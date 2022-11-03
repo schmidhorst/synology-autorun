@@ -1,27 +1,33 @@
 {
-    "defaults": {
-        "run-as": "root"
-    },
-    "username": "autorun",
-    "tool": [{
-        "relpath": "autorun",
-        "user": "package",
-        "group": "package",
-        "permission": "0700"
-    },{
-        "relpath": "common",
-        "user": "package",
-        "group": "package",
-        "permission": "0700"
-    },{
-        "relpath": "rules",
-        "user": "package",
-        "group": "package",
-        "permission": "0400"
-    },{
-        "relpath": "udev",
-        "user": "package",
-        "group": "package",
-        "permission": "0700"
-    }]
-}
+  "defaults": {
+    "run-as": "root"
+    }
+  ,"join-groupname": "http"
+  ,"tool": [
+    {
+      "relpath": "autorun"
+      ,"user": "package"
+      ,"group": "package"
+      ,"permission": "0700"
+      }
+    ,{
+      "relpath": "common"
+      ,"user": "package"
+      ,"group": "package"
+      ,"permission": "0700"
+      }
+    ,{
+      "relpath": "rules"
+      ,"user": "package"
+      ,"group": "package"
+      ,"permission": "0400"
+      }
+    ,{
+      "relpath": "udev"
+      ,"user": "package"
+      ,"group": "package"
+      ,"permission": "0700"
+      }
+    ]
+  }
+

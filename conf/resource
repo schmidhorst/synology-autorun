@@ -1,0 +1,6 @@
+{
+  "usr-local-linker": {
+    "bin": ["bin/autorun-cli"]
+  }
+}
+

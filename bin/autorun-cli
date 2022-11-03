@@ -1,3 +1,0 @@
-#!/bin/sh
-# File 'resource' references this bin/autorun-cli
-/var/packages/autorun/scripts/start-stop-status "$@"

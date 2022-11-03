@@ -22,14 +22,8 @@ sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/pri
 
 # build
 Should run on any *nix box / subsystem.
-Variant A:
   * adjust the version number in INFO.sh
   * Generate the *.spk by execution of ./build
   * publish the created .spk
-Variant B:
-  * adjust the version number in INFO.sh
-  * Put it to the 'source' directory of the Synology Toolkit framework
-    https://github.com/SynologyOpenSource/pkgscripts-ng
-  * publish the created .spk
 
-*Note that almost all of the UI is currently not included in the build (since I got bored of updating that with more or less every DSM version).*
+*Note that backup functionallity, which was included in old versions, is no more included in the version for DSM 7.*

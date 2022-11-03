@@ -1,0 +1,13 @@
+[{
+	"step_title": "Remove log files and settings",
+	"items": 
+		[{
+		"type": "multiselect",
+		"desc" : "<p>During the uninstallation of the package all log files will be removed.<br>Settings of the package can be preseved or deleted.</p>",
+		"subitems": 
+			[{
+				"key": "pkgwizard_remove_settings",
+				"desc": "Remove settings"
+			}]
+		}]
+}]

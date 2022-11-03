@@ -1,0 +1,13 @@
+[{
+	"step_title": "Log-Dateien und Einstellungen entfernen",
+	"items": 
+		[{
+		"type": "multiselect",
+		"desc" : "<p>Während der Deinstallation des Pakets werden alle Log-Dateien gelöscht.<br>Benutzereinstellungen des Pakets können erhalten werden oder auch gelöscht werden.</p>",
+		"subitems": 
+			[{
+				"key": "pkgwizard_remove_settings",
+				"desc": "Einstellungen entfernen"
+			}]
+		}]
+}]

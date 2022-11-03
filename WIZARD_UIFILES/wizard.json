@@ -1,0 +1,177 @@
+[{
+  "step_title": "Configuration",
+   "items": [
+    {"type": "textfield",
+    "desc": "The script must be located in the root directory of the external device and set as executable for the user 'root'. It gets the mount point of the device (e.g. /volumeUSB1/usbshare/) as the first parameter ($1) and the device partition (e.g. usb1p1) as the second ($2). Hint: The script is executed with empty environment, you have to specify all the used commands with path!",
+    "subitems": [{
+      "key": "config_SCRIPT",
+      "desc": "Script to execute",
+      "defaultValue": "@SCRIPT@",
+      "validator": { "allowBlank": false }
+      }]
+    }
+  ,{
+    "type": "textfield",
+    "desc": "An exit value of 100 from the script will unmount and eject the device when the script is finished, all other exit values will leave it mounted. You can stop autorun in the package center to temporarily disable it.<br/><br/>The search time is the time after the trigger by udev for finding the mount point when a device is attached. The additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may have to increase those times depending on your hardware.",
+    "subitems": [
+     {
+      "key": "config_TRIES",
+      "desc": "Search time (sec)",
+      "defaultValue": "@TRIES@",
+      "validator": {
+        "allowBlank": false,
+        "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+        }
+      }
+    ,{
+      "key": "config_WAIT",
+      "desc": "Wait time (sec)",
+      "defaultValue": "@WAIT@",
+      "validator": {
+        "allowBlank": false,
+        "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+        }
+      }
+     ]
+    }
+  ,{
+    "type": "textfield",
+    "desc": "The size of the log files is automatically limitted. If the given line count is reached, the elder half is removed.",
+    "subitems": [
+      {
+        "key": "config_LOG_MAX_LINES",
+        "desc": "Max. line count",
+        "defaultValue": "@LOG_MAX_LINES@",
+        "validator": {
+          "allowBlank": false,
+          "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+          }
+        }
+      ]
+    }
+  ,{
+    "type": "textfield",
+    "desc": "The package generates DSM messages, which are shown on the desktop to configurable user groups or users. Prepend an @ to group names, e.g. @users for all users",
+    "subitems": [{
+      "key": "config_NOTIFY_USERS",
+      "desc": "Message display to",
+      "width": "360",
+      "defaultValue": "@NOTIFY_USERS@",
+         "validator": { "allowBlank": true }
+        }
+      ]
+    }
+  ,{
+    "type": "combobox",
+    "desc": "Use of 'Copy LED':<br/>0: LED are not used at all.<br/>1: ON while running or ejecting, OFF afterwards<br/>2: flashing while running or ejecting, OFF afterwards<br/>3: ON while running or ejecting, afterwards OFF (0/100) or flashing (other codes)<br/>4: flashing while running or ejecting, afterwards OFF or flashing (other codes or ejection failing)<br/>5: flashing while running or ejection, afterwards OFF (0/100) or ON (other codes or ejectionFail)",
+    "subitems": [{ 
+      "key": "config_LED_COPY",
+      "autoSelect": true,
+      "editable": false,
+      "desc": "Copy LED",
+      "defaultValue": "@LED_COPY@",
+      "width": "360",
+      "mode": "local",
+      "valueField": "myId",
+      "displayField": "displayText",
+      "store": {
+        "xtype": "arraystore",
+        "fields": ["myId", "displayText"],
+        "data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+        }
+      }]
+    }  
+  ,{
+    "type": "combobox",
+    "desc": "Use of status LED:<br/>0: Not used at all<br/>1: Green while running, green flashing during eject, OFF if finished with 0 or 100, orange flashing for other results or failed eject<br/>2: Green flashing while script is running or ejecting, green if finished with 0 or 100, orange flashing for other results or failed eject<br/>3: Green while script is running and during eject, OFF when finished, orange flashing if ejection failed",
+    "subitems": [{
+      "key": "config_LED",
+      "autoSelect": true,
+      "editable": false,
+      "desc": "Status LED",
+      "width": "360",
+      "mode": "local",
+      "valueField": "myId",
+      "displayField": "displayText",
+      "defaultValue": "@LED@",
+      "store": {
+        "xtype": "arraystore",
+        "fields": ["myId", "displayText"],
+        "data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+        }
+      }]
+    }
+  ,{
+    "type": "multiselect",
+    "desc": "<br/>Status indication while running the script.",
+    "subitems": [{
+      "key": "config_BEEP",
+      "desc": "Beep at start and end",
+      "defaultValue": "@BEEP@"
+      }]
+    }
+  ,{
+    "type": "textfield",
+    "desc": "If the script ends with the exit code 100, it will be tried to eject the device. You can specify the timeout (in seconds) for ejecting the device",
+    "subitems": [{ 
+      "key": "config_EJECT_TIMEOUT",
+      "desc": "Eject Timeout [s]",
+      "defaultValue": "@EJECT_TIMEOUT@",
+      "validator": {
+        "allowBlank": false,
+        "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+        }
+      }]
+    }  
+  ,{
+    "type": "textfield",
+    "desc": "You can optionally specify a further script (with full path!), which is in case of requested eject (with exit code 100 from your 1st script) executed after the ejection. This may be used e.g. to power down your USB device. If ejection failed, the argument will be 'Ejection failed', at success no argument!",
+    "subitems": [{ 
+      "key": "config_SCRIPT_AFTER_EJECT",
+      "desc": "Script after eject (on DSM)",
+      "width": "350",
+      "defaultValue": "@SCRIPT_AFTER_EJECT@",
+      "validator": {
+        "allowBlank": true
+        }
+      }]
+    }] 
+  }
+,{
+  "step_title": "Security Configuration",
+  "items": [{
+    "type": "combobox",
+    "desc": "The script with the matching name on your USB device is exectuted with root priviledges on your DSM! That could be a security risk! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/>Actually there are @ENTRY_COUNT@ script hashes registerd.<br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: Probably previous registered hashes are all deleted now. The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
+    "subitems": [{
+      "key": "config_ADD_NEW_FINGERPRINTS",
+      "autoSelect": true,
+      "editable": false,
+      "desc": "Script Hash registration",
+      "width": "360",
+      "mode": "local",
+      "valueField": "myId",
+      "displayField": "displayText",
+      "defaultValue": "@ADD_NEW_FINGERPRINTS@",
+      "store": {
+        "xtype": "arraystore",
+        "fields": ["myId", "displayText"],
+        "data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+        }
+      }]
+    }]
+  } 
+,{
+  "step_title": "IMPORTANT: Manual Action Required!",
+  "items": [{
+    "type": "textfield",
+    "desc": "Third party packages are restricted by Synology in DSM 7.x! Since autorun does require root permission to perform its job an additional manual step is required after the installation.<br/><br/>SSH to your NAS (as an admin user) and execute the following command after the installation is finished. Copy it now!",
+    "subitems": [{
+      "key": "ignore_value",
+      "desc": "Command",
+      "width": "440",
+      "defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+      }]
+    }]
+  }
+]
+

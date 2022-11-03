@@ -1,0 +1,13 @@
+# initial settings if no config is available.
+# At upgrade or, at an install after an uninstall without deletion of the settings, this is not used!
+SCRIPT="autorun"
+SCRIPT_AFTER_EJECT=""
+ADD_NEW_FINGERPRINTS="1"
+NOTIFY_USERS="@users"
+TRIES="20"
+WAIT="5"
+BEEP="false"
+LED="0"
+LED_COPY="5"
+EJECT_TIMEOUT="300"    
+LOG_MAX_LINES="2000"

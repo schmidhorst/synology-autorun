@@ -12,15 +12,15 @@ checkCoding() {
       ret=$?
       # echo "  File coding check '$f' result $ret: $res"
       if [[ $res == *"CRLF line terminators"* ]]; then
-        echo "  File coding check '$f2' result $ret: $res"
+        echo "  File coding check '$f' result $ret: $res"
         echo "  ######## Windows line terminator need to be converted to Unix! #########"
         ((errCnt=errCnt+1))
       elif [[ "$res" == *"ISO-8859 text"* ]]; then 
-        echo "  File coding check '$f2' result $ret: $res"
+        echo "  File coding check '$f' result $ret: $res"
         echo "  ######## Please convert to UTF-8! ##########"
         ((errCnt=errCnt+1))    
       elif [[ "$res" == *"PNG image"* ]]; then 
-        echo "  File coding check PNG image '$f2' result $ret: $res"
+        echo "  File coding check PNG image '$f' result $ret: $res"
         # are there some PNG formats which need to be converted?
       fi
     fi
@@ -39,7 +39,7 @@ echo "'$0' started ..."
 # non-UTF-8 files with international characters and Windows-CR-LF may cause problems. 
 # Detect such files by checking all source files ...
 echo "File coding check ..."
-checkCoding "" 
+checkCoding "$SCRIPTPATHTHIS/" 
 echo "... finished file coding check"
 
 # Check for well formed JSON:

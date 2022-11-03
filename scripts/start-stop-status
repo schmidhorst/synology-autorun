@@ -1,34 +1,144 @@
-#!/bin/sh
-
+#!/bin/bash
+user=$(whoami) # EnvVar $USER may be not well set
+# user = "root" if the sudo cp /var/packages/$SYNOPKG_PKGNAME/conf/privilege.root /var/packages/$SYNOPKG_PKGNAME/conf/privilege
+# user = "$SYNOPKG_PKGNAME" = '<appName>' if the copy was not done
+LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
+configFilePathName="/var/packages/$SYNOPKG_PKGNAME/var/config"
+lng=$SYNOPKG_DSM_LANGUAGE
+if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt" ]]; then
+  lng="enu"
+fi
 case $1 in
-	start)
-		if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
-		then
-			exit 1
-		else
-			cp /var/packages/autorun/target/rules /usr/lib/udev/rules.d/99-autorun.rules
-			chmod 400 /usr/lib/udev/rules.d/99-autorun.rules
-			/usr/bin/udevadm control --reload-rules
-		fi
-                echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun activated<br/>" >> /var/packages/autorun/target/log
-		exit 0
-	;;
-	stop)
-		if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
-		then
-			rm -f /usr/lib/udev/rules.d/99-autorun.rules
-			/usr/bin/udevadm control --reload-rules
-		fi
+  prestart)
+    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
+    #### is not occuring !!!????
+    ;;
+  start)
+    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'. SYNOPKG_DSM_LANGUAGE='$lng'<br/>" >> "$LOG"
+    if [ "$user" != "root" ]; then
+      echo "$(date "$DTFMT"): start-stop-status '$1' as user '$user' != \"root\". <br/>" >> "$LOG"      
+      eval $(grep -s "copyPriviledge=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+      if [ "$copyPriviledge" != "" ]; then
+        echo "$copyPriviledge" > "$SYNOPKG_TEMP_LOGFILE"
+      else
+        echo "The copy command 'cp /var/packages/$SYNOPKG_PKGNAME/conf/privilege.root /var/packages/$SYNOPKG_PKGNAME/conf/privilege' was not yet executed. Therefore the package '$SYNOPKG_PKGNAME' cannot be started" > "$SYNOPKG_TEMP_LOGFILE"
+      fi
+      # exit 3 # this would run into repair loop and no exit possible except uninstall
+    else # root
+      # enable log deleting for ui/showlog.cgi:
+      chmod 664 "$LOG"
+      chown $SYNOPKG_PKGNAME:$SYNOPKG_PKGNAME "$LOG"
+      if [[ ! -L "/var/packages/$SYNOPKG_PKGNAME/var/detailLog" ]]; then
+        ln -s "$LOG" "/var/packages/$SYNOPKG_PKGNAME/var/detailLog" # for access from cgi file
+      fi
+      chmod 644 "/var/packages/$SYNOPKG_PKGNAME/var/detailLog"
+      chown $SYNOPKG_PKGNAME:$SYNOPKG_PKGNAME "/var/packages/$SYNOPKG_PKGNAME/var/detailLog"
+      scriptAfterEject=$(grep "^SCRIPT_AFTER_EJECT=" "$configFilePathName")
+      scriptAfterEject=${scriptAfterEject#SCRIPT_AFTER_EJECT=\"}
+      scriptAfterEject=${scriptAfterEject%\"}
+      if [[ -n "$scriptAfterEject" ]]; then # script setup
+        echo "$(date "$DTFMT"): start-stop-status: Script after eject '$scriptAfterEject'<br/>" >> "$LOG"            
+        if [[ ! -f "$scriptAfterEject" ]]; then
+          eval $(grep -s "scriptAfterNA=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+          echo "$scriptAfterNA" > "$SYNOPKG_TEMP_LOGFILE"
+          echo "$(date "$DTFMT"): Error: The 'Script after' file $SCRIPT_AFTER_EJECT is not available!" >> "$LOG"
+        elif [[ ! -x "$scriptAfterEject" ]]; then     
+          eval $(grep -s "scriptAfterNexec=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+          echo "$scriptAfterNexec" > "$SYNOPKG_TEMP_LOGFILE"
+          echo "$(date "$DTFMT"): Error: The 'Script after' file $SCRIPT_AFTER_EJECT is not executable!" >> "$LOG"
+        else
+          scriptName="$scriptAfterEject"
+          res=$(file -b "$scriptName")
+          ret=$?
+          echo "$(date "$DTFMT"): File coding check '$scriptName' result $ret: $res" >> "$LOG"
+          if [[ $res == *"CRLF line terminators"* ]]; then
+            echo "  File coding check '$scriptName' result $ret: $res"
+            echo "  ######## Windows line terminator need to be converted to Unix! #########"
+            eval $(grep -s "msg14=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+            echo "$msg14" > "$SYNOPKG_TEMP_LOGFILE"
+          elif [[ $res == *"with CR line terminators"* ]]; then
+            echo "  File coding check '$scriptName' result $ret: $res"
+            echo "  ######## MAC line terminator need to be converted to Unix! #########"
+            eval $(grep -s "msg16=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+            echo "$msg16" > "$SYNOPKG_TEMP_LOGFILE"
+          elif [[ "$res" == *"ISO-8859 text"* ]]; then 
+            echo "  File coding check '$scriptName' result $ret: $res"
+            echo "  ######## Please convert to UTF-8! ##########"
+            eval $(grep -s "msg15=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+            echo "$msg15" > "$SYNOPKG_TEMP_LOGFILE"
+          fi        
+        fi
+      else # if [[ -n "$scriptAfterEject" ]]
+        echo "$(date "$DTFMT"): start-stop-status: No script after eject<br/>" >> "$LOG"            
+      fi # if [[ -n "$scriptAfterEject" ]]
 
-		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun deactivated<br/>" >> /var/packages/autorun/target/log
-		exit 0
-	;;
-	status)
-		if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
-		then 
-			exit 0
-		else
-			exit 1
-		fi
-	;;
+      notyfyUsers=$(grep "^NOTIFY_USERS=" "$configFilePathName")
+      notyfyUsers=${notyfyUsers#NOTIFY_USERS=\"}
+      notyfyUsers=${notyfyUsers%\"}
+      if [[ -n "$notyfyUsers" ]]; then
+        if [[ $notyfyUsers == "@"* ]]; then # Groupname
+          # syngroup --enum all requires root access
+          groupExist=$(synogroup --enum all | grep "${notyfyUsers:1}") # account which are allowing login
+          if [[ -z $groupExist ]]; then # Fehlermeldung
+            echo "$(date "$DTFMT"): The group account '$notyfyUsers' for desktop message does not exist! Wrong entry replaced by '@users'" >> "$LOG"
+            eval $(grep -s "notifyGroupError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+            echo "$notifyGroupError" > "$SYNOPKG_TEMP_LOGFILE"
+            sed -i 's/^NOTIFY_USERS=*$/^NOTIFY_USERS=@users/' "$configFilePathName"      
+          fi
+        else # single user
+          # userExist=$(grep -o "^${notyfyUsers}:" /etc/passwd) # long list of accounts!
+          userExist=$(synouser --enum all | grep "${notyfyUsers}") # account which are allowing login
+          # alternative: synouser --get "${notyfyUsers}"   
+          if [[ -z $userExist ]]; then # Fehlermeldung
+            echo "$(date "$DTFMT"): The user account '$notyfyUsers' for desktop messages does not exist! Therefore the wrong entry replaced by '@users'. Run Installation again to enter another value!" >> "$LOG"
+            eval $(grep -s "notifyUserError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+            echo "$notifyUserError" > "$SYNOPKG_TEMP_LOGFILE"
+            sed -i 's/^NOTIFY_USERS=*$/^NOTIFY_USERS=@users/' "$configFilePathName"      
+          fi
+        fi
+      fi
+      
+    fi # user root
+    if [ -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" ];  then
+      echo "$(date "$DTFMT"): start executed, but app was already running<br/>" >> "$LOG"    
+      exit 1
+    else
+      echo "$(date "$DTFMT"): start-stop-status script 'start', SYNOPKG_PKGDEST='$SYNOPKG_PKGDEST'<br/>" >> "$LOG"
+      resultStart=$(cp "/var/packages/$SYNOPKG_PKGNAME/target/rules" "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules")
+      retvalStart=$?
+      echo "$(date "$DTFMT"): cp 99-$SYNOPKG_PKGNAME.rules to '/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules': retval=$retvalStart, result='$resultStart'<br/>" >> "$LOG"      
+      chmod 644 "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules"
+      # chown root:root "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" # required? 
+      /usr/bin/udevadm control --reload-rules
+    fi
+    echo "$(date "$DTFMT"): ... start via start-stop-status script successfully finished<br/>" >> "$LOG"
+    exit 0
+  ;;
+  prestop)  # can be disabled via precheckstartstop in INFO file
+    #### is not occuring !!!????
+    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
+  ;;
+  stop)
+    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
+    if [ -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" ]; then
+      resultStop=$(rm -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules")
+      retvalStop=$?
+      echo "$(date "$DTFMT"): rm 99-$SYNOPKG_PKGNAME.rules retval=$retvalStop, result='$resultStop'<br/>" >> "$LOG"
+      /usr/bin/udevadm control --reload-rules
+    else
+      echo "$(date "$DTFMT"): stop executed, but app was not running<br/>" >> "$LOG"    
+    fi
+    echo "$(date "$DTFMT"): ... stop via start-stop-status script done<br/>" >> "$LOG"
+    exit 0
+  ;;
+  status)
+    if [ -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" ]; then 
+      exit 0
+    else
+      exit 1
+    fi
+  ;;
 esac
+

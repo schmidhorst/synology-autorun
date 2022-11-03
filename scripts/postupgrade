@@ -1,23 +1,24 @@
 #!/bin/sh
-
-if [ -d "/tmp/net.reidemeister.autorun" ]
-then
-    # restore config
-    if [ -f "/tmp/net.reidemeister.autorun/config" ]
-    then
-        cp /tmp/net.reidemeister.autorun/config /var/packages/autorun/target/
-    fi
-
+# executed after postinst!
+LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+echo "$(date "$DTFMT"): postupgrade V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
+if [[ ! -f "${SYNOPKG_PKGVAR}/config" ]]; then # not e.g. preserved from uninstall
+  tempStorageFolder="/tmp/net.reidemeister.$SYNOPKG_PKGNAME" 
+  if [ -d "$tempStorageFolder" ]; then
+    echo "$(date "$DTFMT"): temp data folder $tempStorageFolder found<br/>" >> "$LOG"
     # restore log
-    if [ -f "/tmp/net.reidemeister.autorun/log" ]
-    then
-        cp /tmp/net.reidemeister.autorun/log /var/packages/autorun/target/
+    if [ -f "$tempStorageFolder/log" ]; then
+      $(cp -v "$tempStorageFolder/log" "${SYNOPKG_PKGVAR}") 2>&1 >> "$LOG"
+      echo "$(date "$DTFMT"): temp logfile copied<br/>" >> "$LOG"
     fi
-
-    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun upgraded<br/>" >> "/var/packages/autorun/target/log"
+  fi
+else
+  echo "$(date "$DTFMT"): 'config' file is already available (from the before executed postinst!)<br/>" >> "$LOG"
 fi
 
 # clean-up
-rm -r /tmp/net.reidemeister.autorun
+rm -r $tempStorageFolder 
 
+echo "$(date "$DTFMT"): ... postupgrade done<br/>" >> "$LOG"
 exit 0

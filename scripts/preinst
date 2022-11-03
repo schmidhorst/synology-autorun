@@ -1,3 +1,16 @@
 #!/bin/sh
+LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
+echo "$(date "$DTFMT"): preinst $0 V$SYNOPKG_PKGVER (physical path: $SCRIPTPATHTHIS, user=$user)... <br/>" >> "$LOG"
 
+DSMMAJOR=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
+if [ "$DSMMAJOR" -lt 7 ]; then
+	echo "This package version can only be used in DSM 7.0 and above! Earlier package versions may be possible on your DSM version" > $SYNOPKG_TEMP_LOGFILE
+	exit 1
+fi
+
+echo "$(date "$DTFMT"): ... OS major checked, preinst finished<br/>" >> "$LOG"
 exit 0
+

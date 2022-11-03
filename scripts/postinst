@@ -1,30 +1,58 @@
-#!/bin/sh
+#!/bin/bash
+LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+user=$(whoami) # EnvVar $USER may be not well set
+echo "$(date "$DTFMT"): postinst V$SYNOPKG_PKGVER started as user '$user' ...<br/>" >> "$LOG"
 
-eval $(env | grep "^SYNOPKG_PKGDEST=")
-eval $(env | grep "^config_script=")
-eval $(env | grep "^config_search=")
-eval $(env | grep "^config_wait=")
-eval $(env | grep "^config_beep=")
-eval $(env | grep "^config_led=")
+fields="config_SCRIPT config_SCRIPT_AFTER_EJECT config_ADD_NEW_FINGERPRINTS config_TRIES config_WAIT config_BEEP config_LED config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS"
+# config_LED, Status LED usage:
+ # 0 = not used,
+ # 1 = orange while script is running, green when done,
+ # 2 = orange flashing if script result is neither 0 nor 100,
+ # 3 = orange while running, flashing if neither 0 nor 100, else green
 
-echo "SCRIPT=$config_script" > "$SYNOPKG_PKGDEST/config"
-echo "TRIES=$config_search" >> "$SYNOPKG_PKGDEST/config"
-echo "WAIT=$config_wait" >> "$SYNOPKG_PKGDEST/config"
-if [ $config_beep = "true" ]
-then
-	echo "BEEP=1" >> "$SYNOPKG_PKGDEST/config"
-else
-	echo "BEEP=0" >> "$SYNOPKG_PKGDEST/config"
+# config_LED_COPY, Copy LED usage:
+ # 0 = not used,
+ # 1 = on while script is running, off after end,
+ # 2 = flashing while script is running, off after the end,
+ # 4 = flashing if script result is neither 0 nor 100,
+ # 5 = on while running, flashing if script result is neither 0 nor 100, else off after end.
+
+# config_ADD_NEW_FINGERPRINTS, Security configuration:
+ # 0 = unrestricted, no hash check
+ # 1 = clear hash list now and register the hash of each newly executed script,
+ # 2 = allow only previously registered hashes,
+ # 3 = register the new onces
+msg=""
+rm -f "$SYNOPKG_PKGVAR/config"
+echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generated now ...<br/>" >> "$LOG"
+
+# not shown up ==> Check in start-stop-status
+# eval $(env | grep "^$config_SCRIPT_AFTER_EJECT=")
+# if [[ -n "$config_SCRIPT_AFTER_EJECT" ]]; then
+#   if [[ ! -f "$config_SCRIPT_AFTER_EJECT" ]]; then
+#     echo "Error: The 'Script after' file $config_SCRIPT_AFTER_EJECT is not available!" > "$SYNOPKG_TEMP_LOGFILE"  
+#   fi
+# fi
+
+# eval $(env | grep "^config_NOTIFY_USERS=")
+# Check for valid entry requires root access and is done in the start-stop-status script
+
+for f1 in $fields; do
+  eval $(env | grep "^$f1=")
+  msg="$msg, $f1='${!f1}'"
+  f2=${f1#*config_}
+  echo "$f2=\"${!f1}\"" >> "$SYNOPKG_PKGVAR/config"
+done
+
+echo "$(date "$DTFMT"): from ENV: $msg" >> "$LOG"
+
+if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
+  KNOWNSCRIPTSFILEPATHNAME="$SYNOPKG_PKGVAR/FINGERPRINTS"
+  rm -f "$KNOWNSCRIPTSFILEPATHNAME" 
 fi
-if [ $config_led = "true" ]
-then
-	echo "LED=1" >> "$SYNOPKG_PKGDEST/config"
-else
-	echo "LED=0" >> "$SYNOPKG_PKGDEST/config"
-fi
+chmod 755 "$SYNOPKG_PKGVAR/config"
 
-chmod 600 "$SYNOPKG_PKGDEST/config"
-
-echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun installed<br/>" >> "${SYNOPKG_PKGDEST}/log"
+echo "$(date "$DTFMT"): postinst done, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
 
 exit 0

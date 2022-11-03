@@ -1,18 +1,32 @@
 #!/bin/sh
+LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+DTFMT="+%Y-%m-%d %H:%M:%S"
+user=$(whoami)
+echo -e "\n$(date "$DTFMT"): $0 ($SYNOPKG_PKGVER) started with account '$user' ..." >> "$LOG"
+# echo "$(date "$DTFMT"): preupgrade started ...<br/>" >> $SYNOPKG_TEMP_LOGFILE
+# Attention: if in the WIZARD_UIFILES folder a script is used for a dynamic ..._uifile, then it's not allowed to write here somthing to $SYNOPKG_TEMP_LOGFILE !!!
 
-#clean-up temp when required
-if [ -d "/tmp/net.reidemeister.autorun" ]
-then
-    rm -r /tmp/net.reidemeister.autorun
-fi
+#Developer Guide 7, Page 54, Script Execution Order
+#            Upgrade                         Installation     Uninstall
+#  ------------------------------------------------------------------------------------------
+#  newScript upgrade_uifile.sh            install_uifile.sh   uninstall_uifile.sh  (if available)
+#  oldScript start-stop prestop (if running)                  start-stop prestop (if running)
+#  oldScript start-stop stop (if running)                     start-stop stop (if running)
+#  newScript preupgrade  
+#  oldScript preuninst                                        preuninst
+#  @appstore/<app> and @apptemp/<app> are deleted
+#  oldScript postuninst                                       postuninst
+#  newScript prereplace??                    prereplace??
+#  newScript preinst                         preinst
+#  newScript postinst                        postinst  
+#  newScript postreplace        
+#  newScript postupgrade 
+#  newScript start-stop prestart             start-stop prestart
+#  newScript start-stop start                start-stop start
+  
+# tempStorageFolder="${SYNOPKG_TEMP_UPGRADE_FOLDER}/usersettings" # alternative temp folder (DemoUiSpk7)
+# /volumeX/@appdata/<app>	(= /var/packages/<app>/var) is preserved during upgrade!
+# So there is no need for an temporary stprage folder.
 
-# create temp
-mkdir /tmp/net.reidemeister.autorun
-
-# save config
-cp /var/packages/autorun/target/config /tmp/net.reidemeister.autorun
-
-# save log
-cp /var/packages/autorun/target/log /tmp/net.reidemeister.autorun
-
+echo "$(date "$DTFMT"): ... preupgrade done<br/>" >> "$LOG"
 exit 0

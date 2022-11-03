@@ -1,8 +1,0 @@
-package="autorun"
-version="1.8"
-maintainer="Jan Reidemeister"
-description="Execute scripts when connecting external drives (USB / eSATA)."
-arch="noarch"
-os_min_ver="7.0-40000"
-helpurl="http://www.synology-forum.de/showthread.html?18360-Autorun-für-ext.-Datenträger"
-support_url="https://github.com/reidemei/synology-autorun/issues"

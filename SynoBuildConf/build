@@ -1,4 +1,0 @@
-#!/bin/bash
-# file required if Synology toolkit is used to generate *.spk
-#make ${MAKE_FLAGS}
-

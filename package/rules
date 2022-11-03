@@ -1,1 +1,6 @@
-SUBSYSTEM=="block", ACTION=="add", ENV{DEVTYPE}=="partition", PROGRAM="/var/packages/autorun/target/udev %k"
+# not working: ENV{ID_FS_USAGE}=="filesystem", this attribut is often not available!
+# wrong usage in old version: PROGRAM="...", that is for additional filters!
+# Debug helpers:
+#   udevadm info --query=all --attribute-walk --name=/dev/usb1p1
+#   udevadm monitor --environment --udev 
+SUBSYSTEM=="block", ACTION=="add", ENV{DEVTYPE}=="partition", RUN+="/var/packages/autorun/target/udev %k"

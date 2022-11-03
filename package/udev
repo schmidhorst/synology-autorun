@@ -1,25 +1,31 @@
-#!/bin/sh
-
-source /var/packages/autorun/target/common
-
-TMPPATH="/tmp/net.reidemeister.autorun.$1"
+#!/bin/bash
+SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # /volumeX/@appstore/<app>
+APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
+source "$SCRIPTPATHTHIS/common" # e.g. $APPDATA = "/var/packages/$APPNAME/var" is setup there
+# LOG="/var/log/packages/$SYNOPKG_PKGNAME.log" is $SYNOPKG_PKGNAME available???
+# LOG="/var/tmp/$APPNAME.log" set inside of common!
+TMPPATH="/tmp/net.reidemeister.$APPNAME.$1"  # Marker-File for time stamp to filter events
 
 # log manually here 
-/bin/echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$1' - event received from udev <span style=\"color:gray; font-size:50%;\">" >> /var/packages/autorun/target/log
-env >> /var/packages/autorun/target/log
-/bin/echo "</span>" >> /var/packages/autorun/target/log
+# /bin/echo "$(date "$DTFMT"): udev: LOG is '$LOG', APPNAME='$APPNAME'" >> /var/packages/$APPNAME/var/log
+# /bin/echo "$(date "$DTFMT"): udev: device '$1' - event received from udev <span style=\"color:gray; font-size:50%;\">" >> /var/packages/$APPNAME/var/log
+# /bin/echo "$(date "$DTFMT"): Dump of actual environment:" >> /var/packages/$APPNAME/var/log
+# env >> /var/packages/$APPNAME/var/log
+# /bin/echo "</span>" >> /var/packages/$APPNAME/var/log
+# /bin/echo "$(date "$DTFMT"): ... environment done" >> /var/packages/$APPNAME/var/log
 
 # filter duplicate events for 2 minutes
-if [ "$(/bin/find $TMPPATH -mmin -2)" != "" ]
-then
-	logInfo "device '$1' - duplicate event will be ignored"
+if [ "$(/bin/find "$TMPPATH" -mmin -2)" != "" ] ; then
+	logInfo 2 "device '$1' - duplicate event will be ignored"
 	exit
 fi
 
-# to filter subsequent events
-/bin/touch $TMPPATH
+/bin/touch "$TMPPATH" # to filter subsequent events
+
 
 # run autorun
-/var/packages/autorun/target/autorun $1 &
+logInfo 2 "udev done, starting now $SCRIPTPATHTHIS/autorun"
+"$SCRIPTPATHTHIS/autorun" "$1" &
 
 exit
+

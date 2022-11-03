@@ -1,6 +1,0 @@
-SCRIPT=autorun
-BEEP=1
-LED=1
-TRIES=20
-WAIT=0
-

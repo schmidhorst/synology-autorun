@@ -1,0 +1,132 @@
+#!/bin/bash
+# id Synology Toolkit is used to generate the package, this file is used ...
+### Use PKG_DIR as working directory.
+PKG_DIR="/tmp/_syno_pkg"	# temp folder for package files
+## Remark: Due to chroot the /tmp is under /toolkit/build_env/ds.<arch>-<vers>
+if [[ -d "$PKG_DIR" ]]; then
+  chmod -R 777 $PKG_DIR
+  rm -rf $PKG_DIR
+fi
+mkdir -p $PKG_DIR
+chmod -R 777 $PKG_DIR
+chown -R :users $PKG_DIR 
+
+thisScript=$0
+### get spk packing functions
+if [[ ! -x /pkgscripts/include/pkg_util.sh ]]; then
+  echo "$thisScript Error: ##### cannot find /pkgscripts/include/pkg_util.sh #####"
+fi
+source /pkgscripts/include/pkg_util.sh
+
+
+create_package_tgz() {
+  echo "Skript 'install' function 'create_package_tgz' started ..."
+  local package_tgz_dir=/tmp/_package_tgz
+
+  ### clear destination directory
+  chmod 777 $package_tgz_dir
+  rm -rf $package_tgz_dir
+  mkdir -p $package_tgz_dir
+  chmod 777 $package_tgz_dir
+
+  ### install needed file into PKG_DIR
+  if [[ -d ui ]]; then # ui folder may be here or inside the package folder!
+    cp -av ui $package_tgz_dir
+  elif [[ ! -d "package/ui" ]]; then 
+    echo "====================================================================="
+    echo "====================================================================="
+    echo "install script !!!!! Attention: ui folder with icons not found !!!!!!"
+    echo "====================================================================="
+    echo "====================================================================="  
+  # else 
+    # copy to $package_tgz_dir will be done together with package folder! 
+  fi
+  if [[ -d package ]]; then
+    # cp -avR package "$package_tgz_dir"
+    cp -avR package/. $package_tgz_dir  # !!!!!!
+  fi
+  if [[ -d src ]]; then
+    cp -av src "$package_tgz_dir"
+    chown -R http:http $package_tgz_dir/src
+  fi
+
+  ### create package.tgz $1: source_dir, $2: dest_dir
+  echo "calling now 'pkg_make_package $package_tgz_dir ${PKG_DIR}'"
+  pkg_make_package $package_tgz_dir "${PKG_DIR}"
+  echo "/tmp folder content after 'pkg_make_package':"
+  ls -l /tmp
+  echo "call of 'pkg_make_package' and also 'create_package_tgz' done."
+}
+
+
+create_spk() {
+  echo "Skript 'install' function 'create_spk' started ..."
+  if [[ -d scripts ]]; then
+    cp -av scripts $PKG_DIR/scripts
+  fi
+  if [[ -d ui/images ]]; then # ui folder may be here or inside the package folder!
+    path="ui/images"
+  elif [[ -d "package/ui/images" ]]; then 
+    path="package/ui/images"
+  else
+    echo "====================================================================="
+    echo "====================================================================="
+    echo "install script: Attention: images folder with icons not found !!!!!!"
+    echo "====================================================================="
+    echo "====================================================================="      
+  fi
+  cp -av "$path/icon_64.png" "$PKG_DIR/PACKAGE_ICON.PNG"
+
+  if [[ -f "$path/icon_256.png" ]]; then
+    cp -av "$path/icon_256.png" "$PKG_DIR/PACKAGE_ICON_256.PNG"
+  fi
+  cp -av conf $PKG_DIR
+  if [[ -d ui ]]; then # seems to be not yet in package dir
+    cp -avR ui $PKG_DIR
+  fi
+  
+  if [[ -d WIZARD_UIFILES ]]; then
+    cp -avR WIZARD_UIFILES $PKG_DIR
+  fi
+	if [[ -f "LICENSE" ]]; then
+    cp -av "LICENSE" "$PKG_DIR"
+  fi
+  if [[ -f CHANGELOG ]]; then
+    cp -av CHANGELOG $PKG_DIR
+  fi
+  if [[ -f INFO.sh ]]; then
+    ./INFO.sh > INFO
+  fi
+  cp INFO "$PKG_DIR/INFO"
+
+  ### Create the final spk.
+  # pkg_make_spk <source path> <dest path> <spk file name>
+  # Please put the result spk into /image/packages
+  # spk name functions: pkg_get_spk_name pkg_get_spk_unified_name pkg_get_spk_family_name
+
+	mkdir -p /image/packages
+  chmod 777 /image/packages # required !! ??
+  echo "calling now 'pkg_make_spk ${PKG_DIR} /image/packages $(pkg_get_spk_family_name)'"
+  echo "should create tar file '/image/packages/package.tgz' out of '${PKG_DIR}'"
+  pkg_make_spk ${PKG_DIR} "/image/packages" "$(pkg_get_spk_family_name)"
+  ls -l /image/packages/  
+  echo "call of 'pkg_make_spk' and also 'create_spk' done."
+}
+
+
+echo "$0 started now and working in '/tmp' = '/toolkit/build_env/.../tmp' ..."
+create_package_tgz
+size1=$(stat --printf="%s" "${PKG_DIR}/package.tgz")
+echo "package.tgz size is $size1 Bytes"
+if [[ "$size1" -lt 10000 ]]; then # at least the icons need space!
+  echo "============================================================="
+  echo "============================================================="
+  echo "!!!!! package.tgz size is $size1 Bytes  !!!!!!"
+  echo "!!!!! package.tgz size too small! Somthing went wrong!  !!!!!"
+  echo "============================================================="
+  echo "============================================================="
+  exit 22
+fi
+create_spk
+echo "$0 .... done!"
+

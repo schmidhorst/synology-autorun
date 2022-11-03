@@ -1,30 +1,108 @@
 #!/bin/sh
 
-LOGDIR="/var/packages/autorun/target"
-
 # write an info entry to out log file
-#   $1 - log entry
+# Variante a:  $1 = log entry
+# Variante b: $1= LogLevel, $2 log entry: Only if $1 is smaler or equal to the loglevel it will be reported
 logInfo() {
-	/bin/echo "`date +%Y-%m-%d` `date +%H:%M:%S`: $1<br/>" >> $LOGDIR/log
+  if [[ $# -ge 2 ]]; then # more than one parameter
+    ll=$1 # 1st parameter is log level
+    shift
+  else
+    ll=1 # defaultvalue  
+  fi
+  if [[ "$ll" -le  "$LOGLEVEL" ]]; then
+	  /bin/echo -e "$(date "$DTFMT"): $*" | /bin/tee -a "$LOGFILE"
+  fi
 }
 
 # write an error entry to out log file
 #   $1 - log entry
 logError() {
-	/bin/echo "`date +%Y-%m-%d` `date +%H:%M:%S`: <span style=\"color:red;\">$1</span><br/>" >> $LOGDIR/log
+	/bin/echo "$(date "$DTFMT"): <span style=\"color:red;\">$1</span><br/>" | /bin/tee -a "$LOGFILE"
+  # https://stackoverflow.com/questions/692000/how-do-i-write-standard-error-to-a-file-while-using-tee-with-a-pipe
+ 	# /bin/echo "$(date "$DTFMT"): <span style=\"color:red;\">$1</span><br/>" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
 }
+
 
 # set the led or send a beep
+# https://kb.synology.com/de-de/DSM/tutorial/Overview_of_LED_indicator_statuses_during_bootup
 #   $1 - event (see http://www.synology-wiki.de/index.php/LEDs_und_Buttons)
-beep() {
-	/bin/echo $1 > /dev/ttyS1
+# 1 	0x31 	power off
+# 2 	0x32 	kurzer Pieps-Ton
+# 3 	0x33 	langer Pieps-Ton
+# 4 	0x34 	Power LED (blau) an
+# 5 	0x35 	Power LED (blau) blinken (hoch/runterfahren)
+# 6 	0x36 	Power LED aus
+# 7 	0x37 	Status LED aus
+# 8 	0x38 	Status LED grün an (Normalzustand)
+# 9 	0x39 	Status LED grün blinkend (DSM nicht bereit) 
+# : 	0x3A 	Status LED orange an (?)
+# ; 	0x3B 	Status LED orange blinkend (Fehler)
+# @ 	0x40 	Copy LED an
+# A 	0x41 	Copy LED blinkend
+# B 	0x42 	Copy LED aus 
+
+BEEP_SHORT=2
+BEEP_LONG=3
+# LED_POWER_FLASH=5
+LED_STATUS_OFF=7
+LED_STATUS_GREEN=8
+LED_STATUS_GREEN_FLASH=9
+LED_STATUS_ORANGE=:
+LED_STATUS_ORANGE_FLASH=;
+LED_COPY_ON=@
+LED_COPY_FLASH=A
+LED_COPY_OFF=B
+
+beep() {  # also used for LED control
+  # requires root!
+  /bin/echo "$1" > /dev/ttyS1
 }
 
-beepError() {
-        beep 3
-        /bin/sleep 1s
-	beep 3
-        /bin/sleep 1s
-	beep 3
-        /bin/sleep 1s
+
+beepError() {  # 3 times long beep
+  beep 3
+  /bin/sleep 1s
+  beep 3
+  /bin/sleep 1s
+  beep 3
+  /bin/sleep 1s
 }
+
+
+####################### start #############################
+if [[ -z $"PATH" ]]; then
+  PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
+fi
+SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # e.g. /volumeX/@appstore/<app>
+# /volumeX/@appstore/<app>, not /var/packages/<app>/target (Link)
+APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
+APPDATA="/var/packages/$APPNAME/var"
+# LOGLEVEL=8 # set in parse_hlp.sh
+# DTFMT="+%Y-%m-%d %H:%M:%S" # set in parse_hlp.sh
+source "$SCRIPTPATHTHIS/ui/modules/parse_hlp.sh" #  logInfoNoEcho(), DTFMT, LOGLEVEL, urlencode(), urldecode()
+
+# the LOGFILE may be set already different:
+LOGFILEold=$LOGFILE
+# echo "common: LOGFILEold=$LOGFILEold"
+# source $scriptpathThis/bckCfg.txt # setup DsmNotifyClass, DsmNotifyCategory, DsmNotifyTitle, CcuIpAdrPort
+source "$APPDATA/config"
+if [[ -n "$LOGFILEold" ]]; then
+  # echo "common: resetting LOGFILE from $LOGFILE (read from bckCfg.txt) to $LOGFILEold"
+  LOGFILE=$LOGFILEold
+fi
+# echo "common LOGFILE=$LOGFILE"
+if [[ -z "$LOGLEVEL" ]]; then # not set in parse_hlp,sh
+  LOGLEVEL=5 # 5=log all, 1=log only important, increase it for debugging
+fi
+if [[ -z "$LOGFILE" ]]; then
+  ## LOGFILE="/var/packages/autorun/target/log"
+  SCRIPTPATHPARENT=${SCRIPTPATHTHIS%/*}
+  # LOGFILE="$APPDATA/log" # equal to /volumeX/@appdata/<app>
+  # LOGFILE="/var/log/packages/$APPNAME.log" # permission denied
+  LOGFILE="/var/log/tmp/$APPNAME.log" 
+  # /var/log/$APPNAME.log: Permission denied
+  LOG="$LOGFILE"
+fi
+logInfo 4 "Folder for config: $APPDATA"
+

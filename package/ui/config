@@ -1,0 +1,34 @@
+{
+  ".url": {
+    "SYNO.SDS._ThirdParty.App.autorun": {
+      "desc": "Autorun",
+      "icon": "images/icon_{0}.png",
+			"appWindow": "SYNO.SDS._ThirdParty.App.autorun",
+      "allUsers": true,
+      "texts": "texts",
+      "protocol": "https",
+      "title": "Autorun on USB/eSATA connect",
+			"type": "legacy",
+			"width": 550,
+			"height": 400,
+      "url": "/webman/3rdparty/autorun/index.cgi",
+      "preloadTexts": [
+        "app1:title01",
+        "app1:msg0",
+        "app1:msg1",
+        "app1:msg2",
+        "app1:msg3",
+        "app1:msg4",
+        "app1:msg5",
+        "app1:msg6",
+        "app1:msg7",
+        "app1:msg8",
+        "app1:msg9",
+        "app1:msg10",
+        "app1:msg14",
+        "app1:msg15",
+        "app1:msg16"
+      ]
+    }
+  }
+}

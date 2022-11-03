@@ -9,9 +9,13 @@ body {
 	text-align: left;
 }
 
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
 div.h3 {
 	background-color: transparent;
-	background-image: url(/webman/modules/ControlPanel/images/cp_split.png);
 	background-position: 50% 50%;
 	background-repeat: repeat-x;
 	border-bottom-color: black;

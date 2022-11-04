@@ -1,4 +1,4 @@
-1.8.20 Horst Schmid
+1.10.0 Horst Schmid
  !!! A MANUAL STEP IS REQUIRED AFTER THE INSTALLATION !!!  See V1.8 below!
 
  - Eject USB Drive (at exit code 100) reworked, so that it works also on DSM 7.x
@@ -11,21 +11,10 @@
  - In case of using exit code 100 to eject the USB drive now a further script can be called afterwards e.g. to power down the USB drive (if eject was successfully)
  - Code for local Backup from V1.6, which was since V1.7 no more working, removed
  - A new GUI added
- - Internationalization prepared, Englisch and German is implemented. Actually further translations still not done, help would be appreciated!  
- - Changes acc. 1.8.1 schmollmolch 13 Oct 2021 integrated:
-   rule file (which is copied to /usr/lib/udev/rules.d) changed from 
-     SUBSYSTEM=="block", ACTION=="add", ENV{DEVTYPE}=="partition", PROGRAM="/var/packages/autorun/target/udev %k"     
-   to
-     SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_USAGE}=="filesystem", RUN+="/var/packages/autorun/target/udev %k"
-
-https://wiki.ubuntuusers.de/udev/     
-     udevadm info --query=all --attribute-walk --name=/dev/usb1
-     
-     tail -n 10 -f /var/log/syslog.log
-     
-udevadm test /sys/class/block/sdb1
-     
-     
+ - Desktop notification implemented again
+ - Internationalization prepared, Englisch and German is implemented for installation wizzard and desktop messages.
+   Actually further translations still not done, help would be appreciated!
+   If you can translate the englisch texts to your language, please send a email to synoapps@schmidhorst.de  
        
  - note: for DSM 6.x use the version 1.7, which can be found
    at https://github.com/reidemei/synology-autorun/releases/tag/v1.7
@@ -33,6 +22,10 @@ udevadm test /sys/class/block/sdb1
 Known Issues:
  - The Web pages do not use the language setting of the actual user but the general DSM language setting 
    as the file /volume1/@userpreference/<user>/usersettings is not accessible.  
+
+1.8.x/1.9
+  Forks from Jip-Hop (https://github.com/Jip-Hop/synology-autorun) and JC-23 (https://github.com/JC-23/synology-autorun)
+  added: optional feature to verify sha256 fingerprints of scripts before running them
 
 1.8
  !!! A MANUAL STEP IS REQUIRED AFTER THE INSTALLATION !!!

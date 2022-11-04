@@ -63,9 +63,13 @@ if [[ -f "$SCRIPT_EXEC_LOG" ]]; then
     logInfo 2 "The log file '$SCRIPT_EXEC_LOG' was trimmed from $lineCount to $newLineCount lines"
   fi 
 else
-  touch "$SCRIPT_EXEC_LOG"
-  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG"
+  touch "$SCRIPT_EXEC_LOG" # created an empty file
+  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
   chmod 644 "$SCRIPT_EXEC_LOG"
+  gui_lang=$(/bin/get_key_value /etc/synoinfo.conf language)
+  if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$gui_lang/lang.txt" ]]; then
+    echo "$(date "$DTFMT"): Sorry, up to now there is no translation to your language $gui_lang implemented. If you want to help to translate all the messages, please send a message in German or Englisch to synoapps@schmidhorst.de. Thanks!" >> "$SCRIPT_EXEC_LOG"
+  fi
 fi
 
 if [[ -f "$LOG" ]]; then

@@ -24,13 +24,13 @@ if [[ -z "$lng" ]]; then
 fi
 
 JSON="$(dirname "$0")/wizard_$lng.json"
-if [[ ! -f "$JSON" ]]; then
-  JSON=$(dirname "$0")/wizard.json
+if [[ ! -f "$JSON" ]]; then # no translation to the actual language available
+  JSON=$(dirname "$0")/wizard.json # using English version
 fi  
 if [ ! -f "$JSON" ]; then
   echo "$(date "$DTFMT"): ERROR 11: WIZARD template file '$JSON' not available!" | tee -a "$LOG"
   echo "[]" >> "$SYNOPKG_TEMP_LOGFILE"
-  echo "                              No upgrade_uifile ($$SYNOPKG_TEMP_LOGFILE) generated (only empty file)" >> "$LOG"
+  echo "$(date "$DTFMT"): No upgrade_uifile ($$SYNOPKG_TEMP_LOGFILE) generated (only empty file)" >> "$LOG"
   exit 11 # should we use exit 0 ?
 fi
 echo "$(date "$DTFMT"): WIZARD template file available" >> "$LOG"
@@ -41,7 +41,7 @@ fi
 if [ ! -f "$configFilePathName" ]; then
   echo "$(date "$DTFMT"): ERROR 12: Old configuration not available!" | tee -a "$LOG"
   echo "[]" >> "$SYNOPKG_TEMP_LOGFILE"
-  echo "                              No upgrade_uifile ($$SYNOPKG_TEMP_LOGFILE) generated (only empty file)" >> "$LOG"
+  echo "$(date "$DTFMT"): No upgrade_uifile ($$SYNOPKG_TEMP_LOGFILE) generated (only empty file)" >> "$LOG"
   exit 12
 fi
 echo "$(date "$DTFMT"): Used config file: '$configFilePathName'" >> "$LOG"

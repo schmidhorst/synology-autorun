@@ -4,7 +4,7 @@ if [[ "$1" == "" ]]; then # Generation with toolkit scripts
   source /pkgscripts-ng/include/pkg_util.sh
 fi
 package="autorun"
-version="2.0.0-0001"
+version="1.10.0-0001"
 #beta="yes"
 arch="noarch"
 os_min_ver="7.0-40000"
@@ -74,7 +74,6 @@ if [[ "$1" != "" ]]; then # Generation without toolkit scripts
 		fi
 	done
     # checksum  MD5 string to verify the package.tgz.
-	# create_time="20220917-03:06:14"
   return 0
 fi
 

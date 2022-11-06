@@ -18,7 +18,12 @@
 # Initiate system
 # --------------------------------------------------------------
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
-  # SCRIPT_NAME=/webman/3rdparty/<appName>/index.cgi
+bDebug=0
+if [[ -z "$SCRIPT_NAME" ]]; then  # direct start in debug run 
+  SCRIPT_NAME="/webman/3rdparty/autorun/index.cgi"
+  bDebug=1
+  echo "###### index.cgi executed in debug mode!!  ######"
+fi
   # $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi 
 app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
 app_name=${app_link##*/} # "<appName>"
@@ -41,71 +46,80 @@ if [ -f "${app_home}/modules/parse_hlp.sh" ]; then
   res=$?
   echo "$(date "$DTFMT"): Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
   if [[ "$res" -gt 1 ]]; then
+    echo "### Loading ${app_home}/modules/parse_hlp.sh failed!! ###"
     exit
   fi
 else
   echo "$(date "$DTFMT"): Failed to find ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() skipped" >> "$LOG"
+  echo "Failed to find ${app_home}/modules/parse_hlp.sh"
   exit
 fi
 
 # Evaluate app authentication
 # To evaluate the SynoToken, change REQUEST_METHOD to GET
-[[ "${REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="GET" && OLD_REQUEST_METHOD="POST"
+if [[ "${REQUEST_METHOD}" == "POST" ]]; then
+  OLD_REQUEST_METHOD="POST"
+  REQUEST_METHOD="GET"
+fi
 # Read out and check the login authorization  ( login.cgi )
-syno_login=$(/usr/syno/synoman/webman/login.cgi)
+if [[ "$bDebug" -eq 0 ]]; then
+  syno_login=$(/usr/syno/synoman/webman/login.cgi)
+  # echo -e "\n$(date "$DTFMT"): syno_login='$syno_login'" >> "$LOG"
 
-# echo -e "\n$(date "$DTFMT"): syno_login='$syno_login'" >> "$LOG"
-
-# SynoToken ( only when protection against Cross-Site Request Forgery Attacks is enabled ):
-if echo "${syno_login}" | grep -q SynoToken ; then
-  syno_token=$(echo "${syno_login}" | grep SynoToken | cut -d ":" -f2 | cut -d '"' -f2)
-fi
-if [ -n "${syno_token}" ]; then
-  [ -z "${QUERY_STRING}" ] && QUERY_STRING="SynoToken=${syno_token}" || QUERY_STRING="${QUERY_STRING}&SynoToken=${syno_token}"
-fi
-# Login permission ( result=success ):
-if echo "${syno_login}" | grep -q result ; then
-  login_result=$(echo "${syno_login}" | grep result | cut -d ":" -f2 | cut -d '"' -f2)
-fi
-if [[ ${login_result} != "success" ]]; then
-  logInfo 0 "Access denied, no login permission"
-  exit
-fi
-# Login successful ( success=true )
-if echo "${syno_login}" | grep -q success ; then
-  login_success=$(echo "${syno_login}" | grep success | cut -d "," -f3 | grep success | cut -d ":" -f2 | cut -d " " -f2 )
-fi
-if [[ ${login_success} != "true" ]]; then
-  logInfo 0 "Access denied, login failed"
-  exit
-fi
-# Set REQUEST_METHOD back to POST again:
-[[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
-# Reading user/group from authenticate.cgi
-syno_user=$(/usr/syno/synoman/webman/authenticate.cgi) # authenticate.cgi is a Synology binary
-logInfoNoEcho 6 "authenticate.cgi: syno_user=$syno_user"
-# Check if the user exists:
-user_exist=$(grep -o "^${syno_user}:" /etc/passwd)
-# [ -n "${user_exist}" ] && user_exist="yes" || exit
-if [ -z "${user_exist}" ]; then
-  logInfo 0 "User '${syno_user}' does not exist"
-  exit
-fi
-# Check whether the local user belongs to the "administrators" group:
-if id -G "${syno_user}" | grep -q 101; then
-  is_admin="yes"
+  # SynoToken ( only when protection against Cross-Site Request Forgery Attacks is enabled ):
+  if echo "${syno_login}" | grep -q SynoToken ; then
+    syno_token=$(echo "${syno_login}" | grep SynoToken | cut -d ":" -f2 | cut -d '"' -f2)
+  fi
+  if [ -n "${syno_token}" ]; then
+    [ -z "${QUERY_STRING}" ] && QUERY_STRING="SynoToken=${syno_token}" || QUERY_STRING="${QUERY_STRING}&SynoToken=${syno_token}"
+  fi
+  # Login permission ( result=success ):
+  if echo "${syno_login}" | grep -q result ; then
+    login_result=$(echo "${syno_login}" | grep result | cut -d ":" -f2 | cut -d '"' -f2)
+  fi
+  if [[ ${login_result} != "success" ]]; then
+    logInfoNoEcho 0 "Access denied, no login permission"
+    exit
+  fi
+  # Login successful ( success=true )
+  if echo "${syno_login}" | grep -q success ; then
+    login_success=$(echo "${syno_login}" | grep success | cut -d "," -f3 | grep success | cut -d ":" -f2 | cut -d " " -f2 )
+  fi
+  if [[ ${login_success} != "true" ]]; then
+    logInfoNoEcho 0 "Access denied, login failed"
+    exit
+  fi
+  # Set REQUEST_METHOD back to POST again:
+  [[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
+  # Reading user/group from authenticate.cgi
+  syno_user=$(/usr/syno/synoman/webman/authenticate.cgi) # authenticate.cgi is a Synology binary
+  logInfoNoEcho 6 "authenticate.cgi: syno_user=$syno_user"
+  # Check if the user exists:
+  user_exist=$(grep -o "^${syno_user}:" /etc/passwd)
+  # [ -n "${user_exist}" ] && user_exist="yes" || exit
+  if [ -z "${user_exist}" ]; then
+    logInfoNoEcho 0 "User '${syno_user}' does not exist"
+    exit
+  fi
+  # Check whether the local user belongs to the "administrators" group:
+  if id -G "${syno_user}" | grep -q 101; then
+    is_admin="yes"
+  else
+    is_admin="no"
+    logInfoNoEcho 2 "User ${syno_user} is no admin"
+  fi
 else
-  is_admin="no"
-  logInfoNoEcho 2 "User ${syno_user} is no admin"
+  echo "Due to debug mode login skipped"
 fi
 
+local_version=$(cat "/var/packages/${app_name}/INFO" | grep ^version | cut -d '"' -f2)
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
   source "${app_home}/modules/parse_language.sh" "${syno_user}"
   res=$?
   logInfoNoEcho 6 "Loading ${app_home}/modules/parse_language.sh done with result $res"
   # || exit
 else
-  logInfo 0 "Loading ${app_home}/modules/parse_language.sh failed"
+  logInfoNoEcho 0 "Loading ${app_home}/modules/parse_language.sh not executable"
   exit 
 fi
 # ${used_lang} is now e.g. enu
@@ -114,8 +128,12 @@ fi
 unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_authenticated
 
 # Evaluate app authentication
-# To evaluate the SynoToken, change REQUEST_METHOD to GET
-[[ "${REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="GET" && OLD_REQUEST_METHOD="POST"
+if [[ "$bDebug" -eq 0 ]]; then
+  # To evaluate the SynoToken, change REQUEST_METHOD to GET
+  if [[ "${REQUEST_METHOD}" == "POST" ]]; then
+    OLD_REQUEST_METHOD="POST"
+    REQUEST_METHOD="GET"
+  fi
   # Read out and check the login authorization  ( login.cgi )
   syno_login=$(/usr/syno/synoman/webman/login.cgi)
   # SynoToken ( only when protection against Cross-Site Request Forgery Attacks is enabled ):
@@ -130,7 +148,7 @@ unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_auth
     login_result=$(echo "${syno_login}" | grep result | cut -d ":" -f2 | cut -d '"' -f2)
   fi
   if [[ ${login_result} != "success" ]]; then
-    logInfo 0 "Access denied, no login permission"
+    logInfoNoEcho 0 "Access denied, no login permission"
     exit
   fi
   # Login successful ( success=true )
@@ -138,12 +156,18 @@ unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_auth
     login_success=$(echo "${syno_login}" | grep success | cut -d "," -f3 | grep success | cut -d ":" -f2 | cut -d " " -f2 )
   fi
   if [[ ${login_success} != "true" ]]; then
-    logInfo 0 "Access denied, login failed"
+    logInfoNoEcho 0 "Access denied, login failed"
     exit
   fi
   # Set REQUEST_METHOD back to POST again:
-  [[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
-
+  if [[ "${OLD_REQUEST_METHOD}" == "POST" ]]; then
+    REQUEST_METHOD="POST"
+    unset OLD_REQUEST_METHOD
+  fi  
+else
+  echo "Due to debug mode access check skipped"
+  is_admin="yes"
+fi
 
 # Set variables to "readonly" for protection or empty contents
 unset syno_login rar_data syno_privilege
@@ -157,13 +181,14 @@ if [ "$is_admin" != "yes" ]; then
   echo "<button onclick=\"location.href='licence.html'\" type=\"button\">${btnShowLicence}</button> "
   echo "<br/></BODY></HTML>"
   logInfoNoEcho 0 "Admin Login required!"
+  echo "Admin Login required!"
   exit 0
 fi
 
 #appCfgDataPath=$(find /volume*/@appdata/${app_name} -maxdepth 0 -type d)
 appCfgDataPath="/var/packages/${app_name}/var"
 if [ ! -d "${appCfgDataPath}" ]; then
-  logInfo 0 "... terminating as app home folder '$ah' ('${app_home}') not found!"
+  logInfoNoEcho 0 "... terminating as app home folder '$ah' ('${app_home}') not found!"
   echo "$(date "$DTFMT"): ls -l /:" >> "$LOG"
   ls -l / >> "$LOG"
   exit
@@ -200,11 +225,11 @@ fi
   #  read -n ${CONTENT_LENGTH} POST_STRING
   #fi
 
+mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}"
+mapfile -d "&" -t POST_vars <<< "${POST_STRING}"
 # Securing the Internal Field Separator (IFS) as well as the separation
 # of the GET/POST key/value requests, by locating the separator "&"
 if [ -z "${backupIFS}" ]; then
-  mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}"
-  mapfile -d "&" -t POST_vars <<< "${POST_STRING}"
   backupIFS="${IFS}"
 #  IFS='&'
 #  GET_vars=("${QUERY_STRING}")
@@ -221,52 +246,89 @@ SCRIPT_EXEC_LOG="$appCfgDataPath/execLog"
 logfile="$SCRIPT_EXEC_LOG" # default, later optionally set to "$appCfgDataPath/detailLog"
 st=$(echo "$logTitleExec")  # default, later optionally set to "$logTitleDetail"
 
+versionUpdateHint=""
+# https://github.com/schmidhorst/synology-autorun
+git_version=$(wget --no-check-certificate --timeout=60 --tries=1 -q -O- "https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh" | grep ^version | cut -d '"' -f2)		
+logInfoNoEcho 6 "local_version='$local_version', git_version='$git_version'"
+if [ -n "${git_version}" ] && [ -n "${local_version}" ]; then
+	if dpkg --compare-versions ${git_version} gt ${local_version}; then
+	# if dpkg --compare-versions ${git_version} lt ${local_version}; then # for debugging
+    vh=$(echo "$update_available")
+		versionUpdateHint='<p style="text-align:center">'${vh}' <a href="https://github.com/schmidhorst/synology-'${app_name}'/releases" target="_blank">'${git_version}'</a></p>'
+	fi
+fi
+
+
 # Analyze incoming GET requests and process them to ${get[key]}="$value" variables
 declare -A get # associative array
-script=""
+script="<script>"
 for ((i=0; i<${#GET_vars[@]}; i+=1)); do
   key=${GET_vars[i]%%=*}
   key=$(urldecode "$key")
-  val=${GET_vars[i]#*=}
-  val=$(urldecode "$val")
-  logInfoNoEcho 8 "i=$i, key='$key', value='$val'"
-  get[$key]=$val
-  if [[ "$key" == "action" ]]; then
-    if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then
-      logfile="$appCfgDataPath/detailLog"  # Link to /var/log/tmp/autorun.log
-      st=$(echo "$logTitleDetail")
-    fi
-    if [[ "$val" == "delSimpleLog" ]] || [[ "$val" == "delDetailLog" ]]; then
-      echo "" > $logfile
-      logInfoNoEcho 4 "Old content of '$logfile' removed"
-    fi
-    if [[ "$val" == "reloadSimpleLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then
-      logInfoNoEcho 4 "Page reload"
+  if [[ -n "$key" ]]; then
+    val=${GET_vars[i]#*=}
+    val=$(urldecode "$val")
+    logInfoNoEcho 8 "i=$i, key='$key', value='$val'"
+    get[$key]=$val
+    if [[ "$key" == "action" ]]; then
+      if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]]; then
+        logfile="$appCfgDataPath/detailLog"  # Link to /var/log/tmp/autorun.log
+        st=$(echo "$logTitleDetail")
+      fi
+      if [[ "$val" == "delSimpleLog" ]] || [[ "$val" == "delDetailLog" ]]; then
+        echo "" > "$logfile"
+        logInfoNoEcho 4 "Old content of '$logfile' removed"
+      fi
+      if [[ "$val" == "downloadSimpleLog" ]] || [[ "$val" == "downloadDetailLog" ]]; then
+        logInfoNoEcho 4 "Download content of '$logfile' requested"
+# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition
+# Content-Type: text/html; charset=utf-8
+# Content-Disposition: attachment; filename="cool.html"
+# Content-Length: 21
+        logInfoNoEcho 4 "Download content of '$logfile' requested, disposition='$disposition'"
+        echo "Content-type: text/plain; charset=utf-8"
+        echo "Content-Disposition: attachment; filename=$(basename $logfile).txt"
+        echo
+        # echo "<!doctype html>"
+        cat "$logfile"
+        exit
+      fi
+      if [[ "$val" == "reloadSimpleLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then
+        logInfoNoEcho 4 "Page reload"
 # https://stackoverflow.com/questions/17642872/refresh-page-and-keep-scroll-position
-      script="<script>window.onload=function(){ window.scrollTo(0, document.body.scrollHeight);}</script>"
+        script="${script} window.onload=function(){ window.scrollTo(0, document.body.scrollHeight);}"  # scroll to bottom
 
-#      script="<script>"
-#      script="${script} window.addEventListener(\"beforeunload\", function (e) { sessionStorage.setItem('scrollpos', window.scrollY); });"
-#      script="${script} window.onload=function(){
-#        var scrollpos = sessionStorage.getItem('scrollpos');
-#        if (scrollpos) {
-#          window.scrollTo(0, scrollpos);
-#          sessionStorage.removeItem('scrollpos');
-#          };
-#        }"
-#      script="$script</script>"
-    fi
-  fi
+#       script="${script} window.addEventListener(\"beforeunload\", function (e) { sessionStorage.setItem('scrollpos', window.scrollY); });"
+#       script="${script} window.onload=function(){
+#         var scrollpos = sessionStorage.getItem('scrollpos');
+#         if (scrollpos) {
+#           window.scrollTo(0, scrollpos);
+#           sessionStorage.removeItem('scrollpos');
+#           };
+#         }"
+
+      fi # reload
+    fi # action
   
-  # Reset saved GET/POST requests if main is set
-  if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
-    [ -f "${get_request}" ] && rm "${get_request}"
-    [ -f "${post_request}" ] && rm "${post_request}"
-  fi
+    # Reset saved GET/POST requests if main is set
+    if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
+      [ -f "${get_request}" ] && rm "${get_request}"
+      [ -f "${post_request}" ] && rm "${post_request}"
+    fi
 
-  # Saving GET requests for later processing
-  /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
+    # Saving GET requests for later processing
+    /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
+  fi # if [[ -n "$key" ]]; then 
 done
+
+# for download of Logfile:
+# wholeFileContent=$(urlencode "$(<"$logfile")")
+# script="$script
+#     document.getElementById('savelogcontent').onclick = function() {
+#       window.open('data:application/txt,' + $wholeFileContent, '_self');
+#       }
+#      "
+script="$script</script>"
 
 if [[ ${#GET_vars[@]} -gt 0 ]]; then
   logInfoNoEcho 5 "get[] array setup and synosetkeyvalue done."
@@ -276,14 +338,15 @@ fi
 /usr/syno/bin/synosetkeyvalue "${get_request}" "get[SynoToken]" "$syno_token"
 
 # Analyze incoming POST requests and process to ${var[key]}="$value" variables
-declare -A POST_vars
 for ((i=0; i<${#POST_vars[@]}; i+=1)); do
   key=${POST_vars[i]%%=*}
   key=$(urldecode "$key")
   val=${POST_vars[i]#*=}
   val=$(urldecode "$val")
   logInfoNoEcho 8 "i=$i, key='$key', value='$val'"
-  get[$key]=$val
+  if [[ -n "$key" ]]; then
+    get[$key]=$val
+  fi  
 done
 
 if [[ ${#POST_vars[@]} -gt 0 ]]; then
@@ -295,18 +358,20 @@ fi
 
 filesize_Bytes=$(stat -c%s "$logfile")  # if it's a link this returns size of the link, not of linked file!  
 logInfoNoEcho 8 "Size of $logfile is $filesize_Bytes Bytes"
-
+if [[ "$bDebug" -ne 0 ]]; then
+  echo "startingo to generate html document ..."
+fi
 # Layout output
 # --------------------------------------------------------------
 if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
-  echo "Content-type: text/html"
+  echo "Content-type: text/html; charset=utf-8"
   echo
   echo "
   <!doctype html>
   <html lang=\"${SYNO2ISO[${used_lang}]}\">
     <head>"
   echo '<meta charset="utf-8" />'
-  echo "<title>${display_name}</title>"   # <title>...</title> is not displayed but title from the file config
+  echo "<title>${st}</title>"   # <title>...</title> is not displayed but title from the file config
   echo '
       <link rel="shortcut icon" href="images/icon_32.png" type="image/x-icon" />
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -314,8 +379,8 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
   echo "$script"
   echo '</head>
     <body>
-      <header></header>
-      <article>'
+      <header>'
+  echo "$versionUpdateHint"
         # Load page content
         # --------------------------------------------------------------
         if [[ "${is_admin}" == "yes" ]]; then
@@ -337,8 +402,8 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           echo "<button onclick=\"location.href='settings.cgi'\" type=\"button\">${btnShowSettings}</button> "
           echo "<button onclick=\"location.href='licence.html'\" type=\"button\">${btnShowLicence}</button> "
 
-          echo '<article>'
-          echo "<strong>$st</strong><table>"
+          echo "<p><strong>$st</strong></p>"
+          echo "</header><table>"
 
           if [[ -f "$logfile" ]]; then
 
@@ -364,18 +429,19 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           echo '<p>'${txtAlertOnlyAdmin}'</p>'
         fi
         echo '
-      </table></article>
+      </table>
 	    <p style="margin-left:22px; line-height: 16px;">'
       if [[ filesize_Bytes -gt 10 ]]; then
         if [[ "$logfile" == "$SCRIPT_EXEC_LOG" ]]; then
           echo "<button onclick=\"location.href='index.cgi?action=reloadSimpleLog'\" type=\"button\">${btnRefresh}</button> "
+          echo "<button onclick=\"location.href='index.cgi?action=downloadSimpleLog'\" type=\"button\">${btnDownload}</button> "
           echo "<button onclick=\"location.href='index.cgi?action=delSimpleLog'\" type=\"button\">${btnDelLog}</button> "
         else
           echo "<button onclick=\"location.href='index.cgi?action=reloadDetailLog'\" type=\"button\">${btnRefresh}</button> "
+          echo "<button onclick=\"location.href='index.cgi?action=downloadDetailLog'\" type=\"button\">${btnDownload}</button> "
           echo "<button onclick=\"location.href='index.cgi?action=delDetailLog'\" type=\"button\">${btnDelLog}</button> "
         fi  
       fi
-      btnRefresh
     	echo "</p>
         </body>
       </html>"

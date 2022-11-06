@@ -4,7 +4,7 @@ if [[ "$1" == "" ]]; then # Generation with toolkit scripts
   source /pkgscripts-ng/include/pkg_util.sh
 fi
 package="autorun"
-version="1.10.0-0001"
+version="1.10.0-0002"
 #beta="yes"
 arch="noarch"
 os_min_ver="7.0-40000"

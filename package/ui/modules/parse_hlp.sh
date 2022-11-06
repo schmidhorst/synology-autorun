@@ -46,7 +46,7 @@ logInfoNoEcho() {
     ll=1 # defaultvalue  
   fi
   if [[ "$ll" -le  "$LOGLEVEL" ]]; then
-	  /bin/echo -e "$(date "$DTFMT"): $1" >> "$LOGFILE"
+	  /bin/echo -e "$(date "$DTFMT"): $1" >> "$LOG"
   fi
 }
 

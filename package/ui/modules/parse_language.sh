@@ -19,9 +19,9 @@
 #  Author 3:    Horst Schmid, 2022                                   #
 #  License:     GNU GPLv3                                            #
 #  ----------------------------------------------------------------  #
-#  Version:     2022-09-27                                           #
+#  Version:     2022-11-06                                           #
 #********************************************************************#
-
+bDebugPL=0
 # DSM language
 gui_lang=$(/bin/get_key_value /etc/synoinfo.conf language)
 mail_lang=$(/bin/get_key_value /etc/synoinfo.conf maillang) # e.g. ger, global setting, not individual user!
@@ -30,11 +30,21 @@ if [[ -n "$1" ]]; then
 else
   user=$(whoami) # EnvVar $USER may be not well set (whoami may be <appName>)
 fi
+if [[ -z "$SCRIPT_NAME" ]]; then  # direct start in debug run
+  app_name="autorun" 
+  SCRIPT_NAME="/webman/3rdparty/autorun"
+  echo "parse_language.sh started and switched to debug mode ..."
+  bDebugPL=1
+else
+  app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
+  app_name=${app_link##*/} # "<appName>"
+fi
 
-app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
-app_name=${app_link##*/} # "<appName>"
-LOG="/var/tmp/${app_name}.log"
-
+LOG="/var/log/tmp/${app_name}.log"
+echo "$(date '+%Y-%m-%d %H:%M:%S'): parse_language.sh started ..." >> "$LOG"
+if [[ $bDebugPL -eq 1 ]]; then
+  echo "see $LOG" 
+fi
 # userpreferencePathName="$(/bin/get_key_value /etc/synoinfo.conf userpreference_realpath)/$user/usersettings" # "/volume1/@userpreference/<user>/usersettings"
 # # contains ...},"Personal":{"dateFormat":"Y-m-d","lang":"def","timeFormat":"H:i"}...
 # # even if we have had ${login_result} != "success" in showlog.cgi, then still no access!
@@ -100,8 +110,9 @@ if [ ! -f "$lngFile" ]; then
   used_lang="enu"
   lngFile="texts/enu/lang.txt"
 fi
-
+# echo 'before source "$lngFile"'
 source "$lngFile"
+# echo 'after source "$lngFile"'
 # setup $fingerprint0, $fingerprint1count0, $fingerprint1count1, $fingerprint2, ...
 res=$?
 if [[ -n "$LOG" ]]; then
@@ -111,7 +122,12 @@ if [[ -n "$LOG" ]]; then
     echo "$result" >> "$LOG"
   fi  
 fi
-if [[ "$res" -ne 0 ]] && [[ "$used_lang != "enu" ]]; then
+
+if [[ "$res" -ne 0 ]] && [[ "$used_lang" != "enu" ]]; then
+  echo "$(date '+%Y-%m-%d %H:%M:%S'): Failed to load $lngFile: res=$res" >> "$LOG"
+  if [[ $bDebugPL -eq 1 ]]; then 
+    echo "not enu"
+  fi  
   lngFile="texts/enu/lang.txt"
   source "$lngFile"
   res=$?
@@ -122,6 +138,14 @@ if [[ "$res" -ne 0 ]] && [[ "$used_lang != "enu" ]]; then
       echo "$result" >> "$LOG"
     fi  
   fi  
+else
+  if [[ $bDebugPL -eq 1 ]]; then 
+    echo "enu"
+  fi  
 fi  
-exit $res
+if [[ $bDebugPL -eq 1 ]]; then
+  echo "... parse_language.sh done with res=$res" 
+fi
+echo "$(date '+%Y-%m-%d %H:%M:%S'): ... parse_language.sh done, lng= with res=$res" >> "$LOG"
+
 

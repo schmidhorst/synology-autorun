@@ -20,6 +20,10 @@ bDebug="0" # no Buttons for the LED control at bottom as permission is not suffi
 # --------------------------------------------------------------
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
   # SCRIPT_NAME=/webman/3rdparty/<appName>/settings.cgi
+if [[ -z "$SCRIPT_NAME" ]]; then  # direct start in debug run 
+  SCRIPT_NAME="/webman/3rdparty/autorun/index.cgi"
+  bDebug=1
+fi
   # $0=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi 
 app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
 app_name=${app_link##*/} # "<appName>"
@@ -28,7 +32,7 @@ app_name=${app_link##*/} # "<appName>"
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
   # REQUEST_URI=/webman/3rdparty/<appName>/settings.cgi
   # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
-display_name="Tool for script autorun at storage (USB or eSATA) to DSM 7" # used as title of Page 
+display_name="Tool for an script autorun at storage (USB or eSATA) to DSM 7" # used as title of Page 
 LOG="/var/log/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
 echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' ..." >> "$LOG"
@@ -52,53 +56,57 @@ fi
 
 # Evaluate app authentication
 # To evaluate the SynoToken, change REQUEST_METHOD to GET
-[[ "${REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="GET" && OLD_REQUEST_METHOD="POST"
+if [[ "${REQUEST_METHOD}" == "POST" ]]; then
+  OLD_REQUEST_METHOD="POST"
+  REQUEST_METHOD="GET"
+fi
 # Read out and check the login authorization  ( login.cgi )
-syno_login=$(/usr/syno/synoman/webman/login.cgi)
+if [[ "$bDebug" -eq 0 ]]; then
+  syno_login=$(/usr/syno/synoman/webman/login.cgi)
+  # echo -e "\n$(date "$DTFMT"): syno_login='$syno_login'" >> "$LOG"
 
-# echo -e "\n$(date "$DTFMT"): syno_login='$syno_login'" >> "$LOG"
-
-# SynoToken ( only when protection against Cross-Site Request Forgery Attacks is enabled ):
-if echo "${syno_login}" | grep -q SynoToken ; then
-  syno_token=$(echo "${syno_login}" | grep SynoToken | cut -d ":" -f2 | cut -d '"' -f2)
-fi
-if [ -n "${syno_token}" ]; then
-  [ -z "${QUERY_STRING}" ] && QUERY_STRING="SynoToken=${syno_token}" || QUERY_STRING="${QUERY_STRING}&SynoToken=${syno_token}"
-fi
-# Login permission ( result=success ):
-if echo "${syno_login}" | grep -q result ; then
-  login_result=$(echo "${syno_login}" | grep result | cut -d ":" -f2 | cut -d '"' -f2)
-fi
-if [[ ${login_result} != "success" ]]; then
-  logInfo 0 "Access denied, no login permission"
-  exit
-fi
-# Login successful ( success=true )
-if echo "${syno_login}" | grep -q success ; then
-  login_success=$(echo "${syno_login}" | grep success | cut -d "," -f3 | grep success | cut -d ":" -f2 | cut -d " " -f2 )
-fi
-if [[ ${login_success} != "true" ]]; then
-  logInfo 0 "Access denied, login failed"
-  exit
-fi
-# Set REQUEST_METHOD back to POST again:
-[[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
-# Reading user/group from authenticate.cgi
-syno_user=$(/usr/syno/synoman/webman/authenticate.cgi) # authenticate.cgi is a Synology binary
-logInfoNoEcho 6 "authenticate.cgi: syno_user=$syno_user"
-# Check if the user exists:
-user_exist=$(grep -o "^${syno_user}:" /etc/passwd)
-# [ -n "${user_exist}" ] && user_exist="yes" || exit
-if [ -z "${user_exist}" ]; then
-  logInfo 0 "User '${syno_user}' does not exist"
-  exit
-fi
-# Check whether the local user belongs to the "administrators" group:
-if id -G "${syno_user}" | grep -q 101; then
-  is_admin="yes"
-else
-  is_admin="no"
-  logInfoNoEcho 2 "User ${syno_user} is no admin"
+  # SynoToken ( only when protection against Cross-Site Request Forgery Attacks is enabled ):
+  if echo "${syno_login}" | grep -q SynoToken ; then
+    syno_token=$(echo "${syno_login}" | grep SynoToken | cut -d ":" -f2 | cut -d '"' -f2)
+  fi
+  if [ -n "${syno_token}" ]; then
+    [ -z "${QUERY_STRING}" ] && QUERY_STRING="SynoToken=${syno_token}" || QUERY_STRING="${QUERY_STRING}&SynoToken=${syno_token}"
+  fi
+  # Login permission ( result=success ):
+  if echo "${syno_login}" | grep -q result ; then
+    login_result=$(echo "${syno_login}" | grep result | cut -d ":" -f2 | cut -d '"' -f2)
+  fi
+  if [[ ${login_result} != "success" ]]; then
+    logInfoNoEcho 0 "Access denied, no login permission"
+    exit
+  fi
+  # Login successful ( success=true )
+  if echo "${syno_login}" | grep -q success ; then
+    login_success=$(echo "${syno_login}" | grep success | cut -d "," -f3 | grep success | cut -d ":" -f2 | cut -d " " -f2 )
+  fi
+  if [[ ${login_success} != "true" ]]; then
+    logInfoNoEcho 0 "Access denied, login failed"
+    exit
+  fi
+  # Set REQUEST_METHOD back to POST again:
+  [[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
+  # Reading user/group from authenticate.cgi
+  syno_user=$(/usr/syno/synoman/webman/authenticate.cgi) # authenticate.cgi is a Synology binary
+  logInfoNoEcho 6 "authenticate.cgi: syno_user=$syno_user"
+  # Check if the user exists:
+  user_exist=$(grep -o "^${syno_user}:" /etc/passwd)
+  # [ -n "${user_exist}" ] && user_exist="yes" || exit
+  if [ -z "${user_exist}" ]; then
+    logInfoNoEcho 0 "User '${syno_user}' does not exist"
+    exit
+  fi
+  # Check whether the local user belongs to the "administrators" group:
+  if id -G "${syno_user}" | grep -q 101; then
+    is_admin="yes"
+  else
+    is_admin="no"
+    logInfoNoEcho 2 "User ${syno_user} is no admin"
+  fi
 fi
 
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
@@ -116,8 +124,9 @@ fi
 unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_authenticated
 
 # Evaluate app authentication
-# To evaluate the SynoToken, change REQUEST_METHOD to GET
-[[ "${REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="GET" && OLD_REQUEST_METHOD="POST"
+if [[ "$bDebug" -eq 0 ]]; then
+  # To evaluate the SynoToken, change REQUEST_METHOD to GET
+  [[ "${REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="GET" && OLD_REQUEST_METHOD="POST"
   # Read out and check the login authorization  ( login.cgi )
   syno_login=$(/usr/syno/synoman/webman/login.cgi)
   # SynoToken ( only when protection against Cross-Site Request Forgery Attacks is enabled ):
@@ -132,7 +141,7 @@ unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_auth
     login_result=$(echo "${syno_login}" | grep result | cut -d ":" -f2 | cut -d '"' -f2)
   fi
   if [[ ${login_result} != "success" ]]; then
-    logInfo 0 "Access denied, no login permission"
+    logInfoNoEcho 0 "Access denied, no login permission"
     exit
   fi
   # Login successful ( success=true )
@@ -140,12 +149,14 @@ unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_auth
     login_success=$(echo "${syno_login}" | grep success | cut -d "," -f3 | grep success | cut -d ":" -f2 | cut -d " " -f2 )
   fi
   if [[ ${login_success} != "true" ]]; then
-    logInfo 0 "Access denied, login failed"
+    logInfoNoEcho 0 "Access denied, login failed"
     exit
   fi
   # Set REQUEST_METHOD back to POST again:
   [[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
-
+else
+  is_admin="yes"
+fi
 
 # Set variables to "readonly" for protection or empty contents
 unset syno_login rar_data syno_privilege
@@ -265,11 +276,11 @@ fi
   #  read -n ${CONTENT_LENGTH} POST_STRING
   #fi
 
+mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}"
+mapfile -d "&" -t POST_vars <<< "${POST_STRING}"
 # Securing the Internal Field Separator (IFS) as well as the separation
 # of the GET/POST key/value requests, by locating the separator "&"
 if [ -z "${backupIFS}" ]; then
-  mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}"
-  mapfile -d "&" -t POST_vars <<< "${POST_STRING}"
   backupIFS="${IFS}"
 #  IFS='&'
 #  GET_vars=("${QUERY_STRING}")
@@ -287,38 +298,37 @@ declare -A get # associative array
 for ((i=0; i<${#GET_vars[@]}; i+=1)); do
   key=${GET_vars[i]%%=*}
   key=$(urldecode "$key")
-  val=${GET_vars[i]#*=}
-  val=$(urldecode "$val")
-  logInfoNoEcho 8 "i=$i, key='$key', value='$val'"
-  get[$key]=$val
-  if [[ "$key" == "action" ]]; then
-    if [[ "$val" == "copyLedOn" ]]; then # not working!!! Would require root permission!
-      res=$(/bin/echo "@" > /dev/ttyS1) # @ 	0x40 	Copy LED on
-      ret=$?
-      logInfoNoEcho 8 "CopyLED ON done with $ret: '$res'"
-    elif [[ "$val" == "copyLedOff" ]]; then # not working!!! Would require root permission!
-      res=$(/bin/echo "B" > /dev/ttyS1) # B 	0x42 	Copy LED off
-      ret=$?
-      logInfoNoEcho 8 "CopyLED OFF done with $ret: '$res'"
-    elif [[ "$val" == "statusLedGreen" ]]; then  # not working!!! Would require root permission!  
-      /bin/echo "8" > /dev/ttyS1 # 8 	0x38 	Status LED green (default)
-      logInfoNoEcho 8 "StatusLED green done"
-    elif [[ "$val" == "statusLedOff" ]]; then  # not working!!! Would require root permission!   
-      /bin/echo "7" > /dev/ttyS1 # 7 	0x37 	Status LED off
-      logInfoNoEcho 8 "StatusLED green done"
+  if [[ -n "$key" ]]; then
+    val=${GET_vars[i]#*=}
+    val=$(urldecode "$val")
+    logInfoNoEcho 8 "i=$i, key='$key', value='$val'"
+    get[$key]=$val
+    if [[ "$key" == "action" ]]; then
+      if [[ "$val" == "copyLedOn" ]]; then # not working!!! Would require root permission!
+        res=$(/bin/echo "@" > /dev/ttyS1) # @ 	0x40 	Copy LED on
+        ret=$?
+        logInfoNoEcho 8 "CopyLED ON done with $ret: '$res'"
+      elif [[ "$val" == "copyLedOff" ]]; then # not working!!! Would require root permission!
+        res=$(/bin/echo "B" > /dev/ttyS1) # B 	0x42 	Copy LED off
+        ret=$?
+        logInfoNoEcho 8 "CopyLED OFF done with $ret: '$res'"
+      elif [[ "$val" == "statusLedGreen" ]]; then  # not working!!! Would require root permission!  
+        /bin/echo "8" > /dev/ttyS1 # 8 	0x38 	Status LED green (default)
+        logInfoNoEcho 8 "StatusLED green done"
+      elif [[ "$val" == "statusLedOff" ]]; then  # not working!!! Would require root permission!   
+        /bin/echo "7" > /dev/ttyS1 # 7 	0x37 	Status LED off
+        logInfoNoEcho 8 "StatusLED green done"
+      fi
     fi
-  fi
+    # Reset saved GET/POST requests if main is set
+    if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
+      [ -f "${get_request}" ] && rm "${get_request}"
+      [ -f "${post_request}" ] && rm "${post_request}"
+    fi
 
-# 2022-10-22 02:13:38: i=0, GET_key='get[action=copyLedOff&SynoToken=D2NLWO8VQODOA&SynoToken=D2NLWO8VQODOA]', GET_value=''
-  
-  # Reset saved GET/POST requests if main is set
-  if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
-    [ -f "${get_request}" ] && rm "${get_request}"
-    [ -f "${post_request}" ] && rm "${post_request}"
-  fi
-
-  # Saving GET requests for later processing
-  /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
+    # Saving GET requests for later processing
+    /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
+  fi # if [[ -n "$key" ]]; then 
 done
 
 if [[ ${#GET_vars[@]} -gt 0 ]]; then
@@ -329,14 +339,15 @@ fi
 /usr/syno/bin/synosetkeyvalue "${get_request}" "get[SynoToken]" "$syno_token"
 
 # Analyze incoming POST requests and process to ${var[key]}="$value" variables
-declare -A POST_vars
 for ((i=0; i<${#POST_vars[@]}; i+=1)); do
   key=${POST_vars[i]%%=*}
   key=$(urldecode "$key")
   val=${POST_vars[i]#*=}
   val=$(urldecode "$val")
   logInfoNoEcho 8 "i=$i, key='$key', value='$val'"
-  get[$key]=$val
+  if [[ -n "$key" ]]; then
+    get[$key]=$val
+  fi  
 done
 
 if [[ ${#POST_vars[@]} -gt 0 ]]; then

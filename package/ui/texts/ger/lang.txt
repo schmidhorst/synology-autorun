@@ -1,5 +1,5 @@
 #!/bin/bash
-# File: ger/lang.txt - coded in utf-8
+# File coded in utf-8
 # Language variables for dialog pages
 # --------------------------------------------------------------
 LoginRequired="Login erforderlich"

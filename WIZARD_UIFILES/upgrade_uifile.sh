@@ -25,7 +25,7 @@ fi
 
 JSON="$(dirname "$0")/wizard_$lng.json"
 if [[ ! -f "$JSON" ]]; then # no translation to the actual language available
-  JSON=$(dirname "$0")/wizard.json # using English version
+  JSON=$(dirname "$0")/wizard_enu.json # using English version
 fi  
 if [ ! -f "$JSON" ]; then
   echo "$(date "$DTFMT"): ERROR 11: WIZARD template file '$JSON' not available!" | tee -a "$LOG"

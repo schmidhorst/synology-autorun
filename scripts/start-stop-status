@@ -68,16 +68,17 @@ case $1 in
             echo "  ######## Please convert to UTF-8! ##########"
             eval $(grep -s "msg15=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
             echo "$msg15" > "$SYNOPKG_TEMP_LOGFILE"
-          fi        
+          fi # CRLF       
         fi
       else # if [[ -n "$scriptAfterEject" ]]
         echo "$(date "$DTFMT"): start-stop-status: No script after eject<br/>" >> "$LOG"            
       fi # if [[ -n "$scriptAfterEject" ]]
 
+      # check whether the entered user/usergroup for desktop notification is valid:
       notyfyUsers=$(grep "^NOTIFY_USERS=" "$configFilePathName")
       notyfyUsers=${notyfyUsers#NOTIFY_USERS=\"}
       notyfyUsers=${notyfyUsers%\"}
-      if [[ -n "$notyfyUsers" ]]; then
+      if [[ -n "$notyfyUsers" ]]; then # not empty ==> desktop messages active
         if [[ $notyfyUsers == "@"* ]]; then # Groupname
           # syngroup --enum all requires root access
           groupExist=$(synogroup --enum all | grep "${notyfyUsers:1}") # account which are allowing login
@@ -96,9 +97,13 @@ case $1 in
             eval $(grep -s "notifyUserError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
             echo "$notifyUserError" > "$SYNOPKG_TEMP_LOGFILE"
             sed -i 's/^NOTIFY_USERS=*$/^NOTIFY_USERS=@users/' "$configFilePathName"      
-          fi
-        fi
+          fi # not existing user
+        fi # if goupe else user
       fi
+      
+      # cgi files don't have access to language of users. So get now the language settings for all administrators:
+      getUserLngsScript="/var/packages/$SYNOPKG_PKGNAME/target/ui/modules/get_languages.sh"
+      source "$getUserLngsScript" 
       
     fi # user root
     if [ -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" ];  then

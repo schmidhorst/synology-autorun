@@ -112,6 +112,7 @@ else
   echo "Due to debug mode login skipped"
 fi
 
+# get the installed version of the package for later comparison to latest version on github: 
 local_version=$(cat "/var/packages/${app_name}/INFO" | grep ^version | cut -d '"' -f2)
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
   source "${app_home}/modules/parse_language.sh" "${syno_user}"
@@ -122,7 +123,7 @@ else
   logInfoNoEcho 0 "Loading ${app_home}/modules/parse_language.sh not executable"
   exit 
 fi
-# ${used_lang} is now e.g. enu
+
 
 # Resetting access permissions
 unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_authenticated
@@ -173,12 +174,19 @@ fi
 unset syno_login rar_data syno_privilege
 readonly syno_token syno_user user_exist is_admin # is_authenticated
 
+licenceFile="licence_${used_lang}.html"
+if [[ ! -f "licence_${used_lang}.html" ]]; then
+  licenceFile="licence_enu.html"
+fi
+
+
 if [ "$is_admin" != "yes" ]; then
   echo "Content-type: text/html"
   echo  
   echo "<!doctype html><html lang=\"${SYNO2ISO[${used_lang}]}\">"
   echo "<HEAD><TITLE>$app_name: ${LoginRequired}</TITLE></HEAD><BODY>${PleaseLogin}<br/>"
-  echo "<button onclick=\"location.href='licence.html'\" type=\"button\">${btnShowLicence}</button> "
+  echo "<button onclick=\"location.href='$licenceFile'\" type=\"button\">${btnShowLicence}</button> "
+
   echo "<br/></BODY></HTML>"
   logInfoNoEcho 0 "Admin Login required!"
   echo "Admin Login required!"
@@ -400,8 +408,7 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
             echo "<button onclick=\"location.href='index.cgi'\" type=\"button\">${btnShowSimpleLog}</button> "
           fi  
           echo "<button onclick=\"location.href='settings.cgi'\" type=\"button\">${btnShowSettings}</button> "
-          echo "<button onclick=\"location.href='licence.html'\" type=\"button\">${btnShowLicence}</button> "
-
+          echo "<button onclick=\"location.href='$licenceFile'\" type=\"button\">${btnShowLicence}</button> "
           echo "<p><strong>$st</strong></p>"
           echo "</header><table>"
 

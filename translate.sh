@@ -1,0 +1,227 @@
+#!/bin/bash
+# api.deepl.com
+# Here is where the magic with DeepL happens. We get the JSON response from
+# Look at https://www.deepl.com/docs-api/translating-text/request/ for supported languages
+bExec=1
+SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
+source "$SCRIPTPATHTHIS/package/ui/modules/parse_hlp.sh" # urlencode, urldecode
+SCRIPTPATHPARENT=${SCRIPTPATHTHIS%/*}
+if [[ -f "$SCRIPTPATHPARENT/DeepLApiKey.txt" ]]; then
+  apikey=$(cat "$SCRIPTPATHPARENT/DeepLApiKey.txt")
+  echo "DeepL Api-Key '$apikey'"
+else
+  echo "Datei $SCRIPTPATHPARENT/DeepLApiKey.txt mit dem DeepL ApiKey nicht gefunden!"
+  exit 2
+fi
+deepl_url="https://api.deepl.com/v2/translate?auth_key=$apikey"
+#declare -A ISO2SYNO
+#ISO2SYNO=( ["de"]="ger" ["en"]="enu" ["zh"]="chs" ["cs"]="csy" ["ja"]="jpn" ["ko"]="krn" ["da"]="dan" ["fr"]="fre" ["it"]="ita" ["nl"]="nld" ["no"]="nor" ["pl"]="plk" ["ru"]="rus" ["es"]="spn" ["sv"]="sve" ["hu"]="hun" ["tr"]="trk" ["pt"]="ptg")
+declare -A SYNO2ISO
+SYNO2ISO=( ["ger"]="de" ["enu"]="en" ["chs"]="zh" ["csy"]="cs" ["jpn"]="ja" ["krn"]="ko" ["dan"]="da" ["fre"]="fr" ["ita"]="it" ["nld"]="nl" ["nor"]="no" ["plk"]="pl" ["rus"]="ru" ["spn"]="es" ["sve"]="sv" ["hun"]="hu" ["trk"]="tr" ["ptg"]="pt")
+
+# synoLangs="enu chs krn ger fre ita spn jpn dan nor sve nld rus plk ptb ptg hun trk csy"
+# synoLangs="enu chs ger fre ita spn jpn dan sve nld rus plk ptg hun trk csy"
+
+#synoLangs="chs fre ita spn jpn dan sve nld rus plk ptg hun trk csy"
+synoLangs="fre"
+
+sourceSynoLang="enu"
+sourceIsoLang="${SYNO2ISO[$sourceSynoLang]}"
+
+# sourcable files:
+filePath="$SCRIPTPATHTHIS/package/ui/texts"
+sourceablefiles=( "$filePath/${sourceSynoLang}/lang.txt" "$filePath/${sourceSynoLang}/strings" )
+
+# json files from Wizzards:
+wizzardfiles=( "$SCRIPTPATHTHIS/WIZARD_UIFILES/wizard_$sourceSynoLang.json" "$SCRIPTPATHTHIS/WIZARD_UIFILES/uninstall_uifile_$sourceSynoLang" )
+
+# html files:
+htmlfiles=( "$SCRIPTPATHTHIS/package/ui/licence_$sourceSynoLang.html" )
+
+allfiles=( "$sourceablefiles" "$wizzardfiles" "$htmlfiles" )
+for sourcefile in "${allfiles[@]}"; do
+  if [[ ! -f "$sourcefile" ]]; then
+    echo "Sourecfile '$sourcefile' for translation is missing!"
+    exit 2
+  fi
+done
+
+# line by line translation of sourcable files with removed item label like "msg1="
+for sourcefile in "${sourceablefiles[@]}"; do
+  for synoLang in $synoLangs; do
+    targetIsoLang="${SYNO2ISO[$synoLang]}"
+    srcLngPath=$(dirname "$sourcefile")
+    # echo "srcLngPath=$srcLngPath, ${srcLngPath##*/}"
+    if [[ "${srcLngPath##*/}" == "$sourceSynoLang" ]]; then # lng in path, seperate folders for each language
+      lngPath=${srcLngPath%/*} # parent without e.g. "ger"
+      targetFile="$lngPath/${synoLang}/$(basename "$sourcefile")"
+      if [[ "$bExec" -ne "0" ]]; then
+        if [[ -f "$targetFile" ]]; then
+          rm "$targetFile" 
+        elif [[ ! -d "$filePath/${synoLang}" ]]; then
+          mkdir "$filePath/${synoLang}" 
+        fi
+      fi
+    else # lng in file name
+      targetFile=$(echo "$sourcefile" | sed "s/_$sourceSynoLang/_$synoLang/")
+      if [[ "$bExec" -ne "0" ]]; then
+        if [[ -f "$targetFile" ]]; then
+          rm "$targetFile" 
+        fi
+      fi         
+    fi
+    lineCount=0
+    while read line; do # read all settings from file
+      lineCount=$((lineCount+1))
+      if [[ ${line} == "#"* ]] || [[ ${line} == "["* ]]; then
+        if [[ "$bExec" -ne "0" ]]; then
+          echo "$line" >> "$targetFile"
+          if [[ "$lineCount" -eq "1" ]]; then # add an comment line
+            echo "# This file was generated via DeepL machine translation from $sourceIsoLang" >> "$targetFile"        
+          fi
+        fi       
+      else
+        itemName=${line%%=*}
+        val=$(echo "${line#*=}" | sed 's/^"//' | sed 's/"$//')
+        preparedsource="$val"
+        # echo "$synoLang $targetIsoLang: '$source' '$preparedsource'"
+        param="target_lang=$targetIsoLang&source_lang=$sourceIsoLang"
+        if [[ "$bExec" -ne "0" ]]; then
+          translatedraw=$(curl -Gs "$deepl_url" --data-urlencode "text=$preparedsource" -d "$param")
+          res=$? 
+          if [ $res -eq 0 ]; then # If the curl above was sucessful
+            # Get the translated text from the JSON response:
+            translated=$(echo "$translatedraw" | jq -c '.translations[0].text')
+            # echo "$translated"
+            translated=$(urldecode "$translated") 
+            echo "$synoLang $targetIsoLang: $translated"
+            echo "$itemName=$translated" >> "$targetFile"
+          else # If the curl above was NOT sucessful
+            echo "The request failed: $res"
+            exit 1
+          fi
+        else
+          echo "to translate: '$preparedsource'"
+        fi        
+      fi
+    done < "$sourcefile" # while read: Works well even if last line has no \n!    
+  done # for synoLang in $synoLangs; do
+done # for sourcefile in $sourceablefiles; do
+  
+# translation of lines with "desc": and "step_title": in wizzard files: 
+for sourcefile in "${wizzardfiles[@]}"; do
+  for synoLang in $synoLangs; do
+    targetIsoLang="${SYNO2ISO[$synoLang]}"
+    srcLngPath=$(dirname "$sourcefile")
+    # echo "srcLngPath=$srcLngPath, ${srcLngPath##*/}"
+    if [[ "${srcLngPath##*/}" == "$sourceSynoLang" ]]; then # lng in path, seperate folders for each language
+      lngPath=${srcLngPath%/*} # parent without e.g. "ger"
+      targetFile="$lngPath/${synoLang}/$(basename "$sourcefile")"    
+    else # lng in file name
+      targetFile=$(echo "$sourcefile" | sed "s/_$sourceSynoLang/_$synoLang/")     
+    fi
+    if [[ -f "$targetFile" ]]; then
+      rm "$targetFile" 
+    elif [[ ! -d "$filePath/${synoLang}" ]]; then
+      mkdir "$filePath/${synoLang}" 
+    fi
+    lineCount=0
+    while read line; do # read all settings from file
+      lineCount=$((lineCount+1))
+      val=""
+      if [[ ${line} == *"\"step_title\""* ]] || [[ ${line} == "\"desc\"" ]]; then
+        prefix=${line%%:*}
+        #val=$(echo "${line#*=}" | sed 's/^"//' | sed 's/"$//')
+        val="${line#*:}" # e.g. "Konfiguration",
+        echo "raw val='$val'"
+        postfix="${val##*\"}" # e.g. trailing comma
+        val="${val%\"*}"
+        val="${val#*\"}"
+        echo "postfix='$postfix', remaining='$val'"
+      elif [[ ${line} == *"\"fn\""*"return" ]]; then # "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Eine positive Zahl eingeben!'; }"
+        prefix=${line%return*}
+        val=${line##*return }
+        postfix=${line##*\'}
+        val=$(echo "$val" | sed "s/\$postfix$//")
+      fi      
+      if [[ -n $val ]]; then
+        if [[ "$bExec" -ne "0" ]]; then
+          preparedsource="$val"
+          # echo "$synoLang $targetIsoLang: '$source' '$preparedsource'"
+          param="target_lang=$targetIsoLang&source_lang=$sourceIsoLang"
+          if [[ "${targetFile}" == *"html" ]]; then
+            param="$param&tag_handling=html"        
+          fi
+          translatedraw=$(curl -Gs "$deepl_url" --data-urlencode "text=$preparedsource" -d "$param")
+          res=$? 
+          if [ $res -eq 0 ]; then # If the curl above was sucessful
+            # Get the translated text from the JSON response:
+            translated=$(echo "$translatedraw" | jq -c '.translations[0].text')
+            translated=$(urldecode "$translated") 
+            echo "$synoLang $targetIsoLang: $translated"
+            echo "$prefix\"$translated\"$postfix" >> "$targetFile"
+          else # If the curl above was NOT sucessful
+            echo "The request failed: $res"
+            exit 1
+          fi # if [ $res -eq 0 ] else
+        else # only simulation
+          echo "source line: '$line'"
+          echo "to translate: '$val'"
+          echo "result line: '${prefix}: \"XXXX\"${postfix}'"
+        fi # translate or simulate
+
+      else # $val empty: copy line unchanged:
+        if [[ "$bExec" -ne "0" ]]; then
+          echo "$line" >> "$targetFile"
+        fi  
+      fi
+    done < "$sourcefile" # while read: Works well even if last line has no \n!    
+  done # for synoLang in $synoLangs; do
+done # for sourcefile in ${wizzardfiles[@]}; do
+
+
+# translation of html files
+for sourcefile in "${htmlfiles[@]}"; do
+  for synoLang in $synoLangs; do
+    targetIsoLang="${SYNO2ISO[$synoLang]}"
+    srcLngPath=$(dirname "$sourcefile")
+    # echo "srcLngPath=$srcLngPath, ${srcLngPath##*/}"
+    if [[ "${srcLngPath##*/}" == "$sourceSynoLang" ]]; then # lng in path, seperate folders for each language
+      
+      lngPath=${srcLngPath%/*} # parent without e.g. "ger"
+      targetFile="$lngPath/${synoLang}/$(basename "$sourcefile")"
+      if [[ "$bExec" -ne "0" ]]; then
+        if [[ -f "$targetFile" ]]; then
+          rm "$targetFile" 
+        elif [[ ! -d "$filePath/${synoLang}" ]]; then
+          mkdir "$filePath/${synoLang}" 
+        fi
+      fi
+    else # lng in file name
+      targetFile=$(echo "$sourcefile" | sed "s/_$sourceSynoLang/_$synoLang/")
+    fi
+    val=$(<$sourcefile)
+    param="target_lang=$targetIsoLang&source_lang=$sourceIsoLang&tag_handling=html"        
+    if [[ "$bExec" -ne "0" ]]; then
+      translatedraw=$(curl -Gs "$deepl_url" --data-urlencode "text=$val" -d "$param")
+      res=$? 
+      if [ $res -eq 0 ]; then # If the curl above was sucessful
+        # Get the translated text from the JSON response:
+        printf %s "$translatedraw" > "${targetFile}_json"
+        translated=$(echo "$translatedraw" | jq -c '.translations[0].text')
+        printf %s "$translated" > "${targetFile}_extracted"
+        echo "to $synoLang translated $sourcefile:"
+        translated=$(urldecode "$translated") 
+        # echo "$translated"
+        # printf %s "$translated" > "$targetFile"
+        echo -e "$translated" > "$targetFile"        
+      else # If the curl above was NOT sucessful
+        echo "The request failed: $res"
+        exit 1
+      fi
+    else
+      echo "Source: '$sourcefile', Target: '$targetFile'"    
+    fi        
+  done # for synoLang in $synoLangs; do
+done # for sourcefile in $htmlfiles; do
+

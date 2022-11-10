@@ -33,7 +33,7 @@ fi
 if [[ -f "$(dirname "$0")/wizard_$lng.json" ]]; then
   JSON="$(dirname "$0")/wizard_$lng.json"
 else
-  JSON="$(dirname "$0")/wizard.json"
+  JSON="$(dirname "$0")/wizard_enu.json"
 fi
 if [ ! -f "$JSON" ]; then
   echo "$(date "$DTFMT"): ERROR 11: WIZARD template file '$JSON' not available!" | tee -a "$LOG"

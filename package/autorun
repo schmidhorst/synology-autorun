@@ -342,7 +342,7 @@ if [ -x "$MOUNTPATH/$SCRIPT" ];then
   line=""
   if [ -f "$KNOWNSCRIPTSFILEPATHNAME" ]; then  # FingerprintFile is available
     # check whether the hash of the actual script on USB is already registerd
-    line=$(/bin/grep -x "$FINGERPRINT2" "$KNOWNSCRIPTSFILEPATHNAME")
+    line=$(/bin/grep "$FINGERPRINT2" "$KNOWNSCRIPTSFILEPATHNAME")
     logInfo 5 "Matching Fingerprint line: '$line'"
     line=${line%%#*} # remove comments
     line=${line%% } # trim    

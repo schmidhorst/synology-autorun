@@ -44,7 +44,7 @@ echo "... finished file coding check"
 
 # Check for well formed JSON:
 errCnt=0
-for f1 in package/ui/config package/ui/index.conf conf/priviledge conf/priviledge.root conf/resource WIZARD_UIFILES/install_uifile WIZARD_UIFILES/upgrade_uifile WIZARD_UIFILES/upgrade WIZARD_UIFILES/wizard.json WIZARD_UIFILES/wizard_ger.json
+for f1 in package/ui/config package/ui/index.conf conf/priviledge conf/priviledge.root conf/resource WIZARD_UIFILES/install_uifile WIZARD_UIFILES/upgrade_uifile WIZARD_UIFILES/upgrade WIZARD_UIFILES/wizard_*.json
 do
   f2="$SCRIPTPATHTHIS/$1$f1"
   if [[ -f "$f2" ]]; then

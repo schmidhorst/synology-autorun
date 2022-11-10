@@ -42,24 +42,17 @@ fi
 
 LOG="/var/log/tmp/${app_name}.log"
 echo "$(date '+%Y-%m-%d %H:%M:%S'): parse_language.sh started ..." >> "$LOG"
+echo "param1='$1', whoami=$(whoami)" >> "$LOG"
 if [[ $bDebugPL -eq 1 ]]; then
   echo "see $LOG" 
 fi
-# userpreferencePathName="$(/bin/get_key_value /etc/synoinfo.conf userpreference_realpath)/$user/usersettings" # "/volume1/@userpreference/<user>/usersettings"
-# # contains ...},"Personal":{"dateFormat":"Y-m-d","lang":"def","timeFormat":"H:i"}...
 # # even if we have had ${login_result} != "success" in showlog.cgi, then still no access!
-# if [[ -f "$userpreferencePathName" ]]; then
-#   offs1=$(grep -b -o '},"Personal":{' "$userpreferencePathName")
-#   echo "User Language is at about $offs1 in $userpreferencePathName" >> "$LOG"
-#   offs1=${offs1%%:*}
-#   offs2=$(( offs1 + 75 ))
-#   str=$(cut -b "$offs1-$offs2" "$userpreferencePathName")
-#   echo "User Language is in '$str'" >> "$LOG"
-#   user_lng=${str#*lang\":\"}
-#   user_lng=${user_lng%\"*}
-# else
-#   echo "UserPreferences file '$userpreferencePathName' not found / not accessible " >> "$LOG"
-# fi
+# usersettingsfile="/usr/syno/etc/preference/${user}/usersettings"
+# Therefore languages are pre-fetched in the start-stop script:
+LNGDATA="/var/packages/${app_name}/var/lanuages"
+line=$(grep "^$user=" "$LNGDATA")
+userLng="${line#*=}"
+
 declare -A ISO2SYNO
 ISO2SYNO=( ["de"]="ger" ["en"]="enu" ["zh"]="chs" ["cs"]="csy" ["jp"]="jpn" ["ko"]="krn" ["da"]="dan" ["fr"]="fre" ["it"]="ita" ["nl"]="nld" ["no"]="nor" ["pl"]="plk" ["ru"]="rus" ["sp"]="spn" ["sv"]="sve" ["hu"]="hun" ["tr"]="trk" ["pt"]="ptg" )
 declare -A SYNO2ISO
@@ -74,6 +67,8 @@ if [[ -n "${LANG}" ]]; then
   env_lng=${ISO2SYNO[$env_lng]}
 fi
 
+dsm_lang=$(cat /etc/synoinfo.conf | grep language | sed 's/language=//;s/\"//g' | egrep -o "^.{3}")
+
 if [ -n "${HTTP_ACCEPT_LANGUAGE}" ] ; then  # e.g. 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'
   echo "$(date '+%Y-%m-%d %H:%M:%S'): env http='${HTTP_ACCEPT_LANGUAGE}'" >> "$LOG"
   bl=$(echo "${HTTP_ACCEPT_LANGUAGE}" | cut -d "," -f1)
@@ -82,11 +77,14 @@ if [ -n "${HTTP_ACCEPT_LANGUAGE}" ] ; then  # e.g. 'de-DE,de;q=0.9,en-US;q=0.8,e
   # missing: if no SYNO-Language for extracted language, try the next language in the list
   # missing: if no folder texts/${http_lang}, then try the next language
 fi
-echo "$(date '+%Y-%m-%d %H:%M:%S'): env_LANG='$env_lng', httpLng='$http_lang', mailLng='$mail_lang', dsmGuiLng='$gui_lang', pkg_lng='$pkg_lng'" >> "$LOG"
+
+echo "$(date '+%Y-%m-%d %H:%M:%S'): user_lng='$userLng', dsm_lang='$dsm_lang', env_LANG='$env_lng', httpLng='$http_lang', mailLng='$mail_lang', dsmGuiLng='$gui_lang', pkg_lng='$pkg_lng'" >> "$LOG"
 
 # set >> "$LOG"
 
-if [[ -n "$pkg_lng" ]] && [[ "$pkg_lng" != "def" ]] && [[ -n "$pkg_lng" ]]; then
+if [ -n "${userLng}" -a "${userLng}" != "def" -a "${userLng}" != "null" ] ; then
+  used_lang=${userLng}
+elif [[ -n "$pkg_lng" ]] && [[ "$pkg_lng" != "def" ]] && [[ -n "$pkg_lng" ]]; then
   used_lang=$pkg_lng # n.a.
 elif [[ -n "$env_lng" ]] && [[ "$env_lng" != "def" ]] && [[ -n ${SYNO2ISO["$env_lng"]} ]]; then
   used_lang="$env_lng"  # n.a.

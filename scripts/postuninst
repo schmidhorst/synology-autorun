@@ -1,10 +1,10 @@
 #!/bin/bash
-bDebug=1  # 0: delete log files, 1: preserve log files
+bDebug=0  # 0: delete log files, 1: preserve log files
 LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 echo "$(date "$DTFMT"): postuninst V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
 # taken from DemoUiSpk7:
-if [ "${pkgwizard_remove_settings}" == "true" ]; then
+if [[ "${pkgwizard_remove_settings}" == "true" ]]; then
     rm -r "${SYNOPKG_PKGVAR}"
     echo "$(date "$DTFMT"): ${SYNOPKG_PKGVAR} removed<br/>" >> "$LOG"     
 fi

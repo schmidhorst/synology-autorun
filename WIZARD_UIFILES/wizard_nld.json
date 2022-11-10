@@ -1,0 +1,177 @@
+[{
+"step_title":"Configuratie",
+"items": [
+{"type": "textfield",
+"desc":"Het script moet zich in de hoofdmap van het externe apparaat bevinden en ingesteld zijn als uitvoerbaar voor de gebruiker 'root'. Het krijgt het koppelpunt van het apparaat (bijv. /volumeUSB1/usbshare/) als eerste parameter ($1) en de apparaatpartitie (bijv. usb1p1) als tweede ($2). Hint: Het script wordt uitgevoerd met een lege omgeving, je moet alle gebruikte commando's opgeven met pad!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Uit te voeren script",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"Een exit waarde van 100 van het script zal het apparaat ontkoppelen en uitwerpen als het script klaar is, alle andere exit waarden laten het gekoppeld. U kunt autorun stoppen in het package center om het tijdelijk uit te schakelen.<br/><br/>De zoektijd is de tijd na de trigger door udev voor het vinden van het koppelpunt wanneer een apparaat wordt aangekoppeld. De extra wachttijd geeft de DSM wat ruimte om de schijf goed te mounten voordat het script wordt gestart.<br/>Het kan zijn dat u deze tijden moet verlengen, afhankelijk van uw hardware.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Zoektijd (sec)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Wachttijd (sec)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"De grootte van de logbestanden wordt automatisch beperkt. Als het opgegeven aantal regels is bereikt, wordt de oudere helft verwijderd.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Max. aantal regels",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Het pakket genereert DSM-berichten, die op het bureaublad worden getoond aan configureerbare gebruikersgroepen of gebruikers. Voeg een @ toe aan groepsnamen, bijv. @users voor alle gebruikers.",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Berichtweergave naar",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Gebruik van \"Kopieer-LED\":<br/>0: LED wordt helemaal niet gebruikt.<br/>1: AAN tijdens lopen of uitwerpen, daarna UIT<br/>2: knipperen tijdens lopen of uitwerpen, daarna UIT<br/>3: AAN tijdens lopen of uitwerpen, daarna UIT (0/100) of knipperen (andere codes)<br/>4: knipperen tijdens lopen of uitwerpen, daarna UIT of knipperen (andere codes of uitwerpfalen)<br/>5: knipperen tijdens lopen of uitwerpen, daarna UIT (0/100) of AAN (andere codes of uitwerpfalen)",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"Kopieer LED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Gebruik van de status-LED:<br/>0: Wordt helemaal niet gebruikt<br/>1: Groen terwijl het script loopt, groen knipperend tijdens het uitwerpen, UIT als het klaar is met 0 of 100, oranje knipperend voor andere resultaten of mislukte uitwerping<br/>2: Groen knipperend terwijl het script loopt of uitgeworpen wordt, groen als het klaar is met 0 of 100, oranje knipperend voor andere resultaten of mislukte uitwerping<br/>3: Groen terwijl het script loopt en tijdens het uitwerpen, UIT als het klaar is, oranje knipperend als de uitwerping mislukt.",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"Status-LED",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Statusindicatie tijdens het uitvoeren van het script.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Pieptoon bij begin en einde",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Als het script eindigt met de exitcode 100, wordt geprobeerd het apparaat uit te werpen. U kunt de time-out (in seconden) voor het uitwerpen van het apparaat opgeven",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Eject Timeout [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"U kunt optioneel nog een script opgeven (met volledig pad!), dat in geval van gevraagd uitwerpen (met exitcode 100 van uw 1e script) wordt uitgevoerd na het uitwerpen. Dit kan bijvoorbeeld worden gebruikt om uw USB-apparaat uit te schakelen. Als het uitwerpen mislukt, is het argument \"Uitwerpen mislukt\", bij succes geen argument!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Script na uitwerpen (op DSM)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Veiligheidsconfiguratie",
+"items": [{
+"type": "combobox",
+"desc":"Het script met de overeenkomende naam op je USB-apparaat wordt uitgevoerd met root-privileges op je DSM! Dat kan een veiligheidsrisico zijn! Voor een betere beveiliging is een beperking tot scripts met vooraf geregistreerde sha256 hash waarden (vingerafdrukken) mogelijk.<br/>Eigenlijk zijn er @ENTRY_COUNT@ script hashes geregistreerd.<br/>0: De beveiligingsfunctie wordt niet gebruikt. Alle scripts met dezelfde naam zijn toegestaan. Geen verandering van de geregistreerde hashes.<br/>1: Waarschijnlijk zijn alle eerder geregistreerde hashes nu verwijderd. Het 1e script na installatie/configuratie zal worden geregistreerd en mag dan steeds opnieuw worden uitgevoerd.<br/>2: De hash waarde van elk script met dezelfde naam zal worden geregistreerd en uitgevoerd! (Voeg hashes toe)<br/>3: Alleen eerder geregistreerde scripts zijn toegestaan. (Registratie bevroren)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Script Hash registratie",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"BELANGRIJK: Handmatige actie vereist!",
+"items": [{
+"type": "textfield",
+"desc":"Pakketten van derden worden beperkt door Synology in DSM 7.x! Omdat autorun root-toestemming vereist om zijn werk te doen, is een extra handmatige stap vereist na de installatie.<br/><br/>SSH naar uw NAS (als een admin-gebruiker) en voer het volgende commando uit nadat de installatie is voltooid. Kopieer het nu!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Commando",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

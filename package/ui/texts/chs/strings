@@ -1,0 +1,17 @@
+[app1]
+# This file was generated via DeepL machine translation from en
+title01="自动运行"
+msg0="\"由于sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege的shell命令尚未执行，所以无法启动！\""
+msg1="{0}"
+msg2="{0} {1}"
+msg3="脚本'{0}'（{1}）的指纹现在已被注册为允许的脚本。"
+msg4="在插入的设备上，有一个脚本'{1}'（{2}）。脚本的名称与{0}包的设置相符。但该脚本的指纹不允许执行。"
+msg5="在插入的设备上，有一个脚本'{1}'。这个脚本的名称与{0}包的设置相匹配。但该脚本不允许用于{3}。"
+msg6="在插入的设备上，有一个脚本'{1}'。脚本的名称与{0}包的设置相符。但是脚本的权限不允许执行。"
+msg7="设备{1}上的脚本{0}已经完成，结果{2}。!!!注意。设备的弹出失败!!!!"
+msg8="设备{1}上的脚本{0}已经完成，结果是{2}。该设备被弹出。在设备上有{3}Bytes空闲。"
+msg9="设备{1}上的脚本{0}已经完成，结果是{2}。在设备上有{3}Bytes空闲。"
+msg10="错误。如果USB/eSATA设备上的脚本{1}的结果为100，软件包{0}应该弹出设备，然后在磁盘站上执行脚本{2}。该脚本{2}不可用或不可执行!"
+msg14="错误。应该执行的 Skript '{0}' 使用了错误的换行符 CR/LF (Windows)。请使用一个可编辑的编辑器（Linux oder Windows Notepad  , PSPad, ...），将其改为LF（UNIX）!"
+msg15="错误。应该执行的 Skript '{0}' 使用了错误的编码（Windows ISO-8859）。请使用一个可识别的编辑器（Linux oder Windows Notepad  , PSPad, ...）将其改为UTF-8!"
+msg16="错误。应该执行的 Skript '{0}' 使用了错误的换行符（MAC）。请使用可读编辑器（如BBEdit/TextWrangler）将其改为LF（UNIX）!"

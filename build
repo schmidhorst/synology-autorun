@@ -104,7 +104,7 @@ echo "... package.tgz done"
 
 echo "building ${pck}-$VERSION.spk ..."
 chmod 700 package.tgz
-tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO CHANGELOG LICENSE PACKAGE_ICON.PNG $p256 WIZARD_UIFILES conf scripts package.tgz
+tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO CHANGELOG LICENSE* PACKAGE_ICON.PNG $p256 WIZARD_UIFILES conf scripts package.tgz
 
 rm "package.tgz"
 rm "INFO"

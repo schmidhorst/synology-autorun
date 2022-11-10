@@ -1,5 +1,5 @@
 [{
-"step_title":"Protokolldateien und Einstellungen entfernen",
+"step_title":"删除日志文件和设置",
 "items":
 [{
 "type": "multiselect",
@@ -7,7 +7,7 @@
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",
-"desc":"Einstellungen entfernen"
+"desc":"移除设置"
 }]
 }]
 }]

@@ -1,0 +1,177 @@
+[{
+"step_title":"コンフィギュレーション",
+"items": [
+{"type": "textfield",
+"desc":"このスクリプトは、外部デバイスのルートディレクトリに配置し、ユーザー「root」の実行可能ファイルとして設定する必要があります。スクリプトは、最初のパラメータ($1)としてデバイスのマウントポイント(例: /volumeUSB1/usbshare/)、2番目のパラメータ($2)としてデバイスパーティション(例: usb1p1)を取得します。ヒント：スクリプトは空の環境で実行されるので、使用するコマンドはすべてパスで指定する必要があります",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"実行するスクリプト",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"スクリプトの終了値が100の場合、スクリプトの終了時にデバイスのアンマウントとイジェクトを行い、その他の終了値ではマウントされたままになります。<br/><br/> 検索時間は、デバイスが接続されたときにマウントポイントを検索するためのudevによるトリガーの後の時間です。<br/> <br/>この追加された待ち時間は、DSM がスクリプトを開始する前にドライブを適切にマウントするための余裕を与えてくれます。",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"検索時間（秒）",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"待ち時間（秒）",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"ログファイルのサイズは自動的に制限されます。指定された行数に達した場合、上半分が削除されます。",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"最大行数",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"このパッケージは、設定可能なユーザーグループまたはユーザーに対してデスクトップに表示されるDSMメッセージを生成します。グループ名の前に@を付ける（例：@usersは全ユーザーの場合",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"へのメッセージ表示",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Copy LED」の使用：<br/>0：LEDは全く使用されません。<br/>1: 走行中または排出中ON、その後OFF<br/>2: 走行中または排出中点滅、その後OFF<br/>3: 走行中または排出中ON、その後OFF（0/100）または点滅（他のコード）<br/>4: 走行中または排出中点滅、その後OFFまたは点滅（他のコードまたは排出失敗）<br/>5: 走りながら点滅、その後OFF（0/100）またはON（他のコードまたは排出失敗）<br/>1: 走りながら点滅、その後OFFまたは点滅、その後OFFまたは点滅（他のコードまたは排出失敗）<br/>3: 走りながら点滅、その後OFFまたは点滅、その後OFF（0/100）または点滅（他のコードまたは排出失敗）。",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"コピーLED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"ステータスLEDの使用：<br/>0：全く使用しない<br/>1：実行中は緑、イジェクト中は緑点滅、0または100で終了した場合はOFF、その他の結果またはイジェクト失敗の場合はオレンジ点滅<br/>2：スクリプト実行中またはイジェクト中は緑点滅、0または100で終了した場合は緑、その他の結果またはイジェクト失敗の場合はオレンジ点滅＜br/>3：実行中およびイジェクト中は緑、終了時はOFF、イジェクト失敗時はオレンジ点滅＜br/＞4：スクリプトは実行中またはイジェクト中のみ使用可能、イジェクトは実行中またはイジェクト中のみ使用可能",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"ステータスLED",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>スクリプト実行中のステータス表示。",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"開始と終了時にビープ音",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"スクリプトが終了コード100で終了した場合は、デバイスのイジェクトを試みます。デバイスを取り出す際のタイムアウト（秒）を指定することができます。",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"イジェクトタイムアウト[秒］",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"オプションで、イジェクトの後に実行されるスクリプト（フルパスで！）を指定することができます。これは、例えばUSBデバイスの電源を落とすのに使われるかもしれません。イジェクトに失敗した場合、引数は 'Ejection failed' となり、成功した場合は引数はありません!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"イジェクト後のスクリプト（DSMの場合）",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"セキュリティコンフィギュレーション",
+"items": [{
+"type": "combobox",
+"desc":"USBデバイスにある同じ名前のスクリプトがDSMのroot権限で実行される!これはセキュリティ上のリスクです。<br/> 実際には、@ENTRY_COUNT@のスクリプトハッシュが登録されています。<br/>0: セキュリティ機能は使用されません。一致する名前のスクリプトはすべて許可されます。<br/>1: おそらく以前の登録ハッシュはすべて削除されています。<br/>2: 一致する名前のスクリプトのハッシュ値が登録され、実行されるようになる！(ハッシュの追加)<br/><br/>1: おそらく以前の登録ハッシュは全て削除されている。(ハッシュの追加)<br/>3:過去に登録されたスクリプトのみ実行可能です。(登録凍結)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"スクリプトハッシュの登録",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"重要：手動操作が必要です",
+"items": [{
+"type": "textfield",
+"desc":"DSM 7.x では、サードパーティ製パッケージは Synology によって制限されています。自動実行には root 権限が必要なため、インストール後に追加の手動ステップが必要です。<br/><br/>インストールが完了したら、NAS に (管理ユーザーとして) SSH して次のコマンドを実行します。今すぐコピー!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"コマンド",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

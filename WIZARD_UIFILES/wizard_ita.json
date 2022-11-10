@@ -1,0 +1,177 @@
+[{
+"step_title":"Configurazione",
+"items": [
+{"type": "textfield",
+"desc":"Lo script deve trovarsi nella directory principale del dispositivo esterno ed essere impostato come eseguibile per l'utente 'root'. Ottiene il punto di montaggio del dispositivo (ad esempio /volumeUSB1/usbshare/) come primo parametro ($1) e la partizione del dispositivo (ad esempio usb1p1) come secondo ($2). Suggerimento: lo script viene eseguito con l'ambiente vuoto, è necessario specificare tutti i comandi utilizzati con il percorso!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Script da eseguire",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"Un valore di uscita di 100 dallo script smonterà ed espellerà il dispositivo al termine dello script, mentre tutti gli altri valori di uscita lo lasceranno montato. È possibile interrompere l'autorun nel centro pacchetti per disabilitarlo temporaneamente.<br/><br/>Il tempo di ricerca è il tempo successivo all'attivazione da parte di udev per trovare il punto di montaggio quando viene collegato un dispositivo. Il tempo di attesa aggiuntivo dà al DSM un certo margine di manovra per montare correttamente l'unità prima di avviare lo script.<br/>Potrebbe essere necessario aumentare questi tempi a seconda del proprio hardware.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Tempo di ricerca (sec)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Tempo di attesa (sec)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"La dimensione dei file di registro viene limitata automaticamente. Se si raggiunge il numero di righe indicato, la metà più grande viene rimossa.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Numero massimo di linee",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Il pacchetto genera messaggi DSM, che vengono mostrati sul desktop a gruppi di utenti o utenti configurabili. Aggiungere una @ ai nomi dei gruppi, ad esempio @users per tutti gli utenti.",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Visualizzazione del messaggio a",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Uso di 'Copy LED':<br/>0: il LED non viene utilizzato affatto.<br/>1: acceso durante l'esecuzione o l'espulsione, successivamente spento<br/>2: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento<br/>3: acceso durante l'esecuzione o l'espulsione, successivamente spento (0/100) o lampeggiante (altri codici)<br/>4: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento o lampeggiante (altri codici o espulsione fallita)<br/>5: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento (0/100) o acceso (altri codici o espulsione fallita)",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"Copia del LED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Uso del LED di stato:<br/>0: Non utilizzato affatto<br/>1: Verde durante l'esecuzione, verde lampeggiante durante l'espulsione, OFF se terminato con 0 o 100, arancione lampeggiante per altri risultati o espulsione fallita<br/>2: Verde lampeggiante durante l'esecuzione dello script o l'espulsione, verde se terminato con 0 o 100, arancione lampeggiante per altri risultati o espulsione fallita<br/>3: Verde durante l'esecuzione dello script e durante l'espulsione, OFF quando terminato, arancione lampeggiante se espulsione fallita",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"LED di stato",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Indicazione di stato durante l'esecuzione dello script.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Segnale acustico all'inizio e alla fine",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Se lo script termina con il codice di uscita 100, verrà tentata l'espulsione del dispositivo. È possibile specificare il timeout (in secondi) per l'espulsione del dispositivo",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Timeout di espulsione [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"È possibile specificare un ulteriore script (con percorso completo!), che in caso di espulsione richiesta (con codice di uscita 100 dal primo script) viene eseguito dopo l'espulsione. Questo può essere utilizzato, ad esempio, per spegnere il dispositivo USB. Se l'espulsione non è riuscita, l'argomento sarà \"Espulsione fallita\", in caso di successo nessun argomento!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Script dopo l'espulsione (su DSM)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Configurazione della sicurezza",
+"items": [{
+"type": "combobox",
+"desc":"Lo script con il nome corrispondente sul dispositivo USB viene eseguito con privilegi di root sul DSM! Questo potrebbe essere un rischio per la sicurezza! Per una maggiore sicurezza è possibile limitare gli script con valori di hash sha256 pre-registrati (impronte digitali).<br/>In realtà ci sono @ENTRY_COUNT@ hash di script registrati.<br/>0: La funzione di sicurezza non viene utilizzata. Tutti gli script con nome corrispondente sono consentiti. Nessuna modifica degli hash registrati.<br/>1: Probabilmente gli hash registrati in precedenza sono stati tutti eliminati. Il primo script dopo l'installazione/configurazione sarà registrato e potrà essere eseguito più volte.<br/>2: Il valore hash di qualsiasi script con nome corrispondente sarà registrato ed eseguito! (Aggiungi hash)<br/>3: Sono consentiti solo gli script registrati in precedenza. (Registrazione congelata)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Registrazione dello script Hash",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"IMPORTANTE: è necessaria un'azione manuale!",
+"items": [{
+"type": "textfield",
+"desc":"I pacchetti di terze parti sono limitati da Synology in DSM 7.x! Poiché l'autorun richiede i permessi di root per svolgere il suo lavoro, è necessario un ulteriore passaggio manuale dopo l'installazione.<br/><br/>SSH al NAS (come utente amministratore) ed eseguire il seguente comando al termine dell'installazione. Copiatelo ora!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Comando",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

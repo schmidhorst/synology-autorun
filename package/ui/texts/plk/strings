@@ -1,0 +1,17 @@
+[app1]
+# This file was generated via DeepL machine translation from en
+title01="Autorun"
+msg0="\"Uruchomienie nie jest możliwe, ponieważ polecenie powłoki 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' nie zostało jeszcze wykonane!\"."
+msg1="{0}"
+msg2="{0} {1}"
+msg3="Odcisk palca skryptu \"{0}\" ({1}) został teraz zarejestrowany jako dozwolony skrypt."
+msg4="Na wstawionym urządzeniu znajduje się skrypt '{1}' ({2}). Nazwa skryptu jest zgodna z konfiguracją pakietu {0}. Jednak odcisk palca skryptu nie pozwala na wykonanie."
+msg5="Na wstawionym urządzeniu znajduje się skrypt '{1}'. Nazwa skryptu jest zgodna z konfiguracją pakietu {0}. Ale ten skrypt nie jest dozwolony dla {3}."
+msg6="Na wstawionym urządzeniu znajduje się skrypt '{1}'. Nazwa skryptu jest zgodna z konfiguracją pakietu {0}. Ale uprawnienia skryptu nie pozwalają na jego wykonanie."
+msg7="Skrypt {0} na urządzeniu {1} został zakończony wynikiem {2}. !!! Uwaga: Wysuwanie urządzenia nie powiodło się!!!!"
+msg8="Skrypt {0} na urządzeniu {1} został zakończony wynikiem {2}. Urządzenie zostało wysunięte. Na urządzeniu jest wolne {3}Bajtów."
+msg9="Skrypt {0} na urządzeniu {1} został zakończony wynikiem {2}. Na urządzeniu jest wolne {3}Bajtów."
+msg10="Błąd: W przypadku wyniku 100 ze skryptu {1} na urządzeniu USB/eSATA Pakiet {0} powinien wysunąć urządzenie, a następnie wykonać skrypt {2} na stacji dysków. Ten skrypt {2} nie jest dostępny lub nie jest wykonywalny!"
+msg14="Błąd: Skrypt '{0}', który powinien zostać wykonany, używa nieprawidłowego podziału linii CR/LF (Windows). Proszę użyć edytora tekstu (Linux lub Windows Notepad  , PSPad, ...), aby zmienić go na LF (UNIX)!"
+msg15="Błąd: Skrypt '{0}', który powinien zostać wykonany, używa nieprawidłowego kodowania (Windows ISO-8859). Proszę użyć edytora tekstu (Linux oder Windows Notepad  , PSPad, ...) aby zmienić go na UTF-8!"
+msg16="Błąd: Skrypt '{0}', który powinien zostać wykonany, używa niewłaściwego podziału linii CR (MAC). Proszę użyć edytora siutable (np. BBEdit/TextWrangler), aby zmienić go na LF (UNIX)!"

@@ -1,0 +1,177 @@
+[{
+"step_title":"配置",
+"items": [
+{"type": "textfield",
+"desc":"该脚本必须位于外部设备的根目录下，并设置为用户 \"root \"可执行。它获取设备的挂载点（比如/volumeUSB1/usbshare/）作为第一个参数（1），设备的分区（比如usb1p1）作为第二个参数（2）。提示：该脚本是在空环境下执行的，你必须用路径指定所有使用的命令",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"要执行的脚本",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"脚本的退出值为100，当脚本结束时，设备将被卸载并弹出，所有其他的退出值将使其被安装。你可以在软件包中心停止自动运行来暂时禁用它。<br/><br/>搜索时间是udev触发后的时间，用于在连接设备时寻找挂载点。额外的等待时间给了DSM一些回旋余地，以便在启动脚本之前正确地挂载驱动器。<br/>你可能需要增加这些时间，这取决于你的硬件。",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"搜索时间（秒）",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"等待时间（秒）",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"日志文件的大小是自动限制的。如果达到了给定的行数，长者的一半会被删除。",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"最大行数",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"该软件包生成DSM消息，这些消息在桌面上显示给可配置的用户组或用户。在组名前加一个@，例如：@users代表所有用户",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"信息显示为",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"使用 \"复制LED\"：<br/>0：完全不使用LED。<br/>1：运行或弹出时打开，之后关闭<br/>2：运行或弹出时闪烁，之后关闭<br/>3：运行或弹出时打开，之后关闭（0/100）或闪烁（其他代码）<br/>4：运行或弹出时闪烁，之后关闭或闪烁（其他代码或弹出失败）<br/>5：运行或弹出时闪烁，之后关闭（0/100）或打开（其他代码或弹出失败）",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"复制LED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"状态LED的使用：<br/>0：完全不使用<br/>1：运行时绿色，弹出时绿色闪烁，如果完成了0或100，则关闭，其他结果或弹出失败则橙色闪烁<br/>2：脚本运行或弹出时绿色闪烁，如果完成了0或100，则绿色闪烁，其他结果或弹出失败则橙色闪烁<br/>3：脚本运行和弹出时绿色，完成后关闭，弹出失败时橙色闪烁",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"状态LED",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>运行脚本时的状态指示。",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"开始和结束时发出提示音",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"如果脚本以退出代码100结束，将尝试弹出设备。你可以指定弹出设备的超时时间（秒）。",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"弹出超时 [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"你可以选择指定另一个脚本（有完整的路径！），在弹出要求的情况下（第一个脚本的退出代码为100）在弹出后执行。这可以用来关闭你的USB设备的电源。如果弹出失败，参数将是 \"弹出失败\"，成功时没有参数。",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"弹出后的脚本（在DSM上）",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"安全配置",
+"items": [{
+"type": "combobox",
+"desc":"你的USB设备上与之匹配的脚本是以你的DSM上的root权限执行的。这可能是一个安全风险!为了提高安全性，我们可以将脚本限制在预先注册的sha256哈希值（指纹）上。所有具有匹配名称的脚本都被允许。没有改变注册的哈希值。<br/>1: 可能以前注册的哈希值现在都被删除了。安装/配置后的第一个脚本将被注册，并允许反复执行。<br/>2: 任何名称匹配的脚本的哈希值都将被注册并执行！（添加哈希值）<br/>3: 所有的脚本都将被注册。(添加哈希值)<br/>3: 只允许使用以前注册的脚本。(注册被冻结)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"脚本哈希注册",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"重要提示：需要手动操作!",
+"items": [{
+"type": "textfield",
+"desc":"第三方软件包在DSM 7.x中受到Synology的限制!<br/><br/>SSH到你的NAS（以管理员身份）并在安装完成后执行以下命令。现在就复制它!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"指挥部",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

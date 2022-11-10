@@ -1,0 +1,17 @@
+[app1]
+# This file was generated via DeepL machine translation from en
+title01="Autorun"
+msg0="\"Az indítás nem lehetséges, mivel a 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' parancs még nem került végrehajtásra!\""
+msg1="{0}"
+msg2="{0} {1}"
+msg3="A '{0}' ({1}) szkript ujjlenyomata engedélyezett szkriptként lett regisztrálva."
+msg4="A beillesztett eszközön van egy '{1}' ({2}) szkript. A szkript neve megegyezik a {0} csomag beállításával. De a szkript ujjlenyomata nem engedélyezi a végrehajtást."
+msg5="A beillesztett eszközön van egy '{1}' szkript. A szkript neve megegyezik a {0} csomag beállításával. De ez a szkript nem engedélyezett a {3} csomaghoz."
+msg6="A beillesztett eszközön van egy '{1}' szkript. A szkript neve megegyezik a {0} csomag beállításával. A szkript engedélyei azonban nem engedélyezik a végrehajtást."
+msg7="A {0} szkript a {1} eszközön {2} eredménnyel fejeződött be. !!! Figyelem! Az eszköz kilövése sikertelen!!!!."
+msg8="A {0} szkript a {1} eszközön {2} eredménnyel fejeződött be. Az eszköz ki lett dobva. Az eszközön {3}Byte szabad."
+msg9="A {0} szkript a {1} eszközön {2} eredménnyel fejeződött be. Az eszközön {3}Byte szabad."
+msg10="Hiba: Az USB/eSATA eszközön a {1} szkript 100-as eredménye esetén a {0} csomagnak ki kell dobnia az eszközt, majd végre kell hajtania a {2} szkriptet a lemezállomáson. Ez a {2} szkript nem elérhető vagy nem futtatható!"
+msg14="Hiba: Skript '{0}', amelyet végre kellene hajtani, rossz sortörést használ CR/LF (Windows). Kérjük, hogy egy megbízható szerkesztővel (Linux vagy Windows Notepad  , PSPad, ...) változtassa meg LF-re (UNIX)!"
+msg15="Hiba: Skript '{0}', amelyet végre kellene hajtani, rossz kódolást használ (Windows ISO-8859). Kérjük, használjon egy használható szerkesztőt (Linux vagy Windows Notepad  , PSPad, ...), hogy UTF-8-ra módosítsa!"
+msg16="Hiba: Skript '{0}', amelyet végre kellene hajtani, rossz sortörés CR-t használ (MAC). Kérjük, hogy egy siutable Editor (pl. BBEdit/TextWrangler) segítségével változtassa LF-re (UNIX)!"

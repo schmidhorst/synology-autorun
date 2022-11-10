@@ -1,0 +1,17 @@
+[app1]
+# This file was generated via DeepL machine translation from en
+title01="Autorun"
+msg0="\"Spuštění není možné, protože příkaz shellu 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' ještě nebyl proveden!\""
+msg1="{0}"
+msg2="{0} {1}"
+msg3="Otisk skriptu '{0}' ({1}) byl nyní zaregistrován jako povolený skript."
+msg4="Na vloženém zařízení je skript \"{1}\" ({2}). Název skriptu odpovídá nastavení balíčku {0}. Ale otisk skriptu není povolen ke spuštění."
+msg5="Na vloženém zařízení je skript '{1}'. Název skriptu odpovídá nastavení balíčku {0}. Tento skript však není povolen pro {3}."
+msg6="Na vloženém zařízení je skript '{1}'. Název skriptu odpovídá nastavení balíčku {0}. Oprávnění skriptu však neumožňují jeho spuštění."
+msg7="Skript {0} na zařízení {1} byl dokončen s výsledkem {2}. !!! Pozor: Vysunutí zařízení se nezdařilo!!!!."
+msg8="Skript {0} na zařízení {1} byl dokončen s výsledkem {2}. Zařízení bylo vysunuto. Na zařízení jsou volné {3}Bajty."
+msg9="Skript {0} na zařízení {1} byl dokončen s výsledkem {2}. Na zařízení je volných {3}Bajtů."
+msg10="Chyba: V případě výsledku 100 ze skriptu {1} na zařízení USB/eSATA by měla Schránka {0} vysunout zařízení a poté spustit skript {2} na diskové stanici. Tento skript {2} není k dispozici nebo není spustitelný!"
+msg14="Chyba: Skript '{0}', který by měl být proveden, používá nesprávný zlom řádku CR/LF (Windows). Použijte siutabilní editor (Linux oder Windows Notepad  , PSPad, ...) a změňte jej na LF (UNIX)!"
+msg15="Chyba: Skript '{0}', který by měl být proveden, používá nesprávné kódování (Windows ISO-8859). Použijte prosím siutabilní editor (Linux oder Windows Notepad  , PSPad, ...) pro změnu na UTF-8!"
+msg16="Chyba: Skript '{0}', který by měl být proveden, používá špatné zalomení řádku CR (MAC). Použijte siutabilní editor (např. BBEdit/TextWrangler), abyste jej změnili na LF (UNIX)!"

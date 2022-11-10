@@ -1,5 +1,5 @@
 [{
-"step_title":"Protokolldateien und Einstellungen entfernen",
+"step_title":"Supprimer les fichiers journaux et les paramètres",
 "items":
 [{
 "type": "multiselect",
@@ -7,7 +7,7 @@
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",
-"desc":"Einstellungen entfernen"
+"desc":"Supprimer les paramètres"
 }]
 }]
 }]

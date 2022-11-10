@@ -1,0 +1,177 @@
+[{
+"step_title":"Konfiguration",
+"items": [
+{"type": "textfield",
+"desc":"Skriptet måste finnas i den externa enhetens rotkatalog och vara inställt som körbart för användaren \"root\". Det hämtar enhetens monteringspunkt (t.ex. /volumeUSB1/usbshare/) som första parameter ($1) och enhetens partition (t.ex. usb1p1) som andra parameter ($2). Tips: Skriptet utförs med tom miljö, du måste ange alla använda kommandon med sökväg!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Skript som ska exekveras",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"Ett utgångsvärde på 100 från skriptet kommer att avmontera och kasta ut enheten när skriptet är färdigt, alla andra utgångsvärden kommer att lämna den monterad. Du kan stoppa autorun i paketcentret för att tillfälligt inaktivera det.<br/><br/>Söktiden är tiden efter utlösningen av udev för att hitta monteringspunkten när en enhet är ansluten. Den extra väntetiden ger DSM lite spelrum för att korrekt montera enheten innan skriptet startas.<br/>Du kan behöva öka dessa tider beroende på din maskinvara.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Söktid (sek)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Väntetid (sek)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Storleken på loggfilerna begränsas automatiskt. Om det angivna antalet rader uppnås tas den äldre hälften bort.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Max. antal rader",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Paketet genererar DSM-meddelanden som visas på skrivbordet för konfigurerbara användargrupper eller användare. Lägg till ett @ i gruppnamn, t.ex. @users för alla användare.",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Meddelandedisplay till",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Användning av \"Copy LED\":<br/>0: LED används inte alls.<br/>1: Tänds under körning eller utmatning, OFF efteråt<br/>2: Blinkar under körning eller utmatning, OFF efteråt<br/>3: Tänds under körning eller utmatning, OFF efteråt (0/100) eller blinkande (andra koder)<br/>4: Blinkar under körning eller utmatning, OFF eller blinkande efteråt (andra koder eller utmatning misslyckad)<br/>5: Blinkar under körning eller utmatning, OFF efteråt (0/100) eller ON (andra koder eller utmatning misslyckad).",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"Kopiera LED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Användning av status-LED:<br/>0: Används inte alls<br/>1: Grön när skriptet körs, grönt blinkande under utmatning, OFF om det är klart med 0 eller 100, orange blinkande för andra resultat eller misslyckad utmatning<br/>2: Grönt blinkande när skriptet körs eller matas ut, grönt om det är klart med 0 eller 100, orange blinkande för andra resultat eller misslyckad utmatning<br/>3: Grönt när skriptet körs och under utmatning, OFF när det är klart, orange blinkande om utmatningen misslyckades.",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"Status-LED",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Statusindikering när skriptet körs.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Pip vid start och slut",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Om skriptet slutar med utgångskoden 100 kommer man att försöka mata ut enheten. Du kan ange timeout (i sekunder) för att kasta ut enheten.",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Timeout för utmatning [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"Du kan valfritt ange ytterligare ett skript (med fullständig sökväg!), som i händelse av begärd utskjutning (med utgångskod 100 från det första skriptet) utförs efter utskjutningen. Detta kan t.ex. användas för att stänga av din USB-enhet. Om utskjutningen misslyckades kommer argumentet att vara \"Ejection failed\" (utskjutning misslyckad), vid framgång inget argument!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Skrift efter utmatning (på DSM)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Konfigurering av säkerhet",
+"items": [{
+"type": "combobox",
+"desc":"Skriptet med samma namn på USB-enheten utförs med rooträttigheter på DSM! Det kan vara en säkerhetsrisk! För bättre säkerhet är det möjligt att begränsa skript med förregistrerade sha256-hashvärden (fingeravtryck).<br/>Det finns faktiskt @ENTRY_COUNT@ skript-hashvärden registrerade.<br/>0: Säkerhetsfunktionen används inte. Alla skript med matchande namn är tillåtna. Ingen ändring av registrerade hash-koder.<br/>1: Förmodligen är alla tidigare registrerade hash-koder borttagna nu. Det första skriptet efter installation/konfiguration kommer att registreras och får exekveras sedan om och om igen.<br/>2: Hashvärdet för alla skript med matchande namn kommer att registreras och exekveras! (Lägg till hashvärden)<br/>3: Endast tidigare registrerade skript är tillåtna. (Registrering fryst)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Registrering av skriptash",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"VIKTIGT: Manuell åtgärd krävs!",
+"items": [{
+"type": "textfield",
+"desc":"Tredjepartspaket begränsas av Synology i DSM 7.x! Eftersom autorun kräver root-behörighet för att utföra sitt arbete krävs ytterligare ett manuellt steg efter installationen.<br/><br/>SSH till din NAS (som administratör) och utför följande kommando efter att installationen är klar. Kopiera den nu!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Kommando",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

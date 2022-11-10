@@ -1,178 +1,177 @@
 [{
-  "step_title": "Konfiguration",
-   "items": [
-    {"type": "textfield",
-    "desc": "Das Skript muss im Root-Verzeichnis des extenern Geräts liegen und für den User 'root' ausführbar sein. Als erstem Parameter ($1) wird ihm der Mountpfad (z.B. /volumeUSB1/usbshare/) und der Gerätepfad (z.B. usb1p1) als zweitem Parameter ($2) übergeben. Hinweis: Das Skript wird ohne Environment gestartet. Alle Kommandos mit Pfad angeben!",
-    "subitems": [{
-      "key": "config_SCRIPT",
-      "desc": "Auszuführendes Skript",
-      "defaultValue": "@SCRIPT@",
-      "validator": { "allowBlank": true }
-
-      }]
-    }
-  ,{
-    "type": "textfield",
-    "desc": "Bei einem Rückgabewert von 100 vom Skript wird das Gerät ausgeworfen, bei allen anderen Rückgabewerten nicht. Sie können das Paket vorübergehend stoppen um dies zu unterbinden<br/><br/>Die Suchzeit ist die Zeit nach dem Trigger durch udev, um den Mountpfad zu finden. Die DSM benötigt teilweise danach nochmal etwas Verzögerungszeit danach, bevor das Skript gestartet werden kann.<br/>Je nach Hardware kann es nötig sein, die Werte etwas zu erhöhen.",
-    "subitems": [
-      {
-        "key": "config_TRIES",
-        "desc": "Suchzeit [s]",
-        "defaultValue": "@TRIES@",
-        "validator": {
-          "allowBlank": false,
-          "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
-          }
-        }
-      ,{
-        "key": "config_WAIT",
-        "desc": "Verzögerungszeit [s]",
-        "defaultValue": "@WAIT@",
-        "validator": {
-          "allowBlank": false,
-          "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Eine positive Zahl eingeben!'; }"
-          }
-        }
-      ]
-    }
-  ,{
-    "type": "textfield",
-    "desc": "Die Größe der Logdateien wird automatisch begrenzt. Wenn sie die angegebene Zeilenzahl erreicht, wird die ältere Hälfte entfernt.",
-    "subitems": [
-      {
-        "key": "config_LOG_MAX_LINES",
-        "desc": "Max. Zeilenanzahl",
-        "defaultValue": "@LOG_MAX_LINES@",
-        "validator": {
-          "allowBlank": false,
-          "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Eine positive Zahl eingeben!'; }"
-          }
-        }
-      ]
-    }
-  ,{
-    "type": "textfield",
-    "desc": "Das Paket erzeugt DSM Meldungen, welche am Desktop für vorgegbeben Benutzergruppen oder nur für einen einzelnen Benutzer angezeigt werden. Für Gruppennamen ein @ voranstellen, z.B. @users für alle Benutzer",
-    "subitems": [{
-      "key": "config_NOTIFY_USERS",
-      "desc": "Meldungsanzeige für",
-      "width": "360",
-      "defaultValue": "@NOTIFY_USERS@",
-         "validator": { "allowBlank": true }
-        }
-      ]
-    }
-  ,{
-    "type": "combobox",
-    "desc": "Verwendung der 'Copy-LED':<br/>0: LED wird nicht benutzt.<br/>1: EIN solange Skript läuft oder ausgeworfen wird, AUS danach<br/>2: Blinkend solange Skript läuft oder Auswerfen in Gang, AUS danach<br/>3: EIN solange Skript läuft oder Auswerfen in Gang, danach AUS (0/100) oder blinken (bei anderen Codes)<br/>4: Blinken solange Skript läuft oder Auswerfen in Gang, danach AUS (0/100) oder blinkend (andere Codes or Auswerfen-Fehler)<br/>5: Blinkend solange Skript läuft oder Auswerfen in Gang, AUS (0/100) der EIN (andere Codes oderr Auswerf-Fehler)",
-    "subitems": [{ 
-      "key": "config_LED_COPY",
-      "autoSelect": true,
-      "editable": false,
-      "desc": "Copy LED",
-      "defaultValue": "@LED_COPY@",
-      "width": "360",
-      "mode": "local",
-      "valueField": "myId",
-      "displayField": "displayText",
-      "store": {
-        "xtype": "arraystore",
-        "fields": ["myId", "displayText"],
-        "data": [[0, "0 Not used"], [1, "1 AN - AN - AUS"], [2, "2 blink - blink - AUS"], [3, "3 AN - AN - AUS od. blink"], [4, "4 blink - blink - AUS od. blink"], [5, "5 blink - blink - AUS od. AN"]]
-        }
-      }]
-    }  
-  ,{
-    "type": "combobox",
-    "desc": "Verwendung der Status-LED:<br/>0: LED nicht benutzt<br/>1: Grün während Skript läuft, grün blinkend beim Auswerfen, AUS (bei 0 oder 100) bzw. orange blinkend (sonstige Codes oder Auswerf-Fehler)<br/>2: Grün blinkend whärend Skipt läuft, grün wenn mit 0 oder 100 beendet, orange blinkend sonst oder bei Auswerf-Fehler<br/>3: Grün solange Skript läuft oder Auswerfen im Gang, AUS danauch bzw. orange bei Auswerf-Fehler",
-    "subitems": [{
-      "key": "config_LED",
-      "autoSelect": true,
-      "editable": false,
-      "desc": "Status LED",
-      "width": "360",
-      "mode": "local",
-      "valueField": "myId",
-      "displayField": "displayText",
-      "defaultValue": "@LED@",
-      "store": {
-        "xtype": "arraystore",
-        "fields": ["myId", "displayText"],
-        "data": [[0, "0 Not used"], [1, "1 grn - grnBl - AUS od. orgBl"], [2, "2 grnBl - grnBl - grn od. orgBl"], [3, "3 grn - grn - AUS od. orgBl"]]
-        }
-      }]
-    }
-  ,{
-    "type": "multiselect",
-    "desc": "<br/>Verwendung des Piepsers: Kurzer Piep beim Start und Ende, dreifaches langes Piepsen bei einem Fehler",
-    "subitems": [{
-      "key": "config_BEEP",
-      "desc": "Piepser",
-      "defaultValue": "@BEEP@"
-      }]
-    }
-  ,{
-    "type": "textfield",
-    "desc": "Beim Rückgabecode 100 wird das Auswerfen des Geräts versucht. Sie können einen Timeout (in Sekunden) für diese Auswerf-Versuche angeben, bevor dies geg. abgebrochen wird.",
-    "subitems": [{ 
-      "key": "config_EJECT_TIMEOUT",
-      "desc": "Eject Timeout [s]",
-      "defaultValue": "@EJECT_TIMEOUT@",
-      "validator": {
-        "allowBlank": false,
-        "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Bitte eine positive Zahl!'; }"
-        }
-      }]
-    }  
-  ,{
-    "type": "textfield",
-    "desc": "Sie können optional ein weiteres Skript (mit vollständigem Pfad!) auf der DSM angeben, welches beim Exitcode 100 des ersten Skripts nach dem Auswerfen ausgeführt wird. Dies könnte z.B. die Stromversorgung des externen Laufwerks abschalten. Wenn das Auswerfen erfolgreich war, wird es ohne Parameter aufgerufen. Konnte das Gerät nicht ausgeworfen werden, wird es mit 'Ejection failed' als Parameter aufgerufen!",
-    "subitems": [{ 
-      "key": "config_SCRIPT_AFTER_EJECT",
-      "desc": "Skript nach Eject (auf DSM)",
-      "width": "350",
-      "defaultValue": "@SCRIPT_AFTER_EJECT@",
-      "validator": {
-        "allowBlank": true
-        }
-      }]
-    }] 
-  }
+"step_title":"Konfiguration",
+"items": [
+{"type": "textfield",
+"desc":"Das Skript muss sich im Stammverzeichnis des externen Geräts befinden und als ausführbar für den Benutzer \"root\" festgelegt sein. Es erhält den Einhängepunkt des Geräts (z.B. /volumeUSB1/usbshare/) als ersten Parameter ($1) und die Gerätepartition (z.B. usb1p1) als zweiten ($2). Hinweis: Das Skript wird mit leerer Umgebung ausgeführt, Sie müssen alle verwendeten Befehle mit Pfad angeben!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Auszuführendes Skript",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
 ,{
-  "step_title": "Sicherheits-Konfiguration",
-  "items": [{
-    "type": "combobox",
-    "desc": "Das Skript mit dem oben angegebenen Namen auf dem USB/eSATA-Gerät wird mit Root-Rechten auf der DSM ausgeführt! Dies kann ein Sicherheitsrisiko sein! Für höhere Sicheheit gibt es die Möglichkeit, nur Skripte mit zuvor registrierter Sha256-Quersummen auszuführen.<br/>Derzeit ist/sind die Quersumme von @ENTRY_COUNT@ Skripten registriert.<br/>0: Sicherheits-Feature ist deaktiviert. Alle Skripte mit passendem Namen werden ausgeführt. Die registrierten Quersummen bleiben unangetastet.<br/>1: Geg. zuvor registrierte Quersummen werden jetzt alle gelöscht. Das erste Skript nach der Installation/Konfiguration wird registriert und ausgeführt und kann dann immer wieder ausgeführt werden.<br/>2: Jedes Skript mit passendem Namen wird registriert und ausgeführt! (Quersumme hinzugefügt)<br/>3: Nur zuvor registerte Skripte sind erlaubt. (Registrierung eingefroren)",
-    "subitems": [{
-      "key": "config_ADD_NEW_FINGERPRINTS",
-      "autoSelect": true,
-      "editable": false,
-      "desc": "Script Hash registration",
-      "width": "360",
-      "mode": "local",
-      "valueField": "myId",
-      "displayField": "displayText",
-      "defaultValue": "@ADD_NEW_FINGERPRINTS@",
-      "store": {
-        "xtype": "arraystore",
-        "fields": ["myId", "displayText"],
-        "data": [[0, "0 Feature unbenutzt (ungeschützt)"], [1, "1 Erstes Skript wird erlaubt"], [2, "2 Quersummen hinzufügen"], [3, "3 Nur bisher schon registrierte"]]
-        }
-      }]
-    }]
-  } 
+"type": "textfield",
+"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt. Sie können Autorun im Paketcenter stoppen, um es vorübergehend zu deaktivieren.<br/><br/>Die Suchzeit ist die Zeit nach dem Auslösen durch udev, um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen ist. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Suchzeit (sec)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
 ,{
-  "step_title": "Wichtig: Zusätzliche manuelle Aktion ist erforderlich!",
-  "items": [{
-    "type": "textfield",
-    "desc": "3rd-Party-Pakete sind bei Synology DSM 7.x bezüglich ihrer Rechte eingeschränkt! Autorun benötigt aber Root-Rechte für seine Aktionen. Der folgende manuelle Schritt ist nach der Installation erforderlich:<br/><br/>Per SSH als Admin auf dem NAS einloggen und das folgende Kommando ausführen. Kopieren Sie es jetzt! Und führen sie es nach dem 'Fertig' der Installation dann aus.",
-    "subitems": [{
-      "key": "ignore_value",
-      "desc": "Command",
-      "width": "440",
-      "defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
-      }]
-    }]
-  }
+"key": "config_WAIT",
+"desc":"Wartezeit (sec)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Die Größe der Protokolldateien wird automatisch begrenzt. Wenn die angegebene Zeilenzahl erreicht ist, wird die ältere Hälfte entfernt.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Max. Zeilenzahl",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Das Paket erzeugt DSM-Nachrichten, die auf dem Desktop für konfigurierbare Benutzergruppen oder Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Anzeige der Nachricht an",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Verwendung der 'Kopier-LED':<br/>0: LED wird überhaupt nicht verwendet.<br/>1: EIN während des Laufs oder Auswurfs, danach AUS<br/>2: Blinken während des Laufs oder Auswurfs, danach AUS<br/>3: EIN während des Laufs oder Auswurfs, danach AUS (0/100) oder Blinken (andere Codes)<br/>4: Blinken während des Laufs oder Auswurfs, danach AUS oder Blinken (andere Codes oder Auswurf fehlgeschlagen)<br/>5: Blinken während des Laufs oder Auswurfs, danach AUS (0/100) oder EIN (andere Codes oder AuswurfFehlschlag)",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"LED kopieren",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Verwendung der Status-LED:<br/>0: Gar nicht verwendet<br/>1: Grün während des Skripts, grün blinkend während des Auswerfens, AUS wenn mit 0 oder 100 beendet, orange blinkend für andere Ergebnisse oder fehlgeschlagenes Auswerfen<br/>2: Grün blinkend während des Skripts oder des Auswerfens, grün wenn mit 0 oder 100 beendet, orange blinkend für andere Ergebnisse oder fehlgeschlagenes Auswerfen<br/>3: Grün während des Skripts und während des Auswerfens, AUS wenn beendet, orange blinkend für fehlgeschlagenes Auswerfen",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"Status-LED",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Statusanzeige während der Ausführung des Skripts.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Signalton bei Start und Ende",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Wenn das Skript mit dem Exit-Code 100 endet, wird versucht, das Gerät auszuwerfen. Sie können den Timeout (in Sekunden) für das Auswerfen des Geräts angeben",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Zeitüberschreitung beim Auswerfen [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"Sie können optional ein weiteres Skript (mit vollständigem Pfad!) angeben, das im Falle eines angeforderten Auswurfs (mit Exit-Code 100 aus Ihrem 1. Skript) nach dem Auswurf ausgeführt wird. Dies kann z.B. zum Ausschalten des USB-Gerätes verwendet werden. Wenn der Auswurf fehlgeschlagen ist, lautet das Argument 'Ejection failed', bei Erfolg kein Argument!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Skript nach dem Auswerfen (auf DSM)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Sicherheitskonfiguration",
+"items": [{
+"type": "combobox",
+"desc":"Das Skript mit dem passenden Namen auf Ihrem USB-Gerät wird mit Root-Rechten auf Ihrem DSM ausgeführt! Das kann ein Sicherheitsrisiko darstellen! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/>Aktuell sind @ENTRY_COUNT@ Skript-Hashes registriert.<br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit passendem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: Wahrscheinlich werden alle bisher registrierten Hashes gelöscht. Das 1. Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert eines jeden Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Skript Hash-Registrierung",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"WICHTIG: Manueller Eingriff erforderlich!",
+"items": [{
+"type": "textfield",
+"desc":"Pakete von Drittanbietern werden von Synology in DSM 7.x eingeschränkt! Da Autorun zur Ausführung seiner Aufgabe Root-Rechte benötigt, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.<br/><br/>SH zu Ihrem NAS (als Admin-Benutzer) und führen Sie den folgenden Befehl aus, nachdem die Installation abgeschlossen ist. Kopieren Sie es jetzt!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Befehl",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
 ]
 

@@ -1,0 +1,177 @@
+[{
+"step_title":"Configuração",
+"items": [
+{"type": "textfield",
+"desc":"O script deve ser localizado no directório raiz do dispositivo externo e definido como executável para o utilizador 'raiz'. Obtém o ponto de montagem do dispositivo (por exemplo /volumeUSB1/usbshare/) como o primeiro parâmetro ($1) e a partição do dispositivo (por exemplo usb1p1) como o segundo ($2). Dica: O script é executado com ambiente vazio, é necessário especificar todos os comandos utilizados com caminho!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Roteiro a executar",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"Um valor de saída de 100 do guião irá desmontar e ejectar o dispositivo quando o guião estiver terminado, todos os outros valores de saída irão deixá-lo montado. Pode parar a autorun no centro do pacote para o desactivar temporariamente.<br/><br/> O tempo de procura é o tempo após o disparo pelo udev para encontrar o ponto de montagem quando um dispositivo é ligado. O tempo de espera adicional dá ao DSM alguma margem de manobra para montar correctamente a unidade antes de iniciar o script.<br/> Poderá ter de aumentar esses tempos, dependendo do seu hardware.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Tempo de pesquisa (seg)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Tempo de espera (seg)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"O tamanho dos ficheiros de registo é automaticamente limitado. Se a contagem de linhas dada for atingida, a metade mais velha é removida.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Número máximo de linhas",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"O pacote gera mensagens DSM, que são mostradas no ambiente de trabalho para grupos de utilizadores configuráveis ou utilizadores. Prefira um @ a nomes de grupos, por exemplo @utilizadores para todos os utilizadores",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Exibição de mensagens para",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Utilização de 'Copy LED':<br/>0: Os LED não são de todo utilizados.<br/>1: aceso durante a corrida ou ejecção, apagado depois<br/>2: intermitente durante a corrida ou ejecção, apagado depois<br/>3: aceso durante a corrida ou ejecção, apagado depois (0/100) ou intermitente (outros códigos)<br/>4: intermitente durante a corrida ou ejecção, apagado depois ou intermitente (outros códigos ou ejecção falhando)<br/>5: intermitente durante a corrida ou ejecção, apagado depois (0/100) ou aceso (outros códigos ou ejecçãoFail)",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"Copiar LED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Utilização do LED de estado:<br/>0: Não usado de todo<br/>1: Verde enquanto funciona, verde a piscar durante a ejecção, OFF se terminado com 0 ou 100, laranja a piscar para outros resultados ou ejecção falhada<br/>2: Verde a piscar enquanto o guião está a funcionar ou a ejectar, verde se terminado com 0 ou 100, laranja a piscar para outros resultados ou ejecção falhada<br/>3: Verde enquanto o guião está a funcionar e durante a ejecção, OFF quando terminado, laranja a piscar se a ejecção falhou",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"LED de estado",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Indicação do estado durante a execução do guião.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Bipar no início e no fim",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Se o script terminar com o código de saída 100, será tentado ejectar o dispositivo. Pode especificar o tempo limite (em segundos) para ejectar o dispositivo",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Ejectar Timeout [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"Pode opcionalmente especificar um outro script (com caminho completo!), que é no caso de ejectar (com código de saída 100 do seu 1º script) executado após a ejecção. Isto pode ser utilizado, por exemplo, para desligar o seu dispositivo USB. Se a ejecção falhar, o argumento será \"Ejecção falhada\", sem sucesso nenhum argumento!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Roteiro após ejectar (em DSM)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Configuração de Segurança",
+"items": [{
+"type": "combobox",
+"desc":"O guião com o nome correspondente no seu dispositivo USB é executado com privilégios de raiz no seu DSM! Isso pode ser um risco de segurança! Para melhor segurança é possível uma restrição a scripts com valores de hash sha256 (impressões digitais) pré-registados.<br/>Actually there are @ENTRY_COUNT@ script hashes registerd.<br/>0: A característica de segurança não é utilizada. Todos os scripts com nome correspondente são permitidos. Nenhuma alteração de hashes registados.<br/>1: Provavelmente os hashes registados anteriormente são todos apagados agora. O 1º script após a instalação/configuração será registado e é permitido executar repetidamente.<br/>2: O valor do hash de qualquer script com o nome correspondente será registado e executado! (Adicionar hashes)<br/>3: Apenas os scripts previamente registados são permitidos. (Registo congelado)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Registo de Hash Script",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"IMPORTANTE: Acção Manual Necessária!",
+"items": [{
+"type": "textfield",
+"desc":"Os pacotes de terceiros são restringidos pela Synology no DSM 7.x! Uma vez que a autorun requer autorização da raiz para executar o seu trabalho, é necessário um passo manual adicional após a instalação.<br/>>br/>SSH ao seu NAS (como utilizador administrador) e executar o seguinte comando após a instalação estar concluída. Copie-o agora!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Comando",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

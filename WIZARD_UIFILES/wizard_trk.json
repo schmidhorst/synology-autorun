@@ -1,0 +1,177 @@
+[{
+"step_title":"Konfigürasyon",
+"items": [
+{"type": "textfield",
+"desc":"Betik harici aygıtın kök dizininde bulunmalı ve 'root' kullanıcısı için çalıştırılabilir olarak ayarlanmalıdır. İlk parametre ($1) olarak aygıtın bağlama noktasını (örn. /volumeUSB1/usbshare/) ve ikinci parametre ($2) olarak aygıt bölümünü (örn. usb1p1) alır. İpucu: Komut dosyası boş ortamla çalıştırılır, kullanılan tüm komutları yol ile belirtmeniz gerekir!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Yürütülecek komut dosyası",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"Komut dosyasından 100 çıkış değeri, komut dosyası bittiğinde aygıtın bağlantısını kaldıracak ve çıkaracaktır, diğer tüm çıkış değerleri aygıtı takılı bırakacaktır. Geçici olarak devre dışı bırakmak için paket merkezinde otomatik çalıştırmayı durdurabilirsiniz.<br/><br/>Arama süresi, bir aygıt takıldığında bağlama noktasını bulmak için udev tarafından tetiklendikten sonra geçen süredir. Ek bekleme süresi, DSM'ye betiği başlatmadan önce sürücüyü düzgün bir şekilde bağlaması için biraz zaman verir.<br/>Donanımınıza bağlı olarak bu süreleri artırmanız gerekebilir.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Arama süresi (sn)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Bekleme süresi (sn)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Günlük dosyalarının boyutu otomatik olarak sınırlandırılır. Verilen satır sayısına ulaşılırsa, eski yarısı kaldırılır.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Maks. satır sayısı",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Paket, yapılandırılabilir kullanıcı gruplarına veya kullanıcılara masaüstünde gösterilen DSM mesajları oluşturur. Grup adlarının başına bir @ ekleyin, örneğin tüm kullanıcılar için @users",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Mesaj ekranı",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"'Kopyalama LED'i' kullanımı:<br/>0: LED hiç kullanılmaz.<br/>1: Çalışırken veya çıkarırken AÇIK, sonrasında KAPALI<br/>2: Çalışırken veya çıkarırken yanıp söner, sonrasında KAPALI<br/>3: Çalışırken veya çıkarırken AÇIK, sonrasında KAPALI (0/100) veya yanıp söner (diğer kodlar)<br/>4: Çalışırken veya çıkarırken yanıp söner, sonrasında KAPALI veya yanıp söner (diğer kodlar veya çıkarma başarısız)<br/>5: Çalışırken veya çıkarırken yanıp söner, sonrasında KAPALI (0/100) veya AÇIK (diğer kodlar veya çıkarma başarısız)",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"Kopyalama LED'i",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Durum LED'inin kullanımı:<br/>0: Hiç kullanılmaz<br/>1: Çalışırken yeşil, çıkarma sırasında yeşil yanıp sönme, 0 veya 100 ile bittiğinde KAPALI, diğer sonuçlar veya başarısız çıkarma için turuncu yanıp sönme<br/>2: Kod çalışırken veya çıkarılırken yeşil yanıp sönme, 0 veya 100 ile bittiğinde yeşil, diğer sonuçlar veya başarısız çıkarma için turuncu yanıp sönme<br/>3: Kod çalışırken ve çıkarma sırasında yeşil, bittiğinde KAPALI, çıkarma başarısız olduğunda turuncu yanıp sönme",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"Durum LED'i",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Komut dosyasını çalıştırırken durum göstergesi.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Başlangıçta ve bitişte bip sesi",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Kod 100 çıkış koduyla sona ererse, aygıtın çıkarılması denenecektir. Aygıtı çıkarmak için zaman aşımını (saniye cinsinden) belirtebilirsiniz",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Çıkarma Zaman Aşımı [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"İsteğe bağlı olarak, talep edilen çıkarma durumunda (1. komut dosyanızdan çıkış kodu 100 ile) çıkarma işleminden sonra çalıştırılan başka bir komut dosyası (tam yolla!) belirtebilirsiniz. Bu, örneğin USB cihazınızı kapatmak için kullanılabilir. Çıkarma başarısız olursa, argüman 'Çıkarma başarısız' olacaktır, başarıda argüman yoktur!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Çıkardıktan sonra komut dosyası (DSM'de)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Güvenlik Yapılandırması",
+"items": [{
+"type": "combobox",
+"desc":"USB cihazınızdaki eşleşen isme sahip betik, DSM'nizde root yetkileriyle çalıştırılır! Bu bir güvenlik riski olabilir! Daha iyi güvenlik için önceden kaydedilmiş sha256 hash değerlerine (parmak izleri) sahip betiklerle kısıtlama mümkündür.<br/>Aslında @ENTRY_COUNT@ betik hashleri kayıtlıdır.<br/>0: Güvenlik özelliği kullanılmaz. Eşleşen ada sahip tüm komut dosyalarına izin verilir. Kayıtlı hash'lerde değişiklik yok.<br/>1: Muhtemelen önceki kayıtlı hash'lerin tümü şimdi silinmiştir. Kurulum / yapılandırmadan sonraki ilk komut dosyası kaydedilecek ve daha sonra tekrar tekrar yürütülmesine izin verilecektir.<br/>2: Eşleşen ada sahip herhangi bir komut dosyasının karma değeri kaydedilecek ve yürütülecektir! (Hash ekle)<br/>3: Sadece önceden kaydedilmiş betiklere izin verilir. (Kayıt donduruldu)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Script Hash kaydı",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"ÖNEMLİ: Manuel İşlem Gerekli!",
+"items": [{
+"type": "textfield",
+"desc":"Üçüncü taraf paketleri DSM 7.x'de Synology tarafından kısıtlanmıştır! Otomatik çalıştırma işini gerçekleştirmek için kök izni gerektirdiğinden, kurulumdan sonra ek bir manuel adım gereklidir.<br/><br/>SSH ile NAS'ınıza bağlanın (yönetici kullanıcı olarak) ve kurulum tamamlandıktan sonra aşağıdaki komutu çalıştırın. Şimdi kopyalayın!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Komuta",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

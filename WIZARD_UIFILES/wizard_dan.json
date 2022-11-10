@@ -1,0 +1,177 @@
+[{
+"step_title":"Konfiguration",
+"items": [
+{"type": "textfield",
+"desc":"Scriptet skal være placeret i rodmappen på den eksterne enhed og indstillet som eksekverbart for brugeren \"root\". Det får enhedens monteringspunkt (f.eks. /volumeUSB1/usbshare/) som den første parameter ($1) og enhedens partition (f.eks. usb1p1) som den anden ($2). Tip: Scriptet udføres med et tomt miljø, du skal angive alle de anvendte kommandoer med sti!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Script til udførelse",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"En exit-værdi på 100 fra scriptet vil afmontere og skubbe enheden ud, når scriptet er færdigt, mens alle andre exit-værdier vil lade den være monteret. Du kan stoppe autorun i pakkecenteret for midlertidigt at deaktivere det.<br/><br/>Søgetiden er tiden efter udløsningen af udev til at finde monteringspunktet, når en enhed er tilsluttet. Den ekstra ventetid giver DSM noget spillerum til at montere drevet korrekt, før scriptet startes.<br/>Du skal muligvis øge disse tider afhængigt af din hardware.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Søgetid (sek.)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Ventetid (sek.)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Størrelsen af logfilerne begrænses automatisk. Hvis det angivne antal linjer er nået, fjernes den ældste halvdel.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Max. antal linjer",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"Pakken genererer DSM-meddelelser, som vises på skrivebordet til konfigurerbare brugergrupper eller brugere. Tilføj et @ til gruppenavne, f.eks. @users for alle brugere",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Visning af meddelelse til",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Brug af \"Copy LED\":<br/>0: LED bruges slet ikke.<br/>1: Tændt under kørsel eller udkast, slukket bagefter<br/>2: blinker under kørsel eller udkast, slukket bagefter<br/>3: Tændt under kørsel eller udkast, slukket bagefter (0/100) eller blinker (andre koder)<br/>4: blinker under kørsel eller udkast, slukket bagefter eller blinker (andre koder eller udkastfejl)<br/>5: blinker under kørsel eller udkast, slukket bagefter (0/100) eller tændt (andre koder eller udkastfejl).",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"Kopier LED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Anvendelse af status-LED:<br/>0: Anvendes slet ikke<br/>1: Grøn under kørsel, grønt blink under udkast, slukket hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>2: Grønt blink under kørsel eller udkast, grønt hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>3: Grønt under kørsel og under udkast, slukket når scriptet er afsluttet, orange blink hvis udkast mislykkedes",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"Status-LED",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Statusangivelse under kørsel af scriptet.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Bip ved start og slut",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Hvis scriptet slutter med exit-kode 100, vil det blive forsøgt at skubbe enheden ud. Du kan angive timeouttiden (i sekunder) for udsmidning af enheden",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Timeout for udtagning [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"Du kan eventuelt angive et yderligere script (med fuld sti!), som i tilfælde af anmodet udkast (med exitkode 100 fra dit første script) udføres efter udkastningen. Dette kan f.eks. bruges til at slukke for din USB-enhed. Hvis udsmidningen mislykkedes, vil argumentet være \"Ejection failed\", ved succes intet argument!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Script efter udkast (på DSM)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Sikkerhedskonfiguration",
+"items": [{
+"type": "combobox",
+"desc":"Scriptet med det tilsvarende navn på din USB-enhed udføres med root-rettigheder på din DSM! Det kan være en sikkerhedsrisiko! For at opnå bedre sikkerhed er det muligt at begrænse brugen af scripts med forudregistrerede sha256-hashværdier (fingeraftryk).<br/>Der er faktisk @ENTRY_COUNT@ script-hashværdier registreret.<br/>0: Sikkerhedsfunktionen anvendes ikke. Alle scripts med matchende navn er tilladt. Ingen ændring af registrerede hashes.<br/>1: Sandsynligvis er tidligere registrerede hashes alle slettet nu. Det 1. script efter installation/konfiguration vil blive registreret og må derefter udføres igen og igen.<br/>2: Hash-værdien af ethvert script med matchende navn vil blive registreret og udført! (Tilføj hashes)<br/>3: Kun tidligere registrerede scripts er tilladt. (Registrering fastfrosset)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Script Hash-registrering",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"VIGTIGT: Manuel handling er nødvendig!",
+"items": [{
+"type": "textfield",
+"desc":"Tredjepartspakker er begrænset af Synology i DSM 7.x! Da autorun kræver root-tilladelse for at udføre sit arbejde, er der behov for et ekstra manuelt trin efter installationen.<br/><br/>SSH til din NAS (som administratorbruger) og udfør følgende kommando, når installationen er færdig. Kopier den nu!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Kommando",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

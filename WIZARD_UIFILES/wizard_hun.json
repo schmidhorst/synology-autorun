@@ -1,0 +1,177 @@
+[{
+"step_title":"Konfiguráció",
+"items": [
+{"type": "textfield",
+"desc":"A szkriptnek a külső eszköz gyökérkönyvtárában kell lennie, és a \"root\" felhasználó számára futtathatónak kell lennie. Első paraméterként ($1) az eszköz csatlakozási pontját (pl. /volumeUSB1/usbshare/), második paraméterként ($2) pedig az eszköz partícióját (pl. usb1p1) kapja meg. Tipp: A szkript üres környezettel hajtódik végre, minden használt parancsot meg kell adnod a path-val!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Végrehajtandó szkript",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"A szkript 100-as kilépési értéke a szkript befejezésekor leveszi és kidobja az eszközt, az összes többi kilépési érték pedig bekötve hagyja azt. A csomagközpontban leállíthatja az automatikus indítást, hogy ideiglenesen kikapcsolja.<br/><br/>A keresési idő az udev által az eszköz csatlakoztatásakor a csatolási pont megtalálására szolgáló trigger után eltelt idő. A további várakozási idő némi mozgásteret ad a DSM-nek, hogy a szkript indítása előtt megfelelően csatlakoztassa a meghajtót.<br/>Ezeket az időket a hardveredtől függően növelned kell.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Keresési idő (sec)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Várakozási idő (sec)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"A naplófájlok mérete automatikusan korlátozott. Ha a megadott sorszámot elérjük, az idősebbik felét eltávolítjuk.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Maximális sorszám",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"A csomag DSM-üzeneteket generál, amelyek a konfigurálható felhasználói csoportok vagy felhasználók számára az asztalon jelennek meg. A csoportnevek elé egy @ jelet kell írni, pl. @users az összes felhasználóhoz.",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Üzenet megjelenítése a",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"A \"Copy LED\" használata:<br/>0: A LED egyáltalán nem használatos.<br/>1: futás vagy kidobás közben bekapcsol, utána kikapcsol<br/>2: futás vagy kidobás közben villog, utána kikapcsol<br/>3: futás vagy kidobás közben bekapcsol, utána kikapcsol (0/100) vagy villog (egyéb kódok)<br/>4: futás vagy kidobás közben villog, utána kikapcsol vagy villog (egyéb kódok vagy kidobás sikertelen)<br/>5: futás vagy kidobás közben villog, utána kikapcsol (0/100) vagy bekapcsol (egyéb kódok vagy kidobás sikertelen).",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"LED másolása",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Az állapotjelző LED használata:<br/>0: Egyáltalán nem használatos<br/>1: Zöld futás közben, zöld villogás kilövés közben, kikapcsolva, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>2: Zöld villogás a szkript futása vagy kilövése közben, zöld villogás, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>3: Zöld villogás a szkript futása közben és kilövés közben, kikapcsolva, ha befejeződött, narancssárga villogás sikertelen kilövés esetén.",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"Állapot LED",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Státuszjelzés a szkript futtatása közben.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Sípszó az indításkor és a végén",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Ha a szkript a 100-as kilépési kóddal ér véget, akkor megpróbálja kidobni az eszközt. Megadhatja az eszköz kidobásának időkorlátját (másodpercben).",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Kilövési időkorlát [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"Opcionálisan megadhat egy további szkriptet (teljes elérési úttal!), amely a kért kilövés esetén (az 1. szkript 100-as kilépési kódjával) a kilövés után végrehajtódik. Ez például az USB-eszköz kikapcsolására használható. Sikertelen kilövés esetén az argumentum 'Ejection failed' lesz, siker esetén nincs argumentum!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Szkript a kioldás után (DSM-en)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Biztonsági konfiguráció",
+"items": [{
+"type": "combobox",
+"desc":"Az USB-eszközön lévő megfelelő nevű szkriptet root jogosultsággal hajtja végre a DSM-jén! Ez biztonsági kockázatot jelenthet! A nagyobb biztonság érdekében lehetséges az előre regisztrált sha256 hash értékekkel (ujjlenyomatok) rendelkező szkriptekre való korlátozás.<br/>Ténylegesen @ENTRY_COUNT@ szkript hash értékek vannak regisztrálva.<br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ok nem változnak.<br/>1: Valószínűleg a korábbi regisztrált hash-ok most mind törlődnek. A telepítés/konfigurálás utáni 1. szkript regisztrálásra kerül, majd újra és újra végrehajtásra kerül.<br/>2: Minden azonos nevű szkript hash értéke regisztrálásra és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Script Hash regisztráció",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"FONTOS: Kézi művelet szükséges!",
+"items": [{
+"type": "textfield",
+"desc":"A DSM 7.x-ben a Synology korlátozza a harmadik féltől származó csomagokat! Mivel az autorun root jogosultságot igényel a feladat elvégzéséhez, a telepítés után további manuális lépésre van szükség.<br/><br/>SSH-hozzáférés a NAS-hoz (admin felhasználóként), és a telepítés befejezése után hajtsa végre a következő parancsot. Másolja ki most!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Parancs",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

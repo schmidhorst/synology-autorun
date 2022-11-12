@@ -18,16 +18,17 @@ deepl_url="https://api.deepl.com/v2/translate?auth_key=$apikey"
 # deepl_url="https://api-free.deepl.com/v2/translate?auth_key=$apikey"
 
 declare -A SYNO2ISO
-SYNO2ISO=( ["ger"]="de" ["enu"]="en" ["chs"]="zh" ["csy"]="cs" ["jpn"]="ja" ["krn"]="ko" ["dan"]="da" ["fre"]="fr" ["ita"]="it" ["nld"]="nl" ["nor"]="no" ["plk"]="pl" ["rus"]="ru" ["spn"]="es" ["sve"]="sv" ["hun"]="hu" ["trk"]="tr" ["ptg"]="pt")
+SYNO2ISO=( ["ger"]="de" ["enu"]="en" ["chs"]="zh" ["csy"]="cs" ["jpn"]="ja" ["krn"]="ko" ["dan"]="da" ["fre"]="fr" ["ita"]="it" ["nld"]="nl"              ["plk"]="pl" ["rus"]="ru" ["spn"]="es" ["sve"]="sv" ["hun"]="hu" ["trk"]="tr" ["ptb"]="pt-BR" ["ptg"]="pt-PT" )
+# Japan: ja (DeepL acc. FIPS 10 = U.S. Federal Information Processing Standard No. 10), not jp (ISO 3166-1)?
 
-# synoLangs="enu chs krn ger fre ita spn jpn dan nor sve nld rus plk ptb ptg hun trk csy"
-# synoLangs="enu chs ger fre ita spn jpn dan sve nld rus plk ptg hun trk csy"
+# https://www.laenderdaten.info/laendercodes.php
 
 # Deepl: BG - Bulgarian, , EL - Greek, ET - Estonian, FI - Finnish, ID - Indonesian, LT - Lithuanian, LV - Latvian, RO - Romanian, RO - Romanian, SK - Slovak, SL - Slovenian, UK - Ukrainian
-# DeepL-Syno: CS - Czech - csy, DA - Danish - dan, DE - German - ger, EN - English - enu, ES - Spanish - spn, FR - French - fre, HU - Hungarian - hun, IT - Italian - ita, JA - Japanese - jpn, NL - Dutch - nld, PL - Polish - plk, PT - Portuguese - ptg, RU - Russian - rus, SV - Swedish - sve, TR - Turkish - trk, ZH - Chinese - chs
-#Syno:  ["krn"]="ko", ["nor"]="no"
+# DeepL-Syno: CS - Czech - csy, DA - Danish - dan, DE - German - ger, EN - English - enu, ES - Spanish - spn, FR - French - fre, HU - Hungarian - hun, IT - Italian - ita, JA - Japanese - jpn, NL - Dutch - nld, PL - Polish - plk, PT-BR - Portuguese Brazilian - ptb,  PT-PT - Portuguese European - ptg, RU - Russian - rus, SV - Swedish - sve, TR - Turkish - trk, ZH - Chinese simplified - chs
+#Syno: ["cht"]="" Chinese traditional,  ["krn"]="ko" Korean, NO - Norwegian - nor,  th - Thai - tha
 
-synoLangs="chs csy dan fre hun ita jpn nld plk ptg rus spn sve trk"
+
+synoLangs="chs csy dan fre hun ita jpn nld plk ptb ptg rus spn sve trk"
 #synoLangs="ger fre ita jpn"
 
 sourceSynoLang="enu"
@@ -69,7 +70,7 @@ for sourcefile in "${sourceablefiles[@]}"; do
       if [[ "$bExec" -ne "0" ]]; then
         if [[ ! -d "$filePath/${synoLang}" ]]; then
           mkdir "$filePath/${synoLang}" 
-          chmod 700 "$filePath/${synoLang}"
+          chmod 777 "$filePath/${synoLang}"
           chown :users "$filePath/${synoLang}" 
         fi
       fi

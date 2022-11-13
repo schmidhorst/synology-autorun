@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"Licencja",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"Licencja BSD 3-Clause<br><br>Copyright (c) 2011-2022, Jan Reidemeister i Horst Schmid<br>Wszystkie prawa zastrzeżone.<br><br>Redystrybucja i wykorzystanie w formie źródłowej i binarnej, z lub bez modyfikacji, są dozwolone pod warunkiem spełnienia następujących warunków:<br>1. Redystrybucja kodu źródłowego musi zachować powyższą informację o prawach autorskich, niniejszą listę warunków i następujące zrzeczenie.<br>2. Redystrybucja w formie binarnej musi reprodukować powyższą informację o prawach autorskich, niniejszą listę warunków i następujące zrzeczenie w dokumentacji i/lub innych materiałach dostarczonych z dystrybucją.<br>3. Ani nazwa właściciela praw autorskich, ani nazwy jego współpracowników nie mogą być używane do popierania lub promowania produktów pochodzących z tego oprogramowania bez specjalnego wcześniejszego pisemnego zezwolenia.<br><br>Niniejsze oprogramowanie jest dostarczane przez posiadaczy praw autorskich i współtwórców \"takie, jakie jest\", a wszelkie wyraźne lub dorozumiane gwarancje, w tym między innymi dorozumiane gwarancje przydatności handlowej i przydatności do określonego celu, są wyłączone. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Zaakceptowany",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"Konfiguracja",
 "items": [
 {"type": "textfield",
@@ -63,7 +83,7 @@
 }
 ,{
 "type": "combobox",
-"desc":"Zastosowanie 'Copy LED':<br/>0: diody nie są w ogóle używane.<br/>1: włączona podczas biegu lub wysuwania, wyłączona po tym<br/>2: migająca podczas biegu lub wysuwania, wyłączona po tym<br/>3: włączona podczas biegu lub wysuwania, po tym wyłączona (0/100) lub migająca (inne kody)<br/>4: migająca podczas biegu lub wysuwania, po tym wyłączona lub migająca (inne kody lub wysuwanie nieudane)<br/>5: migająca podczas biegu lub wysuwania, po tym wyłączona (0/100) lub włączona (inne kody lub wysuwanie nieudane)",
+"desc":"Zastosowanie \"Copy LED\":<br/>0: diody nie są w ogóle używane.<br/>1: włączona podczas biegu lub wysuwania, wyłączona po tym<br/>2: migająca podczas biegu lub wysuwania, wyłączona po tym<br/>3: włączona podczas biegu lub wysuwania, po tym wyłączona (0/100) lub migająca (inne kody)<br/>4: migająca podczas biegu lub wysuwania, po tym wyłączona lub migająca (inne kody lub wysuwanie nieudane)<br/>5: migająca podczas biegu lub wysuwania, po tym wyłączona (0/100) lub włączona (inne kody lub wysuwanie nieudane)",
 "subitems": [{
 "key": "config_LED_COPY",
 "autoSelect": true,

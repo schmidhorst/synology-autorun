@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"Engedély",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister és Horst Schmid<br>Minden jog fenntartva.<br><br>Az újraelosztás és felhasználás forrás- és bináris formában, módosítással vagy anélkül, a következő feltételek teljesülése esetén engedélyezett:<br>1. A forráskód újraelosztásának meg kell tartania a fenti szerzői jogi közleményt, a jelen feltétellistát és az alábbi nyilatkozatot.<br>2. A bináris formában történő újraelosztásnak a fenti szerzői jogi közleményt, a jelen feltétellistát és az alábbi nyilatkozatot a dokumentációban és/vagy a terjesztéshez mellékelt egyéb anyagokban meg kell ismételnie.<br>3. A szerzői jog jogosultjának neve és a közreműködők neve nem használható fel a szoftverből származó termékek támogatására vagy népszerűsítésére külön előzetes írásbeli engedély nélkül.<br><br>A SZOFTVERT A TULAJDONSÁGI JOGTULAJOK FENNTARTÓI ÉS SZERZŐI \"AZONNAL\" TÁLLÍTJÁK, ÉS MINDEN KIFEJEZETT VAGY KELETLEN JÓTÉRVÉNY, BELEÉRTVE, DE NEM KORLÁTOZVA A KELETLEN JÓTÉRVÉNYRE ÉS A MEGHATÁROZOTT CÉLRA VALÓ ALKALMAZHATÓSÁGRA VONATKOZÓ KIFEJEZETT JÓTÉRVÉNYEKET KIZÁRÓLAG. A SZERZŐI JOGTULAJDONOS VAGY A KÖZREMŰKÖDŐK SEMMILYEN KÖRÜLMÉNYEK KÖZÖTT NEM FELELNEK SEMMILYEN KÖZVETLEN, KÖZVETETT, VÉLETLEN, KÜLÖNLEGES, PÉLDAMUTATÓ VAGY KÖVETKEZMÉNYES KÁRÉRT (BELEÉRTVE, DE NEM KIZÁRÓLAGOSAN A HELYETTESÍTŐ ÁRUK VAGY SZOLGÁLTATÁSOK BESZERZÉSÉT; A HASZNÁLAT, AZ ADATOK VAGY A NYERESÉG ELVESZTÉSÉT; VAGY AZ ÜZLETMENET MEGSZAKÍTÁSÁT), BÁRMILYEN OKBÓL ÉS BÁRMILYEN FELELŐSSÉGI ELMÉLET ALAPJÁN, AKÁR SZERZŐDÉS, SZIGORÚ FELELŐSSÉG, AKÁR KÁROKOZÁS (BELEÉRTVE A GONDATLANSÁGOT VAGY MÁS OKBÓL), AMELY BÁRMILYEN MÓDON A SZOFTVER HASZNÁLATÁBÓL ERED, MÉG AKKOR SEM, HA TUDTAK AZ ILYEN KÁR LEHETŐSÉGÉRŐL.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Elfogadva",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"Konfiguráció",
 "items": [
 {"type": "textfield",
@@ -83,7 +103,7 @@
 }
 ,{
 "type": "combobox",
-"desc":"Az állapotjelző LED használata:<br/>0: Egyáltalán nem használatos<br/>1: Zöld futás közben, zöld villogás kilövés közben, kikapcsolva, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>2: Zöld villogás a szkript futása vagy kilövése közben, zöld villogás, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>3: Zöld villogás a szkript futása közben és kilövés közben, kikapcsolva, ha befejeződött, narancssárga villogás sikertelen kilövés esetén.",
+"desc":"Az állapotjelző LED használata:<br/>0: Egyáltalán nem használatos<br/>1: Zöld futás közben, zöld villogás kilövés közben, OFF, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>2: Zöld villogás a szkript futása vagy kilövése közben, zöld villogás, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>3: Zöld villogás a szkript futása közben és kilövés közben, OFF, ha befejeződött, narancssárga villogás sikertelen kilövés esetén.",
 "subitems": [{
 "key": "config_LED",
 "autoSelect": true,
@@ -106,7 +126,7 @@
 "desc":"<br/>Státuszjelzés a szkript futtatása közben.",
 "subitems": [{
 "key": "config_BEEP",
-"desc":"Sípszó az indításkor és a végén",
+"desc":"Sípszó az indításkor és a befejezéskor",
 "defaultValue": "@BEEP@"
 }]
 }
@@ -141,7 +161,7 @@
 "step_title":"Biztonsági konfiguráció",
 "items": [{
 "type": "combobox",
-"desc":"Az USB-eszközön lévő megfelelő nevű szkriptet root jogosultsággal hajtja végre a DSM-jén! Ez biztonsági kockázatot jelenthet! A nagyobb biztonság érdekében lehetséges az előre regisztrált sha256 hash értékekkel (ujjlenyomatok) rendelkező szkriptekre való korlátozás.<br/>Ténylegesen @ENTRY_COUNT@ szkript hash értékek vannak regisztrálva.<br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ok nem változnak.<br/>1: Valószínűleg a korábbi regisztrált hash-ok most mind törlődnek. A telepítés/konfigurálás utáni 1. szkript regisztrálásra kerül, majd újra és újra végrehajtásra kerül.<br/>2: Minden azonos nevű szkript hash értéke regisztrálásra és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
+"desc":"Az USB-eszközön lévő megfelelő nevű szkriptet root jogosultságokkal hajtja végre a DSM-jén! Ez biztonsági kockázatot jelenthet! A nagyobb biztonság érdekében lehetséges az előre regisztrált sha256 hash értékekkel (ujjlenyomatok) rendelkező szkriptekre való korlátozás.<br/>Ténylegesen @ENTRY_COUNT@ szkript hash értékek vannak regisztrálva.<br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ok nem változnak.<br/>1: Valószínűleg a korábbi regisztrált hash-ok most mind törlődnek. A telepítés/konfigurálás utáni 1. szkript regisztrálásra kerül, majd újra és újra végrehajtásra kerül.<br/>2: Minden azonos nevű szkript hash értéke regisztrálásra és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS",
 "autoSelect": true,

@@ -67,9 +67,6 @@ else
   chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
   chmod 644 "$SCRIPT_EXEC_LOG"
   gui_lang=$(/bin/get_key_value /etc/synoinfo.conf language)
-  if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$gui_lang/lang.txt" ]]; then
-    echo "$(date "$DTFMT"): Sorry, up to now there is no translation to your language $gui_lang implemented. If you want to help to translate all the messages, please send a message in German or Englisch to synoapps@schmidhorst.de. Thanks!" >> "$SCRIPT_EXEC_LOG"
-  fi
 fi
 
 if [[ -f "$LOG" ]]; then
@@ -135,7 +132,7 @@ executeFoundScript(){
   else
     execTime="$execTime_s seconds"
   fi 
-  echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
+  #echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
   # get the free space
   FREE=$(/bin/df -h "$MOUNTPATH" | /bin/grep "$MOUNTPATH" | /bin/awk '{ print $4 }')  # e.g. "2.1T"
   ejected=0 # 0: no eject, 1: ejecting, 2: eject success, 3: eject fail
@@ -194,18 +191,21 @@ executeFoundScript(){
     ((k--))
     done # while not timeout 
     if [[ $ejected -eq 1 ]]; then
+      echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Attention: The requested ejection of the device failed!!" >> "$SCRIPT_EXEC_LOG"
       ejected=3 # failed
     fi
-    logInfo 4 "Eject part finisched with $ejected. (0: no eject, 1: ejecting, 2: eject success, 3: eject fail) "
+    logInfo 4 "Eject part finisched with $ejected. (0: no eject, 2: eject success, 3: eject fail) "
     if [[ -n "$SCRIPT_AFTER_EJECT" ]]; then
       if [ -x "$SCRIPT_AFTER_EJECT" ]; then
         # logInfo "ejected=$ejected"
         if [[ $ejected -eq 2 ]]; then
           logInfo 3 "Script '$SCRIPT_AFTER_EJECT' will be started without parameter!"
           sh "$SCRIPT_AFTER_EJECT"
+          echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Device successfully ejected and the script '$SCRIPT_AFTER_EJECT' done" >> "$SCRIPT_EXEC_LOG"
         else
           logInfo 3 "Script '$SCRIPT_AFTER_EJECT' will be started with 'Ejection failed'!"
           sh "$SCRIPT_AFTER_EJECT" "Ejection failed"
+          echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Device ejecting was failing. The script '$SCRIPT_AFTER_EJECT' with parameter 'Ejection failed' done." >> "$SCRIPT_EXEC_LOG"          
         fi
         # if [[ -n "$NOTIFY_USERS" ]]; then
         #  /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg11" "$SYNOPKG_PKGNAME" "$SCRIPT" "$SCRIPT_AFTER_EJECT"
@@ -218,6 +218,7 @@ executeFoundScript(){
       fi
     else
       logInfo 3 "No SCRIPT_AFTER_EJECT specified"
+      echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
     fi
 
     if [[ $ejected -eq 3 ]]; then
@@ -232,6 +233,7 @@ executeFoundScript(){
       fi       
     fi
   else 
+    echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
     echo "Result != 100"
     logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished with $RESULT ($FREE left on device), no unmount requested"
     if [[ -n "$NOTIFY_USERS" ]]; then

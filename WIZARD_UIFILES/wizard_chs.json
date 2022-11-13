@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"许可证",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister and Horst Schmid<br>All rights reserved.<br><br>在满足以下条件的情况下，允许以源代码和二进制形式重新发布和使用，无论是否修改：<br>1.<br>2.以二进制形式的再发行必须在随发行物提供的文件和/或其他材料中复制上述版权声明、本条件清单和下列免责声明。未经特定的事先书面许可，版权所有者的名字或其贡献者的名字都不得用于支持或推广由本软件衍生的产品。<br><br>本软件由版权持有人和贡献者 \"按原样 \"提供，任何明示或暗示的保证，包括但不限于隐含的适销性和适用于某一特定目的的保证，均不适用。在任何情况下，版权持有人或贡献者都不对任何直接的、间接的、偶然的、特殊的、惩戒性的或后果性的损害（包括但不限于采购替代商品或服务；使用、数据或利润的损失；或业务中断）负责，无论其原因和责任理论如何，也无论其是合同、严格责任还是侵权行为（包括过失或其他），都是由使用本软件而引起的，即使被告知这种损害的可能性。",
+"subitems": [
+{
+"key": "id1",
+"desc":"已接受",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"配置",
 "items": [
 {"type": "textfield",
@@ -164,7 +184,7 @@
 "step_title":"重要提示：需要手动操作!",
 "items": [{
 "type": "textfield",
-"desc":"第三方软件包在DSM 7.x中受到Synology的限制!<br/><br/>SSH到你的NAS（以管理员身份）并在安装完成后执行以下命令。现在就复制它!",
+"desc":"第三方软件包在DSM 7.x中受到Synology的限制!<br/><br/>SSH到你的NAS（以管理员身份），并在安装完成后执行以下命令，因为自动运行需要root权限来执行其工作。现在就复制它!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"指挥部",

@@ -1,0 +1,197 @@
+[
+{
+"step_title":"Licença",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"BSD 3-Clause License<br>>br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>todos os direitos reservados.<br>>br>br>Redistribuição e uso em fontes e formulários binários, com ou sem modificação, são permitidos desde que as seguintes condições sejam cumpridas:<br>1. Redistribuições de código fonte devem manter o aviso de direitos autorais acima, esta lista de condições e a seguinte isenção de responsabilidade.<br>2. Redistribuições em formato binário devem reproduzir o aviso de direitos autorais acima, esta lista de condições e a seguinte isenção de responsabilidade na documentação e/ou outros materiais fornecidos com a distribuição.<br>3. Nem o nome do detentor dos direitos autorais nem os nomes de seus contribuintes podem ser usados para endossar ou promover produtos derivados deste software sem permissão prévia por escrito específica.<br>>br>STE SOFTWARE É FORNECIDO PELOS COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' E QUALQUER GARANTIAS EXPRESSAS OU IMPLÍCITAS, INCLUINDO, MAS NÃO LIMITADAS, AS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO PARA UM PROPÓSITO PARTICULAR SÃO DESCARREGADAS. EM NENHUMA HIPÓTESE O DETENTOR DOS DIREITOS AUTORAIS OU CONTRIBUINTES SERÁ RESPONSÁVEL POR QUAISQUER DANOS DIRETOS, INDIRETOS, INCIDENTAIS, ESPECIAIS, EXEMPLARES OU CONSEQÜENTES (INCLUINDO, MAS NÃO SE LIMITANDO À AQUISIÇÃO DE BENS OU SERVIÇOS SUBSTITUTOS; PERDA DE USO, DADOS OU LUCROS; OU INTERRUPÇÃO DE NEGÓCIOS) CAUSADOS POR QUALQUER FORMA E SOBRE QUALQUER TEORIA DE RESPONSABILIDADE, SEJA EM CONTRATO, RESPONSABILIDADE ESTRITA, OU ATO ILÍCITO (INCLUINDO NEGLIGÊNCIA OU DE OUTRA FORMA) DECORRENTE DE QUALQUER FORMA DO USO DESTE SOFTWARE, MESMO SE AVISADO DA POSSIBILIDADE DE TAIS DANOS.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Aceito",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
+"step_title":"Configuração",
+"items": [
+{"type": "textfield",
+"desc":"O script deve estar localizado no diretório raiz do dispositivo externo e definido como executável para o usuário 'raiz'. Ele obtém o ponto de montagem do dispositivo (por exemplo, /volumeUSB1/usbshare/) como o primeiro parâmetro ($1) e a partição do dispositivo (por exemplo, usb1p1) como o segundo ($2). Dica: O script é executado com ambiente vazio, você tem que especificar todos os comandos usados com caminho!",
+"subitems": [{
+"key": "config_SCRIPT",
+"desc":"Roteiro para executar",
+"defaultValue": "@SCRIPT@",
+"validator": { "allowBlank": false }
+}]
+}
+,{
+"type": "textfield",
+"desc":"Um valor de saída de 100 do script irá desmontar e ejetar o dispositivo quando o script for terminado, todos os outros valores de saída o deixarão montado. Você pode parar o autorun no centro do pacote para desativá-lo temporariamente.<br/><br/> O tempo de busca é o tempo após o disparo pelo udev para encontrar o ponto de montagem quando um dispositivo é anexado. O tempo de espera adicional dá ao DSM alguma margem de manobra para montar corretamente o drive antes de iniciar o script.<br/> Você pode ter que aumentar esses tempos dependendo de seu hardware.",
+"subitems": [
+{
+"key": "config_TRIES",
+"desc":"Tempo de busca (seg)",
+"defaultValue": "@TRIES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+,{
+"key": "config_WAIT",
+"desc":"Tempo de espera (seg)",
+"defaultValue": "@WAIT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"O tamanho dos arquivos de registro é automaticamente limitado. Se a contagem de linhas determinada for atingida, a metade mais velha é removida.",
+"subitems": [
+{
+"key": "config_LOG_MAX_LINES",
+"desc":"Número máximo de linhas",
+"defaultValue": "@LOG_MAX_LINES@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}
+]
+}
+,{
+"type": "textfield",
+"desc":"O pacote gera mensagens DSM, que são mostradas na área de trabalho para grupos de usuários ou usuários configuráveis. Prefira um @ a nomes de grupos, por exemplo, @usuários para todos os usuários",
+"subitems": [{
+"key": "config_NOTIFY_USERS",
+"desc":"Exibição de mensagens para",
+"width": "360",
+"defaultValue": "@NOTIFY_USERS@",
+"validator": { "allowBlank": true }
+}
+]
+}
+,{
+"type": "combobox",
+"desc":"Uso de 'Copy LED':<br/>0: LED não são usados de forma alguma.<br/>1: LIGADO durante a execução ou ejeção, DESLIGADO depois <br/>2: piscando durante a execução ou ejeção, DESLIGADO depois <br/>3: LIGADO durante a execução ou ejeção, depois DESLIGADO (0/100) ou intermitente (outros códigos)<br/>4: piscando durante a execução ou ejeção, depois DESLIGADO ou intermitente (outros códigos ou falha de ejeção)<br/>5: piscando durante a execução ou ejeção, depois DESLIGADO (0/100) ou LIGADO (outros códigos ou falha de ejeção)",
+"subitems": [{
+"key": "config_LED_COPY",
+"autoSelect": true,
+"editable": false,
+"desc":"Copiar LED",
+"defaultValue": "@LED_COPY@",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 ON - ON - OFF"], [2, "2 flash - flash - OFF"], [3, "3 ON - ON - OFF or flash"], [4, "4 flash - flash - OFF or flash"], [5, "5 flash - flash - OFF or ON"]]
+}
+}]
+}
+,{
+"type": "combobox",
+"desc":"Uso do LED de status:<br/>0: Não usado em absoluto<br/>1: verde durante a execução, verde piscando durante a ejeção, OFF se terminado com 0 ou 100, laranja piscando para outros resultados ou falha na ejeção<br/>2: verde piscando durante a execução ou ejeção, verde se terminado com 0 ou 100, laranja piscando para outros resultados ou falha na ejeção<br/>3: verde durante a execução e durante a ejeção, OFF quando terminado, laranja piscando se falha na ejeção",
+"subitems": [{
+"key": "config_LED",
+"autoSelect": true,
+"editable": false,
+"desc":"LED de status",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@LED@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Not used"], [1, "1 grn - grnFlash - OFF or orgFlash"], [2, "2 grnFlash - grnFlash - grn or orgFlash"], [3, "3 grn - grn - OFF or orgFlash"]]
+}
+}]
+}
+,{
+"type": "multiselect",
+"desc":"<br/>Indicação de status durante a execução do roteiro.",
+"subitems": [{
+"key": "config_BEEP",
+"desc":"Bipar no início e no final",
+"defaultValue": "@BEEP@"
+}]
+}
+,{
+"type": "textfield",
+"desc":"Se o script terminar com o código de saída 100, será tentada a ejeção do dispositivo. Você pode especificar o tempo limite (em segundos) para ejetar o dispositivo",
+"subitems": [{
+"key": "config_EJECT_TIMEOUT",
+"desc":"Ejetar Timeout [s]",
+"defaultValue": "@EJECT_TIMEOUT@",
+"validator": {
+"allowBlank": false,
+"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+}
+}]
+}
+,{
+"type": "textfield",
+"desc":"Opcionalmente, você pode especificar um outro script (com caminho completo!), que é no caso de ejeção solicitada (com código de saída 100 de seu primeiro script) executada após a ejeção. Isto pode ser usado, por exemplo, para desligar seu dispositivo USB. Se a ejeção falhou, o argumento será \"Ejeção falhou\", com sucesso sem argumento!",
+"subitems": [{
+"key": "config_SCRIPT_AFTER_EJECT",
+"desc":"Roteiro após ejeção (em DSM)",
+"width": "350",
+"defaultValue": "@SCRIPT_AFTER_EJECT@",
+"validator": {
+"allowBlank": true
+}
+}]
+}]
+}
+,{
+"step_title":"Configuração de segurança",
+"items": [{
+"type": "combobox",
+"desc":"O script com o nome correspondente em seu dispositivo USB é executado com privilégios de raiz em seu DSM! Isso pode ser um risco de segurança! Para melhor segurança é possível uma restrição aos scripts com valores de hash sha256 (impressões digitais) pré-registados.<br/>Atualmente existem @ENTRY_COUNT@ hashes de script registerd.<br/>0: O recurso de segurança não é utilizado. Todos os scripts com nome correspondente são permitidos. Nenhuma mudança de hashes registrados.<br/>1: Provavelmente os hashes registrados anteriormente são todos apagados agora. O 1º script após a instalação/configuração será registrado e será permitido executar então repetidamente.<br/>2: O valor do hash de qualquer script com nome correspondente será registrado e executado! (Adicionar hashes)<br/>3: Somente scripts previamente registrados são permitidos. (Registro congelado)",
+"subitems": [{
+"key": "config_ADD_NEW_FINGERPRINTS",
+"autoSelect": true,
+"editable": false,
+"desc":"Registro de Hash Script",
+"width": "360",
+"mode": "local",
+"valueField": "myId",
+"displayField": "displayText",
+"defaultValue": "@ADD_NEW_FINGERPRINTS@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId", "displayText"],
+"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+}]
+}]
+}
+,{
+"step_title":"IMPORTANTE: Ação Manual Necessária!",
+"items": [{
+"type": "textfield",
+"desc":"Os pacotes de terceiros são restritos pela Synology no DSM 7.x! Uma vez que a autorun requer permissão da raiz para realizar seu trabalho, uma etapa manual adicional é necessária após a instalação.<br/>>br/>SSH ao seu NAS (como usuário administrador) e executar o seguinte comando após a instalação ser concluída. Copie-o agora!",
+"subitems": [{
+"key": "ignore_value",
+"desc":"Comando",
+"width": "440",
+"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+}]
+}]
+}
+]
+

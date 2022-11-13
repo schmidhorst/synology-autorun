@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"Licença",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"BSD 3-Clause License<br>>br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>todos os direitos reservados.<br>>br>br>Redistribuição e utilização em fontes e formas binárias, com ou sem modificação, são permitidas desde que sejam cumpridas as seguintes condições:<br>1. Redistribuições de código fonte devem manter o aviso de direitos de autor acima, esta lista de condições e a seguinte exoneração de responsabilidade.<br>2. Redistribuições em formato binário devem reproduzir o aviso de direitos de autor acima, esta lista de condições e a seguinte exoneração de responsabilidade na documentação e/ou outros materiais fornecidos com a distribuição.<br>3. Nem o nome do titular dos direitos de autor nem os nomes dos seus contribuintes podem ser utilizados para endossar ou promover produtos derivados deste software sem autorização prévia específica por escrito.<br>>br>STE SOFTWARE É FORNECIDO PELOS COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' E QUALQUER GARANTIAS EXPRESSAS OU IMPLÍCITAS, INCLUINDO, MAS NÃO LIMITADAS, AS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO PARA UM PROPÓSITO PARTICULAR SÃO DESCLAMADAS. EM NENHUM CASO O TITULAR OU CONTRIBUINTES DOS DIREITOS DE AUTOR SERÃO RESPONSÁVEIS POR QUAISQUER DANOS DIRECTOS, INDIRECTOS, INCIDENTAIS, ESPECIAIS, EXEMPLARES, OU CONSEQUENTES (INCLUINDO, MAS NÃO LIMITADOS À AQUISIÇÃO DE BENS OU SERVIÇOS SUBSTITUTOS; PERDA DE UTILIZAÇÃO, DADOS OU LUCROS; OU INTERRUPÇÃO DE NEGÓCIOS) CAUSADOS POR QUALQUER FORMA E SOBRE QUALQUER TEORIA DE RESPONSABILIDADE, QUER EM CONTRATO, RESPONSABILIDADE ESTRITA, OU ACTO ILÍCITO (INCLUINDO NEGLIGÊNCIA OU DE OUTRA FORMA) RESULTANTE DE QUALQUER FORMA DA UTILIZAÇÃO DESTE SOFTWARE, MESMO QUE AVISADO DA POSSIBILIDADE DE TAIS DANOS.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Aceite",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"Configuração",
 "items": [
 {"type": "textfield",
@@ -125,7 +145,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Pode opcionalmente especificar um outro script (com caminho completo!), que é no caso de ejectar (com código de saída 100 do seu 1º script) executado após a ejecção. Isto pode ser utilizado, por exemplo, para desligar o seu dispositivo USB. Se a ejecção falhar, o argumento será \"Ejecção falhada\", sem sucesso nenhum argumento!",
+"desc":"Pode opcionalmente especificar um outro script (com caminho completo!), que é em caso de ejeção solicitada (com código de saída 100 do seu primeiro script) executada após a ejeção. Isto pode ser utilizado, por exemplo, para desligar o seu dispositivo USB. Se a ejecção falhar, o argumento será \"Ejecção falhada\", sem sucesso nenhum argumento!",
 "subitems": [{
 "key": "config_SCRIPT_AFTER_EJECT",
 "desc":"Roteiro após ejectar (em DSM)",

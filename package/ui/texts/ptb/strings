@@ -1,0 +1,17 @@
+[app1]
+# This file was generated via DeepL machine translation from en
+title01="Autorun"
+msg0="\"Iniciar não é possível porque o comando shell 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' ainda não foi executado\"!"
+msg1="{0}"
+msg2=""
+msg3="A impressão digital do roteiro '{0}' ({1}) foi registrada agora como roteiro permitido."
+msg4="No dispositivo inserido há um script '{1}' ({2}). O nome do script está de acordo com a configuração do pacote {0}. Mas a impressão digital do script não é permitida para execução."
+msg5="No dispositivo inserido há um roteiro '{1}'. O nome do script está de acordo com a configuração do pacote {0}. Mas esse script não é permitido para {3}."
+msg6="No dispositivo inserido há um roteiro '{1}'. O nome do script está de acordo com a configuração do pacote {0}. Mas as permissões do script não permitem a execução."
+msg7="O script {0} no dispositivo {1} foi terminado com o resultado {2}. !!! Atenção: A ejeção do dispositivo falhou!!!!"
+msg8="O script {0} no dispositivo {1} foi terminado com o resultado {2}. O dispositivo foi ejetado. No dispositivo, há {3}Bytes livres."
+msg9="O script {0} no dispositivo {1} foi terminado com o resultado {2}. No dispositivo, há {3}Bytes livres."
+msg10="Erro: No caso do resultado 100 do script {1} no dispositivo USB/eSATA o pacote {0} deve ejetar o dispositivo e então executar o script {2} na estação de disco. Esse script {2} não está disponível ou não pode ser executado!"
+msg14="Erro: O Skript '{0}', que deve ser executado, usa a quebra de linha errada CR/LF (Windows). Por favor, use um Editor siutable (Linux ou Windows Notepad  , PSPad, ...) para mudá-lo para LF (UNIX)!"
+msg15="Erro: O Skript '{0}', que deve ser executado, usa a codificação errada (Windows ISO-8859). Por favor, use um Editor siutable (Linux ou Windows Notepad  , PSPad, ...) para mudá-lo para UTF-8!"
+msg16="Erro: O Skript '{0}', que deve ser executado, usa a quebra de linha errada CR (MAC). Por favor, use um Editor siutable (por exemplo BBEdit/TextWrangler) para mudá-lo para LF (UNIX)!"

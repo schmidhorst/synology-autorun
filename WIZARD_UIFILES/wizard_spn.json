@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"Licencia",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"Licencia BSD de 3 cláusulas<br><br>Copyright (c) 2011-2022, Jan Reidemeister y Horst Schmid<br>Todos los derechos reservados.<br><br>Se permite la redistribución y el uso en forma de código fuente y binario, con o sin modificaciones, siempre que se cumplan las siguientes condiciones:<br>1. Las redistribuciones del código fuente deben conservar el aviso de copyright anterior, esta lista de condiciones y el siguiente descargo de responsabilidad.<br>2. Las redistribuciones en forma binaria deben reproducir el aviso de copyright anterior, esta lista de condiciones y el siguiente descargo de responsabilidad en la documentación y/o otros materiales proporcionados con la distribución.<br>3. Ni el nombre del titular de los derechos de autor ni los nombres de sus colaboradores pueden utilizarse para respaldar o promocionar productos derivados de este software sin un permiso específico previo por escrito.<br><br> ESTE SOFTWARE ES PROPORCIONADO POR LOS TITULARES DE LOS DERECHOS DE AUTOR Y LOS COLABORADORES \"TAL CUAL\" Y SE RECHAZA CUALQUIER GARANTÍA EXPRESA O IMPLÍCITA, INCLUYENDO, PERO SIN LIMITARSE A ELLO, LAS GARANTÍAS IMPLÍCITAS DE COMERCIALIZACIÓN E IDONEIDAD PARA UN PROPÓSITO PARTICULAR. EN NINGÚN CASO EL TITULAR DE LOS DERECHOS DE AUTOR O LOS COLABORADORES SERÁN RESPONSABLES DE NINGÚN DAÑO DIRECTO, INDIRECTO, INCIDENTAL, ESPECIAL, EJEMPLAR O CONSECUENTE (INCLUYENDO, PERO SIN LIMITARSE A, LA ADQUISICIÓN DE BIENES O SERVICIOS SUSTITUTIVOS; LA PÉRDIDA DE USO, DATOS O BENEFICIOS; O LA INTERRUPCIÓN DE LA ACTIVIDAD COMERCIAL), SEA CUAL SEA LA CAUSA Y LA TEORÍA DE LA RESPONSABILIDAD, YA SEA POR CONTRATO, RESPONSABILIDAD ESTRICTA O AGRAVIO (INCLUYENDO LA NEGLIGENCIA O DE OTRO TIPO) QUE SURJA DE CUALQUIER MANERA DEL USO DE ESTE SOFTWARE, INCLUSO SI SE AVISA DE LA POSIBILIDAD DE TALES DAÑOS.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Aceptado",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"Configuración",
 "items": [
 {"type": "textfield",

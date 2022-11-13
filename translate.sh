@@ -163,11 +163,12 @@ for sourcefile in "${wizzardfiles[@]}"; do
     uptodate=0    
     if [[ -f "$targetFile" ]]; then
       timeStampDest=$(stat -c %Y "$targetFile")
+      age=$(( timeStampDest - timeStampSource ))
       if [[ "$timeStampDest" -gt "$timeStampSource" ]]; then # up to date
-        echo "up to date: $targetFile"
+        echo "up to date: $targetFile, age: $age"
         uptodate=1
       else
-        echo "too old: $targetFile"
+        echo "too old: $targetFile, age: $age"
         if [[ "$bExec" -ne "0" ]]; then
           rm "$targetFile"
         fi # bExec          
@@ -292,7 +293,8 @@ for sourcefile in "${htmlfiles[@]}"; do
           echo -e "$translated" > "$targetFile"
           chmod 777 "$targetFile"
           chown :users "$targetFile" 
-          sed -i 's/\\"/"/g' "$targetFile" # unescape all quotes       
+          sed -i 's/\\"/"/g' "$targetFile" # unescape all quotes
+          sed -i 's/<html lang=\"..\">/<html lang=\"$targetIsoLang\">/' "$targetFile"       
         else # If the curl above was NOT sucessful
           echo "The request failed: $res"
           exit 1

@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"Vergunning",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister en Horst Schmid<br>Alle rechten voorbehouden.<br><br>Herdistributie en gebruik in bron- en binaire vorm, met of zonder wijzigingen, zijn toegestaan mits aan de volgende voorwaarden wordt voldaan:<br>1. Herdistributie van de broncode moet de bovenstaande copyrightmelding, deze lijst met voorwaarden en de volgende disclaimer behouden.<br>2. Herdistributie in binaire vorm moet de bovenstaande copyrightmelding, deze lijst met voorwaarden en de volgende disclaimer weergeven in de documentatie en/of andere materialen die bij de distributie worden geleverd.<br>3. Noch de naam van de auteursrechthebbende, noch de namen van zijn medewerkers mogen worden gebruikt om producten afgeleid van deze software te onderschrijven of te promoten zonder specifieke voorafgaande schriftelijke toestemming.<br><br>Deze SOFTWARE WORDT DOOR DE COPYRIGHTHOUDERS EN DE BIJDRAGERS IN DE HUIDIGE STAAT AANGEBODEN EN ALLE UITDRUKKELIJKE OF IMPLICIETEN GARANTIES, MET INBEGRIP VAN MAAR NIET BEPERKT TOT DE IMPLICIETEN GARANTIES VAN VERKOOPBAARHEID EN GESCHIKTHEID VOOR EEN BEPAALD DOEL ZIJN VERWIJDERD. IN GEEN GEVAL ZAL DE HOUDER VAN HET AUTEURSRECHT OF DE MEDEWERKERS AANSPRAKELIJK ZIJN VOOR ENIGE DIRECTE, INDIRECTE, INCIDENTELE, SPECIALE, EXEMPLARISCHE OF GEVOLGSCHADE (INCLUSIEF, MAAR NIET BEPERKT TOT, DE AANSCHAF VAN VERVANGENDE GOEDEREN OF DIENSTEN; VERLIES VAN GEBRUIK, GEGEVENS OF WINST; OF BEDRIJFSONDERBREKING) HOE DAN OOK VEROORZAAKT EN OP GROND VAN ENIGE THEORIE VAN AANSPRAKELIJKHEID, HETZIJ IN CONTRACT, STRIKTE AANSPRAKELIJKHEID OF ONRECHTMATIGE DAAD (INCLUSIEF NALATIGHEID OF ANDERSZINS) DIE OP ENIGERLEI WIJZE VOORTVLOEIT UIT HET GEBRUIK VAN DEZE SOFTWARE, ZELFS INDIEN GEADVISEERD OVER DE MOGELIJKHEID VAN DERGELIJKE SCHADE.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Aanvaard",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"Configuratie",
 "items": [
 {"type": "textfield",
@@ -164,7 +184,7 @@
 "step_title":"BELANGRIJK: Handmatige actie vereist!",
 "items": [{
 "type": "textfield",
-"desc":"Pakketten van derden worden beperkt door Synology in DSM 7.x! Omdat autorun root-toestemming vereist om zijn werk te doen, is een extra handmatige stap vereist na de installatie.<br/><br/>SSH naar uw NAS (als een admin-gebruiker) en voer het volgende commando uit nadat de installatie is voltooid. Kopieer het nu!",
+"desc":"Pakketten van derden worden beperkt door Synology in DSM 7.x! Omdat autorun root-toestemming vereist om zijn werk te doen, is een extra handmatige stap nodig na de installatie.<br/><br/>SSH naar uw NAS (als een admin-gebruiker) en voer het volgende commando uit nadat de installatie is voltooid. Kopieer het nu!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Commando",

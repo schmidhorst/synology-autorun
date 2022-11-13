@@ -1,22 +1,22 @@
 #!/bin/bash
-bDebug=0  # 0: delete log files, 1: preserve log files
+bDebug=1  # 0: delete log files, 1: preserve log files
 LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 echo "$(date "$DTFMT"): postuninst V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
 # taken from DemoUiSpk7:
-if [[ "${pkgwizard_remove_settings}" == "true" ]]; then
-    rm -r "${SYNOPKG_PKGVAR}"
-    echo "$(date "$DTFMT"): ${SYNOPKG_PKGVAR} removed<br/>" >> "$LOG"     
-fi
 if [[ "$bDebug" -eq "0" ]]; then
   rm "$LOG"
   rm "/var/tmp/resource.$SYNOPKG_PKGNAME.*"
   rm "/var/log/tmp/resource.$SYNOPKG_PKGNAME.*"
   rm "/var/log/packages/$SYNOPKG_PKGNAME.log"
   rm "/var/log/packages/$SYNOPKG_PKGNAME.log.*.xz"
-  echo "$(date "$DTFMT"): Logfiles removed"
+  echo "$(date "$DTFMT"): Old logfiles removed" >> "$LOG"
 else
-  echo "$(date "$DTFMT"): Logfiles preserved due to bDebug!=0"
+  echo "$(date "$DTFMT"): Logfiles preserved due to bDebug!=0" >> "$LOG"
+fi
+if [[ "${pkgwizard_remove_settings}" == "true" ]]; then
+  rm -r "${SYNOPKG_PKGVAR}"
+  echo "$(date "$DTFMT"): Old settings ${SYNOPKG_PKGVAR} removed<br/>" >> "$LOG"     
 fi
 echo "$(date "$DTFMT"): ... postuninst done<br/>" >> "$LOG"
 

@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"Lizenz",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"BSD 3-Klausel-Lizenz<br><br>Copyright (c) 2011-2022, Jan Reidemeister und Horst Schmid<br>Alle Rechte vorbehalten.<br><br>Die Weitergabe und Verwendung in Quell- und Binärform, mit oder ohne Änderungen, ist erlaubt, sofern die folgenden Bedingungen erfüllt sind:<br>1. Bei der Weitergabe des Quellcodes müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss beibehalten werden.<br>2. Bei der Weitergabe in binärer Form müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss in der Dokumentation und/oder anderen Materialien, die mit der Weitergabe bereitgestellt werden, wiedergegeben werden.<br>3. Weder der Name des Copyright-Inhabers noch die Namen der Mitwirkenden dürfen ohne ausdrückliche vorherige schriftliche Genehmigung verwendet werden, um von dieser Software abgeleitete Produkte zu unterstützen oder zu bewerben.<br><br> DIESE SOFTWARE WIRD VON DEN URHEBERN UND MITWIRKERN \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT UND JEGLICHE AUSDRÜCKLICHEN ODER STILLSCHWEIGENDEN GARANTIEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE STILLSCHWEIGENDEN GARANTIEN DER HANDELSÜBLICHKEIT UND DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK, WERDEN AUSGESCHLOSSEN. IN KEINEM FALL HAFTEN DER URHEBERRECHTSINHABER ODER DIE MITWIRKENDEN FÜR DIREKTE, INDIREKTE, ZUFÄLLIGE, BESONDERE, BEISPIELHAFTE SCHÄDEN ODER FOLGESCHÄDEN (EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE BESCHAFFUNG VON ERSATZGÜTERN ODER -DIENSTLEISTUNGEN, NUTZUNGS-, DATEN- ODER GEWINNVERLUSTE ODER GESCHÄFTSUNTERBRECHUNGEN), WIE AUCH IMMER DIESE VERURSACHT WURDEN UND AUF WELCHER HAFTUNGSTHEORIE SIE BERUHEN, OB DURCH VERTRAG, VERSCHULDENSUNABHÄNGIGE HAFTUNG ODER UNERLAUBTE HANDLUNG (EINSCHLIESSLICH FAHRLÄSSIGKEIT ODER ANDERWEITIG), DIE SICH IN IRGENDEINER WEISE AUS DER NUTZUNG DIESER SOFTWARE ERGEBEN, SELBST WENN AUF DIE MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WURDE.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Angenommen",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"Konfiguration",
 "items": [
 {"type": "textfield",
@@ -12,7 +32,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt. Sie können Autorun im Paketcenter stoppen, um es vorübergehend zu deaktivieren.<br/><br/>Die Suchzeit ist die Zeit nach dem Auslösen durch udev, um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen ist. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
+"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt. Die Suchzeit ist die Zeit, die nach dem Auslösen durch udev vergeht, um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen wird. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
 "subitems": [
 {
 "key": "config_TRIES",
@@ -51,7 +71,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Das Paket erzeugt DSM-Nachrichten, die auf dem Desktop für konfigurierbare Benutzergruppen oder Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer",
+"desc":"Das Paket erzeugt DSM-Nachrichten, die auf dem Desktop für konfigurierbare Benutzergruppen oder Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z. B. @users für alle Benutzer",
 "subitems": [{
 "key": "config_NOTIFY_USERS",
 "desc":"Anzeige der Nachricht an",

@@ -54,9 +54,11 @@ line=$(grep "^$user=" "$LNGDATA")
 userLng="${line#*=}"
 
 declare -A ISO2SYNO
-ISO2SYNO=( ["de"]="ger" ["en"]="enu" ["zh"]="chs" ["cs"]="csy" ["jp"]="jpn" ["ko"]="krn" ["da"]="dan" ["fr"]="fre" ["it"]="ita" ["nl"]="nld" ["no"]="nor" ["pl"]="plk" ["ru"]="rus" ["sp"]="spn" ["sv"]="sve" ["hu"]="hun" ["tr"]="trk" ["pt"]="ptg" )
+ISO2SYNO=( ["de"]="ger" ["en"]="enu" ["zh"]="chs" ["cs"]="csy" ["jp"]="jpn" ["ko"]="krn" ["da"]="dan" ["fr"]="fre" ["it"]="ita" ["nl"]="nld" ["no"]="nor" ["pl"]="plk" ["ru"]="rus" ["sp"]="spn" ["sv"]="sve" ["hu"]="hun" ["tr"]="trk" ["pt"]="ptg" ["pt-PT"]="ptg" )
 declare -A SYNO2ISO
-SYNO2ISO=( ["ger"]="de" ["enu"]="en" ["chs"]="zh" ["csy"]="cs" ["jpn"]="jp" ["krn"]="ko" ["dan"]="da" ["fre"]="fr" ["ita"]="it" ["nld"]="nl" ["nor"]="no" ["plk"]="pl" ["rus"]="ru" ["spn"]="sp" ["sve"]="sv" ["hun"]="hu" ["trk"]="tr" ["ptg"]="pt" )
+SYNO2ISO=(   ["ger"]="de" ["enu"]="en" ["chs"]="zh" ["csy"]="cs" ["jpn"]="jp" ["krn"]="ko" ["dan"]="da" ["fre"]="fr" ["ita"]="it" ["nld"]="nl" ["nor"]="no" ["plk"]="pl" ["rus"]="ru" ["spn"]="sp" ["sve"]="sv" ["hun"]="hu" ["trk"]="tr" ["ptg"]="pt" )
+# SYNO2ISO=( ["ger"]="de" ["enu"]="en" ["chs"]="zh" ["csy"]="cs" ["jpn"]="ja" ["krn"]="ko" ["dan"]="da" ["fre"]="fr" ["ita"]="it" ["nld"]="nl"              ["plk"]="pl" ["rus"]="ru" ["spn"]="es" ["sve"]="sv" ["hun"]="hu" ["trk"]="tr" ["ptb"]="pt-BR" ["ptg"]="pt-PT" )
+# Japan: ja (FIPS 10 = U.S. Federal Information Processing Standard No. 10) or jp (ISO 3166-1)?
 
 if [[ -n "$SYNOPKG_DSM_LANGUAGE" ]]; then
   pkg_lng="$SYNOPKG_DSM_LANGUAGE"

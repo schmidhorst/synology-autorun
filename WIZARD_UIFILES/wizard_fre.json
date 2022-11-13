@@ -1,4 +1,24 @@
-[{
+[
+{
+"step_title":"Licence",
+"invalid_next_disabled": true,
+"items": [{
+"type": "multiselect",
+"desc":"Licence BSD 3-Clause<br><br>Copyright (c) 2011-2022, Jan Reidemeister et Horst Schmid<br>Tous droits réservés.<br><br>La redistribution et l'utilisation sous forme source et binaire, avec ou sans modification, sont autorisées à condition que les conditions suivantes soient respectées :<br>1. Les redistributions de code source doivent conserver l'avis de droit d'auteur ci-dessus, la présente liste de conditions et la clause de non-responsabilité suivante.<br>2. Les redistributions sous forme binaire doivent reproduire l'avis de droit d'auteur ci-dessus, la présente liste de conditions et la clause de non-responsabilité suivante dans la documentation et/ou les autres documents fournis avec la distribution.<br>3. Ni le nom du détenteur du droit d'auteur ni les noms de ses contributeurs ne peuvent être utilisés pour approuver ou promouvoir des produits dérivés de ce logiciel sans autorisation écrite spécifique préalable.<br><br>Ce logiciel est fourni par les détenteurs des droits d'auteur et les contributeurs \" en l'état \" et toute garantie expresse ou implicite, y compris, mais sans s'y limiter, les garanties implicites de qualité marchande et d'adéquation à un usage particulier, est rejetée. EN AUCUN CAS, LE TITULAIRE DU DROIT D'AUTEUR OU LES CONTRIBUTEURS NE POURRONT ÊTRE TENUS RESPONSABLES DE TOUT DOMMAGE DIRECT, INDIRECT, ACCESSOIRE, SPÉCIAL, EXEMPLAIRE OU CONSÉCUTIF (Y COMPRIS, MAIS SANS S'Y LIMITER, L'ACQUISITION DE BIENS OU DE SERVICES DE SUBSTITUTION, LA PERTE D'UTILISATION, DE DONNÉES OU DE BÉNÉFICES, OU L'INTERRUPTION D'ACTIVITÉ), QUELLE QU'EN SOIT LA CAUSE ET QUELLE QUE SOIT LA THÉORIE DE RESPONSABILITÉ, QU'IL S'AGISSE D'UN CONTRAT, D'UNE RESPONSABILITÉ STRICTE OU D'UN DÉLIT (Y COMPRIS LA NÉGLIGENCE OU AUTRE) DÉCOULANT DE QUELQUE MANIÈRE QUE CE SOIT DE L'UTILISATION DE CE LOGICIEL, MÊME S'ILS ONT ÉTÉ INFORMÉS DE LA POSSIBILITÉ DE TELS DOMMAGES.",
+"subitems": [
+{
+"key": "id1",
+"desc":"Accepté",
+"defaultValue": false,
+"validator": {
+"fn": "{return arguments[0];}"
+}
+}
+]
+}
+]
+}
+, {
 "step_title":"Configuration",
 "items": [
 {"type": "textfield",

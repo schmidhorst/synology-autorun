@@ -24,32 +24,38 @@
 {"type": "textfield",
 "desc":"A szkriptnek a külső eszköz gyökérkönyvtárában kell lennie, és a \"root\" felhasználó számára futtathatónak kell lennie. Első paraméterként ($1) az eszköz csatlakozási pontját (pl. /volumeUSB1/usbshare/), második paraméterként ($2) pedig az eszköz partícióját (pl. usb1p1) kapja meg. Tipp: A szkript üres környezettel hajtódik végre, minden használt parancsot meg kell adnod a path-val!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Végrehajtandó szkript",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Végrehajtandó szkript"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"A szkript 100-as kilépési értéke a szkript befejezésekor leveszi és kidobja az eszközt, az összes többi kilépési érték pedig bekötve hagyja azt. A csomagközpontban leállíthatja az automatikus indítást, hogy ideiglenesen kikapcsolja.<br/><br/>A keresési idő az udev által az eszköz csatlakoztatásakor a csatolási pont megtalálására szolgáló trigger után eltelt idő. A további várakozási idő némi mozgásteret ad a DSM-nek, hogy a szkript indítása előtt megfelelően csatlakoztassa a meghajtót.<br/>Ezeket az időket a hardveredtől függően növelned kell.",
+"desc":"A szkript 100-as kilépési értéke a szkript befejezésekor leveszi és kidobja az eszközt, az összes többi kilépési érték pedig bekötve hagyja azt. A csomagközpontban leállíthatja az automatikus indítást, hogy ideiglenesen kikapcsolja.<br/><br/>A keresési idő az udev által az eszköz csatlakoztatásakor a csatolási pont megtalálására szolgáló trigger után eltelt idő. A további várakozási idő némi mozgásteret ad a DSM-nek, hogy megfelelően csatlakoztassa a meghajtót a szkript indítása előtt.<br/>Ezeket az időket a hardveredtől függően növelned kell.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Keresési idő (sec)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Keresési idő (sec)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Adjon meg egy pozitív számot"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Várakozási idő (sec)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Várakozási idő (sec)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Adjon meg egy pozitív számot"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"A naplófájlok mérete automatikusan korlátozott. Ha a megadott sorszámot elérjük, az idősebbik felét eltávolítjuk.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Maximális sorszám",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Maximális sorszám"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Adjon meg egy pozitív számot"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"A csomag DSM-üzeneteket generál, amelyek a konfigurálható felhasználói csoportok vagy felhasználók számára az asztalon jelennek meg. A csoportnevek elé egy @ jelet kell írni, pl. @users az összes felhasználóhoz.",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Üzenet megjelenítése a",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"A hibakeresési naplófájlok üzenetének több részletességi szintje áll rendelkezésre: 0 ... 8. Minél magasabb az érték, annál több a részletesség.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Napló részletességi szint"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Adjon meg egy pozitív számot 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"A csomag DSM asztali üzeneteket generál, amelyek a konfigurálható felhasználói csoportok vagy felhasználók számára jelennek meg az asztalon. A csoportnevek elé egy @ jelet kell írni, pl. @users az összes felhasználóhoz."
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Üzenet megjelenítése a"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"A szkript befejezése után általában egy DSM asztali üzenet jelenik meg. Az üzenet tartalmazza a szkript visszatérési kódját és a tárolóeszközön fennmaradó szabad helyet. Itt megadhatja azoknak a visszatérési kódoknak a listáját, amelyek nem generálnak ilyen üzenetet."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Visszatérési kódok üzenet nélkül"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Adjon meg egy vagy több 1..3 számjegyű számot, pontosvesszővel elválasztva."
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,21 +175,24 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Ha a szkript a 100-as kilépési kóddal ér véget, akkor megpróbálja kidobni az eszközt. Megadhatja az eszköz kidobásának időkorlátját (másodpercben).",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Kilövési időkorlát [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Ha a szkript a 100-as kilépési kóddal ér véget, akkor megpróbálja kidobni az eszközt. Megadhatja az eszköz kidobásának időkorlátját (másodpercben)."
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Kilövési időkorlát [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Adjon meg egy pozitív számot"
+}
 }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Opcionálisan megadhat egy további szkriptet (teljes elérési úttal!), amely a kért kilövés esetén (az 1. szkript 100-as kilépési kódjával) a kilövés után végrehajtódik. Ez például az USB-eszköz kikapcsolására használható. Sikertelen kilövés esetén az argumentum 'Ejection failed' lesz, siker esetén nincs argumentum!",
+"desc":"Opcionálisan megadhat egy további szkriptet (a teljes elérési úttal!), amely a kért kilövés esetén (az 1. szkript 100-as kilépési kódjával) a kilövés után végrehajtódik. Ez például az USB-eszköz kikapcsolására használható. Sikertelen kilövés esetén az argumentum 'Ejection failed' lesz, siker esetén nincs argumentum!",
 "subitems": [{
 "key": "config_SCRIPT_AFTER_EJECT",
 "desc":"Szkript a kioldás után (DSM-en)",
@@ -161,7 +208,7 @@
 "step_title":"Biztonsági konfiguráció",
 "items": [{
 "type": "combobox",
-"desc":"Az USB-eszközön lévő megfelelő nevű szkriptet root jogosultságokkal hajtja végre a DSM-jén! Ez biztonsági kockázatot jelenthet! A nagyobb biztonság érdekében lehetséges az előre regisztrált sha256 hash értékekkel (ujjlenyomatok) rendelkező szkriptekre való korlátozás.<br/>Ténylegesen @ENTRY_COUNT@ szkript hash értékek vannak regisztrálva.<br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ok nem változnak.<br/>1: Valószínűleg a korábbi regisztrált hash-ok most mind törlődnek. A telepítés/konfigurálás utáni 1. szkript regisztrálásra kerül, majd újra és újra végrehajtásra kerül.<br/>2: Minden azonos nevű szkript hash értéke regisztrálásra és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
+"desc":"Az USB-eszközön lévő megfelelő nevű szkriptet root jogosultsággal hajtja végre a DSM-jén! Ez biztonsági kockázatot jelenthet! A nagyobb biztonság érdekében lehetséges az előre regisztrált sha256 hash értékekkel (ujjlenyomatok) rendelkező szkriptekre való korlátozás.<br/>Ténylegesen @ENTRY_COUNT@ szkript hash értékek vannak regisztrálva.<br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ok nem változnak.<br/>1: Valószínűleg a korábbi regisztrált hash-ok most mind törlődnek. A telepítés/konfigurálás utáni 1. szkript regisztrálásra kerül, majd újra és újra végrehajtásra kerül.<br/>2: Minden azonos nevű szkript hash értéke regisztrálásra és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS",
 "autoSelect": true,
@@ -184,7 +231,7 @@
 "step_title":"FONTOS: Kézi művelet szükséges!",
 "items": [{
 "type": "textfield",
-"desc":"A DSM 7.x-ben a Synology korlátozza a harmadik féltől származó csomagokat! Mivel az autorun root jogosultságot igényel a feladat elvégzéséhez, a telepítés után további manuális lépésre van szükség.<br/><br/>SSH-hozzáférés a NAS-hoz (admin felhasználóként), és a telepítés befejezése után hajtsa végre a következő parancsot. Másolja ki most!",
+"desc":"A DSM 7.x-ben a Synology korlátozza a harmadik féltől származó csomagokat! Mivel az autorun root jogosultságot igényel a feladat elvégzéséhez, a telepítés után további manuális lépésre van szükség.<br/><br/>SSH-hozzáférés a NAS-hoz (admin felhasználóként), és a telepítés befejezése után hajtsa végre a következő parancsot. Most már másolhatod is!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Parancs",

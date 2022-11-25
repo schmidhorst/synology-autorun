@@ -3,17 +3,22 @@ bDebug=1  # 0: delete log files, 1: preserve log files
 LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 echo "$(date "$DTFMT"): postuninst V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
-# taken from DemoUiSpk7:
-if [[ "$bDebug" -eq "0" ]]; then
-  rm "$LOG"
-  rm "/var/tmp/resource.$SYNOPKG_PKGNAME.*"
-  rm "/var/log/tmp/resource.$SYNOPKG_PKGNAME.*"
-  rm "/var/log/packages/$SYNOPKG_PKGNAME.log"
-  rm "/var/log/packages/$SYNOPKG_PKGNAME.log.*.xz"
-  echo "$(date "$DTFMT"): Old logfiles removed" >> "$LOG"
-else
-  echo "$(date "$DTFMT"): Logfiles preserved due to bDebug!=0" >> "$LOG"
+# Attention: If a new version is installed, then this file from the old version
+#   is executed before the preinst of the new version!
+if [[ "${pkgwizard_remove_settings}" == "true" ]] || [[ "${pkgwizard_remove_settings}" == "false" ]]; then
+	# WIZZARD_UIFILES/uninstall_uifile_<lng> was done before! So it's a real uninstall, not an upgrade! 
+  if [[ "$bDebug" -eq "0" ]]; then
+    rm "$LOG"
+    rm "/var/tmp/resource.$SYNOPKG_PKGNAME.*"
+    rm "/var/log/tmp/resource.$SYNOPKG_PKGNAME.*"
+    rm "/var/log/packages/$SYNOPKG_PKGNAME.log"
+    rm "/var/log/packages/$SYNOPKG_PKGNAME.log.*.xz"
+    echo "$(date "$DTFMT"): Old logfiles removed" >> "$LOG"
+  else
+    echo "$(date "$DTFMT"): Logfiles preserved due to bDebug!=0" >> "$LOG"
+  fi
 fi
+# taken from DemoUiSpk7:
 if [[ "${pkgwizard_remove_settings}" == "true" ]]; then
   rm -r "${SYNOPKG_PKGVAR}"
   echo "$(date "$DTFMT"): Old settings ${SYNOPKG_PKGVAR} removed<br/>" >> "$LOG"     

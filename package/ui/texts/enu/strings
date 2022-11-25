@@ -1,8 +1,8 @@
 [app1]
 title01="Autorun"
-msg0=""Start not possible as the shell command 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' was not yet executed!""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="The fingerprint of the script '{0}' ({1}) has been registered now as allowed script."
 msg4="On the inserted device there is a script '{1}' ({2}). The script name is matching the setup of the {0} package. But the fingerprint of the script is not allowed to execute."
 msg5="On the inserted device there is a script '{1}'. The script name is matching the setup of the {0} package. But that script is not allowed for {3}."

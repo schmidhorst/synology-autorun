@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"Skript musí být umístěn v kořenovém adresáři externího zařízení a nastaven jako spustitelný pro uživatele \"root\". Jako první parametr ($1) získá přípojný bod zařízení (např. /volumeUSB1/usbshare/) a jako druhý ($2) oddíl zařízení (např. usb1p1). Tip: Skript se spouští s prázdným prostředím, všechny použité příkazy musíte zadat pomocí cesty!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Skript k provedení",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Skript k provedení"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"Hodnota ukončení skriptu 100 způsobí odpojení a vysunutí zařízení po dokončení skriptu, všechny ostatní hodnoty ukončení ponechají zařízení připojené. Autorun můžete zastavit v centru balíčků, abyste jej dočasně zakázali.<br/><br/>Čas hledání je čas po spuštění udev pro nalezení přípojného bodu, když je zařízení připojeno. Dodatečná čekací doba dává DSM určitý prostor pro správné připojení jednotky před spuštěním skriptu.<br/>V závislosti na vašem hardwaru budete možná muset tyto časy prodloužit.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Doba vyhledávání (s)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Doba vyhledávání (s)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Zadejte kladné číslo"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Doba čekání (s)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Doba čekání (s)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Zadejte kladné číslo"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"Velikost souborů protokolu je automaticky omezena. Pokud je dosaženo daného počtu řádků, starší polovina je odstraněna.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Maximální počet řádků",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Maximální počet řádků"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Zadejte kladné číslo"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"Balíček generuje zprávy DSM, které se zobrazují na ploše konfigurovatelným skupinám uživatelů nebo uživatelům. K názvům skupin připojte znak @, např. @users pro všechny uživatele.",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Zobrazení zprávy na",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"K dispozici je několik úrovní podrobnosti zpráv souboru protokolu ladění: 0 ... 8. Čím vyšší hodnota, tím více podrobností.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Úroveň podrobnosti protokolu"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Zadejte kladné číslo 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"Balíček generuje zprávy DSM na ploše, které se zobrazují na ploše konfigurovatelným skupinám uživatelů nebo uživatelům. K názvům skupin připojte znak @, např. @users pro všechny uživatele."
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Zobrazení zprávy na"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Obvykle se po dokončení skriptu vygeneruje zpráva na ploše DSM. Zpráva obsahuje návratový kód skriptu a zbývající volné místo na úložném zařízení. Zde můžete zadat seznam návratových kódů, které takovou zprávu negenerují."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Vrácení kódů bez zprávy"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Zadejte jedno nebo více 1..3místných čísel oddělených středníkem."
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Pokud skript skončí s kódem ukončení 100, pokusí se zařízení vysunout. Můžete zadat časový limit (v sekundách) pro vysunutí zařízení.",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Časový limit pro vysunutí [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Pokud skript skončí s kódem ukončení 100, pokusí se zařízení vysunout. Můžete zadat časový limit (v sekundách) pro vysunutí zařízení."
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Časový limit pro vysunutí [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Zadejte kladné číslo"
+}
 }
 }]
 }
@@ -161,7 +208,7 @@
 "step_title":"Konfigurace zabezpečení",
 "items": [{
 "type": "combobox",
-"desc":"Skript s odpovídajícím názvem na vašem zařízení USB se spustí s právy roota na vašem DSM! To by mohlo představovat bezpečnostní riziko! Pro lepší zabezpečení je možné omezení na skripty s předem zaregistrovanými hodnotami hash sha256 (otisky prstů).<br/>Ve skutečnosti jsou zaregistrovány @ENTRY_COUNT@ hashe skriptů.<br/>0: Bezpečnostní funkce se nepoužívá. Všechny skripty se shodným názvem jsou povoleny. Žádná změna registrovaných hashů.<br/>1: Pravděpodobně jsou nyní všechny předchozí registrované hashe smazány. 1. skript po instalaci/konfiguraci bude zaregistrován a je povoleno jej pak znovu a znovu provádět.<br/>2: Hodnota hashe každého skriptu se shodným názvem bude zaregistrována a provedena! (Přidejte hashe)<br/>3: Povoleny jsou pouze dříve registrované skripty. (Registrace zmražena)",
+"desc":"Skript s odpovídajícím názvem na vašem zařízení USB se spustí s právy roota na vašem DSM! To by mohlo představovat bezpečnostní riziko! Pro lepší zabezpečení je možné omezení na skripty s předem zaregistrovanými hodnotami hash sha256 (otisky prstů).<br/>Ve skutečnosti jsou zaregistrovány @ENTRY_COUNT@ hashe skriptů.<br/>0: Bezpečnostní funkce se nepoužívá. Všechny skripty se shodným názvem jsou povoleny. Žádná změna registrovaných hashů.<br/>1: Pravděpodobně jsou nyní všechny předchozí registrované hashe smazány. První skript po instalaci/konfiguraci bude zaregistrován a je povoleno jej pak znovu a znovu provádět.<br/>2: Hodnota hashe každého skriptu se shodným názvem bude zaregistrována a provedena! (Přidejte hashe)<br/>3: Povoleny jsou pouze dříve registrované skripty. (Registrace zmražena)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS",
 "autoSelect": true,
@@ -184,7 +231,7 @@
 "step_title":"DŮLEŽITÉ: Nutná ruční akce!",
 "items": [{
 "type": "textfield",
-"desc":"Balíčky třetích stran jsou v systému DSM 7.x omezeny společností Synology! Vzhledem k tomu, že autorun vyžaduje ke své práci oprávnění roota, je po instalaci nutný další ruční krok.<br/><br/>Připojte se pomocí SSH k NAS (jako uživatel s oprávněním správce) a po dokončení instalace spusťte následující příkaz. Nyní jej zkopírujte!",
+"desc":"Balíčky třetích stran jsou v systému DSM 7.x omezeny společností Synology! Vzhledem k tomu, že autorun vyžaduje ke své práci oprávnění roota, je po instalaci nutný další ruční krok.<br/><br/>Připojte se pomocí SSH k NAS (jako uživatel s oprávněním správce) a po dokončení instalace spusťte následující příkaz. Nyní jej můžete zkopírovat!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Příkaz",

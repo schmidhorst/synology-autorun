@@ -1,9 +1,9 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"¡El inicio no es posible ya que el comando de shell 'sudo cp /var/paquetes/{0}/conf/privilegio.root /var/paquetes/{0}/conf/privilegio' aún no se ha ejecutado!\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="La huella digital del script '{0}' ({1}) se ha registrado ahora como script permitido."
 msg4="En el dispositivo insertado hay un script '{1}' ({2}). El nombre del script coincide con la configuración del paquete {0}. Pero la huella digital del script no se puede ejecutar."
 msg5="En el dispositivo insertado hay un script '{1}'. El nombre del script coincide con la configuración del paquete {0}. Pero ese script no está permitido para {3}."

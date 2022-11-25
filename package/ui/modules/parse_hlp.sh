@@ -7,9 +7,6 @@
 #             License GNU GPLv3
 #   https://www.gnu.org/licenses/gpl-3.0.html
 
-LOGLEVEL=8 # 8=log all, 1=log only important, may be overwritten from config file!
-DTFMT="+%Y-%m-%d %H:%M:%S"
-
 # urlencode and urldecode https://gist.github.com/cdown/1163649
 # --------------------------------------------------------------
 function urlencode() {
@@ -43,10 +40,29 @@ logInfoNoEcho() {
     ll=$1
     shift
   else
-    ll=1 # defaultvalue  
+    ll=1 # default value for used logLevel 
   fi
   if [[ "$ll" -le  "$LOGLEVEL" ]]; then
-	  /bin/echo -e "$(date "$DTFMT"): $1" >> "$LOG"
+	  /bin/echo -e "$(date "$DTFMT"): $*" >> "$LOG"
   fi
 }
+
+
+###############################################################################
+LOGLEVEL=8 # 8=log all, 1=log only important, may be overwritten from config file!
+DTFMT="+%Y-%m-%d %H:%M:%S"
+SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # e.g. /volumeX/@appstore/<app>/ui
+scriptpathParent=${SCRIPTPATHTHIS%/*}
+logInfoNoEcho 8 "parse_hlp.sh is executed with path '$SCRIPTPATHTHIS'"
+# /volumeX/@appstore/<app>, not /var/packages/<app>/target (Link)
+APPNAME=${scriptpathParent##*/} # APPNAME="autorun", but if this is used from translate.sh script it's wrong!
+logInfoNoEcho 8 "From 'SCRIPTPATHTHIS' APPNAME='$APPNAME'"
+
+APPDATA="/var/packages/$APPNAME/var"
+if [[ -f "$APPDATA/config" ]]; then
+  eval "$(grep "LOGLEVEL=" "$APPDATA/config")"
+  logInfoNoEcho 7 "Read LOGLEVEL from '$APPDATA/config' is $LOGLEVEL"
+else
+  logInfoNoEcho 0 "Not found: '$APPDATA/config'"
+fi
 

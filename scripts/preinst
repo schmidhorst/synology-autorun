@@ -1,16 +1,52 @@
-#!/bin/sh
+#!/bin/bash
 LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+# preinst starts from an temporary folder like /volume1/@tmp/synopkg/install.XDdQUB/scripts/preinst
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
-echo "$(date "$DTFMT"): preinst $0 V$SYNOPKG_PKGVER (physical path: $SCRIPTPATHTHIS, user=$user)... <br/>" >> "$LOG"
+echo "$(date "$DTFMT"): preinst $0 V$SYNOPKG_PKGVER (physical path SCRIPTPATHTHIS: $SCRIPTPATHTHIS, user=$user)... <br/>" >> "$LOG"
+# user is equal to $SYNOPKG_PKGNAME, SCRIPTPATHTHIS is e.g. /volume1/@tmp/synopkg/install.HbEips/scripts/
+# ${SYNOPKG_TEMP_UPGRADE_FOLDER} # e.g. /volume1/@tmp/synopkg.tmp, empty
+scriptpathParent=${SCRIPTPATHTHIS%/*}
+# echo "$(date "$DTFMT"): ls -l $scriptpathParent: $(ls -l "$scriptpathParent")" >> "$LOG"
+osMin=$(/bin/get_key_value "$scriptpathParent/INFO" "os_min_ver")  # os_min_ver="7.0-40000"
+echo "$(date "$DTFMT"): From INFO file: os_min_ver='$osMin' via get_key_value" >> "$LOG"
 
-DSMMAJOR=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
-if [ "$DSMMAJOR" -lt 7 ]; then
-	echo "This package version can only be used in DSM 7.0 and above! Earlier package versions may be possible on your DSM version" > $SYNOPKG_TEMP_LOGFILE
+osMinMajor="${osMin%%.*}"
+osMinBuild="${osMin#*-}"
+osMinMinor="${osMin#*.}"
+osMinMinor="${osMinMinor%-*}"
+# productversion="7.1.1", majorversion="7", minorversion="1", major="7", minor="1", micro="1", buildnumber="42962"
+# DSMMAJOR=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
+dsmMajor=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
+dsmMinor=$(/bin/get_key_value /etc.defaults/VERSION minorversion)
+dsmBuild=$(/bin/get_key_value /etc.defaults/VERSION buildnumber)
+# if [ "$DSMMAJOR" -lt 7 ]; then
+vers=0 # not ok
+if [[ "$dsmMajor" -gt "$osMinMajor" ]]; then
+  vers=1
+elif [[ "$dsmMajor" -eq "$osMinMajor" ]]; then
+  if [[ "$dsmMinor" -gt "$osMinMinor" ]]; then
+    vers=1  
+  elif [[ "$dsmMinor" -eq "$osMinMinor" ]]; then
+    if [[ "$dsmBuild" -ge "$osMinBuild" ]]; then
+      vers=1  
+    fi
+  fi  
+fi
+if [[ "$vers" -ne "1" ]]; then
+  lngUser="$SYNOPKG_DSM_LANGUAGE"
+  # echo "$(date "$DTFMT"): lngUser=SYNOPKG_DSM_LANGUAGE='$lngUser'" >> "$LOG"
+	# package.tgz and also the extracted package are available!
+	if [[ -f "$scriptpathParent/package/ui/texts/$lngUser/lang.txt" ]]; then
+    # preinstDsmVersError=$(/bin/get_key_value "$scriptpathParent/package/ui/texts/$lngUser/lang.txt" "preinstDsmVersError")  # "... ${osMin} ..." is not yet expanded
+		eval "$(grep "preinstDsmVersError=" "$scriptpathParent/package/ui/texts/$lngUser/lang.txt")" # "... ${osMin} ..." is expanded
+		echo "$preinstDsmVersError" > "$SYNOPKG_TEMP_LOGFILE"      
+	else
+    echo "This package version can only be used in DSM $osMin and above! Earlier package versions may be possible on your DSM version, see <a target='_blank' rel='noopener noreferrer' href='https://github.com/reidemei/synology-autorun#install'>https://github.com/reidemei/synology-autorun#install</a>" > "$SYNOPKG_TEMP_LOGFILE"
+	fi	
 	exit 1
 fi
-
-echo "$(date "$DTFMT"): ... OS major checked, preinst finished<br/>" >> "$LOG"
+echo "$(date "$DTFMT"): ... OS version checked (${dsmMajor}.${dsmMinor}-${dsmBuild} >= ${osMin}), preinst finished<br/>" >> "$LOG"
 exit 0
 

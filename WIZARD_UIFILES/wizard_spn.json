@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"El script debe estar ubicado en el directorio raíz del dispositivo externo y configurado como ejecutable para el usuario 'root'. Obtiene el punto de montaje del dispositivo (por ejemplo, /volumeUSB1/usbshare/) como primer parámetro ($1) y la partición del dispositivo (por ejemplo, usb1p1) como segundo ($2). Sugerencia: El script se ejecuta con el entorno vacío, ¡tienes que especificar todos los comandos utilizados con la ruta!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Script a ejecutar",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Script a ejecutar"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"Un valor de salida de 100 del script desmontará y expulsará el dispositivo cuando el script termine, todos los demás valores de salida lo dejarán montado. Puede detener la ejecución automática en el centro de paquetes para deshabilitarla temporalmente.<br/><br/>El tiempo de búsqueda es el tiempo que transcurre tras el disparo de udev para encontrar el punto de montaje cuando se conecta un dispositivo. El tiempo de espera adicional le da al DSM algo de margen para montar correctamente la unidad antes de iniciar el script.<br/>Es posible que tenga que aumentar esos tiempos dependiendo de su hardware.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Tiempo de búsqueda (s)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Tiempo de búsqueda (s)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Introduzca un número positivo"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Tiempo de espera (s)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Tiempo de espera (s)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Introduzca un número positivo"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"El tamaño de los archivos de registro se limita automáticamente. Si se alcanza el número de líneas dado, se elimina la mitad mayor.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Número máximo de líneas",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Número máximo de líneas"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Introduzca un número positivo"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"El paquete genera mensajes DSM, que se muestran en el escritorio a grupos de usuarios o usuarios configurables. Anteponga una @ a los nombres de los grupos, por ejemplo, @usuarios para todos los usuarios.",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Visualización de mensajes a",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"Existen varios niveles de detalle de los mensajes del archivo de depuración: 0 ... 8. Cuanto más alto sea el valor, más detalles.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Nivel de detalle del registro"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Introduzca un número positivo 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"El paquete genera mensajes de escritorio DSM, que se muestran en el escritorio a grupos de usuarios o usuarios configurables. Anteponga una @ a los nombres de los grupos, por ejemplo, @usuarios para todos los usuarios."
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Visualización de mensajes a"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Normalmente hay un mensaje de escritorio DSM generado después de que su script haya terminado. El mensaje contiene el código de retorno de su script y el espacio libre restante en el dispositivo de almacenamiento. Puede especificar aquí una lista de códigos de retorno que no generen dicho mensaje."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Códigos de retorno sin mensaje"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Introduzca uno o más números de 1..3 dígitos, separados por punto y coma"
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Si el script termina con el código de salida 100, se intentará expulsar el dispositivo. Puede especificar el tiempo de espera (en segundos) para expulsar el dispositivo",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Tiempo de espera de expulsión [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Si el script termina con el código de salida 100, se intentará expulsar el dispositivo. Puede especificar el tiempo de espera (en segundos) para expulsar el dispositivo"
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Tiempo de espera de expulsión [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Introduzca un número positivo"
+}
 }
 }]
 }
@@ -184,7 +231,7 @@
 "step_title":"IMPORTANTE: ¡Se requiere una acción manual!",
 "items": [{
 "type": "textfield",
-"desc":"Los paquetes de terceros están restringidos por Synology en DSM 7.x. Dado que la ejecución automática requiere permiso de root para realizar su trabajo, se requiere un paso manual adicional después de la instalación.<br/><br/>SSH a su NAS (como usuario administrador) y ejecute el siguiente comando después de que la instalación haya terminado. Cópialo ahora.",
+"desc":"Los paquetes de terceros están restringidos por Synology en DSM 7.x. Dado que la ejecución automática requiere el permiso de root para realizar su trabajo, se requiere un paso manual adicional después de la instalación.<br/><br/>SSH a su NAS (como usuario administrador) y ejecute el siguiente comando después de que la instalación haya terminado. Ya puede copiarlo.",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Comando",

@@ -42,9 +42,16 @@ echo "File coding check ..."
 checkCoding "$SCRIPTPATHTHIS/" 
 echo "... finished file coding check"
 
+# "$(./translate.sh)" # Update tranlations via DeepL if necessary
+/bin/bash ./translate.sh
+ret=$?
+if [[ "$ret" -gt 0 ]]; then
+  exit $ret
+fi
+
 # Check for well formed JSON:
 errCnt=0
-for f1 in package/ui/config package/ui/index.conf conf/priviledge conf/priviledge.root conf/resource WIZARD_UIFILES/install_uifile WIZARD_UIFILES/upgrade_uifile WIZARD_UIFILES/upgrade WIZARD_UIFILES/wizard_*.json
+for f1 in package/ui/config package/ui/index.conf conf/privilege conf/privilege.root conf/resource WIZARD_UIFILES/uninstall_uifile* WIZARD_UIFILES/wizard_*.json
 do
   f2="$SCRIPTPATHTHIS/$1$f1"
   if [[ -f "$f2" ]]; then
@@ -57,15 +64,19 @@ do
     fi
   else
     echo "$f2 not found!"
+    ((errCnt=errCnt+1))
   fi
 done
-
+if [[ "$errCnt" -gt "0" ]]; then
+  echo "Stopped due to errCnt=$errCnt"
+  exit 2
+fi
 
 ### get the version and the package name from INFO.sh:
 if [[ -f "INFO.sh" ]]; then
   line="$(grep -i "VERSION=" "INFO.sh")"
   echo "line with version: '$line'"
-  line=${line^^}
+  line=${line^^} # toUpper
   eval $line
   line=$(grep -i "package=" "INFO.sh")  
   line=${line#*package=\"}
@@ -74,7 +85,14 @@ if [[ -f "INFO.sh" ]]; then
   echo "pck='$pck'"
 else
   echo "Error: File INFO.sh not found!"
+  ((errCnt=errCnt+1))
 fi
+
+if [[ "$errCnt" -gt "0" ]]; then
+  echo "Stopped due to errCnt=$errCnt"
+  exit 2
+fi
+
 
 echo "building V$VERSION of $pck ..."
 # echo "Actual working directory is $PKG_DIR"
@@ -104,7 +122,11 @@ echo "... package.tgz done"
 
 echo "building ${pck}-$VERSION.spk ..."
 chmod 700 package.tgz
-tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO CHANGELOG LICENSE* PACKAGE_ICON.PNG $p256 WIZARD_UIFILES conf scripts package.tgz
+license=""
+if [[ -f "LICENSE*" ]]; then
+  license="LICENSE*"
+fi
+tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO CHANGELOG $license PACKAGE_ICON.PNG $p256 WIZARD_UIFILES conf scripts package.tgz
 
 rm "package.tgz"
 rm "INFO"

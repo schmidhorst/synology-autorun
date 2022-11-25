@@ -6,20 +6,18 @@ LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
 configFilePathName="/var/packages/$SYNOPKG_PKGNAME/var/config"
-lng=$SYNOPKG_DSM_LANGUAGE
-if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt" ]]; then
-  lng="enu"
-fi
+source "/var/packages/$SYNOPKG_PKGNAME/target/common" # set lngUser, lngDsm
+  
 case $1 in
   prestart)
-    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
+    echo "$(date "$DTFMT"): PRESTART of start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
     #### is not occuring !!!????
     ;;
   start)
-    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'. SYNOPKG_DSM_LANGUAGE='$lng'<br/>" >> "$LOG"
+    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'. SYNOPKG_DSM_LANGUAGE='$lngDsm'<br/>" >> "$LOG"
     if [ "$user" != "root" ]; then
       echo "$(date "$DTFMT"): start-stop-status '$1' as user '$user' != \"root\". <br/>" >> "$LOG"      
-      eval $(grep -s "copyPriviledge=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+      eval $(grep -s "copyPriviledge=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
       if [ "$copyPriviledge" != "" ]; then
         echo "$copyPriviledge" > "$SYNOPKG_TEMP_LOGFILE"
       else
@@ -41,11 +39,11 @@ case $1 in
       if [[ -n "$scriptAfterEject" ]]; then # script setup
         echo "$(date "$DTFMT"): start-stop-status: Script after eject '$scriptAfterEject'<br/>" >> "$LOG"            
         if [[ ! -f "$scriptAfterEject" ]]; then
-          eval $(grep -s "scriptAfterNA=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+          eval $(grep -s "scriptAfterNA=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
           echo "$scriptAfterNA" > "$SYNOPKG_TEMP_LOGFILE"
           echo "$(date "$DTFMT"): Error: The 'Script after' file $SCRIPT_AFTER_EJECT is not available!" >> "$LOG"
         elif [[ ! -x "$scriptAfterEject" ]]; then     
-          eval $(grep -s "scriptAfterNexec=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+          eval $(grep -s "scriptAfterNexec=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
           echo "$scriptAfterNexec" > "$SYNOPKG_TEMP_LOGFILE"
           echo "$(date "$DTFMT"): Error: The 'Script after' file $SCRIPT_AFTER_EJECT is not executable!" >> "$LOG"
         else
@@ -56,18 +54,18 @@ case $1 in
           if [[ $res == *"CRLF line terminators"* ]]; then
             echo "  File coding check '$scriptName' result $ret: $res"
             echo "  ######## Windows line terminator need to be converted to Unix! #########"
-            eval $(grep -s "msg14=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
-            echo "$msg14" > "$SYNOPKG_TEMP_LOGFILE"
+            eval $(grep -s "wrongLineBreakWin=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            echo "$wrongLineBreakWin" > "$SYNOPKG_TEMP_LOGFILE"
           elif [[ $res == *"with CR line terminators"* ]]; then
             echo "  File coding check '$scriptName' result $ret: $res"
             echo "  ######## MAC line terminator need to be converted to Unix! #########"
-            eval $(grep -s "msg16=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
-            echo "$msg16" > "$SYNOPKG_TEMP_LOGFILE"
+            eval $(grep -s "wrongLineBreakMac=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            echo "$wrongLineBreakMac" > "$SYNOPKG_TEMP_LOGFILE"
           elif [[ "$res" == *"ISO-8859 text"* ]]; then 
             echo "  File coding check '$scriptName' result $ret: $res"
             echo "  ######## Please convert to UTF-8! ##########"
-            eval $(grep -s "msg15=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
-            echo "$msg15" > "$SYNOPKG_TEMP_LOGFILE"
+            eval $(grep -s "wrongCodePage=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            echo "$wrongCodePage" > "$SYNOPKG_TEMP_LOGFILE"
           fi # CRLF       
         fi
       else # if [[ -n "$scriptAfterEject" ]]
@@ -84,7 +82,7 @@ case $1 in
           groupExist=$(synogroup --enum all | grep "${notyfyUsers:1}") # account which are allowing login
           if [[ -z $groupExist ]]; then # Fehlermeldung
             echo "$(date "$DTFMT"): The group account '$notyfyUsers' for desktop message does not exist! Wrong entry replaced by '@users'" >> "$LOG"
-            eval $(grep -s "notifyGroupError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+            eval $(grep -s "notifyGroupError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
             echo "$notifyGroupError" > "$SYNOPKG_TEMP_LOGFILE"
             sed -i 's/^NOTIFY_USERS=*$/^NOTIFY_USERS=@users/' "$configFilePathName"      
           fi
@@ -94,17 +92,12 @@ case $1 in
           # alternative: synouser --get "${notyfyUsers}"   
           if [[ -z $userExist ]]; then # Fehlermeldung
             echo "$(date "$DTFMT"): The user account '$notyfyUsers' for desktop messages does not exist! Therefore the wrong entry replaced by '@users'. Run Installation again to enter another value!" >> "$LOG"
-            eval $(grep -s "notifyUserError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lng/lang.txt")
+            eval $(grep -s "notifyUserError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
             echo "$notifyUserError" > "$SYNOPKG_TEMP_LOGFILE"
             sed -i 's/^NOTIFY_USERS=*$/^NOTIFY_USERS=@users/' "$configFilePathName"      
           fi # not existing user
         fi # if goupe else user
-      fi
-      
-      # cgi files don't have access to language of users. So get now the language settings for all administrators:
-      getUserLngsScript="/var/packages/$SYNOPKG_PKGNAME/target/ui/modules/get_languages.sh"
-      source "$getUserLngsScript" 
-      
+      fi            
     fi # user root
     if [ -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" ];  then
       echo "$(date "$DTFMT"): start executed, but app was already running<br/>" >> "$LOG"    
@@ -117,6 +110,9 @@ case $1 in
       chmod 644 "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules"
       # chown root:root "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" # required? 
       /usr/bin/udevadm control --reload-rules
+      if [ -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" ];  then
+			  echo "$(date "$DTFMT"): $SYNOPKG_PKGNAME was STARTED!" >> "$SCRIPT_EXEC_LOG"
+			fi	
     fi
     echo "$(date "$DTFMT"): ... start via start-stop-status script successfully finished<br/>" >> "$LOG"
     exit 0
@@ -132,6 +128,7 @@ case $1 in
       retvalStop=$?
       echo "$(date "$DTFMT"): rm 99-$SYNOPKG_PKGNAME.rules retval=$retvalStop, result='$resultStop'<br/>" >> "$LOG"
       /usr/bin/udevadm control --reload-rules
+      echo "$(date "$DTFMT"): $SYNOPKG_PKGNAME was STOPPED!" >> "$SCRIPT_EXEC_LOG"
     else
       echo "$(date "$DTFMT"): stop executed, but app was not running<br/>" >> "$LOG"    
     fi

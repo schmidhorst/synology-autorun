@@ -3,7 +3,7 @@ LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami)
 echo -e "\n$(date "$DTFMT"): $0 ($SYNOPKG_PKGVER) started with account '$user' ..." >> "$LOG"
-# echo "$(date "$DTFMT"): preupgrade started ...<br/>" >> $SYNOPKG_TEMP_LOGFILE
+# preupgrade starts from an temporary folder like /volume1/@tmp/synopkg/install.XDdQUB/scripts/preupgrade
 # Attention: if in the WIZARD_UIFILES folder a script is used for a dynamic ..._uifile, then it's not allowed to write here somthing to $SYNOPKG_TEMP_LOGFILE !!!
 
 #Developer Guide 7, Page 54, Script Execution Order

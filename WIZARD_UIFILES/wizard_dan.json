@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"Scriptet skal være placeret i rodmappen på den eksterne enhed og indstillet som eksekverbart for brugeren \"root\". Det får enhedens monteringspunkt (f.eks. /volumeUSB1/usbshare/) som den første parameter ($1) og enhedens partition (f.eks. usb1p1) som den anden ($2). Tip: Scriptet udføres med et tomt miljø, du skal angive alle de anvendte kommandoer med sti!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Script til udførelse",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Script til udførelse"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"En exit-værdi på 100 fra scriptet vil afmontere og skubbe enheden ud, når scriptet er færdigt, mens alle andre exit-værdier vil lade den være monteret. Du kan stoppe autorun i pakkecenteret for midlertidigt at deaktivere det.<br/><br/>Søgetiden er tiden efter udløsningen af udev til at finde monteringspunktet, når en enhed er tilsluttet. Den ekstra ventetid giver DSM noget spillerum til at montere drevet korrekt, før scriptet startes.<br/>Du skal muligvis øge disse tider afhængigt af din hardware.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Søgetid (sek.)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Søgetid (sek.)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Indtast et positivt tal"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Ventetid (sek.)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Ventetid (sek.)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Indtast et positivt tal"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"Størrelsen af logfilerne begrænses automatisk. Hvis det angivne antal linjer er nået, fjernes den ældste halvdel.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Max. antal linjer",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Max. antal linjer"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Indtast et positivt tal"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"Pakken genererer DSM-meddelelser, som vises på skrivebordet til konfigurerbare brugergrupper eller brugere. Tilføj et @ til gruppenavne, f.eks. @users for alle brugere",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Visning af meddelelse til",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"Der er flere detaljeringsniveauer for meddelelser i debug-logfilen tilgængelige: 0 ... 8. Jo højere værdi, desto flere detaljer.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Detaljeret logniveau"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Indtast et positivt tal 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"Pakken genererer DSM-skrivebordsmeddelelser, som vises på skrivebordet til konfigurerbare brugergrupper eller brugere. Tilføj et @ til gruppenavne, f.eks. @users for alle brugere"
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Visning af meddelelse til"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Normalt genereres der en DSM-skrivebordsmeddelelse, når scriptet er færdigt. Meddelelsen indeholder scriptets returkode og den resterende ledige plads på lagerenheden. Du kan her angive en liste over returkoder, som ikke genererer en sådan meddelelse."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Returkoder uden meddelelse"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Indtast et eller flere 1..3-cifrede tal, adskilt af et semikolon"
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -103,7 +147,7 @@
 }
 ,{
 "type": "combobox",
-"desc":"Anvendelse af status-LED:<br/>0: Anvendes slet ikke<br/>1: Grøn under kørsel, grønt blink under udkast, slukket hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>2: Grønt blink under kørsel eller udkast, grønt hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>3: Grønt under kørsel og under udkast, slukket når scriptet er afsluttet, orange blink hvis udkast mislykkedes",
+"desc":"Anvendelse af status-LED:<br/>0: Anvendes slet ikke<br/>1: Grøn under kørsel, grønt blink under udkast, slukket hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>2: Grønt blink under kørsel eller udkast, grønt hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>3: Grønt under kørsel af script og under udkast, slukket når det er afsluttet, orange blink hvis udkast mislykkedes",
 "subitems": [{
 "key": "config_LED",
 "autoSelect": true,
@@ -131,21 +175,24 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Hvis scriptet slutter med exit-kode 100, vil det blive forsøgt at skubbe enheden ud. Du kan angive timeouttiden (i sekunder) for udsmidning af enheden",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Timeout for udtagning [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Hvis scriptet slutter med exit-kode 100, vil det blive forsøgt at skubbe enheden ud. Du kan angive timeouttiden (i sekunder) for udsmidning af enheden"
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Timeout for udtagning [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Indtast et positivt tal"
+}
 }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Du kan eventuelt angive et yderligere script (med fuld sti!), som i tilfælde af anmodet udkast (med exitkode 100 fra dit første script) udføres efter udkastningen. Dette kan f.eks. bruges til at slukke for din USB-enhed. Hvis udsmidningen mislykkedes, vil argumentet være \"Ejection failed\", ved succes intet argument!",
+"desc":"Du kan eventuelt angive et yderligere script (med fuld sti!), som i tilfælde af anmodet udkast (med exitkode 100 fra dit første script) udføres efter udkastet. Dette kan f.eks. bruges til at slukke for din USB-enhed. Hvis udsmidningen mislykkedes, vil argumentet være \"Ejection failed\", ved succes intet argument!",
 "subitems": [{
 "key": "config_SCRIPT_AFTER_EJECT",
 "desc":"Script efter udkast (på DSM)",
@@ -184,7 +231,7 @@
 "step_title":"VIGTIGT: Manuel handling er nødvendig!",
 "items": [{
 "type": "textfield",
-"desc":"Tredjepartspakker er begrænset af Synology i DSM 7.x! Da autorun kræver root-tilladelse for at udføre sit arbejde, er der behov for et ekstra manuelt trin efter installationen.<br/><br/>SSH til din NAS (som administratorbruger) og udfør følgende kommando, når installationen er færdig. Kopier den nu!",
+"desc":"Tredjepartspakker er begrænset af Synology i DSM 7.x! Da autorun kræver root-tilladelse for at udføre sit arbejde, er der behov for et ekstra manuelt trin efter installationen.<br/><br/>SSH til din NAS (som administratorbruger) og udfør følgende kommando, når installationen er færdig. Du kan kopiere den nu!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Kommando",

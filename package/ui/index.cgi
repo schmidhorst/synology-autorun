@@ -117,13 +117,13 @@ local_version=$(cat "/var/packages/${app_name}/INFO" | grep ^version | cut -d '"
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
   source "${app_home}/modules/parse_language.sh" "${syno_user}"
   res=$?
-  logInfoNoEcho 6 "Loading ${app_home}/modules/parse_language.sh done with result $res"
+  logInfoNoEcho 7 "Loading ${app_home}/modules/parse_language.sh done with result $res"
   # || exit
 else
-  logInfoNoEcho 0 "Loading ${app_home}/modules/parse_language.sh not executable"
+  logInfo 0 "Loading ${app_home}/modules/parse_language.sh failed"
   exit 
 fi
-
+# ${used_lang} is now setup, e.g. enu
 
 # Resetting access permissions
 unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_authenticated
@@ -179,7 +179,6 @@ if [[ ! -f "licence_${used_lang}.html" ]]; then
   licenceFile="licence_enu.html"
 fi
 
-
 if [ "$is_admin" != "yes" ]; then
   echo "Content-type: text/html"
   echo  
@@ -196,7 +195,7 @@ fi
 #appCfgDataPath=$(find /volume*/@appdata/${app_name} -maxdepth 0 -type d)
 appCfgDataPath="/var/packages/${app_name}/var"
 if [ ! -d "${appCfgDataPath}" ]; then
-  logInfoNoEcho 0 "... terminating as app home folder '$ah' ('${app_home}') not found!"
+  logInfo 0 "... terminating as app home folder '$appCfgDataPath' not found!"
   echo "$(date "$DTFMT"): ls -l /:" >> "$LOG"
   ls -l / >> "$LOG"
   exit
@@ -233,39 +232,29 @@ fi
   #  read -n ${CONTENT_LENGTH} POST_STRING
   #fi
 
-mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}"
-mapfile -d "&" -t POST_vars <<< "${POST_STRING}"
-# Securing the Internal Field Separator (IFS) as well as the separation
-# of the GET/POST key/value requests, by locating the separator "&"
-if [ -z "${backupIFS}" ]; then
-  backupIFS="${IFS}"
-#  IFS='&'
-#  GET_vars=("${QUERY_STRING}")
-#  POST_vars=("${POST_STRING}")
-  readonly backupIFS
-  IFS="${backupIFS}"
-  logInfoNoEcho 6 "CGI QUERY_STRING='${QUERY_STRING}'"
-  logInfoNoEcho 6 "CGI POST_STRING='${POST_STRING}'"
-  logInfoNoEcho 8 "GET_vars[*]='${GET_vars[*]}'"
-  logInfoNoEcho 5 "CGI QUERY_STRING done, GET_vars and/or POST_vars set"
-fi
+# mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}" here-string <<< appends a newline!
+mapfile -d "&" -t GET_vars < <(printf '%s' "$QUERY_STRING")
+mapfile -d "&" -t POST_vars  < <(printf '%s' "$POST_STRING")
+logInfoNoEcho 6 "CGI QUERY_STRING done, GET_vars and/or POST_vars set"
 
 SCRIPT_EXEC_LOG="$appCfgDataPath/execLog"
 logfile="$SCRIPT_EXEC_LOG" # default, later optionally set to "$appCfgDataPath/detailLog"
-st=$(echo "$logTitleExec")  # default, later optionally set to "$logTitleDetail"
+pageTitle=$(echo "$logTitleExec")  # default, later optionally set to "$logTitleDetail"
 
 versionUpdateHint=""
-# https://github.com/schmidhorst/synology-autorun
-git_version=$(wget --no-check-certificate --timeout=60 --tries=1 -q -O- "https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh" | grep ^version | cut -d '"' -f2)		
-logInfoNoEcho 6 "local_version='$local_version', git_version='$git_version'"
-if [ -n "${git_version}" ] && [ -n "${local_version}" ]; then
-	if dpkg --compare-versions ${git_version} gt ${local_version}; then
-	# if dpkg --compare-versions ${git_version} lt ${local_version}; then # for debugging
-    vh=$(echo "$update_available")
-		versionUpdateHint='<p style="text-align:center">'${vh}' <a href="https://github.com/schmidhorst/synology-'${app_name}'/releases" target="_blank">'${git_version}'</a></p>'
-	fi
+# githubRawInfoUrl="https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh"
+ #patched from INFO.sh
+if [[ -n "$githubRawInfoUrl" ]]; then
+  git_version=$(wget --timeout=30 --tries=1 -q -O- "$githubRawInfoUrl" | grep ^version | cut -d '"' -f2)
+  logInfoNoEcho 6 "local_version='$local_version', git_version='$git_version'"
+  if [ -n "${git_version}" ] && [ -n "${local_version}" ]; then
+	  if dpkg --compare-versions ${git_version} gt ${local_version}; then
+  	# if dpkg --compare-versions ${git_version} lt ${local_version}; then # for debugging
+      vh=$(echo "$update_available")
+		  versionUpdateHint='<p style="text-align:center">'${vh}' <a href="https://github.com/schmidhorst/synology-'${app_name}'/releases" target="_blank">'${git_version}'</a></p>'
+  	fi
+  fi
 fi
-
 
 # Analyze incoming GET requests and process them to ${get[key]}="$value" variables
 declare -A get # associative array
@@ -281,14 +270,14 @@ for ((i=0; i<${#GET_vars[@]}; i+=1)); do
     if [[ "$key" == "action" ]]; then
       if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]]; then
         logfile="$appCfgDataPath/detailLog"  # Link to /var/log/tmp/autorun.log
-        st=$(echo "$logTitleDetail")
+				pageTitle=$(echo "$logTitleDetail")
       fi
       if [[ "$val" == "delSimpleLog" ]] || [[ "$val" == "delDetailLog" ]]; then
         echo "" > "$logfile"
         logInfoNoEcho 4 "Old content of '$logfile' removed"
       fi
       if [[ "$val" == "downloadSimpleLog" ]] || [[ "$val" == "downloadDetailLog" ]]; then
-        logInfoNoEcho 4 "Download content of '$logfile' requested"
+        logInfoNoEcho 5 "Download content of '$logfile' requested"
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition
 # Content-Type: text/html; charset=utf-8
 # Content-Disposition: attachment; filename="cool.html"
@@ -329,13 +318,6 @@ for ((i=0; i<${#GET_vars[@]}; i+=1)); do
   fi # if [[ -n "$key" ]]; then 
 done
 
-# for download of Logfile:
-# wholeFileContent=$(urlencode "$(<"$logfile")")
-# script="$script
-#     document.getElementById('savelogcontent').onclick = function() {
-#       window.open('data:application/txt,' + $wholeFileContent, '_self');
-#       }
-#      "
 script="$script</script>"
 
 if [[ ${#GET_vars[@]} -gt 0 ]]; then
@@ -364,8 +346,15 @@ fi
 [ -f "${get_request}" ] && source "${get_request}"
 [ -f "${post_request}" ] && source "${post_request}"
 
-filesize_Bytes=$(stat -c%s "$logfile")  # if it's a link this returns size of the link, not of linked file!  
-logInfoNoEcho 8 "Size of $logfile is $filesize_Bytes Bytes"
+linkTarget="$(readlink $logfile)" # result 1 if it's not a link
+if [[ "$?" -eq "0" ]]; then
+  filesize_Bytes=$(stat -c%s "$linkTarget")
+  lineCount=$(wc -l < "$linkTarget")
+else
+  filesize_Bytes=$(stat -c%s "$logfile")  # if it's a link this returns size of the link, not of linked file!  
+  lineCount=$(wc -l < "$logfile")
+fi
+logInfoNoEcho 8 "Size of $logfile is $lineCount lines, $filesize_Bytes Bytes"
 if [[ "$bDebug" -ne 0 ]]; then
   echo "startingo to generate html document ..."
 fi
@@ -379,7 +368,7 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
   <html lang=\"${SYNO2ISO[${used_lang}]}\">
     <head>"
   echo '<meta charset="utf-8" />'
-  echo "<title>${st}</title>"   # <title>...</title> is not displayed but title from the file config
+  # echo "<title>${pageTitle}</title>"   # <title>...</title> is not displayed but title from the file config
   echo '
       <link rel="shortcut icon" href="images/icon_32.png" type="image/x-icon" />
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -409,7 +398,7 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           fi  
           echo "<button onclick=\"location.href='settings.cgi'\" type=\"button\">${btnShowSettings}</button> "
           echo "<button onclick=\"location.href='$licenceFile'\" type=\"button\">${btnShowLicence}</button> "
-          echo "<p><strong>$st</strong></p>"
+          echo "<p><strong>$pageTitle</strong></p>"
           echo "</header><table>"
 
           if [[ -f "$logfile" ]]; then
@@ -418,9 +407,12 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
               msg=$(echo "$execLogNA")
               echo "<tr><td>$msg</td></tr>"            
             else
-              while read line; do # read all settings from config file
+              while read line; do # read all settings from logfile
                 timestamp=${line%%: *}
-                msg=${line#*: }  
+                msg=${line#*: }
+								if [[ "$msg" == "$timestamp" ]]; then # no ": " 
+								  timestamp="" # put all to 2nd column
+								fi  
                 echo "<tr><td>$timestamp</td><td>$msg</td></tr>"
               done < "$logfile" # Works well even if last line has no \n!
             fi

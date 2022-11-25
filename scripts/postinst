@@ -3,8 +3,9 @@ LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami) # EnvVar $USER may be not well set
 echo "$(date "$DTFMT"): postinst V$SYNOPKG_PKGVER started as user '$user' ...<br/>" >> "$LOG"
+# postinst starts from var/packages/autorun/scripts, not from temporary folder like preupgrade
 
-fields="config_SCRIPT config_SCRIPT_AFTER_EJECT config_ADD_NEW_FINGERPRINTS config_TRIES config_WAIT config_BEEP config_LED config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS"
+fields="config_SCRIPT config_SCRIPT_AFTER_EJECT config_ADD_NEW_FINGERPRINTS config_TRIES config_WAIT config_BEEP config_LED config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS config_NO_DSM_MESSAGE_RETURN_CODES config_LOGLEVEL"
 # config_LED, Status LED usage:
  # 0 = not used,
  # 1 = orange while script is running, green when done,
@@ -27,16 +28,10 @@ msg=""
 rm -f "$SYNOPKG_PKGVAR/config"
 echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generated now ...<br/>" >> "$LOG"
 
-# not shown up ==> Check in start-stop-status
-# eval $(env | grep "^$config_SCRIPT_AFTER_EJECT=")
-# if [[ -n "$config_SCRIPT_AFTER_EJECT" ]]; then
-#   if [[ ! -f "$config_SCRIPT_AFTER_EJECT" ]]; then
-#     echo "Error: The 'Script after' file $config_SCRIPT_AFTER_EJECT is not available!" > "$SYNOPKG_TEMP_LOGFILE"  
-#   fi
-# fi
-
-# eval $(env | grep "^config_NOTIFY_USERS=")
-# Check for valid entry requires root access and is done in the start-stop-status script
+# Messages (send to $SYNOPKG_TEMP_LOGFILE) are not shown up!? ==> Do the checks in start-stop-status
+# If terminated with "exit 1" then the old setting are lost. ==> Do the checks in start-stop-status 
+# 1) Is the $config_SCRIPT_AFTER_EJECT file available, and has it correct line break and UTF8-Coding?
+# 2) is user or group config_NOTIFY_USERS valid? Check for valid entry requires root access and is done in the start-stop-status script
 
 for f1 in $fields; do
   eval $(env | grep "^$f1=")
@@ -44,15 +39,12 @@ for f1 in $fields; do
   f2=${f1#*config_}
   echo "$f2=\"${!f1}\"" >> "$SYNOPKG_PKGVAR/config"
 done
-
 echo "$(date "$DTFMT"): from ENV: $msg" >> "$LOG"
-
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
   KNOWNSCRIPTSFILEPATHNAME="$SYNOPKG_PKGVAR/FINGERPRINTS"
   rm -f "$KNOWNSCRIPTSFILEPATHNAME" 
 fi
+
 chmod 755 "$SYNOPKG_PKGVAR/config"
-
 echo "$(date "$DTFMT"): postinst done, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
-
 exit 0

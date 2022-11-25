@@ -14,9 +14,6 @@
       "url": "/webman/3rdparty/autorun/index.cgi",
       "preloadTexts": [
         "app1:title01",
-        "app1:msg0",
-        "app1:msg1",
-        "app1:msg2",
         "app1:msg3",
         "app1:msg4",
         "app1:msg5",

@@ -1,9 +1,9 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="自动运行"
-msg0="\"由于sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege的shell命令尚未执行，所以无法启动！\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="脚本'{0}'（{1}）的指纹现在已被注册为允许的脚本。"
 msg4="在插入的设备上，有一个脚本'{1}'（{2}）。脚本的名称与{0}包的设置相符。但该脚本的指纹不允许执行。"
 msg5="在插入的设备上，有一个脚本'{1}'。这个脚本的名称与{0}包的设置相匹配。但该脚本不允许用于{3}。"

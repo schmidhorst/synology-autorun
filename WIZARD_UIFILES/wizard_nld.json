@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"Het script moet zich in de hoofdmap van het externe apparaat bevinden en ingesteld zijn als uitvoerbaar voor de gebruiker 'root'. Het krijgt het koppelpunt van het apparaat (bijv. /volumeUSB1/usbshare/) als eerste parameter ($1) en de apparaatpartitie (bijv. usb1p1) als tweede ($2). Hint: Het script wordt uitgevoerd met een lege omgeving, je moet alle gebruikte commando's opgeven met pad!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Uit te voeren script",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Uit te voeren script"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"Een exit waarde van 100 van het script zal het apparaat ontkoppelen en uitwerpen als het script klaar is, alle andere exit waarden laten het gekoppeld. U kunt autorun stoppen in het package center om het tijdelijk uit te schakelen.<br/><br/>De zoektijd is de tijd na de trigger door udev voor het vinden van het koppelpunt wanneer een apparaat wordt aangekoppeld. De extra wachttijd geeft de DSM wat ruimte om de schijf goed te mounten voordat het script wordt gestart.<br/>Het kan zijn dat u deze tijden moet verlengen, afhankelijk van uw hardware.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Zoektijd (sec)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Zoektijd (sec)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Voer een positief getal in"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Wachttijd (sec)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Wachttijd (sec)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Voer een positief getal in"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"De grootte van de logbestanden wordt automatisch beperkt. Als het opgegeven aantal regels is bereikt, wordt de oudere helft verwijderd.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Max. aantal regels",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Max. aantal regels"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Voer een positief getal in"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"Het pakket genereert DSM-berichten, die op het bureaublad worden getoond aan configureerbare gebruikersgroepen of gebruikers. Voeg een @ toe aan groepsnamen, bijv. @users voor alle gebruikers.",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Berichtweergave naar",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"Er zijn verschillende detailniveaus voor debug-logbestanden beschikbaar: 0 ... 8. Hoe hoger de waarde, hoe meer details.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Log Detailniveau"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Voer een positief getal in 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"Het pakket genereert DSM-desktopberichten, die op het bureaublad worden getoond aan configureerbare gebruikersgroepen of gebruikers. Voeg een @ toe aan groepsnamen, bijv. @users voor alle gebruikers."
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Berichtweergave naar"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Normaal gesproken wordt er een DSM-desktopbericht gegenereerd nadat je script is voltooid. Het bericht bevat de retourcode van je script en de resterende vrije ruimte op het opslagapparaat. Je kunt hier een lijst van retourcodes opgeven, die een dergelijk bericht niet genereren."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Retourcodes zonder bericht"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Voer een of meer 1..3 cijfers in, gescheiden door een puntkomma."
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Als het script eindigt met de exitcode 100, wordt geprobeerd het apparaat uit te werpen. U kunt de time-out (in seconden) voor het uitwerpen van het apparaat opgeven",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Eject Timeout [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Als het script eindigt met de exitcode 100, wordt geprobeerd het apparaat uit te werpen. U kunt de time-out (in seconden) voor het uitwerpen van het apparaat opgeven"
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Eject Timeout [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Voer een positief getal in"
+}
 }
 }]
 }
@@ -184,7 +231,7 @@
 "step_title":"BELANGRIJK: Handmatige actie vereist!",
 "items": [{
 "type": "textfield",
-"desc":"Pakketten van derden worden beperkt door Synology in DSM 7.x! Omdat autorun root-toestemming vereist om zijn werk te doen, is een extra handmatige stap nodig na de installatie.<br/><br/>SSH naar uw NAS (als een admin-gebruiker) en voer het volgende commando uit nadat de installatie is voltooid. Kopieer het nu!",
+"desc":"Pakketten van derden worden beperkt door Synology in DSM 7.x! Omdat autorun root-toestemming vereist om zijn werk te doen, is een extra handmatige stap vereist na de installatie.<br/><br/>SSH naar uw NAS (als een admin-gebruiker) en voer het volgende commando uit nadat de installatie is voltooid. U kunt het nu kopiëren!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Commando",

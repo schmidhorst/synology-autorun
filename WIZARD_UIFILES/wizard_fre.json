@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"Licence BSD 3-Clause<br><br>Copyright (c) 2011-2022, Jan Reidemeister et Horst Schmid<br>Tous droits réservés.<br><br>La redistribution et l'utilisation sous forme source et binaire, avec ou sans modification, sont autorisées à condition que les conditions suivantes soient respectées :<br>1. Les redistributions de code source doivent conserver l'avis de droit d'auteur ci-dessus, la présente liste de conditions et la clause de non-responsabilité suivante.<br>2. Les redistributions sous forme binaire doivent reproduire l'avis de droit d'auteur ci-dessus, la présente liste de conditions et la clause de non-responsabilité suivante dans la documentation et/ou les autres documents fournis avec la distribution.<br>3. Ni le nom du détenteur du droit d'auteur ni les noms de ses contributeurs ne peuvent être utilisés pour approuver ou promouvoir des produits dérivés de ce logiciel sans autorisation écrite spécifique préalable.<br><br>Ce logiciel est fourni par les détenteurs des droits d'auteur et les contributeurs \" en l'état \" et toute garantie expresse ou implicite, y compris, mais sans s'y limiter, les garanties implicites de qualité marchande et d'adéquation à un usage particulier, est rejetée. EN AUCUN CAS, LE TITULAIRE DU DROIT D'AUTEUR OU LES CONTRIBUTEURS NE POURRONT ÊTRE TENUS RESPONSABLES DE TOUT DOMMAGE DIRECT, INDIRECT, ACCESSOIRE, SPÉCIAL, EXEMPLAIRE OU CONSÉCUTIF (Y COMPRIS, MAIS SANS S'Y LIMITER, L'ACQUISITION DE BIENS OU DE SERVICES DE SUBSTITUTION, LA PERTE D'UTILISATION, DE DONNÉES OU DE BÉNÉFICES, OU L'INTERRUPTION D'ACTIVITÉ), QUELLE QU'EN SOIT LA CAUSE ET QUELLE QUE SOIT LA THÉORIE DE RESPONSABILITÉ, QU'IL S'AGISSE D'UN CONTRAT, D'UNE RESPONSABILITÉ STRICTE OU D'UN DÉLIT (Y COMPRIS LA NÉGLIGENCE OU AUTRE) DÉCOULANT DE QUELQUE MANIÈRE QUE CE SOIT DE L'UTILISATION DE CE LOGICIEL, MÊME S'ILS ONT ÉTÉ INFORMÉS DE LA POSSIBILITÉ DE TELS DOMMAGES.",
+"desc":"Licence BSD 3-Clause<br><br>Copyright (c) 2011-2022, Jan Reidemeister et Horst Schmid<br>Tous droits réservés.<br><br>La redistribution et l'utilisation sous forme source et binaire, avec ou sans modification, sont autorisées à condition que les conditions suivantes soient respectées :<br>1. Les redistributions de code source doivent conserver l'avis de droit d'auteur ci-dessus, la présente liste de conditions et la clause de non-responsabilité suivante.<br>2. Les redistributions sous forme binaire doivent reproduire l'avis de droit d'auteur ci-dessus, la présente liste de conditions et la clause de non-responsabilité suivante dans la documentation et/ou les autres documents fournis avec la distribution.<br>3. Ni le nom du détenteur du droit d'auteur ni les noms de ses contributeurs ne peuvent être utilisés pour approuver ou promouvoir des produits dérivés de ce logiciel sans autorisation écrite spécifique préalable.<br><br>Ce logiciel est fourni par les détenteurs de droits d'auteur et les contributeurs \" en l'état \" et toute garantie expresse ou implicite, y compris, mais sans s'y limiter, les garanties implicites de qualité marchande et d'adéquation à un usage particulier, est rejetée. EN AUCUN CAS, LE TITULAIRE DU DROIT D'AUTEUR OU LES CONTRIBUTEURS NE POURRONT ÊTRE TENUS RESPONSABLES DE TOUT DOMMAGE DIRECT, INDIRECT, ACCESSOIRE, SPÉCIAL, EXEMPLAIRE OU CONSÉCUTIF (Y COMPRIS, MAIS SANS S'Y LIMITER, L'ACQUISITION DE BIENS OU DE SERVICES DE SUBSTITUTION, LA PERTE D'UTILISATION, DE DONNÉES OU DE BÉNÉFICES, OU L'INTERRUPTION D'ACTIVITÉ), QUELLE QU'EN SOIT LA CAUSE ET QUELLE QUE SOIT LA THÉORIE DE RESPONSABILITÉ, QU'IL S'AGISSE D'UN CONTRAT, D'UNE RESPONSABILITÉ STRICTE OU D'UN DÉLIT (Y COMPRIS LA NÉGLIGENCE OU AUTRE) DÉCOULANT DE QUELQUE MANIÈRE QUE CE SOIT DE L'UTILISATION DE CE LOGICIEL, MÊME S'ILS ONT ÉTÉ INFORMÉS DE LA POSSIBILITÉ DE TELS DOMMAGES.",
 "subitems": [
 {
 "key": "id1",
@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"Le script doit être situé dans le répertoire racine du périphérique externe et défini comme exécutable pour l'utilisateur 'root'. Il obtient le point de montage du périphérique (par exemple /volumeUSB1/usbshare/) comme premier paramètre ($1) et la partition du périphérique (par exemple usb1p1) comme second ($2). Astuce : Le script est exécuté avec un environnement vide, vous devez spécifier toutes les commandes utilisées avec le chemin !",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Script à exécuter",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Script à exécuter"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"Une valeur de sortie de 100 du script démontera et éjectera le périphérique lorsque le script sera terminé, toutes les autres valeurs de sortie le laisseront monté. Vous pouvez arrêter l'autorun dans le centre de paquets pour le désactiver temporairement.<br/><br/>Le temps de recherche est le temps après le déclenchement par udev pour trouver le point de montage lorsqu'un périphérique est attaché. Le temps d'attente supplémentaire donne au DSM une certaine marge de manœuvre pour monter correctement le lecteur avant de lancer le script.<br/>Vous devrez peut-être augmenter ces temps en fonction de votre matériel.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Temps de recherche (sec)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Temps de recherche (sec)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Entrez un nombre positif"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Temps d'attente (sec)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Temps d'attente (sec)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Entrez un nombre positif"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"La taille des fichiers journaux est automatiquement limitée. Si le nombre de lignes donné est atteint, la moitié la plus ancienne est supprimée.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Nombre maximal de lignes",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Nombre maximal de lignes"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Entrez un nombre positif"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"Le paquet génère des messages DSM, qui sont affichés sur le bureau pour les groupes d'utilisateurs ou les utilisateurs configurables. Ajoutez un @ aux noms de groupes, par exemple @users pour tous les utilisateurs.",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Affichage du message sur",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"Plusieurs niveaux de détail des messages du fichier journal de débogage sont disponibles : 0 ... 8. Plus la valeur est élevée, plus les détails sont nombreux.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Niveau de détail du journal"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Entrez un nombre positif 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"Le paquetage génère des messages de bureau DSM, qui sont affichés sur le bureau pour des groupes d'utilisateurs ou des utilisateurs configurables. Ajoutez un @ aux noms de groupes, par exemple @users pour tous les utilisateurs."
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Affichage du message sur"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Normalement, un message de bureau DSM est généré après la fin de votre script. Ce message contient le code de retour de votre script et l'espace libre restant sur le périphérique de stockage. Vous pouvez spécifier ici une liste de codes de retour, qui ne génèrent pas un tel message."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Codes de retour sans message"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Entrez un ou plusieurs numéros de 1 à 3 chiffres, séparés par un point-virgule."
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Si le script se termine par le code de sortie 100, il sera tenté d'éjecter le périphérique. Vous pouvez spécifier le délai (en secondes) d'éjection du périphérique.",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Délai d'éjection [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Si le script se termine par le code de sortie 100, il sera tenté d'éjecter le périphérique. Vous pouvez spécifier le délai (en secondes) d'éjection du périphérique."
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Délai d'éjection [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Entrez un nombre positif"
+}
 }
 }]
 }
@@ -184,7 +231,7 @@
 "step_title":"IMPORTANT : Action manuelle requise !",
 "items": [{
 "type": "textfield",
-"desc":"Les paquets tiers sont restreints par Synology dans DSM 7.x ! Étant donné que l'autorun nécessite une autorisation root pour effectuer son travail, une étape manuelle supplémentaire est nécessaire après l'installation.<br/><br/>SSH à votre NAS (en tant qu'utilisateur admin) et exécutez la commande suivante une fois l'installation terminée. Copiez-le maintenant !",
+"desc":"Les paquets tiers sont restreints par Synology dans DSM 7.x ! Étant donné que l'autorun nécessite une autorisation root pour effectuer son travail, une étape manuelle supplémentaire est nécessaire après l'installation.<br/><br/>SSH à votre NAS (en tant qu'utilisateur admin) et exécutez la commande suivante une fois l'installation terminée. Vous pouvez maintenant le copier !",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Commande",

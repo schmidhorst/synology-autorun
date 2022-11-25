@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"Skriptet måste finnas i den externa enhetens rotkatalog och vara inställt som körbart för användaren \"root\". Det hämtar enhetens monteringspunkt (t.ex. /volumeUSB1/usbshare/) som första parameter ($1) och enhetens partition (t.ex. usb1p1) som andra parameter ($2). Tips: Skriptet utförs med tom miljö, du måste ange alla använda kommandon med sökväg!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Skript som ska exekveras",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Skript som ska exekveras"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"Ett utgångsvärde på 100 från skriptet kommer att avmontera och kasta ut enheten när skriptet är färdigt, alla andra utgångsvärden kommer att lämna den monterad. Du kan stoppa autorun i paketcentret för att tillfälligt inaktivera det.<br/><br/>Söktiden är tiden efter utlösningen av udev för att hitta monteringspunkten när en enhet är ansluten. Den extra väntetiden ger DSM lite spelrum för att korrekt montera enheten innan skriptet startas.<br/>Du kan behöva öka dessa tider beroende på din maskinvara.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Söktid (sek)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Söktid (sek)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Ange ett positivt tal"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Väntetid (sek)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Väntetid (sek)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Ange ett positivt tal"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"Storleken på loggfilerna begränsas automatiskt. Om det angivna antalet rader uppnås tas den äldre hälften bort.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Max. antal rader",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Max. antal rader"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Ange ett positivt tal"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"Paketet genererar DSM-meddelanden som visas på skrivbordet för konfigurerbara användargrupper eller användare. Lägg till ett @ i gruppnamn, t.ex. @users för alla användare.",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Meddelandedisplay till",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"Det finns flera detaljeringsnivåer för meddelanden i felsökningsloggfilen: 0 ... 8. Ju högre värde desto mer detaljer.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Detaljerad loggnivå"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Ange ett positivt tal 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"Paketet genererar DSM-skrivbordsmeddelanden som visas på skrivbordet för konfigurerbara användargrupper eller användare. Lägg till ett @ i gruppnamn, t.ex. @users för alla användare."
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Meddelandedisplay till"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Normalt genereras ett DSM-skrivbordsmeddelande när skriptet är klart. Meddelandet innehåller skriptets returkod och det återstående lediga utrymmet på lagringsenheten. Du kan här ange en lista över returkoder som inte genererar ett sådant meddelande."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Returkoder utan meddelande"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Ange ett eller flera 1...3-siffriga nummer, separerade med semikolon."
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Om skriptet slutar med utgångskoden 100 kommer man att försöka mata ut enheten. Du kan ange timeout (i sekunder) för att kasta ut enheten.",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Timeout för utmatning [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Om skriptet slutar med utgångskoden 100 kommer man att försöka mata ut enheten. Du kan ange timeout (i sekunder) för att kasta ut enheten."
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Timeout för utmatning [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Ange ett positivt tal"
+}
 }
 }]
 }
@@ -184,7 +231,7 @@
 "step_title":"VIKTIGT: Manuell åtgärd krävs!",
 "items": [{
 "type": "textfield",
-"desc":"Tredjepartspaket begränsas av Synology i DSM 7.x! Eftersom autorun kräver root-behörighet för att utföra sitt arbete krävs ytterligare ett manuellt steg efter installationen.<br/><br/>SSH till din NAS (som administratör) och utför följande kommando efter att installationen är klar. Kopiera den nu!",
+"desc":"Tredjepartspaket begränsas av Synology i DSM 7.x! Eftersom autorun kräver root-behörighet för att utföra sitt arbete krävs ytterligare ett manuellt steg efter installationen.<br/><br/>SSH till din NAS (som administratör) och utför följande kommando efter att installationen är klar. Du kan kopiera den nu!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Kommando",

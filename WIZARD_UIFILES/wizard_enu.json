@@ -24,10 +24,10 @@
     {"type": "textfield",
     "desc": "The script must be located in the root directory of the external device and set as executable for the user 'root'. It gets the mount point of the device (e.g. /volumeUSB1/usbshare/) as the first parameter ($1) and the device partition (e.g. usb1p1) as the second ($2). Hint: The script is executed with empty environment, you have to specify all the used commands with path!",
     "subitems": [{
-      "key": "config_SCRIPT",
-      "desc": "Script to execute",
-      "defaultValue": "@SCRIPT@",
-      "validator": { "allowBlank": false }
+      "key": "config_SCRIPT"
+      ,"desc": "Script to execute"
+      ,"defaultValue": "@SCRIPT@"
+      ,"validator": { "allowBlank": false }
       }]
     }
   ,{
@@ -35,21 +35,27 @@
     "desc": "An exit value of 100 from the script will unmount and eject the device when the script is finished, all other exit values will leave it mounted. You can stop autorun in the package center to temporarily disable it.<br/><br/>The search time is the time after the trigger by udev for finding the mount point when a device is attached. The additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may have to increase those times depending on your hardware.",
     "subitems": [
      {
-      "key": "config_TRIES",
-      "desc": "Search time (sec)",
-      "defaultValue": "@TRIES@",
-      "validator": {
-        "allowBlank": false,
-        "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+      "key": "config_TRIES"
+      ,"desc": "Search time (sec)"
+      ,"defaultValue": "@TRIES@"
+      ,"validator": { 
+        "allowBlank": false
+        ,"regex": {
+          "expr": "/^[0-9]+$/"
+          ,"errorText": "Enter a positive number"
+          }
         }
       }
     ,{
-      "key": "config_WAIT",
-      "desc": "Wait time (sec)",
-      "defaultValue": "@WAIT@",
-      "validator": {
-        "allowBlank": false,
-        "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+      "key": "config_WAIT"
+      ,"desc": "Wait time (sec)"
+      ,"defaultValue": "@WAIT@"
+      ,"validator": { 
+        "allowBlank": false
+        ,"regex": {
+          "expr": "/^[0-9]+$/"
+          ,"errorText": "Enter a positive number"
+          }
         }
       }
      ]
@@ -59,27 +65,65 @@
     "desc": "The size of the log files is automatically limitted. If the given line count is reached, the elder half is removed.",
     "subitems": [
       {
-        "key": "config_LOG_MAX_LINES",
-        "desc": "Max. line count",
-        "defaultValue": "@LOG_MAX_LINES@",
-        "validator": {
-          "allowBlank": false,
-          "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+        "key": "config_LOG_MAX_LINES"
+        ,"desc": "Max. line count"
+        ,"defaultValue": "@LOG_MAX_LINES@"
+        ,"validator": { 
+          "allowBlank": false
+          ,"regex": {
+            "expr": "/^[0-9]+$/"
+            ,"errorText": "Enter a positive number"
+            }
           }
         }
       ]
     }
   ,{
     "type": "textfield",
-    "desc": "The package generates DSM messages, which are shown on the desktop to configurable user groups or users. Prepend an @ to group names, e.g. @users for all users",
-    "subitems": [{
-      "key": "config_NOTIFY_USERS",
-      "desc": "Message display to",
-      "width": "360",
-      "defaultValue": "@NOTIFY_USERS@",
-         "validator": { "allowBlank": true }
+    "desc": "Several debug log file message detail levels are available: 0 ... 8. The higher the value the more details.",
+    "subitems": [
+      {
+        "key": "config_LOGLEVEL"
+        ,"desc": "Log Detail Level"
+        ,"defaultValue": "@LOGLEVEL@"
+        ,"validator": { 
+          "allowBlank": false
+          ,"regex": {
+            "expr": "/^[0-8]$/"
+            ,"errorText": "Enter a positive number 0 ... 8"
+            }
+          }
         }
       ]
+    }
+  ,{
+    "type": "textfield"
+    ,"desc": "The package generates DSM desktop messages, which are shown on the desktop to configurable user groups or users. Prepend an @ to group names, e.g. @users for all users"
+    ,"subitems": [{
+      "key": "config_NOTIFY_USERS"
+      ,"desc": "Message display to"
+      ,"width": "360"
+      ,"defaultValue": "@NOTIFY_USERS@"
+      ,"validator": { "allowBlank": true }
+      }]
+    }
+
+  ,{
+    "type": "textfield"
+    ,"desc": "Normally there is a DSM desktop message generated after your script is finished. The message contains the return code of your script and the remaining free space on the storage device. You may specifiy here list of return codes, which don't generate such a message."
+    ,"subitems": [{
+      "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+      ,"desc": "Return codes w/o message"
+      ,"width": "360"
+      ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+      ,"validator": { 
+        "allowBlank": true
+        ,"regex": {
+          "expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+          ,"errorText": "Enter one or more 1..3 digit numbers, seperated by semicolon"
+          }
+        }
+      }]
     }
   ,{
     "type": "combobox",
@@ -131,15 +175,18 @@
       }]
     }
   ,{
-    "type": "textfield",
-    "desc": "If the script ends with the exit code 100, it will be tried to eject the device. You can specify the timeout (in seconds) for ejecting the device",
-    "subitems": [{ 
-      "key": "config_EJECT_TIMEOUT",
-      "desc": "Eject Timeout [s]",
-      "defaultValue": "@EJECT_TIMEOUT@",
-      "validator": {
-        "allowBlank": false,
-        "fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+    "type": "textfield"
+    ,"desc": "If the script ends with the exit code 100, it will be tried to eject the device. You can specify the timeout (in seconds) for ejecting the device"
+    ,"subitems": [{ 
+      "key": "config_EJECT_TIMEOUT"
+      ,"desc": "Eject Timeout [s]"
+      ,"defaultValue": "@EJECT_TIMEOUT@"
+      ,"validator": { 
+        "allowBlank": false
+        ,"regex": {
+          "expr": "/^[0-9]+$/"
+          ,"errorText": "Enter a positive number"
+          }
         }
       }]
     }  

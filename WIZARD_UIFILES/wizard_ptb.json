@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Clause License<br>>br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>todos os direitos reservados.<br>>br>br>Redistribuição e uso em fontes e formulários binários, com ou sem modificação, são permitidos desde que as seguintes condições sejam cumpridas:<br>1. Redistribuições de código fonte devem manter o aviso de direitos autorais acima, esta lista de condições e a seguinte isenção de responsabilidade.<br>2. Redistribuições em formato binário devem reproduzir o aviso de direitos autorais acima, esta lista de condições e a seguinte isenção de responsabilidade na documentação e/ou outros materiais fornecidos com a distribuição.<br>3. Nem o nome do detentor dos direitos autorais nem os nomes de seus contribuintes podem ser usados para endossar ou promover produtos derivados deste software sem permissão prévia por escrito específica.<br>>br>STE SOFTWARE É FORNECIDO PELOS COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' E QUALQUER GARANTIAS EXPRESSAS OU IMPLÍCITAS, INCLUINDO, MAS NÃO LIMITADAS, AS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO PARA UM PROPÓSITO PARTICULAR SÃO DESCARREGADAS. EM NENHUMA HIPÓTESE O DETENTOR DOS DIREITOS AUTORAIS OU CONTRIBUINTES SERÁ RESPONSÁVEL POR QUAISQUER DANOS DIRETOS, INDIRETOS, INCIDENTAIS, ESPECIAIS, EXEMPLARES OU CONSEQÜENTES (INCLUINDO, MAS NÃO SE LIMITANDO À AQUISIÇÃO DE BENS OU SERVIÇOS SUBSTITUTOS; PERDA DE USO, DADOS OU LUCROS; OU INTERRUPÇÃO DE NEGÓCIOS) CAUSADOS POR QUALQUER FORMA E SOBRE QUALQUER TEORIA DE RESPONSABILIDADE, SEJA EM CONTRATO, RESPONSABILIDADE ESTRITA, OU ATO ILÍCITO (INCLUINDO NEGLIGÊNCIA OU DE OUTRA FORMA) DECORRENTE DE QUALQUER FORMA DO USO DESTE SOFTWARE, MESMO SE AVISADO DA POSSIBILIDADE DE TAIS DANOS.",
+"desc":"BSD 3-Clause License<br>>br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>Todos os direitos reservados.<br>>br>br>Redistribuição e uso em fontes e formulários binários, com ou sem modificação, são permitidos desde que as seguintes condições sejam cumpridas:<br>1. Redistribuições de código fonte devem manter o aviso de direitos autorais acima, esta lista de condições e a seguinte isenção de responsabilidade.<br>2. Redistribuições em formato binário devem reproduzir o aviso de direitos autorais acima, esta lista de condições e a seguinte isenção de responsabilidade na documentação e/ou outros materiais fornecidos com a distribuição.<br>3. Nem o nome do detentor dos direitos autorais nem os nomes de seus contribuintes podem ser usados para endossar ou promover produtos derivados deste software sem permissão prévia por escrito específica.<br>>br>STE SOFTWARE É FORNECIDO PELOS COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' E QUALQUER GARANTIAS EXPRESSAS OU IMPLÍCITAS, INCLUINDO, MAS NÃO LIMITADAS, AS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO PARA UM PROPÓSITO PARTICULAR SÃO DESCARREGADAS. EM NENHUMA HIPÓTESE O DETENTOR DOS DIREITOS AUTORAIS OU CONTRIBUINTES SERÁ RESPONSÁVEL POR QUAISQUER DANOS DIRETOS, INDIRETOS, INCIDENTAIS, ESPECIAIS, EXEMPLARES OU CONSEQÜENTES (INCLUINDO, MAS NÃO SE LIMITANDO À AQUISIÇÃO DE BENS OU SERVIÇOS SUBSTITUTOS; PERDA DE USO, DADOS OU LUCROS; OU INTERRUPÇÃO DE NEGÓCIOS) CAUSADOS POR QUALQUER FORMA E SOBRE QUALQUER TEORIA DE RESPONSABILIDADE, SEJA EM CONTRATO, RESPONSABILIDADE ESTRITA, OU ATO ILÍCITO (INCLUINDO NEGLIGÊNCIA OU DE OUTRA FORMA) DECORRENTE DE QUALQUER FORMA DO USO DESTE SOFTWARE, MESMO SE AVISADO DA POSSIBILIDADE DE TAIS DANOS.",
 "subitems": [
 {
 "key": "id1",
@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"O script deve estar localizado no diretório raiz do dispositivo externo e definido como executável para o usuário 'raiz'. Ele obtém o ponto de montagem do dispositivo (por exemplo, /volumeUSB1/usbshare/) como o primeiro parâmetro ($1) e a partição do dispositivo (por exemplo, usb1p1) como o segundo ($2). Dica: O script é executado com ambiente vazio, você tem que especificar todos os comandos usados com caminho!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Roteiro para executar",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Roteiro para executar"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"Um valor de saída de 100 do script irá desmontar e ejetar o dispositivo quando o script for terminado, todos os outros valores de saída o deixarão montado. Você pode parar o autorun no centro do pacote para desativá-lo temporariamente.<br/><br/> O tempo de busca é o tempo após o disparo pelo udev para encontrar o ponto de montagem quando um dispositivo é anexado. O tempo de espera adicional dá ao DSM alguma margem de manobra para montar corretamente o drive antes de iniciar o script.<br/> Você pode ter que aumentar esses tempos dependendo de seu hardware.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Tempo de busca (seg)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Tempo de busca (seg)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Digite um número positivo"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Tempo de espera (seg)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Tempo de espera (seg)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Digite um número positivo"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"O tamanho dos arquivos de registro é automaticamente limitado. Se a contagem de linhas determinada for atingida, a metade mais velha é removida.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Número máximo de linhas",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Número máximo de linhas"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Digite um número positivo"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"O pacote gera mensagens DSM, que são mostradas na área de trabalho para grupos de usuários ou usuários configuráveis. Prefira um @ a nomes de grupos, por exemplo, @usuários para todos os usuários",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Exibição de mensagens para",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"Estão disponíveis vários níveis de detalhes de mensagens do arquivo de registro de depuração: 0 ... 8. Quanto mais alto o valor, mais detalhes.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Nível de detalhe de log"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Digite um número positivo 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"O pacote gera mensagens DSM na área de trabalho, que são mostradas na área de trabalho para grupos de usuários configuráveis ou usuários. Prefira um @ a nomes de grupos, por exemplo, @usuários para todos os usuários"
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Exibição de mensagens para"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Normalmente há uma mensagem de área de trabalho DSM gerada após o término de seu script. A mensagem contém o código de retorno de seu script e o espaço livre restante no dispositivo de armazenamento. Você pode especificar aqui uma lista de códigos de retorno, que não geram tal mensagem."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Códigos de retorno sem mensagem"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Digite um ou mais números de 1...3 dígitos, separados por ponto-e-vírgula"
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Se o script terminar com o código de saída 100, será tentada a ejeção do dispositivo. Você pode especificar o tempo limite (em segundos) para ejetar o dispositivo",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Ejetar Timeout [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Se o script terminar com o código de saída 100, será tentada a ejeção do dispositivo. Você pode especificar o tempo limite (em segundos) para ejetar o dispositivo"
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Ejetar Timeout [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Digite um número positivo"
+}
 }
 }]
 }
@@ -184,7 +231,7 @@
 "step_title":"IMPORTANTE: Ação Manual Necessária!",
 "items": [{
 "type": "textfield",
-"desc":"Os pacotes de terceiros são restritos pela Synology no DSM 7.x! Uma vez que a autorun requer permissão da raiz para realizar seu trabalho, uma etapa manual adicional é necessária após a instalação.<br/>>br/>SSH ao seu NAS (como usuário administrador) e executar o seguinte comando após a instalação ser concluída. Copie-o agora!",
+"desc":"Os pacotes de terceiros são restritos pela Synology no DSM 7.x! Uma vez que a autorun requer permissão da raiz para realizar seu trabalho, uma etapa manual adicional é necessária após a instalação.<br/>>br/>SSH ao seu NAS (como usuário administrador) e executar o seguinte comando após a instalação ser concluída. Você pode copiá-lo agora!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Comando",

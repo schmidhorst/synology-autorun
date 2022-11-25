@@ -1,9 +1,9 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Otomatik Çalıştırma"
-msg0="\"Kabuk komutu 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' henüz çalıştırılmadığı için başlatma mümkün değil!\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="'{0}' ({1}) betiğinin parmak izi şimdi izin verilen betik olarak kaydedildi."
 msg4="Takılan cihazda '{1}' ({2}) komut dosyası vardır. Komut dosyası adı {0} paketinin kurulumuyla eşleşiyor. Ancak betiğin parmak izinin yürütülmesine izin verilmiyor."
 msg5="Yerleştirilen cihazda '{1}' komut dosyası var. Komut dosyası adı {0} paketinin kurulumuyla eşleşiyor. Ancak bu betiğe {3} için izin verilmiyor."

@@ -16,7 +16,7 @@ fi
 # contains ...},"Personal":{"dateFormat":"Y-m-d","lang":"def","timeFormat":"H:i"}...
 # but is not accessible
 if [[ -n "$SYNOPKG_DSM_LANGUAGE" ]]; then
-  lng="$SYNOPKG_DSM_LANGUAGE"
+  lng="$SYNOPKG_DSM_LANGUAGE" # lng of actual user
   echo "$(date "$DTFMT"): from environment: '$lng'" | tee -a "$LOG"
 else
   declare -A ISO2SYNO
@@ -52,7 +52,7 @@ fi
 echo "$(date "$DTFMT"): Used config file: '$configFilePathName'" >> "$LOG"
 
 cat "$JSON" >> "$SYNOPKG_TEMP_LOGFILE"
-fields="SCRIPT SCRIPT_AFTER_EJECT ADD_NEW_FINGERPRINTS TRIES WAIT BEEP LED LED_COPY EJECT_TIMEOUT LOG_MAX_LINES NOTIFY_USERS"
+fields="SCRIPT SCRIPT_AFTER_EJECT ADD_NEW_FINGERPRINTS TRIES WAIT BEEP LED LED_COPY EJECT_TIMEOUT LOG_MAX_LINES NOTIFY_USERS NO_DSM_MESSAGE_RETURN_CODES LOGLEVEL"
 msg=""
 for f1 in $fields; do
   line=$(grep "^$f1=" "$configFilePathName")
@@ -74,7 +74,7 @@ sed -i -e "s|@ENTRY_COUNT@|$ENTRY_COUNT|g" "$SYNOPKG_TEMP_LOGFILE"
 # Fill ComboBox with the configured scheduled Tasks:
 # not possible as the command $(synoschedtask --get) is not working as actual user = $SYNOPKG_PKGNAME
 
-echo "$(date "$DTFMT"): Values from config and TaskSchedulerList put to template and copied to '$SYNOPKG_TEMP_LOGFILE'" >> "$LOG"
+echo "$(date "$DTFMT"): Wizzard template copied to '$SYNOPKG_TEMP_LOGFILE' and values from config inserted" >> "$LOG"
 echo "$(date "$DTFMT"): ... $0 done" >> "$LOG"
 exit 0
 

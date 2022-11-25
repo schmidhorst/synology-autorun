@@ -18,7 +18,7 @@ logInfo() {
 # write an error entry to out log file
 #   $1 - log entry
 logError() {
-	/bin/echo "$(date "$DTFMT"): <span style=\"color:red;\">$1</span><br/>" | /bin/tee -a "$LOGFILE"
+	/bin/echo "$(date "$DTFMT"): <span style=\"color:red;\">$*</span><br/>" | /bin/tee -a "$LOGFILE"
   # https://stackoverflow.com/questions/692000/how-do-i-write-standard-error-to-a-file-while-using-tee-with-a-pipe
  	# /bin/echo "$(date "$DTFMT"): <span style=\"color:red;\">$1</span><br/>" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
 }
@@ -53,6 +53,7 @@ LED_STATUS_ORANGE_FLASH=;
 LED_COPY_ON=@
 LED_COPY_FLASH=A
 LED_COPY_OFF=B
+NO_DSM_MESSAGE_RETURN_CODES=""
 
 beep() {  # also used for LED control
   # requires root!
@@ -77,32 +78,46 @@ fi
 SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # e.g. /volumeX/@appstore/<app>
 # /volumeX/@appstore/<app>, not /var/packages/<app>/target (Link)
 APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
-APPDATA="/var/packages/$APPNAME/var"
-# LOGLEVEL=8 # set in parse_hlp.sh
+APPDATA="/var/packages/$APPNAME/var" # appCfgDataPath="/var/packages/${app_name}/var"
+LOGLEVEL=8 # preset, may be chanded in parse_hlp.sh from config 
 # DTFMT="+%Y-%m-%d %H:%M:%S" # set in parse_hlp.sh
 source "$SCRIPTPATHTHIS/ui/modules/parse_hlp.sh" #  logInfoNoEcho(), DTFMT, LOGLEVEL, urlencode(), urldecode()
+SCRIPT_EXEC_LOG="$APPDATA/execLog"
 
 # the LOGFILE may be set already different:
 LOGFILEold=$LOGFILE
 # echo "common: LOGFILEold=$LOGFILEold"
 # source $scriptpathThis/bckCfg.txt # setup DsmNotifyClass, DsmNotifyCategory, DsmNotifyTitle, CcuIpAdrPort
+
 source "$APPDATA/config"
 if [[ -n "$LOGFILEold" ]]; then
   # echo "common: resetting LOGFILE from $LOGFILE (read from bckCfg.txt) to $LOGFILEold"
   LOGFILE=$LOGFILEold
 fi
 # echo "common LOGFILE=$LOGFILE"
-if [[ -z "$LOGLEVEL" ]]; then # not set in parse_hlp,sh
-  LOGLEVEL=5 # 5=log all, 1=log only important, increase it for debugging
-fi
 if [[ -z "$LOGFILE" ]]; then
   ## LOGFILE="/var/packages/autorun/target/log"
-  SCRIPTPATHPARENT=${SCRIPTPATHTHIS%/*}
   # LOGFILE="$APPDATA/log" # equal to /volumeX/@appdata/<app>
   # LOGFILE="/var/log/packages/$APPNAME.log" # permission denied
-  LOGFILE="/var/log/tmp/$APPNAME.log" 
   # /var/log/$APPNAME.log: Permission denied
-  LOG="$LOGFILE"
+  LOGFILE="/var/log/tmp/$APPNAME.log" # A link /var/packages/$SYNOPKG_PKGNAME/var/detailLog is set to this (see start-stop-status script) 
 fi
+LOG="$LOGFILE"
 logInfo 4 "Folder for config: $APPDATA"
+
+lngUser=$SYNOPKG_DSM_LANGUAGE # not global DSM language but actual user language! Never 'def'
+lngMail=$(/bin/get_key_value "/etc/synoinfo.conf" "maillang") # global setting, not individual user!
+
+if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt" ]]; then
+  logInfo 5 "common: texts/$lngUser/lang.txt not available, switched to enu"
+  lngUser="enu"
+fi
+if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngMail/langDsm.txt" ]]; then
+  logInfo 5 "common: texts/$lngMail/langDsm.txt not available, switched to enu"
+  lngMail="enu"
+fi
+
+user=$(whoami) # EnvVar $USER may be not well set
+  
+logInfo 7 "common: lngUser='$lngUser', user='$user', lngMail='$lngMail'"
 

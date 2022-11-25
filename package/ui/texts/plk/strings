@@ -1,9 +1,9 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"Uruchomienie nie jest możliwe, ponieważ polecenie powłoki 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' nie zostało jeszcze wykonane!\"."
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="Odcisk palca skryptu \"{0}\" ({1}) został teraz zarejestrowany jako dozwolony skrypt."
 msg4="Na wstawionym urządzeniu znajduje się skrypt '{1}' ({2}). Nazwa skryptu jest zgodna z konfiguracją pakietu {0}. Jednak odcisk palca skryptu nie pozwala na wykonanie."
 msg5="Na wstawionym urządzeniu znajduje się skrypt '{1}'. Nazwa skryptu jest zgodna z konfiguracją pakietu {0}. Ale ten skrypt nie jest dozwolony dla {3}."

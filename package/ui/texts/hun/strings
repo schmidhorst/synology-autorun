@@ -1,13 +1,13 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"Az indítás nem lehetséges, mivel a 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' parancs még nem került végrehajtásra!\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="A '{0}' ({1}) szkript ujjlenyomata engedélyezett szkriptként lett regisztrálva."
 msg4="A beillesztett eszközön van egy '{1}' ({2}) szkript. A szkript neve megegyezik a {0} csomag beállításával. De a szkript ujjlenyomata nem engedélyezi a végrehajtást."
 msg5="A beillesztett eszközön van egy '{1}' szkript. A szkript neve megegyezik a {0} csomag beállításával. De ez a szkript nem engedélyezett a {3} csomaghoz."
-msg6="A beillesztett eszközön van egy '{1}' szkript. A szkript neve megegyezik a {0} csomag beállításával. A szkript engedélyei azonban nem engedélyezik a végrehajtást."
+msg6="A beillesztett eszközön van egy '{1}' szkript. A szkript neve megegyezik a {0} csomag beállításával. De a szkript engedélyei nem engedélyezik a végrehajtást."
 msg7="A {0} szkript a {1} eszközön {2} eredménnyel fejeződött be. !!! Figyelem! Az eszköz kilövése sikertelen!!!!."
 msg8="A {0} szkript a {1} eszközön {2} eredménnyel fejeződött be. Az eszköz ki lett dobva. Az eszközön {3}Byte szabad."
 msg9="A {0} szkript a {1} eszközön {2} eredménnyel fejeződött be. Az eszközön {3}Byte szabad."

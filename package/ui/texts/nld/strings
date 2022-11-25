@@ -1,13 +1,13 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"Starten niet mogelijk omdat de shell-opdracht 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' nog niet is uitgevoerd!\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="De vingerafdruk van het script '{0}' ({1}) is nu geregistreerd als toegestaan script."
-msg4="Op het geplaatste apparaat staat een script '{1}' ({2}). De naam van het script komt overeen met de instelling van het {0} pakket. Maar de vingerafdruk van het script mag niet worden uitgevoerd."
+msg4="Op het geplaatste apparaat staat een script '{1}' ({2}). De scriptnaam komt overeen met de instelling van het {0} pakket. Maar de vingerafdruk van het script mag niet worden uitgevoerd."
 msg5="Op het geplaatste apparaat staat een script '{1}'. De scriptnaam komt overeen met de instelling van het {0} pakket. Maar dat script is niet toegestaan voor {3}."
-msg6="Op het geplaatste apparaat staat een script '{1}'. De scriptnaam komt overeen met de setup van het {0} pakket. Maar de scriptrechten staan uitvoering niet toe."
+msg6="Op het geplaatste apparaat staat een script '{1}'. De scriptnaam komt overeen met de instelling van het {0} pakket. Maar de scriptrechten staan uitvoering niet toe."
 msg7="Het script {0} op het apparaat {1} werd beëindigd met het resultaat {2}. !!! Attentie: Het uitwerpen van het apparaat is mislukt!!!!"
 msg8="Het script {0} op het apparaat {1} werd beëindigd met het resultaat {2}. Het apparaat is uitgeworpen. Op het apparaat zijn {3}Bytes vrij."
 msg9="Het script {0} op het apparaat {1} werd beëindigd met het resultaat {2}. Op het apparaat zijn {3}Bytes vrij."

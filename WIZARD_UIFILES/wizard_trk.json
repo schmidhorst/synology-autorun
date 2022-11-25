@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister and Horst Schmid<br>Tüm hakları saklıdır.<br><br>Kaynak ve ikili formlarda, değişiklik yapılarak veya yapılmadan yeniden dağıtıma ve kullanıma, aşağıdaki koşulların karşılanması şartıyla izin verilir:<br>1. Kaynak kodun yeniden dağıtımları yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi muhafaza etmelidir.<br>2. İkili formdaki yeniden dağıtımlar yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi dağıtımla birlikte sağlanan belgelerde ve/veya diğer materyallerde yeniden üretmelidir.<br>3. Ne telif hakkı sahibinin adı ne de katkıda bulunanların adları, önceden yazılı izin alınmadan bu yazılımdan türetilen ürünleri desteklemek veya tanıtmak için kullanılamaz.<br><br>BU YAZILIM, TELİF HAKKI SAHİPLERİ VE KATKIDA BULUNANLAR TARAFINDAN 'OLDUĞU GİBİ' SAĞLANMAKTADIR VE SATILABİLİRLİK VE BELİRLİ BİR AMACA UYGUNLUK ZIMNİ GARANTİLERİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE HER TÜRLÜ AÇIK VEYA ZIMNİ GARANTİ REDDEDİLMEKTEDİR. HİÇBİR DURUMDA TELİF HAKKI SAHİBİ VEYA KATKIDA BULUNANLAR, BU YAZILIMIN KULLANIMINDAN KAYNAKLANAN HERHANGİ BİR ŞEKİLDE ORTAYA ÇIKAN DOĞRUDAN, DOLAYLI, ARIZİ, ÖZEL, ÖRNEK VEYA DOLAYLI ZARARLARDAN (İKAME MAL VEYA HİZMETLERİN TEMİNİ; KULLANIM, VERİ VEYA KAR KAYBI VEYA İŞ KESİNTİSİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE), BU TÜR BİR ZARAR OLASILIĞI BİLDİRİLMİŞ OLSA DAHİ, SÖZLEŞME, KUSURSUZ SORUMLULUK VEYA HAKSIZ FİİL (İHMAL VEYA BAŞKA BİR ŞEKİLDE) İLE İLGİLİ HERHANGİ BİR SORUMLULUK TEORİSİNDEN SORUMLU TUTULAMAZ.",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister and Horst Schmid<br>Tüm hakları saklıdır.<br><br>Kaynak ve ikili formlarda, değişiklik yapılarak veya yapılmadan yeniden dağıtıma ve kullanıma, aşağıdaki koşulların karşılanması şartıyla izin verilir:<br>1. Kaynak kodun yeniden dağıtımları yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi muhafaza etmelidir.<br>2. İkili formdaki yeniden dağıtımlar yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi dağıtımla birlikte sağlanan belgelerde ve/veya diğer materyallerde yeniden üretmelidir.<br>3. Ne telif hakkı sahibinin adı ne de katkıda bulunanların adları, önceden yazılı izin alınmadan bu yazılımdan türetilen ürünleri desteklemek veya tanıtmak için kullanılamaz.<br><br>BU YAZILIM, TELİF HAKKI SAHİPLERİ VE KATKIDA BULUNANLAR TARAFINDAN 'OLDUĞU GİBİ' SAĞLANMAKTADIR VE SATILABİLİRLİK VE BELİRLİ BİR AMACA UYGUNLUK ZIMNİ GARANTİLERİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE HER TÜRLÜ AÇIK VEYA ZIMNİ GARANTİ REDDEDİLMEKTEDİR. HİÇBİR DURUMDA TELİF HAKKI SAHİBİ VEYA KATKIDA BULUNANLAR, BU YAZILIMIN KULLANIMINDAN KAYNAKLANAN HERHANGİ BİR ŞEKİLDE ORTAYA ÇIKAN DOĞRUDAN, DOLAYLI, ARIZİ, ÖZEL, ÖRNEK VEYA DOLAYLI ZARARLARDAN (İKAME MAL VEYA HİZMETLERİN TEMİNİ; KULLANIM, VERİ VEYA KAR KAYBI VEYA İŞ KESİNTİSİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE), BU TÜR BİR ZARARIN OLASILIĞI BİLDİRİLMİŞ OLSA DAHİ, SÖZLEŞME, KUSURSUZ SORUMLULUK VEYA HAKSIZ FİİL (İHMAL VEYA BAŞKA BİR ŞEKİLDE) İLE İLGİLİ HERHANGİ BİR SORUMLULUK TEORİSİNDEN SORUMLU TUTULAMAZ.",
 "subitems": [
 {
 "key": "id1",
@@ -24,10 +24,10 @@
 {"type": "textfield",
 "desc":"Betik harici aygıtın kök dizininde bulunmalı ve 'root' kullanıcısı için çalıştırılabilir olarak ayarlanmalıdır. İlk parametre ($1) olarak aygıtın bağlama noktasını (örn. /volumeUSB1/usbshare/) ve ikinci parametre ($2) olarak aygıt bölümünü (örn. usb1p1) alır. İpucu: Komut dosyası boş ortamla çalıştırılır, kullanılan tüm komutları yol ile belirtmeniz gerekir!",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"Yürütülecek komut dosyası",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"Yürütülecek komut dosyası"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"Komut dosyasından 100 çıkış değeri, komut dosyası bittiğinde aygıtın bağlantısını kaldıracak ve çıkaracaktır, diğer tüm çıkış değerleri aygıtı takılı bırakacaktır. Geçici olarak devre dışı bırakmak için paket merkezinde otomatik çalıştırmayı durdurabilirsiniz.<br/><br/>Arama süresi, bir aygıt takıldığında bağlama noktasını bulmak için udev tarafından tetiklendikten sonra geçen süredir. Ek bekleme süresi, DSM'ye betiği başlatmadan önce sürücüyü düzgün bir şekilde bağlaması için biraz zaman verir.<br/>Donanımınıza bağlı olarak bu süreleri artırmanız gerekebilir.",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"Arama süresi (sn)",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"Arama süresi (sn)"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Pozitif bir sayı girin"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"Bekleme süresi (sn)",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"Bekleme süresi (sn)"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Pozitif bir sayı girin"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"Günlük dosyalarının boyutu otomatik olarak sınırlandırılır. Verilen satır sayısına ulaşılırsa, eski yarısı kaldırılır.",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"Maks. satır sayısı",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"Maks. satır sayısı"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Pozitif bir sayı girin"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"Paket, masaüstünde yapılandırılabilir kullanıcı gruplarına veya kullanıcılara gösterilen DSM mesajları oluşturur. Grup adlarının başına bir @ ekleyin, örneğin tüm kullanıcılar için @users",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"Mesaj ekranı",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"Çeşitli hata ayıklama günlük dosyası mesaj detay seviyeleri mevcuttur: 0 ... 8. Değer ne kadar yüksek olursa o kadar fazla ayrıntı olur.",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"Günlük Ayrıntı Düzeyi"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"Pozitif bir sayı girin 0 ... 8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"Paket, yapılandırılabilir kullanıcı gruplarına veya kullanıcılara masaüstünde gösterilen DSM masaüstü mesajları oluşturur. Grup adlarının başına bir @ ekleyin, örneğin tüm kullanıcılar için @users"
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"Mesaj ekranı"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"Normalde, komut dosyanız tamamlandıktan sonra bir DSM masaüstü mesajı oluşturulur. Mesaj, komut dosyanızın dönüş kodunu ve depolama aygıtında kalan boş alanı içerir. Burada böyle bir mesaj oluşturmayan dönüş kodlarının listesini belirtebilirsiniz."
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"Mesajsız dönüş kodları"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"Noktalı virgülle ayrılmış bir veya daha fazla 1..3 basamaklı sayı girin"
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"Kod 100 çıkış koduyla sona ererse, aygıtın çıkarılması denenecektir. Aygıtın çıkarılması için zaman aşımını (saniye cinsinden) belirtebilirsiniz",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"Çıkarma Zaman Aşımı [s]",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"Kod 100 çıkış koduyla sona ererse, aygıtın çıkarılması denenecektir. Aygıtı çıkarmak için zaman aşımını (saniye cinsinden) belirtebilirsiniz"
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"Çıkarma Zaman Aşımı [s]"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"Pozitif bir sayı girin"
+}
 }
 }]
 }
@@ -161,7 +208,7 @@
 "step_title":"Güvenlik Yapılandırması",
 "items": [{
 "type": "combobox",
-"desc":"USB cihazınızdaki eşleşen isme sahip betik, DSM'nizde root yetkileriyle çalıştırılır! Bu bir güvenlik riski olabilir! Daha iyi güvenlik için, önceden kaydedilmiş sha256 hash değerlerine (parmak izleri) sahip betiklerle bir kısıtlama mümkündür.<br/>Aslında @ENTRY_COUNT@ betik hashleri kayıtlıdır.<br/>0: Güvenlik özelliği kullanılmaz. Eşleşen ada sahip tüm komut dosyalarına izin verilir. Kayıtlı hash'lerde değişiklik yok.<br/>1: Muhtemelen önceki kayıtlı hash'lerin tümü şimdi silinmiştir. Kurulum / yapılandırmadan sonraki ilk komut dosyası kaydedilecek ve daha sonra tekrar tekrar yürütülmesine izin verilecektir.<br/>2: Eşleşen ada sahip herhangi bir komut dosyasının karma değeri kaydedilecek ve yürütülecektir! (Hash ekle)<br/>3: Sadece önceden kaydedilmiş betiklere izin verilir. (Kayıt donduruldu)",
+"desc":"USB cihazınızdaki eşleşen isme sahip betik, DSM'nizde root yetkileriyle çalıştırılır! Bu bir güvenlik riski olabilir! Daha iyi güvenlik için önceden kaydedilmiş sha256 hash değerlerine (parmak izleri) sahip betiklerle kısıtlama mümkündür.<br/>Aslında @ENTRY_COUNT@ betik hashleri kayıtlıdır.<br/>0: Güvenlik özelliği kullanılmaz. Eşleşen ada sahip tüm komut dosyalarına izin verilir. Kayıtlı hash'lerde değişiklik yok.<br/>1: Muhtemelen önceki kayıtlı hash'lerin tümü şimdi silinmiştir. Kurulum / yapılandırmadan sonraki ilk komut dosyası kaydedilecek ve daha sonra tekrar tekrar yürütülmesine izin verilecektir.<br/>2: Eşleşen ada sahip herhangi bir komut dosyasının karma değeri kaydedilecek ve yürütülecektir! (Hash ekle)<br/>3: Sadece önceden kaydedilmiş betiklere izin verilir. (Kayıt donduruldu)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS",
 "autoSelect": true,
@@ -184,7 +231,7 @@
 "step_title":"ÖNEMLİ: Manuel İşlem Gerekli!",
 "items": [{
 "type": "textfield",
-"desc":"Üçüncü taraf paketleri DSM 7.x'de Synology tarafından kısıtlanmıştır! Otomatik çalıştırma işini gerçekleştirmek için kök izni gerektirdiğinden, kurulumdan sonra ek bir manuel adım gereklidir.<br/><br/>SSH ile NAS'ınıza bağlanın (yönetici kullanıcı olarak) ve kurulum tamamlandıktan sonra aşağıdaki komutu çalıştırın. Şimdi kopyalayın!",
+"desc":"Üçüncü taraf paketleri DSM 7.x'de Synology tarafından kısıtlanmıştır! Otomatik çalıştırma işini gerçekleştirmek için kök izni gerektirdiğinden, kurulumdan sonra ek bir manuel adım gereklidir.<br/><br/>SSH ile NAS'ınıza bağlanın (yönetici kullanıcı olarak) ve kurulum tamamlandıktan sonra aşağıdaki komutu çalıştırın. Şimdi kopyalayabilirsiniz!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Komuta",

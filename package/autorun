@@ -1,6 +1,6 @@
 #!/bin/bash
 # https://raw.githubusercontent.com/reidemei/synology-autorun/main/package/autorun
-# re-written Horst Schmid 2022-11-04
+# re-written Horst Schmid 2022-11-25
 
 # default settings
 TRIES=20
@@ -10,80 +10,6 @@ FINGERPRINTS_INCL_DRIVE=0 # 0: allow script from any drive
 SCRIPT_AFTER_EJECT=""
 
 # $1 is e.g. 'usb1p1'
-
-SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # e.g. /volumeX/@appstore/<app>
-baseNameThis="$(basename "$0")"
-scriptFullPathName=$SCRIPTPATHTHIS/$baseNameThis # with physical path
-if [[ -z "$SYNOPKG_PKGNAME" ]]; then
-  SYNOPKG_PKGNAME=${SCRIPTPATHTHIS##*/}
-  myMsg="SYNOPKG_PKGNAME='$SYNOPKG_PKGNAME' extracted from SCRIPTPATHTHIS"  
-else
-  myMsg="SYNOPKG_PKGNAME='$SYNOPKG_PKGNAME' was available"  
-fi
-# import our config:
-source "/var/packages/$SYNOPKG_PKGNAME/var/config"
-
-# import helper functions logInfo(), logError(), beepError() and beep() (also used for LED control): 
-if [[ ! -x "/var/packages/$SYNOPKG_PKGNAME/target/common" ]]; then
-  echo "###########################################################################"
-  echo "Error: File '/var/packages/$SYNOPKG_PKGNAME/target/common' not available or not executable!" | tail -a "/var/log/packages/$SYNOPKG_PKGNAME.log"
-  echo "###########################################################################"
-  exit 1
-fi
-source "/var/packages/$SYNOPKG_PKGNAME/target/common"
-/bin/echo -e "" >> "$LOGFILE" # empty row
-logInfo 2 "Start of $0 ..."
-logInfo 4 "$myMsg"
-if [ -z "$1" ]; then
-  echo "incorrect '\$1' - aborting ..."
-  logError ""
-  logError "#######################################"
-  logError "Error: Parameter 1 missing in $0"
-  beepError
-  exit 1
-fi
-
-MOUNTPATH=""
-eval "$(grep "dsmappname=" "/var/packages/$SYNOPKG_PKGNAME/INFO")"
-logInfo 4 "The 'dsmappname', the class for synodsmnotify is '$dsmappname'"
-# dsmappname needs to match the .url in ui/config. Otherwise synodsmnotify will not work 
-# used as CLASS in synodsmnotify
-COUNT=0
-SCRIPT_EXEC_LOG="$APPDATA/execLog" # logfile with 1 ..2 lines per executed script
-if [[ -f "$SCRIPT_EXEC_LOG" ]]; then
-  logInfo 6 "File $SCRIPT_EXEC_LOG exists"
-  lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
-  # Hint: Result of "wc -l $SCRIPT_EXEC_LOG" would be "<LineCount> <FileName>", result of "wc -l < $SCRIPT_EXEC_LOG" is only the line count. 
-  logInfo 6 "The log file '$SCRIPT_EXEC_LOG' has $lineCount lines"
-  echo "lineCount=$lineCount"
-  if [[ "$lineCount" -gt "$LOG_MAX_LINES" ]]; then
-    newLineCount=$((LOG_MAX_LINES / 2))  
-    delLines=$((lineCount - newLineCount))
-    sed -i "$delLines d" "$SCRIPT_EXEC_LOG"
-    logInfo 2 "The log file '$SCRIPT_EXEC_LOG' was trimmed from $lineCount to $newLineCount lines"
-  fi 
-else
-  touch "$SCRIPT_EXEC_LOG" # created an empty file
-  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
-  chmod 644 "$SCRIPT_EXEC_LOG"
-  gui_lang=$(/bin/get_key_value /etc/synoinfo.conf language)
-fi
-
-if [[ -f "$LOG" ]]; then
-  lineCount=$(wc -l < "$LOG")
-  logInfo 6 "The log file '$LOG' has $lineCount lines"
-  if [[ $lineCount -gt "$LOG_MAX_LINES" ]]; then
-    newLineCount=$((LOG_MAX_LINES / 2))  
-    delLines=$((lineCount - newLineCount))
-    sed -i "$delLines d" "$LOG"
-    logInfo 2 "The log file '$LOG' was trimmed from $lineCount to $newLineCount lines"
-  fi 
-else
-  touch "$LOG"
-  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG"
-  chmod 644 "$LOG"
-fi
-
 
 
 executeFoundScript(){
@@ -201,19 +127,21 @@ executeFoundScript(){
         if [[ $ejected -eq 2 ]]; then
           logInfo 3 "Script '$SCRIPT_AFTER_EJECT' will be started without parameter!"
           sh "$SCRIPT_AFTER_EJECT"
-          echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Device successfully ejected and the script '$SCRIPT_AFTER_EJECT' done" >> "$SCRIPT_EXEC_LOG"
+					res="$?"
+          # delete the previous log line with script start info
+          # head -n -1 input.txt > tmp.txt && mv tmp.txt input.txt
+          lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
+          sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"					
+          echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was started $dateStart_string and finished after $execTime with return code $RESULT. Device successfully ejected and the script '$SCRIPT_AFTER_EJECT' done with return code $res" >> "$SCRIPT_EXEC_LOG"
         else
           logInfo 3 "Script '$SCRIPT_AFTER_EJECT' will be started with 'Ejection failed'!"
           sh "$SCRIPT_AFTER_EJECT" "Ejection failed"
           echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Device ejecting was failing. The script '$SCRIPT_AFTER_EJECT' with parameter 'Ejection failed' done." >> "$SCRIPT_EXEC_LOG"          
         fi
-        # if [[ -n "$NOTIFY_USERS" ]]; then
-        #  /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg11" "$SYNOPKG_PKGNAME" "$SCRIPT" "$SCRIPT_AFTER_EJECT"
-        # fi     
       else
         logError "The script '$SCRIPT_AFTER_EJECT' is not executable for actual user"
         if [[ -n "$NOTIFY_USERS" ]]; then
-          /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg10" "$SYNOPKG_PKGNAME" "$SCRIPT" "$SCRIPT_AFTER_EJECT"
+          /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg10" "$SYNOPKG_PKGNAME" "$SCRIPT" "$SCRIPT_AFTER_EJECT"
         fi     
       fi
     else
@@ -224,20 +152,20 @@ executeFoundScript(){
     if [[ $ejected -eq 3 ]]; then
       # Ejection of device failed!
       if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg7" "$SCRIPT" "$MOUNTPATH" "$RESULT"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg7" "$SCRIPT" "$MOUNTPATH" "$RESULT"
       fi       
       echo "$(date "$DTFMT"): Ejection of '$diskName', mounted as $MOUNTPATH failed!" >> "$SCRIPT_EXEC_LOG"
     else
-      if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg8" "$SCRIPT" "$MOUNTPATH" "$RESULT" "$FREE"
+      if [[ -n "$NOTIFY_USERS" ]] && [[ ";$noDsmNotifyList;" != *";$RESULT;"* ]]; then
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg8" "$SCRIPT" "$MOUNTPATH" "$RESULT" "$FREE"
       fi       
     fi
   else 
     echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
     echo "Result != 100"
     logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished with $RESULT ($FREE left on device), no unmount requested"
-    if [[ -n "$NOTIFY_USERS" ]]; then
-      /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg9" "$SCRIPT" "$MOUNTPATH" "$RESULT" "$FREE"
+    if [[ -n "$NOTIFY_USERS" ]] && [[ ";$noDsmNotifyList;" != *";$RESULT;"* ]]; then
+      /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg9" "$SCRIPT" "$MOUNTPATH" "$RESULT" "$FREE"
     fi       
   fi
 
@@ -268,10 +196,78 @@ executeFoundScript(){
 
 
 ########################################### start point #####################
-# myPath=$(printenv PATH)
-# logInfo "Env PATH=$myPath" # PATH is empty when started via event!!!
+# environment PATH is empty when started via event!!!
 
-# 
+SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # e.g. /volumeX/@appstore/<app>
+baseNameThis="$(basename "$0")"
+scriptFullPathName=$SCRIPTPATHTHIS/$baseNameThis # with physical path
+if [[ -z "$SYNOPKG_PKGNAME" ]]; then
+  SYNOPKG_PKGNAME=${SCRIPTPATHTHIS##*/}
+  myMsg="SYNOPKG_PKGNAME='$SYNOPKG_PKGNAME' extracted from SCRIPTPATHTHIS"  
+else
+  myMsg="SYNOPKG_PKGNAME='$SYNOPKG_PKGNAME' was available"  
+fi
+source "/var/packages/$SYNOPKG_PKGNAME/var/config" # import our config
+
+# import helper functions logInfo(), logError(), beepError() and beep() (also used for LED control): 
+if [[ ! -x "/var/packages/$SYNOPKG_PKGNAME/target/common" ]]; then
+  echo "###########################################################################"
+  echo "Error: File '/var/packages/$SYNOPKG_PKGNAME/target/common' not available or not executable!" | tail -a "/var/log/packages/$SYNOPKG_PKGNAME.log"
+  echo "###########################################################################"
+  exit 1
+fi
+source "/var/packages/$SYNOPKG_PKGNAME/target/common" # lngUser, lngMail (for Logfile) set, $APPDATA/config read
+/bin/echo -e "" >> "$LOGFILE" # empty row
+logInfo 2 "Start of $0 ..."
+logInfo 4 "$myMsg"
+if [ -z "$1" ]; then
+  echo "incorrect '\$1' - aborting ..."
+  logError ""
+  logError "#######################################"
+  logError "Error: Parameter 1 missing in $0"
+  beepError
+  exit 1
+fi
+
+MOUNTPATH=""
+eval "$(grep "dsmappname=" "/var/packages/$SYNOPKG_PKGNAME/INFO")"
+logInfo 4 "The 'dsmappname', the class for synodsmnotify is '$dsmappname'"
+# dsmappname needs to match the .url in ui/config. Otherwise synodsmnotify will not work 
+# used as CLASS in synodsmnotify
+COUNT=0
+SCRIPT_EXEC_LOG="$APPDATA/execLog" # logfile with 1 ..2 lines per executed script
+if [[ -f "$SCRIPT_EXEC_LOG" ]]; then
+  logInfo 6 "File $SCRIPT_EXEC_LOG exists"
+  lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")   
+  logInfo 6 "The log file '$SCRIPT_EXEC_LOG' has $lineCount lines"
+  echo "lineCount=$lineCount"
+  if [[ "$lineCount" -gt "$LOG_MAX_LINES" ]]; then
+    newLineCount=$((LOG_MAX_LINES / 2))  
+    delLines=$((lineCount - newLineCount))
+    sed -i -e "1,${delLines}d" "$SCRIPT_EXEC_LOG"
+    logInfo 2 "The log file '$SCRIPT_EXEC_LOG' was trimmed from $lineCount to $newLineCount lines"
+  fi 
+else
+  touch "$SCRIPT_EXEC_LOG" # created an empty file
+  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
+  chmod 644 "$SCRIPT_EXEC_LOG"
+fi
+
+if [[ -f "$LOG" ]]; then
+  lineCount=$(wc -l < "$LOG")
+  logInfo 6 "The log file '$LOG' has $lineCount lines"
+  if [[ $lineCount -gt "$LOG_MAX_LINES" ]]; then
+    newLineCount=$((LOG_MAX_LINES / 2))  
+    delLines=$((lineCount - newLineCount))
+    sed -i -e "1,${delLines}d" "$LOG"
+    logInfo 2 "The log file '$LOG' was trimmed from $lineCount to $newLineCount lines"
+  fi 
+else
+  touch "$LOG"
+  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG"
+  chmod 644 "$LOG"
+fi
+ 
 # try to get the mount path
 logInfo 2 "device '$1' - inserted, trying to find mount point"
 COUNT=0
@@ -360,7 +356,7 @@ if [ -x "$MOUNTPATH/$SCRIPT" ];then
       logInfo 3 "New fingerprint of '$MOUNTPATH/$SCRIPT' registered"
       echo "$(date "$DTFMT"): The fingerprint of the script '$SCRIPT' ($scriptDateLastChange) on '$diskName', mounted as $MOUNTPATH was now registered as allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
       if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg3" "$SCRIPT" "$scriptDateLastChange"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg3" "$SCRIPT" "$scriptDateLastChange"
       fi  
       bExec=1      
     elif [[ "$line" != "" ]]; then # this is the already registered skript 
@@ -372,11 +368,11 @@ if [ -x "$MOUNTPATH/$SCRIPT" ];then
   if [[ "$ADD_NEW_FINGERPRINTS" -eq "2" ]]; then
     bExec=1 # execute any script matching the configured name and add the fingerprint if not already available
     if [[ "$line" == "" ]]; then
-      echo "$FINGERPRINT2 # $(date "$DTFMT") added from $diskName for $SCRIPT $(date -r $SCRIPT '+%Y-%m-%d %H:%M:%S')" >> "$KNOWNSCRIPTSFILEPATHNAME"
+      echo "$FINGERPRINT2 # $(date "$DTFMT") added from $diskName for $SCRIPT $(date -r "$SCRIPT" '+%Y-%m-%d %H:%M:%S')" >> "$KNOWNSCRIPTSFILEPATHNAME"
       logInfo 3 "New fingerprint of '$MOUNTPATH/$SCRIPT' registered"
       echo "$(date "$DTFMT"): The fingerprint of the script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH was now registered as additionally allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
       if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg3" "$SCRIPT" "$scriptDateLastChange"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg3" "$SCRIPT" "$scriptDateLastChange"
       fi        
     fi
   elif [[ "$ADD_NEW_FINGERPRINTS" -eq "3" ]]; then
@@ -396,9 +392,8 @@ if [ -x "$MOUNTPATH/$SCRIPT" ];then
     if [[ $res == *"CRLF line terminators"* ]]; then # Windows Format
       bExec=0 # don't try to execute the script
       logInfo 1 "######## Windows line terminator need to be converted to Unix! #########"
-      eval $(grep -s "msg14=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$SYNOPKG_DSM_LANGUAGE/strings")
       if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg14" "$scriptName"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg14" "$scriptName"
       fi        
       echo "$(date "$DTFMT"): Error: The Skript '$scriptName', which should be executed, uses the wrong line break CR/LF (Windows). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"      
       bError=1
@@ -406,7 +401,7 @@ if [ -x "$MOUNTPATH/$SCRIPT" ];then
       bExec=0 # don't try to execute the script
       logInfo 1 "######## MAC line terminator need to be converted to Unix! #########"
       if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg16" "$scriptName"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg16" "$scriptName"
       fi        
       echo "$(date "$DTFMT"): Error: The Skript '$scriptName', which should be executed, uses the wrong line break CR (MAC). Please use a siutable Editor to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"      
       bError=1
@@ -415,7 +410,7 @@ if [ -x "$MOUNTPATH/$SCRIPT" ];then
       logInfo 1 "File coding check '$scriptName' result $ret: $res"
       logInfo 1 "######## Please convert to UTF-8! ##########"
       if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg15" "$scriptName"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg15" "$scriptName"
       fi        
       echo "$(date "$DTFMT"): Error: The Skript '$scriptName', which should be executed, uses the wrong coding (Windows ISO-8859). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to UTF-8!" >> "$SCRIPT_EXEC_LOG"      
       bError=1
@@ -430,12 +425,12 @@ if [ -x "$MOUNTPATH/$SCRIPT" ];then
       if [[ FINGERPRINTS_INCL_DRIVE -eq 1 ]]; then
         logInfo 1 "This skript on '$diskName' ($scriptDateLastChange) with fingerprint $FINGERPRINT1 is not permitted to run from $MOUNTPATH/$SCRIPT. No autorun!"
         if [[ -n "$NOTIFY_USERS" ]]; then
-          /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg5" "$SYNOPKG_PKGNAME" "$SCRIPT" "$MOUNTPATH"
+          /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg5" "$SYNOPKG_PKGNAME" "$SCRIPT" "$MOUNTPATH"
         fi      
       else
         logInfo 1 "This skript '$SCRIPT' ($scriptDateLastChange) on '$diskName' with fingerprint $FINGERPRINT1 with it's fingerprint is not permitted to run. No autorun!"
         if [[ -n "$NOTIFY_USERS" ]]; then
-          /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg4" "$SYNOPKG_PKGNAME" "$SCRIPT" "$scriptDateLastChange"
+          /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg4" "$SYNOPKG_PKGNAME" "$SCRIPT" "$scriptDateLastChange"
         fi      
       fi  
     fi
@@ -461,7 +456,7 @@ else # no executable script
     logInfo 0 "The script file '$MOUNTPATH/$SCRIPT' on $1 is not executable. Exiting from $SYNOPKG_PKGNAME now."
     echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH is not executable" >> "$SCRIPT_EXEC_LOG"
     if [[ -n "$NOTIFY_USERS" ]]; then
-      /usr/syno/bin/synodsmnotify -c "$dsmappname" $NOTIFY_USERS "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg6" "$SCRIPT"
+      /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg6" "$SCRIPT"
     fi        
   else
     logInfo 2 "On the device '$1' there is no file '$MOUNTPATH/$SCRIPT'. Exiting from $SYNOPKG_PKGNAME now."

@@ -8,7 +8,7 @@
 "subitems": [
 {
 "key": "id1",
-"desc":"受理される",
+"desc":"受諾済み",
 "defaultValue": false,
 "validator": {
 "fn": "{return arguments[0];}"
@@ -22,12 +22,12 @@
 "step_title":"コンフィギュレーション",
 "items": [
 {"type": "textfield",
-"desc":"このスクリプトは、外部デバイスのルートディレクトリに配置し、ユーザー「root」の実行可能ファイルとして設定する必要があります。スクリプトは、最初のパラメータ($1)としてデバイスのマウントポイント(例：/volumeUSB1/usbshare/)を、2番目のパラメータ($2)としてデバイスパーティション(例：usb1p1)を得ます。ヒント：スクリプトは空の環境で実行されるので、使用するコマンドはすべてパスで指定する必要があります",
+"desc":"このスクリプトは、外部デバイスのルートディレクトリに配置し、ユーザー「root」の実行可能ファイルとして設定する必要があります。スクリプトは、最初のパラメータ($1)としてデバイスのマウントポイント(例: /volumeUSB1/usbshare/)、2番目のパラメータ($2)としてデバイスパーティション(例: usb1p1)を取得します。ヒント：スクリプトは空の環境で実行されるので、使用するコマンドはすべてパスで指定する必要があります",
 "subitems": [{
-"key": "config_SCRIPT",
-"desc":"実行するスクリプト",
-"defaultValue": "@SCRIPT@",
-"validator": { "allowBlank": false }
+"key": "config_SCRIPT"
+,"desc":"実行するスクリプト"
+,"defaultValue": "@SCRIPT@"
+,"validator": { "allowBlank": false }
 }]
 }
 ,{
@@ -35,21 +35,27 @@
 "desc":"スクリプトの終了値が100の場合、スクリプトの終了時にデバイスのアンマウントとイジェクトを行い、その他の終了値ではマウントされたままになります。<br/><br/> 検索時間は、デバイスが接続されたときにマウントポイントを検索するためのudevによるトリガーの後の時間です。<br/> <br/>この追加された待ち時間は、DSM がスクリプトを開始する前にドライブを適切にマウントするための余裕を与えてくれます。",
 "subitems": [
 {
-"key": "config_TRIES",
-"desc":"検索時間（秒）",
-"defaultValue": "@TRIES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_TRIES"
+,"desc":"検索時間（秒）"
+,"defaultValue": "@TRIES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"正の数を入力する"
+}
 }
 }
 ,{
-"key": "config_WAIT",
-"desc":"待ち時間（秒）",
-"defaultValue": "@WAIT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_WAIT"
+,"desc":"待ち時間（秒）"
+,"defaultValue": "@WAIT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"正の数を入力する"
+}
 }
 }
 ]
@@ -59,27 +65,65 @@
 "desc":"ログファイルのサイズは自動的に制限されます。指定された行数に達した場合、上半分が削除されます。",
 "subitems": [
 {
-"key": "config_LOG_MAX_LINES",
-"desc":"最大行数",
-"defaultValue": "@LOG_MAX_LINES@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"key": "config_LOG_MAX_LINES"
+,"desc":"最大行数"
+,"defaultValue": "@LOG_MAX_LINES@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"正の数を入力する"
+}
 }
 }
 ]
 }
 ,{
 "type": "textfield",
-"desc":"このパッケージは、設定可能なユーザーグループまたはユーザーに対してデスクトップに表示されるDSMメッセージを生成します。グループ名の前に@を付ける（例：@usersは全ユーザーの場合",
-"subitems": [{
-"key": "config_NOTIFY_USERS",
-"desc":"へのメッセージ表示",
-"width": "360",
-"defaultValue": "@NOTIFY_USERS@",
-"validator": { "allowBlank": true }
+"desc":"デバッグログファイルのメッセージの詳細レベルはいくつか用意されています。0 ...8.値が高いほど、より詳細な情報が得られます。",
+"subitems": [
+{
+"key": "config_LOGLEVEL"
+,"desc":"ログ詳細レベル"
+,"defaultValue": "@LOGLEVEL@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-8]$/"
+,"errorText":"正の数を入力する 0 ...8"
+}
+}
 }
 ]
+}
+,{
+"type": "textfield"
+,"desc":"このパッケージは DSM デスクトップメッセージを生成し、設定可能なユーザーグループまたはユーザーに対してデスクトップ上に表示します。グループ名の前に@を付けます（例：@usersは全ユーザー）。"
+,"subitems": [{
+"key": "config_NOTIFY_USERS"
+,"desc":"へのメッセージ表示"
+,"width": "360"
+,"defaultValue": "@NOTIFY_USERS@"
+,"validator": { "allowBlank": true }
+}]
+}
+
+,{
+"type": "textfield"
+,"desc":"通常、スクリプトが終了すると、DSMデスクトップメッセージが生成されます。このメッセージにはスクリプトのリターンコードと、 ストレージデバイスの残りの空き容量が含まれています。ここで、そのようなメッセージを生成しないリターンコードのリストを指定することができます。"
+,"subitems": [{
+"key": "config_NO_DSM_MESSAGE_RETURN_CODES"
+,"desc":"メッセージのないコードを返す"
+,"width": "360"
+,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"validator": {
+"allowBlank": true
+,"regex": {
+"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
+,"errorText":"セミコロンで区切られた1～3桁の数字を入力してください。"
+}
+}
+}]
 }
 ,{
 "type": "combobox",
@@ -131,15 +175,18 @@
 }]
 }
 ,{
-"type": "textfield",
-"desc":"スクリプトが終了コード100で終了した場合は、デバイスのイジェクトを試みます。デバイスを取り出す際のタイムアウト（秒）を指定することができます。",
-"subitems": [{
-"key": "config_EJECT_TIMEOUT",
-"desc":"イジェクトタイムアウト[秒］",
-"defaultValue": "@EJECT_TIMEOUT@",
-"validator": {
-"allowBlank": false,
-"fn": "{if (/^([0-9]+)$/.test(arguments[0])) return true; return 'Enter a positive number!'; }"
+"type": "textfield"
+,"desc":"スクリプトが終了コード100で終了した場合は、デバイスのイジェクトを試みます。デバイスを取り出す際のタイムアウト（秒）を指定することができます。"
+,"subitems": [{
+"key": "config_EJECT_TIMEOUT"
+,"desc":"イジェクトタイムアウト[秒］"
+,"defaultValue": "@EJECT_TIMEOUT@"
+,"validator": {
+"allowBlank": false
+,"regex": {
+"expr": "/^[0-9]+$/"
+,"errorText":"正の数を入力する"
+}
 }
 }]
 }
@@ -184,7 +231,7 @@
 "step_title":"重要：手動操作が必要です",
 "items": [{
 "type": "textfield",
-"desc":"DSM 7.x では、サードパーティ製パッケージは Synology によって制限されています。自動実行には root 権限が必要なため、インストール後に追加の手動ステップが必要です。<br/><br/>インストールが完了したら、NAS に (管理ユーザーとして) SSH して次のコマンドを実行します。今すぐコピー!",
+"desc":"DSM 7.x では、サードパーティ製パッケージは Synology によって制限されています。自動実行には root 権限が必要なので、インストール後に追加の手動ステップが必要です。<br/><br/>インストールが完了したら、NAS に SSH して (管理ユーザーとして)、次のコマンドを実行します。これで、コピーすることができます!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"コマンド",

@@ -1,9 +1,9 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"Spuštění není možné, protože příkaz shellu 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' ještě nebyl proveden!\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="Otisk skriptu '{0}' ({1}) byl nyní zaregistrován jako povolený skript."
 msg4="Na vloženém zařízení je skript \"{1}\" ({2}). Název skriptu odpovídá nastavení balíčku {0}. Ale otisk skriptu není povolen ke spuštění."
 msg5="Na vloženém zařízení je skript '{1}'. Název skriptu odpovídá nastavení balíčku {0}. Tento skript však není povolen pro {3}."

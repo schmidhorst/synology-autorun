@@ -1,8 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"Iniciar não é possível porque o comando shell 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' ainda não foi executado\"!"
-msg1="{0}"
+msg0=""
+msg1=""
 msg2=""
 msg3="A impressão digital do roteiro '{0}' ({1}) foi registrada agora como roteiro permitido."
 msg4="No dispositivo inserido há um script '{1}' ({2}). O nome do script está de acordo com a configuração do pacote {0}. Mas a impressão digital do script não é permitida para execução."

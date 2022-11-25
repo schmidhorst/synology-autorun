@@ -23,6 +23,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
 if [[ -z "$SCRIPT_NAME" ]]; then  # direct start in debug run 
   SCRIPT_NAME="/webman/3rdparty/autorun/index.cgi"
   bDebug=1
+  echo "###### index.cgi executed in debug mode!!  ######"
 fi
   # $0=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi 
 app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
@@ -47,10 +48,12 @@ if [ -f "${app_home}/modules/parse_hlp.sh" ]; then
   res=$?
   echo "$(date "$DTFMT"): Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
   if [[ "$res" -gt 1 ]]; then
+    echo "### Loading ${app_home}/modules/parse_hlp.sh failed!! ###"
     exit
   fi
 else
   echo "$(date "$DTFMT"): Failed to find ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() skipped" >> "$LOG"
+  echo "Failed to find ${app_home}/modules/parse_hlp.sh"
   exit
 fi
 
@@ -107,6 +110,8 @@ if [[ "$bDebug" -eq 0 ]]; then
     is_admin="no"
     logInfoNoEcho 2 "User ${syno_user} is no admin"
   fi
+else
+  echo "Due to debug mode login skipped"
 fi
 
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
@@ -118,7 +123,9 @@ else
   logInfo 0 "Loading ${app_home}/modules/parse_language.sh failed"
   exit 
 fi
-# ${used_lang} is now e.g. enu
+
+# parse_language.sh: out of ${HTTP_ACCEPT_LANGUAGE} tried to set $used_lang
+# if no siutable language found: fallbackToEnu=1 
 
 # Resetting access permissions
 unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_authenticated
@@ -155,6 +162,7 @@ if [[ "$bDebug" -eq 0 ]]; then
   # Set REQUEST_METHOD back to POST again:
   [[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
 else
+  echo "Due to debug mode access check skipped"
   is_admin="yes"
 fi
 
@@ -169,20 +177,21 @@ if [ "$is_admin" != "yes" ]; then
   echo "<HEAD><TITLE>$app_name: ${LoginRequired}</TITLE></HEAD><BODY>${PleaseLogin}<br/>"
   echo "<br/></BODY></HTML>"
   logInfoNoEcho 0 "Admin Login required!"
+  echo "Admin Login required!"
   exit 0
 fi
 
 #appCfgDataPath=$(find /volume*/@appdata/${app_name} -maxdepth 0 -type d)
 appCfgDataPath="/var/packages/${app_name}/var"
 if [ ! -d "${appCfgDataPath}" ]; then
-  logInfo 0 "... terminating as app home folder '$ah' ('${app_home}') not found!"
+  logInfo 0 "... terminating as app home folder '$appCfgDataPath' not found!"
   echo "$(date "$DTFMT"): ls -l /:" >> "$LOG"
   ls -l / >> "$LOG"
   exit
 fi  
 
 # Generate the text with the actual settings values and the language specific descriptions:
-st=$(echo "$settingsTitle")
+st=$(echo "$settingsTitle")  # = eval the $app_name in the $settingsTitle
 
 while read line; do # read all settings from config file
   itemName=${line%%=*}
@@ -233,6 +242,10 @@ while read line; do # read all settings from config file
     settings="${settings}<p style=\"margin-left:30px;\">${logMaxLines1}<br/></p>"  
   elif [[ "$itemName" == "NOTIFY_USERS" ]]; then
     settings="${settings}<p style=\"margin-left:30px;\">${notifyUsers1}<br/></p>"  
+  elif [[ "$itemName" == "NO_DSM_MESSAGE_RETURN_CODES" ]]; then
+    settings="${settings}<p style=\"margin-left:30px;\">${noDsmMessageReturnCodes}<br/></p>"  
+  elif [[ "$itemName" == "LOGLEVEL" ]]; then
+    settings="${settings}<p style=\"margin-left:30px;\">${logVerbose1}<br/></p>"  
   fi
   # echo "  line='$line', itemName='$itemName', value='${!itemName}'" >> "$LOG"
 done < "$appCfgDataPath/config" # Works well even if last line has no \n!
@@ -276,22 +289,10 @@ fi
   #  read -n ${CONTENT_LENGTH} POST_STRING
   #fi
 
-mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}"
-mapfile -d "&" -t POST_vars <<< "${POST_STRING}"
-# Securing the Internal Field Separator (IFS) as well as the separation
-# of the GET/POST key/value requests, by locating the separator "&"
-if [ -z "${backupIFS}" ]; then
-  backupIFS="${IFS}"
-#  IFS='&'
-#  GET_vars=("${QUERY_STRING}")
-#  POST_vars=("${POST_STRING}")
-  readonly backupIFS
-  IFS="${backupIFS}"
-  logInfoNoEcho 6 "CGI QUERY_STRING='${QUERY_STRING}'"
-  logInfoNoEcho 6 "CGI POST_STRING='${POST_STRING}'"
-  logInfoNoEcho 8 "GET_vars[*]='${GET_vars[*]}'"
-  logInfoNoEcho 5 "CGI QUERY_STRING done, GET_vars and/or POST_vars set"
-fi
+# mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}" here-string <<< appends a newline!
+mapfile -d "&" -t GET_vars < <(printf '%s' "$QUERY_STRING")
+mapfile -d "&" -t POST_vars  < <(printf '%s' "$POST_STRING")
+logInfoNoEcho 5 "CGI QUERY_STRING done, GET_vars and/or POST_vars set"
 
 # Analyze incoming GET requests and process them to ${get[key]}="$value" variables
 declare -A get # associative array
@@ -360,7 +361,7 @@ fi
 # Layout output
 # --------------------------------------------------------------
 if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
-  echo "Content-type: text/html"
+  echo "Content-type: text/html; charset=utf-8"
   echo
   echo "
   <!doctype html>
@@ -398,6 +399,11 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           # Infotext: Access allowed only for users from the Administrators group
           echo '<p>'${txtAlertOnlyAdmin}'</p>'
         fi
+				if [[ "$fallbackToEnu" -eq "0" ]]; then
+				  echo '<p>'${txtLanguageSource}'</p>'
+				else
+				  echo "<p>Could not find a supported language in your webbrowser regional preferences '${HTTP_ACCEPT_LANGUAGE}'. Therefore English is used.</p>"				
+				fi
         if [[ "$bDebug" -eq "1" ]]; then # LED control is not working, permission denied!
           echo "$ledCtrlHint<br/>"
           echo "<button onclick=\"location.href='index.cgi?action=copyLedOn'\" type=\"button\">CopyLED ON</button> "

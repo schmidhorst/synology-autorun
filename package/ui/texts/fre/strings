@@ -1,9 +1,9 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"Démarrage impossible car la commande shell 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' n'a pas encore été exécutée !\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="L'empreinte digitale du script '{0}' ({1}) a été enregistrée comme script autorisé."
 msg4="Sur le dispositif inséré, il y a un script '{1}' ({2}). Le nom du script correspond à la configuration du paquet {0}. Mais l'empreinte digitale du script n'est pas autorisée à s'exécuter."
 msg5="Sur le dispositif inséré, il y a un script '{1}'. Le nom du script correspond à la configuration du paquet {0}. Mais ce script n'est pas autorisé pour {3}."

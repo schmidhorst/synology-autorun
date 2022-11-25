@@ -1,9 +1,9 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0="\"Start ikke mulig, da shell-kommandoen 'sudo cp /var/packages/{0}/conf/privilege.root /var/packages/{0}/conf/privilege' endnu ikke er blevet udført!\""
-msg1="{0}"
-msg2="{0} {1}"
+msg0=""
+msg1=""
+msg2=""
 msg3="Fingeraftrykket af scriptet \"{0}\" ({1}) er nu registreret som tilladt script."
 msg4="På den indsatte enhed findes der et script \"{1}\" ({2}). Scriptnavnet svarer til opsætningen af {0}-pakken. Men scriptets fingeraftryk må ikke udføres."
 msg5="På den indsatte enhed findes der et script \"{1}\". Scriptnavnet svarer til opsætningen af {0}-pakken. Men dette script er ikke tilladt for {3}."

@@ -3,11 +3,11 @@
 "items":
 [{
 "type": "multiselect",
-"desc" : "<p>During the uninstallation of the package all log files will be removed.<br>Settings of the package can be preseved or deleted.</p>",
+"desc" : "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>Or you can delete all settings and logfiles of the package</p>",
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",
-"desc":"Fjern indstillinger"
+"desc":"Fjern"
 }]
 }]
 }]

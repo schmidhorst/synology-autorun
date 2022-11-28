@@ -56,8 +56,6 @@ scriptpathParent=${SCRIPTPATHTHIS%/*}
 logInfoNoEcho 8 "parse_hlp.sh is executed with path '$SCRIPTPATHTHIS'"
 # /volumeX/@appstore/<app>, not /var/packages/<app>/target (Link)
 APPNAME=${scriptpathParent##*/} # APPNAME="autorun", but if this is used from translate.sh script it's wrong!
-logInfoNoEcho 8 "From 'SCRIPTPATHTHIS' APPNAME='$APPNAME'"
-
 APPDATA="/var/packages/$APPNAME/var"
 if [[ -f "$APPDATA/config" ]]; then
   eval "$(grep "LOGLEVEL=" "$APPDATA/config")"

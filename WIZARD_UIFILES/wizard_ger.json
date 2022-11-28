@@ -209,7 +209,7 @@
 "step_title":"Sicherheitskonfiguration",
 "items": [{
 "type": "combobox",
-"desc":"Das Skript mit dem passenden Namen auf Ihrem USB-Gerät wird mit Root-Rechten auf Ihrem DSM ausgeführt! Das kann ein Sicherheitsrisiko darstellen! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/>Aktuell sind @ENTRY_COUNT@ Skript-Hashes registriert.<br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit passendem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: Wahrscheinlich werden alle bisher registrierten Hashes gelöscht. Das 1. Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert eines jeden Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
+"desc":"Das Skript mit dem passenden Namen auf Ihrem USB-Gerät wird mit Root-Rechten auf Ihrem DSM ausgeführt! Das kann ein Sicherheitsrisiko darstellen! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/><b>Aktuell sind @ENTRY_COUNT@ Skript-Hashes registriert.</b><br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit passendem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: @HASH_DELETION@Das 1. Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert eines jeden Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS",
 "autoSelect": true,
@@ -225,6 +225,12 @@
 "fields": ["myId", "displayText"],
 "data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
 }
+,"validator": { 
+  "regex": {
+    "expr": "/^[@SECURITY_RANGE@].*/"
+    ,"errorText": "With no previously registered hashes value 3 makes no sense"
+    }
+  }
 }]
 }]
 }

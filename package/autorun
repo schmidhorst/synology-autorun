@@ -156,7 +156,7 @@ executeFoundScript(){
       fi       
       echo "$(date "$DTFMT"): Ejection of '$diskName', mounted as $MOUNTPATH failed!" >> "$SCRIPT_EXEC_LOG"
     else
-      if [[ -n "$NOTIFY_USERS" ]] && [[ ";$noDsmNotifyList;" != *";$RESULT;"* ]]; then
+      if [[ -n "$NOTIFY_USERS" ]] && [[ ";$NO_DSM_MESSAGE_RETURN_CODES;" != *";$RESULT;"* ]]; then
         /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg8" "$SCRIPT" "$MOUNTPATH" "$RESULT" "$FREE"
       fi       
     fi
@@ -164,7 +164,7 @@ executeFoundScript(){
     echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
     echo "Result != 100"
     logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished with $RESULT ($FREE left on device), no unmount requested"
-    if [[ -n "$NOTIFY_USERS" ]] && [[ ";$noDsmNotifyList;" != *";$RESULT;"* ]]; then
+    if [[ -n "$NOTIFY_USERS" ]] && [[ ";$NO_DSM_MESSAGE_RETURN_CODES;" != *";$RESULT;"* ]]; then
       /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg9" "$SCRIPT" "$MOUNTPATH" "$RESULT" "$FREE"
     fi       
   fi

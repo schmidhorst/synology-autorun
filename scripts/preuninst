@@ -7,7 +7,7 @@ if [ "${pkgwizard_remove_settings}" == "true" ]; then
 	exit 0
 elif [ "${pkgwizard_remove_settings}" == "false" ]; then
   echo "$(date '+%Y-%m-%d %H:%M:%S'): preuninst V$SYNOPKG_PKGVER: Preserve Settings via an 'exit 1' ....<br/>" >> "$LOG"
-	exit 1
+	exit 0
 fi
 echo "$(date '+%Y-%m-%d %H:%M:%S'): preuninst V$SYNOPKG_PKGVER: Executed without before WIZZARD_UIFILES/uninstall_uifile_<lng>, e.g. during upgrade<br/>" >> "$LOG"
 exit 0

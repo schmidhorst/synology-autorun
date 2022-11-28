@@ -12,9 +12,7 @@
  - Code for local Backup from V1.6, which was since V1.7 no more working, removed
  - A new GUI added
  - Desktop notification implemented again
- - Internationalization prepared, Englisch and German is implemented for installation wizzard and desktop messages.
-   Actually further translations still not done, help would be appreciated!
-   If you can translate the englisch texts to your language, please send a email to synoapps@schmidhorst.de  
+ - Internationalization done with machine tranlations via DeepL
        
  - note: for DSM 6.x use the version 1.7, which can be found
    at https://github.com/reidemei/synology-autorun/releases/tag/v1.7

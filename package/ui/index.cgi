@@ -34,8 +34,7 @@ user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
   # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
 LOG="/var/log/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
-echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' ..." >> "$LOG"
-echo -e "$(date "$DTFMT"): with parameters '$QUERY_STRING'" >> "$LOG" # e.g. "action=copyLedOff"
+echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' with parameters '$QUERY_STRING' ..." >> "$LOG"
 # $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi 
 ah="/volume*/@appstore/$app_name/ui"
 app_home=$(find $ah -maxdepth 0 -type d) # Attention: find is not working with quotet path!!
@@ -277,17 +276,17 @@ for ((i=0; i<${#GET_vars[@]}; i+=1)); do
         logInfoNoEcho 4 "Old content of '$logfile' removed"
       fi
       if [[ "$val" == "downloadSimpleLog" ]] || [[ "$val" == "downloadDetailLog" ]]; then
-        logInfoNoEcho 5 "Download content of '$logfile' requested"
-# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition
-# Content-Type: text/html; charset=utf-8
-# Content-Disposition: attachment; filename="cool.html"
-# Content-Length: 21
         logInfoNoEcho 4 "Download content of '$logfile' requested, disposition='$disposition'"
         echo "Content-type: text/plain; charset=utf-8"
         echo "Content-Disposition: attachment; filename=$(basename $logfile).txt"
         echo
         # echo "<!doctype html>"
         cat "$logfile"
+				if [[ "$val" == "downloadDetailLog" ]]; then
+          echo -e "\n"
+          env || printenv
+          echo ""
+				fi
         exit
       fi
       if [[ "$val" == "reloadSimpleLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then

@@ -4,13 +4,8 @@ DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami)
 echo "$(date "$DTFMT"): Start of $0 to put values from config file to $SYNOPKG_TEMP_LOGFILE, which replaces upgrade_uifile (as $user)" >> "$LOG"
 
-# userpreferencePathName="$(/bin/get_key_value /etc/synoinfo.conf userpreference_realpath)/$user/usersettings" # "/volume1/@userpreference/<user>/usersettings"
-#     contains ...},"Personal":{"dateFormat":"Y-m-d","lang":"def","timeFormat":"H:i"}...
-#   usersettingsfile="/usr/syno/etc/preference/${user}/usersettings"
-#   lngUser1=$(jq -r ".Personal.lang" "${usersettingsfile}") #  may be 'def', 'null' or e.g. ger, enu, ...
-# but is not accessible here
 if [[ -n "$SYNOPKG_DSM_LANGUAGE" ]]; then
-  lng="$SYNOPKG_DSM_LANGUAGE"
+  lng="$SYNOPKG_DSM_LANGUAGE" # lng of actual user
   echo "$(date "$DTFMT"): from environment SYNOPKG_DSM_LANGUAGE: '$lng'" | tee -a "$LOG" # normally available, lng of actual user
 else
   declare -A ISO2SYNO
@@ -72,6 +67,24 @@ if [ -f "${SYNOPKG_PKGVAR}/FINGERPRINTS" ]; then
   ENTRY_COUNT=$(wc -l < "${SYNOPKG_PKGVAR}/FINGERPRINTS")
 fi
 sed -i -e "s|@ENTRY_COUNT@|$ENTRY_COUNT|g" "$SYNOPKG_TEMP_LOGFILE"
+if [[ "$ENTRY_COUNT" -eq "0" ]]; then
+  #  1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.
+  sed -i -e "s|@HASH_DELETION@||" "$SYNOPKG_TEMP_LOGFILE" # Error message for value "3 Only previously registered"
+  #  "regex": { "expr": "/^[@SECURITY_RANGE@]+$/","errorText": "With no previously registered hashes value 3 makes no sense"} 
+  sed -i -e "s|@SECURITY_RANGE@|0-2|" "$SYNOPKG_TEMP_LOGFILE" # Error message for value "3 Only previously registered"
+  echo "$(date "$DTFMT"): @SECURITY_RANGE@ replaced by '0-2'" >> "$LOG"
+else
+  #  1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.
+  if [[ -f "$scriptpathParent/package/ui/texts/$lng/lang.txt" ]]; then
+    eval "$(grep "HASH_DELETION=" "$scriptpathParent/package/ui/texts/$lng/lang.txt")" # "
+  else
+    HASH_DELETION="<b>Previous registered hashes are all deleted now.</b> "
+  fi  
+  echo "$(date "$DTFMT"): @HASH_DELETION@ replaced by '$HASH_DELETION'" >> "$LOG"
+  sed -i -e "s|@HASH_DELETION@|$HASH_DELETION|" "$SYNOPKG_TEMP_LOGFILE" # Error message for value "3 Only previously registered"
+  sed -i -e "s|@SECURITY_RANGE@|0-3|" "$SYNOPKG_TEMP_LOGFILE" # allow all values
+  echo "$(date "$DTFMT"): @SECURITY_RANGE@ replaced by '0-3'" >> "$LOG"
+fi
 
 # Fill ComboBox with the configured scheduled Tasks:
 # not possible as the command $(synoschedtask --get) is not working as actual user = $SYNOPKG_PKGNAME

@@ -23,6 +23,7 @@ wait1="Eine zusätzliche Wartezeit (in Sekunden) nach dem Einhängen wird erkann
 beep1="Bei true ertönt ein kurzer Piepton, wenn ein Skript gefunden wird. Und ein dreifach langer Piepton im Falle eines Fehlers"
 led1="Wenn nicht Null, dann wird die Status-LED von diesem Paket verwendet."
 ledCopy1="Wenn nicht Null, dann wird die Statuskopie-LED von diesem Paket verwendet."
+ledResetHint="Je nach den LED-Einstellungen können die LEDs auf dem Gerät nach Beendigung des Skripts einen Fehlerzustand anzeigen. Mit dem Befehl <pre translate='no'>echo \8 \ 4 \B> /dev/ttyS1</pre>, ausgeführt als 'root', kann der normale Zustand wiederhergestellt werden. Sie können in der Systemsteuerung eine geplante Aufgabe für ein benutzerdefiniertes Skript für den Root-Benutzer mit dem Ausführungsbefehl <pre translate='no'>echo \8 \ 4 \B> /dev/ttyS1</pre> erstellen. Führen Sie diese Aufgabe aus, wenn Sie die LEDs zurücksetzen müssen."
 ejectTimeout1="Wenn im Falle des Exit-Codes 100 das externe Laufwerk nicht ausgeworfen werden kann (da es belegt ist), wird hier die Zeitspanne in Sekunden angegeben, bevor das Programm mit Fehler beendet wird."
 logMaxLines1="Um zu verhindern, dass zu viel Platz durch die Logdatei belegt wird, wird die ältere Hälfte der Dateien gelöscht, wenn die Zeilenzahl die angegebene Zahl erreicht hat."
 logVerbose1="Für die Meldungen der Debug-Protokolldatei stehen mehrere Detailstufen zur Verfügung: 0 ... 8. Je höher der Wert, desto mehr Details."

@@ -118,10 +118,11 @@ for sourcefile in "${sourceablefiles[@]}"; do
           echo "" >> "$targetFile"
         else
           itemName=${line%%=*}
-          val=$(echo "${line#*=}" | sed 's/^"//' | sed 's/"$//')
+          val="${line@Q}" # $(echo "$line" | sed 's/^"//' | sed 's/"$//') # remove quotes, preserve ESC
           preparedsource="$val"
           # echo "$synoLang $targetIsoLang: '$source' '$preparedsource'"
           param="target_lang=$targetIsoLang&source_lang=$sourceIsoLang"
+          # param="target_lang=$targetIsoLang&source_lang=$sourceIsoLang&tag_handling=xml"
           if [[ "$bExec" -ne "0" ]]; then
             translatedraw=$(curl -Gs "$deepl_url" --data-urlencode "text=$preparedsource" -d "$param")
             res=$? 

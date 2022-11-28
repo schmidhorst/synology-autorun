@@ -12,13 +12,9 @@ if [[ ! -f "${SYNOPKG_PKGVAR}/config" ]]; then # not e.g. preserved from uninsta
       $(cp -v "$tempStorageFolder/log" "${SYNOPKG_PKGVAR}") 2>&1 >> "$LOG"
       echo "$(date "$DTFMT"): temp logfile copied<br/>" >> "$LOG"
     fi
+    # clean-up
+    rm -r $tempStorageFolder 
   fi
-else
-  echo "$(date "$DTFMT"): 'config' file is already available (from the before executed postinst!)<br/>" >> "$LOG"
 fi
-
-# clean-up
-rm -r $tempStorageFolder 
-
 echo "$(date "$DTFMT"): ... postupgrade done<br/>" >> "$LOG"
 exit 0

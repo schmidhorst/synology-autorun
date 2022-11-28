@@ -34,10 +34,17 @@ echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generate
 # 2) is user or group config_NOTIFY_USERS valid? Check for valid entry requires root access and is done in the start-stop-status script
 
 for f1 in $fields; do
-  eval $(env | grep "^$f1=")
-  msg="$msg, $f1='${!f1}'"
-  f2=${f1#*config_}
-  echo "$f2=\"${!f1}\"" >> "$SYNOPKG_PKGVAR/config"
+	item="$(env | grep "^$f1=")" # Attention: Values without quotes 
+  echo "$(date "$DTFMT"): Entry from ENV $f1: '$item'" >> "$LOG" # e.g. "config_NO_DSM_MESSAGE_RETURN_CODES=98;99" 
+	# eval "$item" # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'", the ";99" is lost!???
+  # msg="$msg, $f1='${!f1}'"  # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'"
+  # f2=${f1#*config_}
+  # echo "$f2=\"${!f1}\"" >> "$SYNOPKG_PKGVAR/config"
+	key="${item%%=*}"
+	val="${item#*=}"
+  msg="$msg, $key='$val'"
+  f2=${key#*config_}
+  echo "$f2=\"${val}\"" >> "$SYNOPKG_PKGVAR/config"	  
 done
 echo "$(date "$DTFMT"): from ENV: $msg" >> "$LOG"
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
@@ -46,5 +53,11 @@ if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
 fi
 
 chmod 755 "$SYNOPKG_PKGVAR/config"
+if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
+  echo "$(date "$DTFMT"): Installation, upgrade or change of settings done, previously registered script fingerprints deleted" >> "$SYNOPKG_PKGVAR/execLog" 
+else
+  echo "$(date "$DTFMT"): Installation, upgrade or change of settings done" >> "$SYNOPKG_PKGVAR/execLog" 
+fi
 echo "$(date "$DTFMT"): postinst done, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
 exit 0
+

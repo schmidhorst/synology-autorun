@@ -192,7 +192,7 @@ fi
 
 # Generate the text with the actual settings values and the language specific descriptions:
 st=$(echo "$settingsTitle")  # = eval the $app_name in the $settingsTitle
-
+ledResetHintRequired=0
 while read line; do # read all settings from config file
   itemName=${line%%=*}
   eval "$line"
@@ -234,8 +234,14 @@ while read line; do # read all settings from config file
     settings="${settings}<p style=\"margin-left:30px;\">${beep1}<br/></p>"
   elif [[ "$itemName" == "LED" ]]; then
     settings="${settings}<p style=\"margin-left:30px;\">${led1}<br/></p>"
+		if [[ "${!itemName}" -ne "0" ]]; then
+		  ledResetHintRequired=1
+		fi
   elif [[ "$itemName" == "LED_COPY" ]]; then
     settings="${settings}<p style=\"margin-left:30px;\">${ledCopy1}<br/></p>"
+		if [[ "${!itemName}" -ne "0" ]]; then
+		  ledResetHintRequired=1
+		fi
   elif [[ "$itemName" == "EJECT_TIMEOUT" ]]; then
     settings="${settings}<p style=\"margin-left:30px;\">${ejectTimeout1}<br/></p>"
   elif [[ "$itemName" == "LOG_MAX_LINES" ]]; then
@@ -249,6 +255,9 @@ while read line; do # read all settings from config file
   fi
   # echo "  line='$line', itemName='$itemName', value='${!itemName}'" >> "$LOG"
 done < "$appCfgDataPath/config" # Works well even if last line has no \n!
+if [[ "$ledResetHintRequired" -ne "0" ]]; then
+  settings="${settings}<p>${ledResetHint}</p>"  
+fi
 ENTRY_COUNT=0
 if [[ -f "$appCfgDataPath/FINGERPRINTS" ]]; then
   ENTRY_COUNT=$(wc -l < "$appCfgDataPath/FINGERPRINTS")
@@ -394,7 +403,6 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           #echo '<br \>'
           echo "<p><strong>$st</strong></p>"
           echo "${settings}" 
-
         else
           # Infotext: Access allowed only for users from the Administrators group
           echo '<p>'${txtAlertOnlyAdmin}'</p>'

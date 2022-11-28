@@ -208,21 +208,27 @@
   "step_title": "Security Configuration",
   "items": [{
     "type": "combobox",
-    "desc": "The script with the matching name on your USB device is exectuted with root priviledges on your DSM! That could be a security risk! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/>Actually there are @ENTRY_COUNT@ script hashes registerd.<br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: Probably previous registered hashes are all deleted now. The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
+    "desc": "The script with the matching name on your USB device is exectuted with root priviledges on your DSM! That could be a security risk! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/><b>Actually there are @ENTRY_COUNT@ script hashes registerd.</b><br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
     "subitems": [{
-      "key": "config_ADD_NEW_FINGERPRINTS",
-      "autoSelect": true,
-      "editable": false,
-      "desc": "Script Hash registration",
-      "width": "360",
-      "mode": "local",
-      "valueField": "myId",
-      "displayField": "displayText",
-      "defaultValue": "@ADD_NEW_FINGERPRINTS@",
-      "store": {
-        "xtype": "arraystore",
-        "fields": ["myId", "displayText"],
-        "data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+      "key": "config_ADD_NEW_FINGERPRINTS"
+      ,"autoSelect": true
+      ,"editable": false
+      ,"desc": "Script Hash registration"
+      ,"width": "360"
+      ,"mode": "local"
+      ,"valueField": "myId"
+      ,"displayField": "displayText"
+      ,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+      ,"store": {
+        "xtype": "arraystore"
+        ,"fields": ["myId", "displayText"]
+        ,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+        }
+      ,"validator": { 
+        "regex": {
+          "expr": "/^[@SECURITY_RANGE@].*/"
+          ,"errorText": "With no previously registered hashes the selection '3' makes no sense"
+          }
         }
       }]
     }]

@@ -4,7 +4,7 @@ DTFMT="+%Y-%m-%d %H:%M:%S"
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # preinst starts from an temporary folder like /volume1/@tmp/synopkg/install.XDdQUB/scripts/preinst
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
-echo "$(date "$DTFMT"): preinst $0 V$SYNOPKG_PKGVER (physical path SCRIPTPATHTHIS: $SCRIPTPATHTHIS, user=$user)... <br/>" >> "$LOG"
+echo "$(date "$DTFMT"): preinst $0 V$SYNOPKG_PKGVER (physical path SCRIPTPATHTHIS: $SCRIPTPATHTHIS, user=$user, UID=$(id -u "$user"))... <br/>" >> "$LOG"
 # user is equal to $SYNOPKG_PKGNAME, SCRIPTPATHTHIS is e.g. /volume1/@tmp/synopkg/install.HbEips/scripts/
 # ${SYNOPKG_TEMP_UPGRADE_FOLDER} # e.g. /volume1/@tmp/synopkg.tmp, empty
 scriptpathParent=${SCRIPTPATHTHIS%/*}

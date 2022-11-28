@@ -1,4 +1,4 @@
-[![de](<img src="https://flagcdn.com/w20/de.png" width="20" alt="Deutsch">)](https://github.com/schmidhorst/synology-autorun/blob/main/README.de.md)
+[![de](<img src="https://flagcdn.com/w20/de.png" width="20" alt="Deutsch">)](https://github.com/schmidhorst/synology-autorun/blob/main/README.de.md)
 # autorun
 Execute scripts when connecting external storage (USB / eSATA) on a Synology NAS. Typical use is to copy or backup some files. 
 In Synologies Task Scheduler there is the posibility to create triggered tasks. But for the trigger event there is only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.  

@@ -16,12 +16,12 @@ görevini yerine getirmesi için kurulumdan sonra ek bir manuel adım gereklidir
 
 NAS'ınıza SSH ile bağlanın (yönetici kullanıcı olarak) ve aşağıdaki komutu çalıştırın:
 
-``shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 SSH'a alternatif: 
 Denetim Paneli => Görev Zamanlayıcı => Oluştur => Zamanlanmış Görev => Kullanıcı Tanımlı Komut Dosyasına gidin. "Genel" sekmesinde herhangi bir görev adı belirleyin, kullanıcı olarak 'root' seçin. "Görev Ayarları" sekmesinde şunları girin  
-```Kabuk
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 "Komutu çalıştır" olarak seçin. Tamam ile bitirin. Pckage kurulumu sırasında bu komutu şimdi çalıştırmanız istendiğinde, görev zamanlayıcısına gidin, bu görevi seçin ve "Çalıştırın". 

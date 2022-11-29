@@ -21,7 +21,7 @@ sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/pri
 ```
 Alternativ till SSH: 
 Alternativ till SSH: Gå till Kontrollpanelen => Aktivitetsschemaläggare => Skapa => Schemalagd aktivitet => Användardefinierat skript. På fliken "General" anger du ett valfritt uppgiftsnamn och väljer "root" som användare. På fliken "Task Settings" (Uppgiftsinställningar) anger du  
-````shell
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 som "Körkommando". Avsluta det med OK. När du ombeds att utföra det kommandot nu under installationen av paketet går du till schemaläggaren, väljer den uppgiften och "kör" den. 

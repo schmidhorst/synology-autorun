@@ -21,7 +21,7 @@ sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/pri
 ```
 Alternatywa dla SSH: 
 Goto Control Panelel => Task Scheduler => Create => Scheduled Task => User-defined Script. W zakładce "General" ustaw dowolną nazwę zadania, wybierz 'root' jako użytkownika. W zakładce "Ustawienia zadania" wpisz  
-``Powłoka
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 jako "Uruchom polecenie". Zakończ go przyciskiem OK. Kiedy zostaniesz poproszony o wykonanie tego polecenia teraz podczas instalacji pckage, przejdź do harmonogramu zadań, wybierz to zadanie i "Uruchom" je. 

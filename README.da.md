@@ -21,7 +21,7 @@ sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/pri
 ```
 Alternativ til SSH: 
 Gå til Kontrolpanel => Opgaveskemalægger => Opret => Planlagt opgave => Brugerdefineret script. I fanen "General" indstiller du et vilkårligt opgavenavn, og vælger "root" som bruger. I fanen "Task Settings" (Indstillinger for opgaver) indtastes  
-````shell
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 som "Kør kommando". Afslut den med OK. Når du bliver bedt om at udføre denne kommando nu under pckage-installationen, skal du gå til opgaveplanlæggeren, vælge denne opgave og "Kør" den. 

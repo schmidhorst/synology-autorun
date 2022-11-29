@@ -16,12 +16,12 @@
 
 SSH到你的NAS（以管理员身份）并执行以下命令。
 
-``shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 替代SSH的方法。
 转到控制窗格 => 任务调度器 => 创建 => 预定任务 => 用户定义的脚本。在 "常规 "标签中设置任何任务名称，选择 "root "作为用户。在 "任务设置 "标签中输入  
-``shell
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 作为 "运行命令"。用 "确定 "完成它。当你在软件包安装过程中被要求执行该命令时，就去任务调度器，选择该任务并 "运行 "它。

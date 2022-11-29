@@ -21,7 +21,7 @@ sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/pri
 ```
 Alternativa ao SSH: 
 Goto Control Panelel => Programador de Tarefas => Criar => Tarefa Agendada => Script definido pelo utilizador. No separador "Geral" definir qualquer nome de tarefa, seleccionar "root" como utilizador. No separador "Definições de Tarefas", introduzir  
-```contornar
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 como "comando de execução". Termine-o com OK. Quando lhe for pedido para executar agora esse comando durante a instalação do pckage, então vá ao programador de tarefas, seleccione essa tarefa e "Executar". 

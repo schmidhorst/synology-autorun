@@ -1,17 +1,17 @@
-[![da](https://flagcdn.com/w20/da.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.da.md)
+[![da](https://flagcdn.com/w20/dk.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.da.md)
 [![de](https://flagcdn.com/w20/de.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.de.md)
 [![fr](https://flagcdn.com/w20/fr.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.fr.md)
 [![it](https://flagcdn.com/w20/it.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.it.md)
 [![jp](https://flagcdn.com/w20/jp.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.jp.md)
 [![nl](https://flagcdn.com/w20/nl.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.nl.md)
 [![pl](https://flagcdn.com/w20/pl.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.pl.md)
-[![pt-PT](https://flagcdn.com/w20/pt-PT.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.pt-PT.md)
-[![pt-BR](https://flagcdn.com/w20/pt-BR.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.pt-BR.md)
+[![pt-PT](https://flagcdn.com/w20/pt.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.pt-PT.md)
+[![pt-BR](https://flagcdn.com/w20/br.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.pt-BR.md)
 [![ru](https://flagcdn.com/w20/ru.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.ru.md)
-[![sp](https://flagcdn.com/w20/sp.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.sp.md)
+[![sp](https://flagcdn.com/w20/es.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.sp.md)
 [![sv](https://flagcdn.com/w20/sv.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.sv.md)
 [![tr](https://flagcdn.com/w20/tr.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.tr.md)
-[![zh](https://flagcdn.com/w20/zh.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.zh.md)
+[![zh](https://flagcdn.com/w20/cn.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.zh.md)
 
 # autorun
 Execute scripts when connecting external storage (USB / eSATA) on a Synology NAS. Typical use is to copy or backup some files. 

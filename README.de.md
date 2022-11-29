@@ -1,6 +1,6 @@
 # autorun
 Führt Skripte aus, wenn ein externer Speicher (USB / eSATA) an ein Synology NAS angeschlossen wird. Typische Anwendung ist das Kopieren oder Sichern einiger Dateien. 
-In Synologies Taskplaner gibt es die Möglichkeit, getriggerte Aufgaben zu erstellen, aber für das Trigger-Ereignis sind nur Boot-up und Shutdown verfügbar. Es sind keine USB-Ereignisse verfügbar. Dies wird durch dieses Tool kompensiert.  
+In Synologies Taskplaner gibt es die Möglichkeit, getriggerte Aufgaben zu erstellen, aber für das Trigger-Ereignis sind nur Boot-up und Shutdown verfügbar. Es sind keine USB-Ereignisse verfügbar. Dieses Defizit wird durch dieses Tool kompensiert.  
 
 # installieren
 * Laden Sie die *.spk Datei von "Releases", "Assets" in Github herunter und verwenden Sie "Manual Install" im Package Center.

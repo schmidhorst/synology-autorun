@@ -16,7 +16,7 @@ DSM 7 では、サードパーティ パッケージが Synology によって制
 
 NAS に SSH して (管理者ユーザーとして)、次のコマンドを実行します。
 
-``shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 SSHの代替。

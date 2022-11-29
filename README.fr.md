@@ -16,12 +16,12 @@ pour effectuer son travail, une étape manuelle supplémentaire est nécessaire 
 
 SSH à votre NAS (en tant qu'utilisateur administrateur) et exécutez la commande suivante :
 
-``shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternative à SSH : 
 Allez dans le panneau de configuration => Planificateur de tâches => Créer => Tâche planifiée => Script défini par l'utilisateur. Dans l'onglet "Général", donnez un nom à la tâche, sélectionnez "root" comme utilisateur. Dans l'onglet "Task Settings" entrez  
-``shell
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 comme "Exécuter la commande". Terminez en cliquant sur OK. Si l'on vous demande d'exécuter cette commande maintenant pendant l'installation du paquet, allez dans le planificateur de tâches, sélectionnez cette tâche et "Exécutez-la". 

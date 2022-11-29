@@ -16,7 +16,7 @@ för att utföra sitt arbete krävs ytterligare ett manuellt steg efter installa
 
 SSH till din NAS (som adminanvändare) och utför följande kommando:
 
-````shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternativ till SSH: 

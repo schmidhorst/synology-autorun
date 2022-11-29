@@ -16,7 +16,7 @@ tilladelse for at udføre sit arbejde, er der behov for et ekstra manuelt trin e
 
 SSH til din NAS (som en admin-bruger) og udfør følgende kommando:
 
-````shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternativ til SSH: 

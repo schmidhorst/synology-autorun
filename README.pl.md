@@ -16,7 +16,7 @@ aby wykonać swoje zadanie, po instalacji wymagany jest dodatkowy krok ręczny.
 
 SSH do swojego NAS-a (jako użytkownik admin) i wykonaj następujące polecenie:
 
-``Shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternatywa dla SSH: 

@@ -16,12 +16,12 @@ per eseguire il suo lavoro, è necessario un ulteriore passaggio manuale dopo l'
 
 SSH al NAS (come utente amministratore) ed eseguire il seguente comando:
 
-``shell
+```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternativa a SSH: 
 Andare su Pannello di controllo => Pianificazione attività => Crea => Attività pianificata => Script definito dall'utente. Nella scheda "Generale" impostare il nome dell'attività, selezionare 'root' come utente. Nella scheda "Impostazioni attività" inserire  
-``shell
+```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 come "Comando di esecuzione". Terminate con OK. Se durante l'installazione di pckage vi viene richiesto di eseguire quel comando, andate nel task scheduler, selezionate quell'attività ed eseguitela. 

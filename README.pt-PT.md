@@ -20,7 +20,7 @@ SSH ao seu NAS (como utilizador administrativo) e executar o seguinte comando:
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternativa ao SSH: 
-Goto Control Panelel => Programador de Tarefas => Criar => Tarefa Agendada => Script definido pelo utilizador. No separador "Geral" definir qualquer nome de tarefa, seleccionar "root" como utilizador. No separador "Definições de Tarefas", introduzir  
+Goto Control Panel => Programador de Tarefas => Criar => Tarefa Agendada => Script definido pelo utilizador. No separador "Geral" definir qualquer nome de tarefa, seleccionar "root" como utilizador. No separador "Definições de Tarefas", introduzir  
 ```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```

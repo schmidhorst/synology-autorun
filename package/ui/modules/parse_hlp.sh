@@ -53,14 +53,21 @@ LOGLEVEL=8 # 8=log all, 1=log only important, may be overwritten from config fil
 DTFMT="+%Y-%m-%d %H:%M:%S"
 SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # e.g. /volumeX/@appstore/<app>/ui
 scriptpathParent=${SCRIPTPATHTHIS%/*}
-logInfoNoEcho 8 "parse_hlp.sh is executed with path '$SCRIPTPATHTHIS'"
 # /volumeX/@appstore/<app>, not /var/packages/<app>/target (Link)
-APPNAME=${scriptpathParent##*/} # APPNAME="autorun", but if this is used from translate.sh script it's wrong!
-APPDATA="/var/packages/$APPNAME/var"
-if [[ -f "$APPDATA/config" ]]; then
-  eval "$(grep "LOGLEVEL=" "$APPDATA/config")"
-  logInfoNoEcho 7 "Read LOGLEVEL from '$APPDATA/config' is $LOGLEVEL"
+if [[ -z "$APPNAME" ]]; then
+  APPNAME=${scriptpathParent##*/} # APPNAME="autorun", but if this is used from translate.sh script it's wrong!
+fi
+appData="/var/packages/$APPNAME/var" # verbigt u.U. APPDATA in common!??
+if [[ -f "$appData/config" ]]; then
+  eval "$(grep "LOGLEVEL=" "$appData/config")"
+  if [[ -d "$(basename "$LOG" )" ]]; then # in 1st call from autorun $LOG may be not yet setup
+    logInfoNoEcho 8 "parse_hlp.sh is executed with path '$SCRIPTPATHTHIS'"
+    logInfoNoEcho 7 "parse_hlp.sh: Read LOGLEVEL from '$appData/config' is $LOGLEVEL"
+  fi
 else
-  logInfoNoEcho 0 "Not found: '$APPDATA/config'"
+  if [[ -d "$(basename "$LOG" )" ]]; then
+    logInfoNoEcho 8 "parse_hlp.sh is executed with path '$SCRIPTPATHTHIS'"
+    logInfoNoEcho 1 "parse_hlp.sh: Not found: '$appData/config'"
+  fi
 fi
 

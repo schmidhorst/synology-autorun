@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 # write an info entry to out log file
 # Variante a:  $1 = log entry
 # Variante b: $1= LogLevel, $2 log entry: Only if $1 is smaler or equal to the loglevel it will be reported
@@ -8,7 +7,7 @@ logInfo() {
     ll=$1 # 1st parameter is log level
     shift
   else
-    ll=1 # defaultvalue  
+    ll=1 # defaultvalue
   fi
   if [[ "$ll" -le  "$LOGLEVEL" ]]; then
 	  /bin/echo -e "$(date "$DTFMT"): $*" | /bin/tee -a "$LOGFILE"
@@ -35,7 +34,7 @@ logError() {
 # 6 	0x36 	Power LED aus
 # 7 	0x37 	Status LED aus
 # 8 	0x38 	Status LED grün an (Normalzustand)
-# 9 	0x39 	Status LED grün blinkend (DSM nicht bereit) 
+# 9 	0x39 	Status LED grün blinkend (DSM nicht bereit)
 # : 	0x3A 	Status LED orange an (?)
 # ; 	0x3B 	Status LED orange blinkend (Fehler)
 # @ 	0x40 	Copy LED an
@@ -70,18 +69,77 @@ beepError() {  # 3 times long beep
   /bin/sleep 1s
 }
 
+# Check whether file $1 exists: Result 0: yes, identical name, 1: upper/lower case is different, 2: no
+# The -iname item of find command is not allowed to contain '/' ==> need to loop through path elements!
+# not yet supported: multiple directories with same ignore-case-name
+findFileIgnoreCase() {
+  filePath="$(dirname "$1")"
+  fileName="$(basename "$1")"
+  # echo "path='$filePath', name='$fileName'"
+  if [[ "${filePath:0:1}" == "/" ]]; then
+    file="/"
+    filePath=${filePath:1}
+    #echo "$filePath"
+  else
+    file=""
+  fi
+  mapfile -d "/" -t pathItems  < <(printf '%s' "$filePath")
+  found=1
+  #echo "path item count ${#pathItems[@]}"
+  for ((i=0; i<${#pathItems[@]}; i+=1)); do # check path
+    #echo "file='$file', item='${pathItems[$i]}':"
+    res="$(find -L "$file" -maxdepth 1 -iname "${pathItems[$i]}" -type d)" # -L Follow symbolic links
+    #echo "$file${pathItems[$i]}: res='$res'"
+    if [[ -n "$res" ]]; then
+      # missing here is the support for multiple results, e.g. log, Log, LOG
+      file="$res/"
+    else
+      #echo "not existing"
+      echo ""
+      found=0
+      break
+    fi
+  done
+  if [[ "$found" -eq "1" ]]; then # check basename
+    res="$(find "$file" -iname "$fileName" -type f)"
+    if [[ -n "$res" ]]; then
+      echo "$res"
+      # missing here is the support for multiple results, e.g. log, Log, LOG
+      if [[ "$res" == "$1" ]]; then
+        return 0 # identical
+      else
+        return 1 # case different
+      fi
+    fi
+  fi
+  return 2 # not found
+}
+
 
 ####################### start #############################
-if [[ -z $"PATH" ]]; then
+if [[ -z "$PATH" ]]; then
   PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
 fi
 SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # e.g. /volumeX/@appstore/<app>
+# echo "common: SCRIPTPATHTHIS='$SCRIPTPATHTHIS'"
 # /volumeX/@appstore/<app>, not /var/packages/<app>/target (Link)
-APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
+if [[ -n "${app_name}" ]]; then
+  APPNAME="${app_name}"
+else
+  APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
+  # echo "common: APPNAME: '$APPNAME' extracted from script path"
+  if [[ "$APPNAME" == "scripts" ]]; then # Why "scripts" if called from start-stop-status???
+    # echo "common: APPNAME wrong: '$APPNAME'='scripts' !! ????"
+    scriptpathParent=${SCRIPTPATHTHIS%/*}
+    APPNAME=${scriptpathParent##*/} # APPNAME="autorun"
+    # echo "common: APPNAME corrected: '$APPNAME'"
+  fi
+fi
 APPDATA="/var/packages/$APPNAME/var" # appCfgDataPath="/var/packages/${app_name}/var"
 LOGLEVEL=8 # preset, may be chanded in parse_hlp.sh from config 
 # DTFMT="+%Y-%m-%d %H:%M:%S" # set in parse_hlp.sh
-source "$SCRIPTPATHTHIS/ui/modules/parse_hlp.sh" #  logInfoNoEcho(), DTFMT, LOGLEVEL, urlencode(), urldecode()
+
+source "/var/packages/$APPNAME/target/ui/modules/parse_hlp.sh" #  logInfoNoEcho(), DTFMT, LOGLEVEL, urlencode(), urldecode()
 SCRIPT_EXEC_LOG="$APPDATA/execLog"
 
 # the LOGFILE may be set already different:
@@ -94,30 +152,29 @@ if [[ -n "$LOGFILEold" ]]; then
   # echo "common: resetting LOGFILE from $LOGFILE (read from bckCfg.txt) to $LOGFILEold"
   LOGFILE=$LOGFILEold
 fi
-# echo "common LOGFILE=$LOGFILE"
+# echo "common LOGFILE='$LOGFILE'"
 if [[ -z "$LOGFILE" ]]; then
   ## LOGFILE="/var/packages/autorun/target/log"
   # LOGFILE="$APPDATA/log" # equal to /volumeX/@appdata/<app>
   # LOGFILE="/var/log/packages/$APPNAME.log" # permission denied
   # /var/log/$APPNAME.log: Permission denied
-  LOGFILE="/var/log/tmp/$APPNAME.log" # A link /var/packages/$SYNOPKG_PKGNAME/var/detailLog is set to this (see start-stop-status script) 
+  LOGFILE="/var/log/tmp/$APPNAME.log" # A link /var/packages/$SYNOPKG_PKGNAME/var/detailLog is set to this (see start-stop-status script)
+  # echo "common LOGFILE changed, now='$LOGFILE'"
 fi
 LOG="$LOGFILE"
-logInfo 4 "Folder for config: $APPDATA"
-
+logInfo 7 "common ($0) was called with param1='$1', app_name='${app_name}', APPNAME='$APPNAME', APPDATA='$APPDATA', SCRIPTPATHTHIS='$SCRIPTPATHTHIS'"
 lngUser=$SYNOPKG_DSM_LANGUAGE # not global DSM language but actual user language! Never 'def'
 lngMail=$(/bin/get_key_value "/etc/synoinfo.conf" "maillang") # global setting, not individual user!
-
-if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt" ]]; then
-  logInfo 5 "common: texts/$lngUser/lang.txt not available, switched to enu"
-  lngUser="enu"
+if [[ -z "$lngUser" ]]; then
+  logInfo 5 "common: SYNOPKG_DSM_LANGUAGE is not available, trying maillang='$lngMail'"
+  lngUser="$lngMail"  
 fi
-if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngMail/langDsm.txt" ]]; then
-  logInfo 5 "common: texts/$lngMail/langDsm.txt not available, switched to enu"
-  lngMail="enu"
+if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt" ]]; then
+  logInfo 5 "common: /var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt not available, switched to enu"
+  lngUser="enu"
 fi
 
 user=$(whoami) # EnvVar $USER may be not well set
   
-logInfo 7 "common: lngUser='$lngUser', user='$user', lngMail='$lngMail'"
+logInfo 7 "common: user='$user', SYNOPKG_DSM_LANGUAGE='$SYNOPKG_DSM_LANGUAGE', lngMail='$lngMail', selected lngUser='$lngUser'"
 

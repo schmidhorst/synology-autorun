@@ -14,8 +14,8 @@
 [![zh](https://flagcdn.com/w20/cn.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.zh.md)
 
 # autorun
-Execute scripts when connecting external storage (USB / eSATA) on a Synology NAS. Typical use is to copy or backup some files. 
-In Synologies Task Scheduler there is the posibility to create triggered tasks. But for the trigger event there is only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.  
+Execute scripts when connecting external storage (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files. 
+In Synologies Task Scheduler there is the posibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.  
 
 # install
 * Download the *.spk file from "Releases", "Assets" in Github and use "Manual Install" in the Package Center.
@@ -30,12 +30,11 @@ Third Party packages are restricted by Synology in DSM 7. Since autorun does req
 permission to perform its job an additional manual step is required after the installation.
 
 SSH to your NAS (as an admin user) and execute the following command:
-
 ```shell
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternative to SSH: 
-Goto Control Panelel => Task Scheduler => Create => Scheduled Task => User-defined Script. In the "General" tab set any task name, select 'root' as user. In the "Task Settings" tab enter  
+Goto Control Panel => Task Scheduler => Create => Scheduled Task => User-defined Script. In the "General" tab set any task name, select 'root' as user. In the "Task Settings" tab enter  
 ```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```

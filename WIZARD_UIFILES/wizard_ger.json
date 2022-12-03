@@ -22,17 +22,18 @@
 "step_title":"Konfiguration",
 "items": [
 {"type": "textfield",
-"desc":"Das Skript muss sich im Stammverzeichnis des externen Geräts befinden und als ausführbar für den Benutzer \"root\" festgelegt sein. Es erhält den Einhängepunkt des Geräts (z.B. /volumeUSB1/usbshare/) als ersten Parameter ($1) und die Gerätepartition (z.B. usb1p1) als zweiten ($2). Hinweis: Das Skript wird mit leerer Umgebung ausgeführt, Sie müssen alle verwendeten Befehle mit Pfad angeben!",
+"desc":"Es gibt zwei Möglichkeiten für die Position des Skripts, welches nach einem Speicher-Anschluß ausgeführt werden soll:<br>a) Das Skript liegt im Stammverzeichnis des externen Speichergeräts. Keine Aktion bei einem Speichergeräte ohne so ein Skript. Geben Sie hierfür den Skriptnamen ohne Pfad, ohne '/' geben.<br>b)Das Skript liegt auf dem DSM-Gerät und wird beim Anschließen jeglichen externen Speichergeräts gestartet. Den Skriptnamen mit vollständigen Pfad angeben, z.B. '/volume1/mysyn/auto.sh'.<br>Das Skript muss für den Benutzer \"root\" ausführbar sein. Es erhält den Einhängepunkt des Geräts (z.B. /volumeUSB1/usbshare/) als ersten Parameter ($1) und die Gerätepartition (z.B. usb1p1) als zweiten ($2). Hinweise: Das Skript wird mit leerer Umgebung ausgeführt, Sie müssen alle verwendeten Befehle mit Pfad angeben! Groß-Kleinschriebung beachten!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Auszuführendes Skript"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText": "Skript Name (optional)"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt. Sie können Autorun im Paketcenter stoppen, um es vorübergehend zu deaktivieren.<br/><br/>Die Suchzeit ist die Zeit nach dem Auslösen durch udev, um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen ist. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
+"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt.<br/><br/>Die Suchzeit ist die Zeit nach dem Trigger durch 'udev', um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen worden ist. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Es sind mehrere Detailstufen für die Debug-Protokolldatei verfügbar: 0 ... 8. Je höher der Wert, desto mehr Details.",
+"desc":"Es sind mehrere Detailstufen für die Debug-Protokolldatei verfügbar: 1 ... 8. Je höher der Wert, desto mehr Details.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Das Paket erzeugt DSM-Desktop-Nachrichten, die auf dem Desktop für konfigurierbare Benutzergruppen oder Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer"
+,"desc":"Das Paket erzeugt DSM-Desktop-Nachrichten, die auf dem Desktop einer konfigurierbare Benutzergruppe oder einem Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer"
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Anzeige der Nachricht an"
@@ -167,7 +168,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Statusanzeige während der Ausführung des Skripts.",
+"desc":"<br/>Piepser-Verwendung durchs Skript: Kurzer Beep beim Start und Ende, langer Dreifach-Pieps bei einem Fehler.",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Signalton bei Start und Ende",
@@ -209,7 +210,7 @@
 "step_title":"Sicherheitskonfiguration",
 "items": [{
 "type": "combobox",
-"desc":"Das Skript mit dem passenden Namen auf Ihrem USB-Gerät wird mit Root-Rechten auf Ihrem DSM ausgeführt! Das kann ein Sicherheitsrisiko darstellen! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/><b>Aktuell sind @ENTRY_COUNT@ Skript-Hashes registriert.</b><br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit passendem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: @HASH_DELETION@Das 1. Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert eines jeden Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
+"desc":"Das Skript mit dem passenden Namen wird mit Root-Rechten auf Ihrem DSM ausgeführt! Insbesondere wenn das Skript auf dem extenen Speichergerät liegt, das kann ein Sicherheitsrisiko darstellen! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/><b>Aktuell sind @ENTRY_COUNT@ Skript-Hashes registriert.</b><br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit passendem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: @HASH_DELETION@Das 1. Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert eines jeden Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS",
 "autoSelect": true,
@@ -238,7 +239,7 @@
 "step_title":"WICHTIG: Manueller Eingriff erforderlich!",
 "items": [{
 "type": "textfield",
-"desc":"Pakete von Drittanbietern werden von Synology in DSM 7.x eingeschränkt! Da Autorun zur Ausführung seiner Aufgabe Root-Rechte benötigt, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.<br/><br/>SH zu Ihrem NAS (als Admin-Benutzer) und führen Sie den folgenden Befehl aus, nachdem die Installation abgeschlossen ist. Sie können es jetzt kopieren!",
+"desc":"Pakete von Drittanbietern werden von Synology in DSM 7.x eingeschränkt! Da Autorun zur Ausführung seiner Aufgabe Root-Rechte benötigt, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.<br/><br/>Öffnen sie eine SSH Komandoshell zu Ihrem NAS (als Admin-Benutzer) und führen Sie den folgenden Befehl aus, nachdem die Installation abgeschlossen ist.<br>Instead of via a SSH command window you can execute this command via a userdefined script (as user 'root'), generated via control panel, scheduled task. And run that after the finished installation.<br>Sie können das Kommando jetzt kopieren!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Befehl",

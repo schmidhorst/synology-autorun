@@ -42,9 +42,8 @@ else
 fi
 
 LOG="/var/log/tmp/${app_name}.log"
-logInfoNoEcho 4 "parse_language.sh started ..."
-logInfoNoEcho 4 "param1='$1', whoami=$(whoami)"
-if [[ $bDebugPL -eq 1 ]]; then
+logInfoNoEcho 6 "parse_language.sh started with param1='$1', whoami=$(whoami) ..."
+if [[ "$bDebugPL" -eq "1" ]]; then
   echo "see $LOG" 
 fi
 # # even if we have had ${login_result} != "success" in showlog.cgi, then still no access!
@@ -75,7 +74,7 @@ lngMail=$(/bin/get_key_value "/etc/synoinfo.conf" "maillang") # Notification Lan
 httpSynLngs=""
 if [ -n "${HTTP_ACCEPT_LANGUAGE}" ] ; then  # WebBrowser-Preset available in cgi files, e.g. 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'
   # try to translate the ISO language codes now to SYNO language codes:
-  logInfoNoEcho 6 "HTTP_ACCEPT_LANGUAGE='${HTTP_ACCEPT_LANGUAGE}'"
+  logInfoNoEcho 6 "From web browser regional settings: HTTP_ACCEPT_LANGUAGE='${HTTP_ACCEPT_LANGUAGE}'"
   # mapfile -d "," -t httpLngs <<< "${HTTP_ACCEPT_LANGUAGE}" # here-string <<< appends a newline!
 	mapfile -d "," -t httpLngs < <(printf '%s' "$HTTP_ACCEPT_LANGUAGE")
   logInfoNoEcho 8 "${#httpLngs[@]} Elments in httpLngs[@]"
@@ -89,14 +88,14 @@ if [ -n "${HTTP_ACCEPT_LANGUAGE}" ] ; then  # WebBrowser-Preset available in cgi
     elif [[ -n "${ISO2SYNO[$b2]}" ]] && [[ "$httpSynLngs" != *"${ISO2SYNO[$b2]}"* ]]; then  
       httpSynLngs="$httpSynLngs${ISO2SYNO[$b2]} "
     elif [[ -z "${ISO2SYNO[$b1]}" ]] && [[ -z "${ISO2SYNO[$b2]}" ]]; then 
-      logInfoNoEcho 6 "No Syno abbreviation found for '$b1' and '$b2'"
+      logInfoNoEcho 6 "No Syno language abbreviation found for '$b1' and '$b2'"
     fi  
   done
 fi
 
 logInfoNoEcho 6 "lngDsmUser='$lngDsmUser', httpLng='$httpSynLngs',lngDsm2='$lngDsm2', env_LANG='$env_lng', gui_lang='$gui_lang', lngMail='$lngMail'"
 languages=( $lngDsmUser $httpSynLngs $lngDsm2 $env_lng $gui_lang $lngMail )
-logInfoNoEcho 6 "languages with precedence to check for an available translation: ${languages[@]}"
+# logInfoNoEcho 6 "languages with precedence to check for an available translation: ${languages[@]}"
 used_lang=""
 for lngx in "${languages[@]}"; do
   if [[ -n "$lngx" ]] && [[ "$lngx" != "def" ]]; then  
@@ -112,23 +111,23 @@ fallbackToEnu=0
 if [[ -z "$used_lang" ]]; then
   fallbackToEnu=1  
   used_lang="enu"
-  logInfoNoEcho 1 "Language fallback to English as no other selection found"
+  logInfoNoEcho 3 "Language fallback to English as no other selection found"
 fi  
 lngUser=$used_lang
-logInfoNoEcho 3 "Selected Language '$used_lang'"
+logInfoNoEcho 6 "Selected Language '$used_lang'"
 lngFile=texts/${used_lang}/lang.txt
 source "$lngFile" # setup $fingerprint0, $fingerprint1count0, $fingerprint1count1, $fingerprint2, ...
 res=$?
-# logInfoNoEcho 4 "Result from 'source $lngFile' is '$res'"
+# logInfoNoEcho 7 "Result from 'source $lngFile' is '$res'"
 if [[ "$res" -ne 0 ]]; then
-  logInfoNoEcho 0 "Bad result from 'source $lngFile' is '$res'!"
+  logInfoNoEcho 1 "Bad result from 'source $lngFile' is '$res'!"
   if [[ "$used_lang" != "enu" ]]; then
   # try fallback to English:
     source "texts/enu/lang.txt"
     res=$?
-    logInfoNoEcho 2 "Result from 'source $lngFile' is '$res'"
+    logInfoNoEcho 7 "Result from 'source $lngFile' is '$res'"
     if [[ "$res" -ne 0 ]]; then
-      logInfoNoEcho 0 "Failed to fallback to Englisch, result from 'source texts/enu/lang.txt' is '$res'"
+      logInfoNoEcho 1 "Failed to fallback to Englisch, result from 'source texts/enu/lang.txt' is '$res'"
       # dsmnotify
     fi # if [[ "$res" -ne 0 ]]  
   fi # if [[ "$used_lang" != "enu" ]]
@@ -136,5 +135,5 @@ fi # if [[ "$res" -ne 0 ]]
 if [[ $bDebugPL -eq 1 ]]; then
   echo "... parse_language.sh done with res=$res" 
 fi
-logInfoNoEcho 4 "... parse_language.sh done"
+logInfoNoEcho 6 "... parse_language.sh done, language set to '$used_lang'"
 

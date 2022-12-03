@@ -159,7 +159,7 @@ for sourcefile in "${sourceablefiles[@]}"; do
   done # for synoLang in $synoLangs; do
 done # for sourcefile in $sourceablefiles; do
   
-# translation of lines with '"desc":', '"errorText":' and '"step_title":' in wizzard files: 
+# translation of lines with '"desc":', '"errorText":', '"emptyText":' and '"step_title":' in wizzard files:
 for sourcefile in "${wizzardfiles[@]}"; do
   if [[ "$bUpdateAll" -ne "0" ]]; then
     timeStampSource=$(date +%s)
@@ -205,7 +205,7 @@ for sourcefile in "${wizzardfiles[@]}"; do
       while read -r line; do # read all settings from file
         lineCount=$((lineCount+1))
         val=""
-        if [[ ${line} == *"\"step_title\":"* ]] || [[ ${line} == *"\"desc\":"* ]] || [[ ${line} == *"\"errorText\":"* ]]; then
+        if [[ ${line} == *"\"step_title\":"* ]] || [[ ${line} == *"\"desc\":"* ]] || [[ ${line} == *"\"errorText\":"* ]]  || [[ ${line} == *"\"emptyText\":"* ]]; then
           prefix=${line%%:*}
           #val=$(echo "${line#*=}" | sed 's/^"//' | sed 's/"$//')
           val="${line#*:}" # e.g. "Konfiguration",

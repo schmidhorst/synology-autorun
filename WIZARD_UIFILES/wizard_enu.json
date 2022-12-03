@@ -22,17 +22,18 @@
   "step_title": "Configuration",
    "items": [
     {"type": "textfield",
-    "desc": "The script must be located in the root directory of the external device and set as executable for the user 'root'. It gets the mount point of the device (e.g. /volumeUSB1/usbshare/) as the first parameter ($1) and the device partition (e.g. usb1p1) as the second ($2). Hint: The script is executed with empty environment, you have to specify all the used commands with path!",
+    "desc": "There are two posibilities for the location of the script, which should be executed after device connect:<br>a) The script is located in the root directory of the external storage device. No action for devices without such a script. For this enter the name of your script without path, wothout '/'.<br>b) The script is on your DSM. And will be started at any storage device connect. Enter the full name with path, e.g. '/volume1/mysyn/auto.sh'.<br>The script must be executable for the user 'root'. The script will get the mount point of the device (e.g. /volumeUSB1/usbshare/) as the first parameter ($1) and the device partition (e.g. usb1p1) as the second ($2). Hints: The script is started with an <b>empty environment</b>, you have to specify all the used commands with path! The script name is case sensitive!",
     "subitems": [{
       "key": "config_SCRIPT"
       ,"desc": "Script to execute"
       ,"defaultValue": "@SCRIPT@"
+      ,"emptyText": "Script name"
       ,"validator": { "allowBlank": false }
       }]
     }
   ,{
     "type": "textfield",
-    "desc": "An exit value of 100 from the script will unmount and eject the device when the script is finished, all other exit values will leave it mounted. You can stop autorun in the package center to temporarily disable it.<br/><br/>The search time is the time after the trigger by udev for finding the mount point when a device is attached. The additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may have to increase those times depending on your hardware.",
+    "desc": "An exit value of 100 from the script will unmount and eject the device when the script is finished, all other exit values will leave it mounted.<br/><br/>The search time is the time after the trigger by 'udev' for finding the mount point when a device has been attached. The additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may have to increase those times depending on your hardware.",
     "subitems": [
      {
       "key": "config_TRIES"
@@ -80,7 +81,7 @@
     }
   ,{
     "type": "textfield",
-    "desc": "Several debug log file message detail levels are available: 0 ... 8. The higher the value the more details.",
+    "desc": "Several debug log file message detail levels are available: 1 ... 8. The higher the value the more details.",
     "subitems": [
       {
         "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
           "allowBlank": false
           ,"regex": {
             "expr": "/^[0-8]$/"
-            ,"errorText": "Enter a positive number 0 ... 8"
+            ,"errorText": "Enter a positive number 1 ... 8"
             }
           }
         }
@@ -98,7 +99,7 @@
     }
   ,{
     "type": "textfield"
-    ,"desc": "The package generates DSM desktop messages, which are shown on the desktop to configurable user groups or users. Prepend an @ to group names, e.g. @users for all users"
+    ,"desc": "The package generates DSM desktop messages, which are shown on the desktop to a configurable user group or to a user. Prepend an @ to group names, e.g. @users for all users"
     ,"subitems": [{
       "key": "config_NOTIFY_USERS"
       ,"desc": "Message display to"
@@ -110,12 +111,13 @@
 
   ,{
     "type": "textfield"
-    ,"desc": "Normally there is a DSM desktop message generated after your script is finished. The message contains the return code of your script and the remaining free space on the storage device. You may specifiy here list of return codes, which don't generate such a message."
+    ,"desc": "Normally there is a DSM desktop message generated after your script is finished. The message contains the return code of your script and the remaining free space on the storage device. You may specifiy here a list of return codes, which don't generate such a message."
     ,"subitems": [{
       "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
       ,"desc": "Return codes w/o message"
       ,"width": "360"
       ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+      ,"emptyText": "e.g. 0;97;98;99"
       ,"validator": { 
         "allowBlank": true
         ,"regex": {
@@ -167,7 +169,7 @@
     }
   ,{
     "type": "multiselect",
-    "desc": "<br/>Status indication while running the script.",
+    "desc": "<br/>Beeper use by the script: Short beep at begin and end, tripple long beep for an error",
     "subitems": [{
       "key": "config_BEEP",
       "desc": "Beep at start and end",
@@ -202,13 +204,14 @@
         "allowBlank": true
         }
       }]
-    }] 
+    }
+    ] 
   }
 ,{
   "step_title": "Security Configuration",
   "items": [{
     "type": "combobox",
-    "desc": "The script with the matching name on your USB device is exectuted with root priviledges on your DSM! That could be a security risk! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/><b>Actually there are @ENTRY_COUNT@ script hashes registerd.</b><br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
+    "desc": "The script with the matching name is exectuted with root priviledges on your DSM! That could be a security risk, especially it its located on the external device! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/><b>Actually there are @ENTRY_COUNT@ script hashes registerd.</b><br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
     "subitems": [{
       "key": "config_ADD_NEW_FINGERPRINTS"
       ,"autoSelect": true
@@ -237,7 +240,7 @@
   "step_title": "IMPORTANT: Manual Action Required!",
   "items": [{
     "type": "textfield",
-    "desc": "Third party packages are restricted by Synology in DSM 7.x! Since autorun does require root permission to perform its job an additional manual step is required after the installation.<br/><br/>SSH to your NAS (as an admin user) and execute the following command after the installation is finished. You may copy it now!",
+    "desc": "Third party packages are restricted by Synology in DSM 7.x! Since autorun does require root permission to perform its job an additional manual step is required after the installation.<br/><br/>Open a SSH command shell to your NAS (as an admin user) and execute the following command <b>after</b> the installation is finished.<br>Instead of via a SSH command window you can execute this command via a userdefined script (as user 'root'), generated via control panel, scheduled task. And run that after the finished installation.<br>You may copy the command now!",
     "subitems": [{
       "key": "ignore_value",
       "desc": "Command",

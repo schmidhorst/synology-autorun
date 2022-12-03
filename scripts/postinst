@@ -35,7 +35,6 @@ echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generate
 
 for f1 in $fields; do
 	item="$(env | grep "^$f1=")" # Attention: Values without quotes 
-  echo "$(date "$DTFMT"): Entry from ENV $f1: '$item'" >> "$LOG" # e.g. "config_NO_DSM_MESSAGE_RETURN_CODES=98;99" 
 	# eval "$item" # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'", the ";99" is lost!???
   # msg="$msg, $f1='${!f1}'"  # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'"
   # f2=${f1#*config_}

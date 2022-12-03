@@ -20,7 +20,7 @@ SSH naar uw NAS (als admin gebruiker) en voer het volgende commando uit:
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternatief voor SSH: 
-Ga naar Control Panelel => Task Scheduler => Create => Scheduled Task => User-defined Script. In het tabblad "Algemeen" stelt u een willekeurige taaknaam in, selecteer 'root' als gebruiker. In het tabblad "Taakinstellingen" voert u in  
+Ga naar Control Panel => Task Scheduler => Create => Scheduled Task => User-defined Script. In het tabblad "Algemeen" stelt u een willekeurige taaknaam in, selecteer 'root' als gebruiker. In het tabblad "Taakinstellingen" voert u in  
 ```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```

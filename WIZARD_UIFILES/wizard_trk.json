@@ -211,7 +211,7 @@
 "step_title":"Güvenlik Yapılandırması",
 "items": [{
 "type": "combobox",
-"desc":"Eşleşen isme sahip betik DSM'nizde root yetkileriyle çalıştırılır! Bu bir güvenlik riski oluşturabilir, özellikle de harici bir cihazda bulunuyorsa! Daha iyi güvenlik için, önceden kaydedilmiş sha256 hash değerlerine (parmak izleri) sahip betiklerle bir kısıtlama mümkündür.<br/><b>Aslında @ENTRY_COUNT@ betik hashleri kayıtlıdır.</b><br/>0: Güvenlik özelliği kullanılmaz. Eşleşen ada sahip tüm betiklere izin verilir. Kayıtlı hash'lerde değişiklik yok.<br/>1: @HASH_DELETION@Kurulum/konfigürasyondan sonraki ilk script kaydedilecek ve daha sonra tekrar tekrar çalıştırılmasına izin verilecektir.<br/>2: Eşleşen isme sahip herhangi bir script'in hash değeri kaydedilecek ve çalıştırılacaktır! (Hash ekle)<br/>3: Sadece önceden kaydedilmiş betiklere izin verilir. (Kayıt donduruldu)",
+"desc":"Eşleşen isme sahip betik DSM'nizde root yetkileriyle çalıştırılır! Bu bir güvenlik riski oluşturabilir, özellikle de harici bir cihazda bulunuyorsa! Daha iyi güvenlik için, önceden kaydedilmiş sha256 hash değerlerine (parmak izleri) sahip betiklerle kısıtlama mümkündür.<br/><b>Şu anda @ENTRY_COUNT@ betik hashleri kayıtlıdır.</b><br/>0: Güvenlik özelliği kullanılmaz. Eşleşen ada sahip tüm komut dosyalarına izin verilir. Kayıtlı hash'lerde değişiklik yok.<br/>1: @HASH_DELETION@Kurulum/konfigürasyondan sonraki ilk script kaydedilecek ve daha sonra tekrar tekrar çalıştırılmasına izin verilecektir.<br/>2: Eşleşen isme sahip herhangi bir script'in hash değeri kaydedilecek ve çalıştırılacaktır! (Hash ekle)<br/>3: Sadece önceden kaydedilmiş betiklere izin verilir. (Kayıt donduruldu)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true

@@ -243,6 +243,11 @@ while read line; do # read all settings from config file
   elif [[ "$itemName" == "LOGLEVEL" ]]; then
     settings="${settings}<p style=\"margin-left:30px;\">${settingLogVerbose}<br/></p>"
   fi
+  if [[ "$ADD_NEW_FINGERPRINTS" == "0" ]] || [[ "$ADD_NEW_FINGERPRINTS" == "2" ]]; then
+    if [[ "$SCRIPT" != *"/"* ]]; then
+      settings="${settings}<p>${settingSecurityWarning}<br/></p>"
+    fi
+  fi
   # echo "  line='$line', itemName='$itemName', value='${!itemName}'" >> "$LOG"
 done < "$appCfgDataPath/config" # Works well even if last line has no \n!
 if [[ "$ledResetHintRequired" -ne "0" ]]; then

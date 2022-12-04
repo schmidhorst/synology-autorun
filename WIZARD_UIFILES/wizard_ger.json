@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Klausel-Lizenz<br><br>Copyright (c) 2011-2022, Jan Reidemeister und Horst Schmid<br>Alle Rechte vorbehalten.<br><br>Die Weitergabe und Verwendung in Quell- und Binärform, mit oder ohne Änderungen, ist erlaubt, sofern die folgenden Bedingungen erfüllt sind:<br>1. Bei der Weitergabe des Quellcodes müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss beibehalten werden.<br>2. Bei der Weitergabe in binärer Form müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss in der Dokumentation und/oder anderen Materialien, die mit der Weitergabe bereitgestellt werden, wiedergegeben werden.<br>3. Weder der Name des Copyright-Inhabers noch die Namen der Mitwirkenden dürfen ohne ausdrückliche vorherige schriftliche Genehmigung verwendet werden, um von dieser Software abgeleitete Produkte zu unterstützen oder zu bewerben.<br><br> DIESE SOFTWARE WIRD VON DEN URHEBERN UND MITWIRKERN \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT UND JEGLICHE AUSDRÜCKLICHEN ODER STILLSCHWEIGENDEN GARANTIEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE STILLSCHWEIGENDEN GARANTIEN DER HANDELSÜBLICHKEIT UND DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK, WERDEN AUSGESCHLOSSEN. IN KEINEM FALL HAFTEN DER URHEBERRECHTSINHABER ODER DIE MITWIRKENDEN FÜR DIREKTE, INDIREKTE, ZUFÄLLIGE, BESONDERE, BEISPIELHAFTE SCHÄDEN ODER FOLGESCHÄDEN (EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE BESCHAFFUNG VON ERSATZGÜTERN ODER -DIENSTLEISTUNGEN, NUTZUNGS-, DATEN- ODER GEWINNVERLUSTE ODER GESCHÄFTSUNTERBRECHUNGEN), WIE AUCH IMMER DIESE VERURSACHT WURDEN UND AUF WELCHER HAFTUNGSTHEORIE SIE BERUHEN, OB DURCH VERTRAG, VERSCHULDENSUNABHÄNGIGE HAFTUNG ODER UNERLAUBTE HANDLUNG (EINSCHLIESSLICH FAHRLÄSSIGKEIT ODER ANDERWEITIG), DIE SICH IN IRGENDEINER WEISE AUS DER NUTZUNG DIESER SOFTWARE ERGEBEN, SELBST WENN AUF DIE MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WURDE.",
+"desc":"BSD 3-Klausel-Lizenz<br><br>Copyright (c) 2011-2022, Jan Reidemeister und Horst Schmid<br>Alle Rechte vorbehalten.<br><br>Die Weitergabe und Verwendung in Quell- und Binärform, mit oder ohne Modifikation, ist erlaubt, sofern folgende Bedingungen erfüllt sind:<br>1. Bei der Weitergabe des Quellcodes müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss beibehalten werden.<br>2. Bei der Weitergabe in binärer Form müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss in der Dokumentation und/oder anderen Materialien, die mit der Weitergabe bereitgestellt werden, wiedergegeben werden.<br>3. Weder der Name des Copyright-Inhabers noch die Namen der Mitwirkenden dürfen ohne ausdrückliche vorherige schriftliche Genehmigung verwendet werden, um von dieser Software abgeleitete Produkte zu unterstützen oder zu bewerben.<br><br> DIESE SOFTWARE WIRD VON DEN URHEBERN UND MITWIRKERN \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT UND JEGLICHE AUSDRÜCKLICHEN ODER STILLSCHWEIGENDEN GARANTIEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE STILLSCHWEIGENDEN GARANTIEN DER HANDELSÜBLICHKEIT UND DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK, WERDEN AUSGESCHLOSSEN. IN KEINEM FALL HAFTEN DER URHEBERRECHTSINHABER ODER DIE MITWIRKENDEN FÜR DIREKTE, INDIREKTE, ZUFÄLLIGE, BESONDERE, BEISPIELHAFTE SCHÄDEN ODER FOLGESCHÄDEN (EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE BESCHAFFUNG VON ERSATZGÜTERN ODER -DIENSTLEISTUNGEN, NUTZUNGS-, DATEN- ODER GEWINNVERLUSTE ODER GESCHÄFTSUNTERBRECHUNGEN), WIE AUCH IMMER DIESE VERURSACHT WURDEN UND AUF WELCHER HAFTUNGSTHEORIE SIE BERUHEN, OB DURCH VERTRAG, VERSCHULDENSUNABHÄNGIGE HAFTUNG ODER UNERLAUBTE HANDLUNG (EINSCHLIESSLICH FAHRLÄSSIGKEIT ODER ANDERWEITIG), DIE SICH IN IRGENDEINER WEISE AUS DER NUTZUNG DIESER SOFTWARE ERGEBEN, SELBST WENN AUF DIE MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WURDE.",
 "subitems": [
 {
 "key": "id1",
@@ -22,18 +22,18 @@
 "step_title":"Konfiguration",
 "items": [
 {"type": "textfield",
-"desc":"Es gibt zwei Möglichkeiten für die Position des Skripts, welches nach einem Speicher-Anschluß ausgeführt werden soll:<br>a) Das Skript liegt im Stammverzeichnis des externen Speichergeräts. Keine Aktion bei einem Speichergeräte ohne so ein Skript. Geben Sie hierfür den Skriptnamen ohne Pfad, ohne '/' geben.<br>b)Das Skript liegt auf dem DSM-Gerät und wird beim Anschließen jeglichen externen Speichergeräts gestartet. Den Skriptnamen mit vollständigen Pfad angeben, z.B. '/volume1/mysyn/auto.sh'.<br>Das Skript muss für den Benutzer \"root\" ausführbar sein. Es erhält den Einhängepunkt des Geräts (z.B. /volumeUSB1/usbshare/) als ersten Parameter ($1) und die Gerätepartition (z.B. usb1p1) als zweiten ($2). Hinweise: Das Skript wird mit leerer Umgebung ausgeführt, Sie müssen alle verwendeten Befehle mit Pfad angeben! Groß-Kleinschriebung beachten!",
+"desc":"Es gibt zwei Möglichkeiten für den Speicherort des Skripts, das nach dem Verbinden des Geräts ausgeführt werden soll:<br>a) Das Skript befindet sich im Stammverzeichnis des externen Speichergeräts. Keine Aktion für Geräte ohne ein solches Skript. Geben Sie dazu den Namen Ihres Skripts ohne Pfad, ohne '/' ein.<br>b) Das Skript befindet sich auf Ihrem DSM. Und wird bei jeder Verbindung mit einem Speichergerät gestartet. Geben Sie den vollständigen Namen mit Pfad ein, z.B. '/volume1/mysyn/auto.sh'.<br>Das Skript muss für den Benutzer 'root' ausführbar sein. Das Skript erhält den Einhängepunkt des Geräts (z.B. /volumeUSB1/usbshare/) als ersten Parameter ($1) und die Gerätepartition (z.B. usb1p1) als zweiten ($2). Hinweise: Das Skript wird mit einer <b>leeren Umgebung</b> gestartet, man muss alle verwendeten Befehle mit Pfad angeben! Beim Skriptnamen wird zwischen Groß- und Kleinschreibung unterschieden!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Auszuführendes Skript"
 ,"defaultValue": "@SCRIPT@"
-,"emptyText": "Skript Name (optional)"
+,"emptyText":"Skriptname"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt.<br/><br/>Die Suchzeit ist die Zeit nach dem Trigger durch 'udev', um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen worden ist. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
+"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt.<br/><br/>Die Suchzeit ist die Zeit nach dem Auslösen durch 'udev', um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen wurde. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -55,7 +55,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-9]+$/"
-,"errorText":"Geben Sie eine positive Zahl ein"
+,"errorText":"Eingabe einer positiven Zahl"
 }
 }
 }
@@ -73,7 +73,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-9]+$/"
-,"errorText":"Geben Sie eine positive Zahl ein"
+,"errorText":"Eingabe einer positiven Zahl"
 }
 }
 }
@@ -91,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Eingabe einer positiven Zahl 0 ... 8"
+,"errorText":"Eingabe einer positiven Zahl 1 ... 8"
 }
 }
 }
@@ -99,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Das Paket erzeugt DSM-Desktop-Nachrichten, die auf dem Desktop einer konfigurierbare Benutzergruppe oder einem Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer"
+,"desc":"Das Paket erzeugt DSM-Desktop-Nachrichten, die auf dem Desktop einer konfigurierbaren Benutzergruppe oder einem Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer"
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Anzeige der Nachricht an"
@@ -117,6 +117,7 @@
 ,"desc":"Rückgabecodes ohne Meldung"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"z.B. 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -168,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Piepser-Verwendung durchs Skript: Kurzer Beep beim Start und Ende, langer Dreifach-Pieps bei einem Fehler.",
+"desc":"<br/>Piepserverwendung durch das Skript: Kurzer Piepton zu Beginn und am Ende, dreimaliger langer Piepton bei einem Fehler",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Signalton bei Start und Ende",
@@ -182,12 +183,11 @@
 "key": "config_EJECT_TIMEOUT"
 ,"desc":"Zeitüberschreitung beim Auswerfen [s]"
 ,"defaultValue": "@EJECT_TIMEOUT@"
-
 ,"validator": {
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-9]+$/"
-,"errorText":"Eingabe einer positiven Zahl"
+,"errorText":"Geben Sie eine positive Zahl ein"
 }
 }
 }]
@@ -204,34 +204,35 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Sicherheitskonfiguration",
 "items": [{
 "type": "combobox",
-"desc":"Das Skript mit dem passenden Namen wird mit Root-Rechten auf Ihrem DSM ausgeführt! Insbesondere wenn das Skript auf dem extenen Speichergerät liegt, das kann ein Sicherheitsrisiko darstellen! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/><b>Aktuell sind @ENTRY_COUNT@ Skript-Hashes registriert.</b><br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit passendem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: @HASH_DELETION@Das 1. Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert eines jeden Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
+"desc":"Das Skript mit dem passenden Namen wird mit Root-Rechten auf Ihrem DSM ausgeführt! Das kann ein Sicherheitsrisiko sein, besonders wenn es sich auf dem externen Gerät befindet! Für mehr Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/><b>Zur Zeit sind @ENTRY_COUNT@ Skript-Hashes registriert.</b><br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit gleichem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: @HASH_DELETION@Das erste Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert jedes Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Skript Hash-Registrierung",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Skript Hash-Registrierung"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
 }
-,"validator": { 
-  "regex": {
-    "expr": "/^[@SECURITY_RANGE@].*/"
-    ,"errorText": "With no previously registered hashes value 3 makes no sense"
-    }
-  }
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"Ohne zuvor registrierte Hashes macht die Auswahl '3' keinen Sinn"
+}
+}
 }]
 }]
 }
@@ -239,7 +240,7 @@
 "step_title":"WICHTIG: Manueller Eingriff erforderlich!",
 "items": [{
 "type": "textfield",
-"desc":"Pakete von Drittanbietern werden von Synology in DSM 7.x eingeschränkt! Da Autorun zur Ausführung seiner Aufgabe Root-Rechte benötigt, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.<br/><br/>Öffnen sie eine SSH Komandoshell zu Ihrem NAS (als Admin-Benutzer) und führen Sie den folgenden Befehl aus, nachdem die Installation abgeschlossen ist.<br>Instead of via a SSH command window you can execute this command via a userdefined script (as user 'root'), generated via control panel, scheduled task. And run that after the finished installation.<br>Sie können das Kommando jetzt kopieren!",
+"desc":"Pakete von Drittanbietern werden von Synology in DSM 7.x eingeschränkt! Da Autorun zur Ausführung seiner Aufgabe Root-Rechte benötigt, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.<br/><br/>Öffnen Sie eine SSH-Befehlsshell auf Ihrem NAS (als Admin-Benutzer) und führen Sie den folgenden Befehl <b>nach</b> Beendigung der Installation aus.<br>Anstatt über ein SSH-Befehlsfenster können Sie diesen Befehl auch über ein benutzerdefiniertes Skript (als Benutzer 'root') ausführen, das über die Systemsteuerung, geplante Aufgabe, erstellt wurde. Und dieses nach der fertigen Installation ausführen.<br>Sie können den Befehl jetzt kopieren!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Befehl",

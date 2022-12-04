@@ -194,7 +194,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Du kan eventuelt angive et yderligere script (med fuld sti!), som i tilfælde af anmodet udkast (med exitkode 100 fra dit første script) udføres efter udkastningen. Dette kan f.eks. bruges til at slukke for din USB-enhed. Hvis udsmidningen mislykkedes, vil argumentet være \"Ejection failed\", ved succes intet argument!",
+"desc":"Du kan eventuelt angive et yderligere script (med fuld sti!), som i tilfælde af anmodet udkast (med exitkode 100 fra dit første script) udføres efter udkastet. Dette kan f.eks. bruges til at slukke for din USB-enhed. Hvis udsmidningen mislykkedes, vil argumentet være \"Ejection failed\", ved succes intet argument!",
 "subitems": [{
 "key": "config_SCRIPT_AFTER_EJECT",
 "desc":"Script efter udkast (på DSM)",
@@ -211,7 +211,7 @@
 "step_title":"Sikkerhedskonfiguration",
 "items": [{
 "type": "combobox",
-"desc":"Scriptet med det tilsvarende navn udføres med root-rettigheder på din DSM! Det kan være en sikkerhedsrisiko, især hvis det er placeret på den eksterne enhed! For at opnå bedre sikkerhed er det muligt at begrænse brugen af scripts med forudregistrerede sha256 hash-værdier (fingeraftryk).<br/><b>Der er faktisk @ENTRY_COUNT@ script hashes registreret.</b><br/>0: Sikkerhedsfunktionen anvendes ikke. Alle scripts med matchende navn er tilladt. Ingen ændring af registrerede hashes.<br/>1: @HASH_DELETION@Det 1. script efter installation/konfiguration vil blive registreret og er tilladt at udføre derefter igen og igen.<br/>2: Hash-værdien af ethvert script med matchende navn vil blive registreret og udført! (Tilføj hashes)<br/>3: Kun tidligere registrerede scripts er tilladt. (Registrering fastfrosset)",
+"desc":"Scriptet med det tilsvarende navn udføres med root-rettigheder på din DSM! Det kan være en sikkerhedsrisiko, især hvis det er placeret på den eksterne enhed! For at opnå bedre sikkerhed er det muligt at begrænse brugen af scripts med forudregistrerede sha256 hash-værdier (fingeraftryk).<br/><b>I øjeblikket er der @ENTRY_COUNT@ script hashes registreret.</b><br/>0: Sikkerhedsfunktionen bruges ikke. Alle scripts med matchende navn er tilladt. Ingen ændring af registrerede hashes.<br/>1: @HASH_DELETION@Det 1. script efter installation/konfiguration vil blive registreret og er tilladt at udføre derefter igen og igen.<br/>2: Hash-værdien af ethvert script med matchende navn vil blive registreret og udført! (Tilføj hashes)<br/>3: Kun tidligere registrerede scripts er tilladt. (Registrering fastfrosset)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true

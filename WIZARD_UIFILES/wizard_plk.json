@@ -33,7 +33,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Wartość wyjścia 100 ze skryptu będzie odmontować i wysunąć urządzenie po zakończeniu skryptu, wszystkie inne wartości wyjścia będzie zostawić go zamontowane.<br/><br/>Czas wyszukiwania jest czas po wyzwoleniu przez 'udev' do znalezienia punktu mocowania, gdy urządzenie zostało dołączone. Dodatkowy czas oczekiwania daje DSM trochę swobody, aby prawidłowo zamontować dysk przed rozpoczęciem skryptu.<br/>Możesz mieć do zwiększenia tych czasów w zależności od sprzętu.",
+"desc":"Wartość wyjścia 100 ze skryptu będzie odmontować i wysunąć urządzenie po zakończeniu skryptu, wszystkie inne wartości wyjścia pozostawia go zamontowany.<br/><br/>Czas wyszukiwania jest czas po wyzwoleniu przez 'udev' do znalezienia punktu mocowania, gdy urządzenie zostało dołączone. Dodatkowy czas oczekiwania daje DSM trochę swobody, aby prawidłowo zamontować dysk przed rozpoczęciem skryptu.<br/>Możesz mieć do zwiększenia tych czasów w zależności od sprzętu.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -129,7 +129,7 @@
 }
 ,{
 "type": "combobox",
-"desc":"Zastosowanie 'Copy LED':<br/>0: diody nie są w ogóle używane.<br/>1: włączona podczas biegu lub wysuwania, wyłączona po tym<br/>2: migająca podczas biegu lub wysuwania, wyłączona po tym<br/>3: włączona podczas biegu lub wysuwania, po tym wyłączona (0/100) lub migająca (inne kody)<br/>4: migająca podczas biegu lub wysuwania, po tym wyłączona lub migająca (inne kody lub wysuwanie nieudane)<br/>5: migająca podczas biegu lub wysuwania, po tym wyłączona (0/100) lub włączona (inne kody lub wysuwanie nieudane)",
+"desc":"Zastosowanie \"Copy LED\":<br/>0: diody nie są w ogóle używane.<br/>1: włączona podczas biegu lub wysuwania, wyłączona po tym<br/>2: migająca podczas biegu lub wysuwania, wyłączona po tym<br/>3: włączona podczas biegu lub wysuwania, po tym wyłączona (0/100) lub migająca (inne kody)<br/>4: migająca podczas biegu lub wysuwania, po tym wyłączona lub migająca (inne kody lub wysuwanie nieudane)<br/>5: migająca podczas biegu lub wysuwania, po tym wyłączona (0/100) lub włączona (inne kody lub wysuwanie nieudane)",
 "subitems": [{
 "key": "config_LED_COPY",
 "autoSelect": true,
@@ -211,7 +211,7 @@
 "step_title":"Konfiguracja bezpieczeństwa",
 "items": [{
 "type": "combobox",
-"desc":"Skrypt o takiej samej nazwie jest uruchamiany z uprawnieniami roota na DSM! Może to stanowić zagrożenie dla bezpieczeństwa, zwłaszcza jeśli znajduje się na urządzeniu zewnętrznym! W celu zwiększenia bezpieczeństwa możliwe jest ograniczenie do skryptów z zarejestrowanymi wcześniej wartościami skrótu sha256 (odcisk palca).<br/><b>Właściwie istnieją zarejestrowane skrypty @ENTRY_COUNT@.</b><br/>0: Zabezpieczenie nie jest używane. Wszystkie skrypty z pasującą nazwą są dozwolone. Brak zmiany zarejestrowanych haseł.<br/>1: @HASH_DELETION@1. skrypt po instalacji/konfiguracji zostanie zarejestrowany i jest dozwolone do wykonania następnie ponownie i ponownie.<br/>2: Wartość hash każdego skryptu z pasującą nazwą zostanie zarejestrowany i wykonane! (Dodaj hasze)<br/>3: Tylko wcześniej zarejestrowane skrypty są dozwolone. (Rejestracja zamrożone)",
+"desc":"Skrypt o takiej samej nazwie jest uruchamiany z uprawnieniami roota na DSM! To może być zagrożenie dla bezpieczeństwa, zwłaszcza jeśli znajduje się na urządzeniu zewnętrznym! W celu zwiększenia bezpieczeństwa można ograniczyć się do skryptów z zarejestrowanymi wcześniej wartościami skrótu sha256 (odcisk palca).<br/><b>Obecnie istnieje @ENTRY_COUNT@ script hashes registerd.</b><br/>0: Zabezpieczenie nie jest używane. Wszystkie skrypty z pasującą nazwą są dozwolone. Brak zmiany zarejestrowanych haseł.<br/>1: @HASH_DELETION@1. skrypt po instalacji/konfiguracji zostanie zarejestrowany i jest dozwolone do wykonania następnie ponownie i ponownie.<br/>2: Wartość hash każdego skryptu z pasującą nazwą zostanie zarejestrowany i wykonane! (Dodaj hasze)<br/>3: Tylko wcześniej zarejestrowane skrypty są dozwolone. (Rejestracja zamrożone)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true

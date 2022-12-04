@@ -196,11 +196,12 @@
     "type": "textfield",
     "desc": "You can optionally specify a further script (with full path!), which is in case of requested eject (with exit code 100 from your 1st script) executed after the ejection. This may be used e.g. to power down your USB device. If ejection failed, the argument will be 'Ejection failed', at success no argument!",
     "subitems": [{ 
-      "key": "config_SCRIPT_AFTER_EJECT",
-      "desc": "Script after eject (on DSM)",
-      "width": "350",
-      "defaultValue": "@SCRIPT_AFTER_EJECT@",
-      "validator": {
+      "key": "config_SCRIPT_AFTER_EJECT"
+      ,"desc": "Script after eject (on DSM)"
+      ,"width": "350"
+      ,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+      ,"emptyText": "Script name (optional)"
+      ,"validator": {
         "allowBlank": true
         }
       }]
@@ -211,7 +212,7 @@
   "step_title": "Security Configuration",
   "items": [{
     "type": "combobox",
-    "desc": "The script with the matching name is exectuted with root priviledges on your DSM! That could be a security risk, especially it its located on the external device! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/><b>Actually there are @ENTRY_COUNT@ script hashes registerd.</b><br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
+    "desc": "The script with the matching name is exectuted with root priviledges on your DSM! That could be a security risk, especially it its located on the external device! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/><b>Currently there are @ENTRY_COUNT@ script hashes registerd.</b><br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
     "subitems": [{
       "key": "config_ADD_NEW_FINGERPRINTS"
       ,"autoSelect": true

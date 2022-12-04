@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"Licencia BSD de 3 cláusulas<br><br>Copyright (c) 2011-2022, Jan Reidemeister y Horst Schmid<br>Todos los derechos reservados.<br><br>Se permite la redistribución y el uso en forma de código fuente y binario, con o sin modificaciones, siempre que se cumplan las siguientes condiciones:<br>1. Las redistribuciones del código fuente deben conservar el aviso de copyright anterior, esta lista de condiciones y el siguiente descargo de responsabilidad.<br>2. Las redistribuciones en formato binario deben reproducir el aviso de copyright anterior, esta lista de condiciones y el siguiente descargo de responsabilidad en la documentación y/o en otros materiales proporcionados con la distribución.<br>3. Ni el nombre del titular de los derechos de autor ni los nombres de sus colaboradores pueden utilizarse para respaldar o promocionar productos derivados de este software sin un permiso específico previo por escrito.<br><br> ESTE SOFTWARE ES PROPORCIONADO POR LOS TITULARES DE LOS DERECHOS DE AUTOR Y LOS COLABORADORES \"TAL CUAL\" Y SE RECHAZA CUALQUIER GARANTÍA EXPRESA O IMPLÍCITA, INCLUYENDO, PERO SIN LIMITARSE A ELLO, LAS GARANTÍAS IMPLÍCITAS DE COMERCIALIZACIÓN E IDONEIDAD PARA UN PROPÓSITO PARTICULAR. EN NINGÚN CASO EL TITULAR DE LOS DERECHOS DE AUTOR O LOS COLABORADORES SERÁN RESPONSABLES DE NINGÚN DAÑO DIRECTO, INDIRECTO, INCIDENTAL, ESPECIAL, EJEMPLAR O CONSECUENTE (INCLUYENDO, PERO SIN LIMITARSE A, LA ADQUISICIÓN DE BIENES O SERVICIOS SUSTITUTIVOS; LA PÉRDIDA DE USO, DATOS O BENEFICIOS; O LA INTERRUPCIÓN DE LA ACTIVIDAD COMERCIAL), SEA CUAL SEA LA CAUSA Y LA TEORÍA DE LA RESPONSABILIDAD, YA SEA POR CONTRATO, RESPONSABILIDAD ESTRICTA O AGRAVIO (INCLUYENDO LA NEGLIGENCIA O DE OTRO TIPO) QUE SURJA DE CUALQUIER MANERA DEL USO DE ESTE SOFTWARE, INCLUSO SI SE AVISA DE LA POSIBILIDAD DE TALES DAÑOS.",
+"desc":"Licencia BSD de 3 cláusulas<br><br>Copyright (c) 2011-2022, Jan Reidemeister y Horst Schmid<br>Todos los derechos reservados.<br><br>Se permite la redistribución y el uso en forma de código fuente y binario, con o sin modificaciones, siempre que se cumplan las siguientes condiciones:<br>1. Las redistribuciones del código fuente deben conservar el aviso de copyright anterior, esta lista de condiciones y el siguiente descargo de responsabilidad.<br>2. Las redistribuciones en forma binaria deben reproducir el aviso de copyright anterior, esta lista de condiciones y el siguiente descargo de responsabilidad en la documentación y/o otros materiales proporcionados con la distribución.<br>3. Ni el nombre del titular de los derechos de autor ni los nombres de sus colaboradores pueden utilizarse para respaldar o promocionar productos derivados de este software sin un permiso específico previo por escrito.<br><br> ESTE SOFTWARE ES PROPORCIONADO POR LOS TITULARES DE LOS DERECHOS DE AUTOR Y LOS COLABORADORES \"TAL CUAL\" Y SE RECHAZA CUALQUIER GARANTÍA EXPRESA O IMPLÍCITA, INCLUYENDO, PERO SIN LIMITARSE A ELLO, LAS GARANTÍAS IMPLÍCITAS DE COMERCIALIZACIÓN E IDONEIDAD PARA UN PROPÓSITO PARTICULAR. EN NINGÚN CASO EL TITULAR DE LOS DERECHOS DE AUTOR O LOS COLABORADORES SERÁN RESPONSABLES DE NINGÚN DAÑO DIRECTO, INDIRECTO, INCIDENTAL, ESPECIAL, EJEMPLAR O CONSECUENTE (INCLUYENDO, PERO SIN LIMITARSE A, LA ADQUISICIÓN DE BIENES O SERVICIOS SUSTITUTIVOS; LA PÉRDIDA DE USO, DATOS O BENEFICIOS; O LA INTERRUPCIÓN DE LA ACTIVIDAD COMERCIAL), SEA CUAL SEA LA CAUSA Y LA TEORÍA DE LA RESPONSABILIDAD, YA SEA POR CONTRATO, RESPONSABILIDAD ESTRICTA O AGRAVIO (INCLUYENDO LA NEGLIGENCIA O DE OTRO TIPO) QUE SURJA DE CUALQUIER MANERA DEL USO DE ESTE SOFTWARE, INCLUSO SI SE AVISA DE LA POSIBILIDAD DE TALES DAÑOS.",
 "subitems": [
 {
 "key": "id1",
@@ -63,7 +63,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"El tamaño de los archivos de registro se limita automáticamente. Si se alcanza el número de líneas indicado, se elimina la mitad superior.",
+"desc":"El tamaño de los archivos de registro se limita automáticamente. Si se alcanza el número de líneas dado, se elimina la mitad mayor.",
 "subitems": [
 {
 "key": "config_LOG_MAX_LINES"
@@ -134,7 +134,7 @@
 "key": "config_LED_COPY",
 "autoSelect": true,
 "editable": false,
-"desc":"Copia del LED",
+"desc":"Copiar LED",
 "defaultValue": "@LED_COPY@",
 "width": "360",
 "mode": "local",
@@ -194,7 +194,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Puede especificar opcionalmente otro script (¡con la ruta completa!), que se ejecuta en caso de expulsión solicitada (con el código de salida 100 de su primer script) después de la expulsión. Esto puede usarse, por ejemplo, para apagar su dispositivo USB. Si la expulsión falló, el argumento será 'Ejection failed', en caso de éxito no hay argumento.",
+"desc":"Puede especificar opcionalmente otro script (¡con la ruta completa!), que se ejecuta en caso de expulsión solicitada (con el código de salida 100 de su primer script) después de la expulsión. Esto puede ser usado, por ejemplo, para apagar su dispositivo USB. Si la expulsión falló, el argumento será 'Ejection failed', en caso de éxito no hay argumento.",
 "subitems": [{
 "key": "config_SCRIPT_AFTER_EJECT",
 "desc":"Guión después de la expulsión (en DSM)",
@@ -211,7 +211,7 @@
 "step_title":"Configuración de seguridad",
 "items": [{
 "type": "combobox",
-"desc":"El script con el nombre correspondiente se ejecuta con privilegios de root en su DSM. Esto podría ser un riesgo de seguridad, especialmente si se encuentra en el dispositivo externo. Para mejorar la seguridad es posible restringir los scripts con valores hash sha256 pre-registrados (huellas dactilares).<br/><b>En realidad hay @ENTRY_COUNT@ hashes de scripts registrados.</b><br/>0: La función de seguridad no se utiliza. Todos los scripts con nombre coincidente están permitidos. No se modifican los hashes registrados.<br/>1: @HASH_DELETION@El primer script después de la instalación/configuración se registrará y se permitirá su ejecución una y otra vez.<br/>2: ¡El valor del hash de cualquier script con nombre coincidente se registrará y ejecutará! (Añadir hashes)<br/>3: Sólo se permiten scripts previamente registrados. (Registro congelado)",
+"desc":"El script con el nombre correspondiente se ejecuta con privilegios de root en su DSM. Esto podría ser un riesgo de seguridad, especialmente si se encuentra en el dispositivo externo. Para mejorar la seguridad es posible restringir los scripts con valores hash sha256 pre-registrados (huellas dactilares).<br/><b>Actualmente hay @ENTRY_COUNT@ hashes de script registrados.</b><br/>0: La característica de seguridad no se utiliza. Se permiten todos los scripts con nombre coincidente. No se modifican los hashes registrados.<br/>1: @HASH_DELETION@El primer script después de la instalación/configuración se registrará y se permitirá su ejecución una y otra vez.<br/>2: ¡El valor del hash de cualquier script con nombre coincidente se registrará y ejecutará! (Añadir hashes)<br/>3: Sólo se permiten scripts previamente registrados. (Registro congelado)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true

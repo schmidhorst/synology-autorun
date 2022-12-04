@@ -211,7 +211,7 @@
 "step_title":"Konfigurering av säkerhet",
 "items": [{
 "type": "combobox",
-"desc":"Skriptet med det matchande namnet utförs med rooträttigheter på din DSM! Det kan vara en säkerhetsrisk, särskilt om det finns på den externa enheten! För bättre säkerhet är det möjligt att begränsa skript med förregistrerade sha256-hashvärden (fingeravtryck).<br/><b>Det finns faktiskt @ENTRY_COUNT@ skript-hashvärden registrerade.</b><br/>0: Säkerhetsfunktionen används inte. Alla skript med matchande namn är tillåtna. Ingen ändring av registrerade hashvärden.<br/>1: @HASH_DELETION@Det första skriptet efter installation/konfiguration kommer att registreras och det är tillåtet att utföra det igen och igen.<br/>2: Hashvärdet av alla skript med matchande namn kommer att registreras och utföras! (Lägg till hashvärden)<br/>3: Endast tidigare registrerade skript är tillåtna. (Registrering fryst)",
+"desc":"Skriptet med det matchande namnet utförs med rooträttigheter på din DSM! Det kan vara en säkerhetsrisk, särskilt om det finns på den externa enheten! För bättre säkerhet är det möjligt att begränsa skript med förregistrerade sha256-hashvärden (fingeravtryck).<br/><b>För närvarande finns det @ENTRY_COUNT@ skript-hashvärden registrerade.</b><br/>0: Säkerhetsfunktionen används inte. Alla skript med matchande namn är tillåtna. Ingen ändring av registrerade hashvärden.<br/>1: @HASH_DELETION@Det första skriptet efter installation/konfiguration kommer att registreras och det är tillåtet att utföra det igen och igen.<br/>2: Hashvärdet av alla skript med matchande namn kommer att registreras och utföras! (Lägg till hashvärden)<br/>3: Endast tidigare registrerade skript är tillåtna. (Registrering fryst)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true
@@ -230,7 +230,7 @@
 ,"validator": {
 "regex": {
 "expr": "/^[@SECURITY_RANGE@].*/"
-,"errorText":"Om det inte finns några tidigare registrerade hash-koder är valet \"3\" meningslöst."
+,"errorText":"Utan tidigare registrerade hash-koder är valet \"3\" meningslöst."
 }
 }
 }]

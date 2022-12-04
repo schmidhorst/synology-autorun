@@ -5,12 +5,6 @@ In Synologies Taskplaner gibt es die Möglichkeit, getriggerte Aufgaben zu erste
 # installieren
 * Laden Sie die *.spk Datei von "Releases", "Assets" in Github herunter und verwenden Sie "Manual Install" im Package Center.
 
-Unter https://www.cphub.net/ im Package Center gibt es ältere Versionen für ältere DSM-Versionen:
-* DSM 7: aktuell nur noch 1.8
-* DSM 6: 1.7
-* DSM 5: 1.6
-* elder: 1.3
-
 Pakete von Drittanbietern werden von Synology im DSM 7 eingeschränkt. Da Autorun Root-Rechte benötigt 
 Berechtigung benötigt, um seine Aufgabe zu erfüllen, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.
 
@@ -26,5 +20,10 @@ cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privileg
 ```
 als "Befehl ausführen" ein. Beenden Sie es mit OK. Wenn Sie nun während der Paketinstallation aufgefordert werden, diesen Befehl auszuführen, gehen Sie zum Aufgabenplaner, wählen Sie diese Aufgabe aus und führen Sie sie aus. 
 
+Unter https://www.cphub.net/ im Package Center gibt es ältere Versionen für ältere DSM-Versionen:
+* DSM 7: aktuell nur noch 1.8
+* DSM 6: 1.7
+* DSM 5: 1.6
+* elder: 1.3
 
 Übersetzt mit www.DeepL.com/Translator (kostenlose Version)

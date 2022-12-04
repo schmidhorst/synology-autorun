@@ -22,17 +22,18 @@
 "step_title":"Configuratie",
 "items": [
 {"type": "textfield",
-"desc":"Het script moet zich in de hoofdmap van het externe apparaat bevinden en ingesteld zijn als uitvoerbaar voor de gebruiker 'root'. Het krijgt het koppelpunt van het apparaat (bijv. /volumeUSB1/usbshare/) als eerste parameter ($1) en de apparaatpartitie (bijv. usb1p1) als tweede ($2). Hint: Het script wordt uitgevoerd met een lege omgeving, je moet alle gebruikte commando's opgeven met pad!",
+"desc":"Er zijn twee mogelijkheden voor de locatie van het script, dat moet worden uitgevoerd nadat het apparaat is aangesloten:<br>a) Het script bevindt zich in de hoofdmap van het externe opslagapparaat. Geen actie voor apparaten zonder zo'n script. Voer hiervoor de naam van uw script in zonder pad, zonder '/'.<br>b) Het script staat op uw DSM. En zal worden gestart bij elke verbinding met het opslagapparaat. Voer de volledige naam met pad in, bijvoorbeeld '/volume1/mysyn/auto.sh'.<br>Het script moet uitvoerbaar zijn voor de gebruiker 'root'. Het script krijgt het koppelpunt van het apparaat (bijv. /volumeUSB1/usbshare/) als eerste parameter ($1) en de apparaatpartitie (bijv. usb1p1) als tweede ($2). Hints: Het script wordt gestart met een <b>lege omgeving</b>, je moet alle gebruikte commando's opgeven met pad! De scriptnaam is hoofdlettergevoelig!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Uit te voeren script"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"Naam van het script"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Een exit waarde van 100 van het script zal het apparaat ontkoppelen en uitwerpen als het script klaar is, alle andere exit waarden laten het gekoppeld. U kunt autorun stoppen in het package center om het tijdelijk uit te schakelen.<br/><br/>De zoektijd is de tijd na de trigger door udev voor het vinden van het koppelpunt wanneer een apparaat wordt aangekoppeld. De extra wachttijd geeft de DSM wat ruimte om de schijf goed te mounten voordat het script wordt gestart.<br/>Het kan zijn dat u deze tijden moet verlengen, afhankelijk van uw hardware.",
+"desc":"Een exit-waarde van 100 van het script zal het apparaat ontkoppelen en uitwerpen als het script klaar is, alle andere exit-waarden laten het gekoppeld.<br/><br/>De zoektijd is de tijd na de trigger door 'udev' voor het vinden van het koppelpunt als een apparaat is gekoppeld. De extra wachttijd geeft de DSM wat ruimte om de schijf goed te mounten voordat het script wordt gestart.<br/>Het kan zijn dat u deze tijden moet verlengen, afhankelijk van uw hardware.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Er zijn verschillende detailniveaus voor debug-logbestanden beschikbaar: 0 ... 8. Hoe hoger de waarde, hoe meer details.",
+"desc":"Er zijn verschillende detailniveaus voor debug-logbestanden beschikbaar: 1 ... 8. Hoe hoger de waarde, hoe meer details.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Voer een positief getal in 0 ... 8"
+,"errorText":"Voer een positief getal in 1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Het pakket genereert DSM-desktopberichten, die op het bureaublad worden getoond aan configureerbare gebruikersgroepen of gebruikers. Voeg een @ toe aan groepsnamen, bijv. @users voor alle gebruikers."
+,"desc":"Het pakket genereert DSM-desktopberichten, die op het bureaublad worden getoond aan een configureerbare gebruikersgroep of aan een gebruiker. Voeg een @ toe aan groepsnamen, bijv. @users voor alle gebruikers."
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Berichtweergave naar"
@@ -116,6 +117,7 @@
 ,"desc":"Retourcodes zonder bericht"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"bijv. 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Statusindicatie tijdens het uitvoeren van het script.",
+"desc":"<br/>Beepgebruik door het script: Korte piep aan begin en einde, driedubbele lange piep voor een fout.",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Pieptoon bij begin en einde",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Veiligheidsconfiguratie",
 "items": [{
 "type": "combobox",
-"desc":"Het script met de overeenkomende naam op je USB-apparaat wordt uitgevoerd met root-privileges op je DSM! Dat kan een veiligheidsrisico zijn! Voor een betere beveiliging is een beperking tot scripts met vooraf geregistreerde sha256 hash waarden (vingerafdrukken) mogelijk.<br/>Eigenlijk zijn er @ENTRY_COUNT@ script hashes geregistreerd.<br/>0: De beveiligingsfunctie wordt niet gebruikt. Alle scripts met dezelfde naam zijn toegestaan. Geen verandering van de geregistreerde hashes.<br/>1: Waarschijnlijk zijn alle eerder geregistreerde hashes nu verwijderd. Het 1e script na installatie/configuratie zal worden geregistreerd en mag dan steeds opnieuw worden uitgevoerd.<br/>2: De hash waarde van elk script met dezelfde naam zal worden geregistreerd en uitgevoerd! (Voeg hashes toe)<br/>3: Alleen eerder geregistreerde scripts zijn toegestaan. (Registratie bevroren)",
+"desc":"Het script met de overeenkomende naam wordt uitgevoerd met root rechten op je DSM! Dat kan een veiligheidsrisico zijn, vooral als het zich op een extern apparaat bevindt! Voor een betere beveiliging is een beperking tot scripts met vooraf geregistreerde sha256 hashwaarden (vingerafdrukken) mogelijk.<br/><b>Eigenlijk zijn er @ENTRY_COUNT@ script hashes geregistreerd.</b><br/>0: De beveiligingsfunctie wordt niet gebruikt. Alle scripts met dezelfde naam zijn toegestaan. Geen verandering van geregistreerde hashes.<br/>1: @HASH_DELETION@Het 1e script na installatie/configuratie wordt geregistreerd en mag steeds opnieuw worden uitgevoerd.<br/>2: De hash waarde van elk script met dezelfde naam wordt geregistreerd en uitgevoerd! (Voeg hashes toe)<br/>3: Alleen eerder geregistreerde scripts zijn toegestaan. (Registratie bevroren)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Script Hash registratie",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Script Hash registratie"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"Zonder eerder geregistreerde hashes heeft de selectie \"3\" geen zin."
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"BELANGRIJK: Handmatige actie vereist!",
 "items": [{
 "type": "textfield",
-"desc":"Pakketten van derden worden beperkt door Synology in DSM 7.x! Omdat autorun root-toestemming vereist om zijn werk te doen, is een extra handmatige stap vereist na de installatie.<br/><br/>SSH naar uw NAS (als een admin-gebruiker) en voer het volgende commando uit nadat de installatie is voltooid. U kunt het nu kopiëren!",
+"desc":"Pakketten van derden worden beperkt door Synology in DSM 7.x! Omdat autorun toestemming van root nodig heeft om zijn werk te doen, is een extra handmatige stap nodig na de installatie.<br/><br/>Open een SSH commando schil naar uw NAS (als een admin gebruiker) en voer het volgende commando uit <b>nadat</b> de installatie is voltooid.<br>In plaats van via een SSH commando venster kunt u dit commando uitvoeren via een door de gebruiker gedefinieerd script (als gebruiker 'root'), gegenereerd via het configuratiescherm, geplande taak. En voer dat uit na de voltooide installatie.<br>U mag het commando nu kopiëren!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Commando",

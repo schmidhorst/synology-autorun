@@ -239,7 +239,7 @@ logfile="$SCRIPT_EXEC_LOG" # default, later optionally set to "$appCfgDataPath/d
 pageTitle=$(echo "$logTitleExec")  # default, later optionally set to "$logTitleDetail"
 
 versionUpdateHint=""
-githubRawInfoUrl="https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh"
+githubRawInfoUrl="https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh" #patched from INFO.sh
  # above line will be patched from INFO.sh and is used to check for a newer version
 if [[ -n "$githubRawInfoUrl" ]]; then
   git_version=$(wget --timeout=30 --tries=1 -q -O- "$githubRawInfoUrl" | grep ^version | cut -d '"' -f2)

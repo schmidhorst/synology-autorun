@@ -22,17 +22,18 @@
 "step_title":"Konfiguracja",
 "items": [
 {"type": "textfield",
-"desc":"Skrypt musi być umieszczony w katalogu głównym urządzenia zewnętrznego i ustawiony jako wykonywalny dla użytkownika 'root'. Jako pierwszy parametr ($1) pobiera punkt montowania urządzenia (np. /volumeUSB1/usbshare/), a jako drugi ($2) partycję urządzenia (np. usb1p1). Wskazówka: Skrypt jest wykonywany z pustym środowiskiem, musisz określić wszystkie używane polecenia za pomocą ścieżki!",
+"desc":"Istnieją dwie możliwości lokalizacji skryptu, który powinien zostać wykonany po podłączeniu urządzenia:<br>a) Skrypt znajduje się w katalogu głównym zewnętrznego urządzenia pamięci masowej. Brak działania dla urządzeń bez takiego skryptu. Dla tego wpisz nazwę swojego skryptu bez ścieżki, bez '/'.<br>b) Skrypt znajduje się na DSM. I zostanie uruchomiony przy każdym podłączeniu urządzenia pamięci masowej. Wpisz pełną nazwę ze ścieżką, np. '/volume1/mysyn/auto.sh'.<br>Skrypt musi być wykonywalny dla użytkownika 'root'. Skrypt otrzyma punkt montowania urządzenia (np. /volumeUSB1/usbshare/) jako pierwszy parametr ($1) i partycję urządzenia (np. usb1p1) jako drugi ($2). Wskazówki: Skrypt jest uruchamiany z <b>pustym środowiskiem</b>, należy podać wszystkie używane polecenia ze ścieżką! W nazwie skryptu rozróżniana jest wielkość liter!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Skrypt do wykonania"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"Nazwa skryptu"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Wartość wyjścia 100 ze skryptu spowoduje odmontowanie i wysunięcie urządzenia po zakończeniu skryptu, wszystkie inne wartości wyjścia pozostawią je zamontowane. Możesz zatrzymać autorun w centrum pakietów, aby tymczasowo wyłączyć go.<br/><br/>Czas wyszukiwania to czas po wyzwoleniu przez udev do znalezienia punktu mocowania, gdy urządzenie jest podłączone. Dodatkowy czas oczekiwania daje DSM trochę swobody, aby prawidłowo zamontować dysk przed rozpoczęciem skryptu.<br/>Możesz mieć do zwiększenia tych czasów w zależności od sprzętu.",
+"desc":"Wartość wyjścia 100 ze skryptu będzie odmontować i wysunąć urządzenie po zakończeniu skryptu, wszystkie inne wartości wyjścia będzie zostawić go zamontowane.<br/><br/>Czas wyszukiwania jest czas po wyzwoleniu przez 'udev' do znalezienia punktu mocowania, gdy urządzenie zostało dołączone. Dodatkowy czas oczekiwania daje DSM trochę swobody, aby prawidłowo zamontować dysk przed rozpoczęciem skryptu.<br/>Możesz mieć do zwiększenia tych czasów w zależności od sprzętu.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Dostępnych jest kilka poziomów szczegółowości komunikatów pliku dziennika debugowania: 0 ... 8. Im wyższa wartość tym więcej szczegółów.",
+"desc":"Dostępnych jest kilka poziomów szczegółowości komunikatów pliku dziennika debugowania: 1 ... 8. Im wyższa wartość tym więcej szczegółów.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Wprowadź liczbę dodatnią 0 ... 8"
+,"errorText":"Wprowadź liczbę dodatnią 1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Pakiet generuje komunikaty pulpitu DSM, które są wyświetlane na pulpicie dla konfigurowalnych grup użytkowników lub użytkowników. Do nazw grup dodajemy znak @, np. @users dla wszystkich użytkowników"
+,"desc":"Pakiet generuje komunikaty pulpitu DSM, które są wyświetlane na pulpicie dla konfigurowalnej grupy użytkowników lub dla użytkownika. Do nazw grup dodajemy znak @, np. @users dla wszystkich użytkowników"
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Wyświetlanie komunikatów do"
@@ -110,12 +111,13 @@
 
 ,{
 "type": "textfield"
-,"desc":"Zazwyczaj po zakończeniu skryptu generowany jest komunikat na pulpicie DSM. Komunikat zawiera kod powrotu skryptu oraz informację o pozostałym wolnym miejscu na urządzeniu pamięci masowej. Można określić tutaj listę kodów powrotnych, które nie generują takiego komunikatu."
+,"desc":"Zazwyczaj po zakończeniu skryptu generowany jest komunikat na pulpicie DSM. Komunikat zawiera kod powrotu skryptu oraz pozostałą ilość wolnego miejsca na urządzeniu pamięci masowej. Można tutaj określić listę kodów powrotnych, które nie generują takiego komunikatu."
 ,"subitems": [{
 "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
 ,"desc":"Kody powrotne bez komunikatu"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"np. 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/> Wskazanie statusu podczas uruchamiania skryptu.",
+"desc":"<br/>Użycie bipera przez skrypt: Krótki sygnał dźwiękowy na początku i końcu, potrójny długi sygnał dźwiękowy dla błędu",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Sygnał dźwiękowy na początku i na końcu",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Konfiguracja bezpieczeństwa",
 "items": [{
 "type": "combobox",
-"desc":"Skrypt o pasującej nazwie na urządzeniu USB jest uruchamiany z uprawnieniami roota na DSM! Może to stanowić zagrożenie dla bezpieczeństwa! Dla lepszego bezpieczeństwa możliwe jest ograniczenie do skryptów z zarejestrowanymi wartościami skrótu sha256 (odciski palców).<br/>Właściwie istnieje @ENTRY_COUNT@ script hashes registerd.<br/>0: Funkcja bezpieczeństwa nie jest używana. Wszystkie skrypty z pasującą nazwą są dozwolone. Brak zmian w zarejestrowanych haseł.<br/>1: Prawdopodobnie poprzednie zarejestrowane haseł są wszystkie usunięte teraz. 1st skrypt po instalacji / konfiguracji zostanie zarejestrowany i jest dozwolone do wykonania następnie ponownie i ponownie.<br/>2: Wartość skrótu każdego skryptu z pasującą nazwą zostanie zarejestrowany i wykonane! (Dodaj hasze)<br/>3: Tylko wcześniej zarejestrowane skrypty są dozwolone. (Rejestracja zamrożone)",
+"desc":"Skrypt o takiej samej nazwie jest uruchamiany z uprawnieniami roota na DSM! Może to stanowić zagrożenie dla bezpieczeństwa, zwłaszcza jeśli znajduje się na urządzeniu zewnętrznym! W celu zwiększenia bezpieczeństwa możliwe jest ograniczenie do skryptów z zarejestrowanymi wcześniej wartościami skrótu sha256 (odcisk palca).<br/><b>Właściwie istnieją zarejestrowane skrypty @ENTRY_COUNT@.</b><br/>0: Zabezpieczenie nie jest używane. Wszystkie skrypty z pasującą nazwą są dozwolone. Brak zmiany zarejestrowanych haseł.<br/>1: @HASH_DELETION@1. skrypt po instalacji/konfiguracji zostanie zarejestrowany i jest dozwolone do wykonania następnie ponownie i ponownie.<br/>2: Wartość hash każdego skryptu z pasującą nazwą zostanie zarejestrowany i wykonane! (Dodaj hasze)<br/>3: Tylko wcześniej zarejestrowane skrypty są dozwolone. (Rejestracja zamrożone)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Rejestracja Script Hash",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Rejestracja Script Hash"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"Przy braku wcześniej zarejestrowanych haseł wybór \"3\" jest bez sensu"
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"WAŻNE: Wymagana czynność ręczna!",
 "items": [{
 "type": "textfield",
-"desc":"Pakiety innych firm są ograniczone przez Synology w DSM 7.x! Ponieważ autorun wymaga uprawnień roota do wykonywania swoich zadań, po instalacji wymagany jest dodatkowy krok ręczny.<br/><br/>SSH do NAS (jako użytkownik admin) i wykonaj następujące polecenie po zakończeniu instalacji. Możesz go teraz skopiować!",
+"desc":"Pakiety innych firm są ograniczone przez Synology w DSM 7.x! Ponieważ autorun wymaga uprawnień roota do wykonywania swojej pracy, wymagany jest dodatkowy ręczny krok po instalacji.<br/><br/>Otwórz powłokę poleceń SSH na swoim NAS (jako użytkownik admin) i wykonaj następujące polecenie <b>po</b> zakończeniu instalacji.<br>Zamiast okna poleceń SSH możesz wykonać to polecenie za pomocą skryptu zdefiniowanego przez użytkownika (jako użytkownik 'root'), wygenerowanego za pomocą panelu sterowania, zaplanowanego zadania. I uruchomić go po zakończeniu instalacji.<br>Możesz skopiować polecenie teraz!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Polecenie",

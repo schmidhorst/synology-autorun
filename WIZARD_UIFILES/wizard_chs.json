@@ -22,17 +22,18 @@
 "step_title":"配置",
 "items": [
 {"type": "textfield",
-"desc":"该脚本必须位于外部设备的根目录下，并设置为用户 \"root \"可执行。它获取设备的挂载点（比如/volumeUSB1/usbshare/）作为第一个参数（1），设备的分区（比如usb1p1）作为第二个参数（2）。提示：该脚本是在空环境下执行的，你必须用路径指定所有使用的命令",
+"desc":"脚本的位置有两种可能，应在设备连接后执行：<br>a) 脚本位于外部存储设备的根目录中。对于没有这种脚本的设备，不采取任何行动。<br>b) 脚本在你的DSM上。并且将在任何存储设备连接时启动。输入带有路径的全名，例如'/volume1/mysyn/auto.sh'。<br>该脚本必须可以由用户'root'执行。脚本将获得设备的挂载点（例如：/volumeUSB1/usbshare/）作为第一个参数（1美元），设备的分区（例如：usb1p1）作为第二个参数（2美元）。提示。脚本是在一个<b>空的环境下启动的，你必须用路径指定所有使用的命令脚本的名字是区分大小写的!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"要执行的脚本"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"脚本名称"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"脚本的退出值为100，当脚本结束时，设备将被卸载并弹出，所有其他的退出值将使其被挂载。你可以在软件包中心停止自动运行来暂时禁用它。<br/><br/>搜索时间是udev触发后的时间，用于在连接设备时寻找挂载点。额外的等待时间给了DSM一些回旋余地，以便在启动脚本之前正确地挂载驱动器。<br/>你可能需要增加这些时间，这取决于你的硬件。",
+"desc":"<br/><br/>脚本的退出值为100，当脚本完成时，将卸载并弹出设备，所有其他的退出值将使其被安装。<br/><br/>搜索时间是在设备被连接后，由'udev'触发寻找安装点的时间。额外的等待时间给了DSM一些回旋余地，以便在启动脚本之前正确地挂载驱动器。<br/>你可能需要增加这些时间，这取决于你的硬件。",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"有几个调试日志文件的信息细节级别可供选择。0 ...8.值越高，细节越多。",
+"desc":"有几个调试日志文件的信息细节级别可供选择。1 ... 8.值越高，细节越多。",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"输入一个正数0 ...8"
+,"errorText":"输入一个正数1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"该软件包生成DSM桌面信息，这些信息在桌面上显示给可配置的用户组或用户。在组名前加一个@，例如：@users代表所有用户"
+,"desc":"该软件包生成DSM桌面信息，这些信息在桌面上显示给可配置的用户组或某个用户。在组名前加一个@，例如：@users代表所有用户"
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"信息显示为"
@@ -110,12 +111,13 @@
 
 ,{
 "type": "textfield"
-,"desc":"通常情况下，在你的脚本完成后会有一条DSM桌面信息产生。这条信息包含了你的脚本的返回代码和存储设备上的剩余空间。你可以在这里指定不产生这种信息的返回代码的列表。"
+,"desc":"通常情况下，在你的脚本完成后会有一条DSM桌面信息产生。这条信息包含了你的脚本的返回代码和存储设备上的剩余空间。你可以在这里指定一个不产生这种信息的返回代码的列表。"
 ,"subitems": [{
 "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
 ,"desc":"返回代码，无信息"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"例如：0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>运行脚本时的状态指示。",
+"desc":"<br/>脚本使用的蜂鸣器。开始和结束时发出短促的蜂鸣声，错误时发出三倍的长鸣声。",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"开始和结束时发出提示音",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"安全配置",
 "items": [{
 "type": "combobox",
-"desc":"你的USB设备上与之匹配的脚本是以你的DSM上的root权限执行的。这可能是一个安全风险!为了提高安全性，我们可以将脚本限制在预先注册的sha256哈希值（指纹）上。所有具有匹配名称的脚本都被允许。没有改变注册的哈希值。<br/>1: 可能以前注册的哈希值现在都被删除了。安装/配置后的第一个脚本将被注册，并允许反复执行。<br/>2: 任何名称匹配的脚本的哈希值都将被注册并执行！（添加哈希值）<br/>3: 所有的脚本都将被注册。(添加哈希值)<br/>3: 只允许使用以前注册的脚本。(注册被冻结)",
+"desc":"与之匹配的脚本在你的DSM上是以root权限执行的。这可能是一个安全隐患，尤其是当它位于外部设备上时!为了提高安全性，可以限制脚本使用预先注册的sha256哈希值（指纹）。<br/><b>实际上，有@ENTRY_COUNT@脚本哈希值注册。所有具有匹配名称的脚本都被允许。<br/>1: @HASH_DELETION@安装/配置后的第一个脚本将被注册，并被允许反复执行。<br/>2: 任何具有匹配名称的脚本的哈希值将被注册并执行!(添加哈希值)<br/>3: 只允许先前注册的脚本。(注册被冻结)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"脚本哈希注册",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"脚本哈希注册"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"由于没有先前注册的哈希值，选择 \"3 \"是没有意义的。"
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"重要提示：需要手动操作!",
 "items": [{
 "type": "textfield",
-"desc":"第三方软件包在DSM 7.x中受到Synology的限制!<br/><br/>SSH到你的NAS（以管理员身份）并在安装完成后执行以下命令。你现在可以复制它了!",
+"desc":"第三方软件包在DSM 7.x中受到Synology的限制!<br/><br/>在你的NAS上打开一个SSH命令窗口（以管理员身份），在<b>安装完成后执行以下命令。<br>你现在可以复制这个命令了！<br>你可以通过一个用户定义的脚本（以用户 \"root \"的身份）来执行这个命令。",
 "subitems": [{
 "key": "ignore_value",
 "desc":"指挥部",

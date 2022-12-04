@@ -22,17 +22,18 @@
 "step_title":"Konfigurace",
 "items": [
 {"type": "textfield",
-"desc":"Skript musí být umístěn v kořenovém adresáři externího zařízení a nastaven jako spustitelný pro uživatele \"root\". Jako první parametr ($1) získá přípojný bod zařízení (např. /volumeUSB1/usbshare/) a jako druhý ($2) oddíl zařízení (např. usb1p1). Tip: Skript se spouští s prázdným prostředím, všechny použité příkazy musíte zadat pomocí cesty!",
+"desc":"Existují dvě možnosti umístění skriptu, který by se měl spustit po připojení zařízení:<br>a) Skript je umístěn v kořenovém adresáři externího paměťového zařízení. U zařízení bez takového skriptu se akce neprovádí. Pro tento případ zadejte název skriptu bez cesty, bez '/'.<br>b) Skript se nachází na vašem DSM. A bude spuštěn při každém připojení úložného zařízení. Zadejte celý název s cestou, například '/volume1/mysyn/auto.sh'.<br>Skript musí být spustitelný pro uživatele 'root'. Skript získá přípojný bod zařízení (např. /volumeUSB1/usbshare/) jako první parametr ($1) a oddíl zařízení (např. usb1p1) jako druhý ($2). Nápověda: Skript je spuštěn s <b>prázdným prostředím</b>, všechny použité příkazy musíte zadat pomocí cesty! V názvu skriptu se rozlišují malá a velká písmena!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Skript k provedení"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"Název skriptu"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Hodnota ukončení skriptu 100 způsobí odpojení a vysunutí zařízení po dokončení skriptu, všechny ostatní hodnoty ukončení ponechají zařízení připojené. Autorun můžete zastavit v centru balíčků, abyste jej dočasně zakázali.<br/><br/>Čas hledání je čas po spuštění udev pro nalezení přípojného bodu, když je zařízení připojeno. Dodatečná čekací doba dává DSM určitý prostor pro správné připojení jednotky před spuštěním skriptu.<br/>V závislosti na vašem hardwaru budete možná muset tyto časy prodloužit.",
+"desc":"Hodnota ukončení skriptu 100 způsobí odpojení a vysunutí zařízení po dokončení skriptu, všechny ostatní hodnoty ukončení ponechají zařízení připojené.<br/><br/>Čas hledání je čas po spuštění skriptem 'udev' pro nalezení přípojného bodu, když bylo zařízení připojeno. Dodatečná čekací doba dává DSM určitý prostor pro správné připojení jednotky před spuštěním skriptu.<br/>Možná budete muset tyto časy zvýšit v závislosti na vašem hardwaru.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"K dispozici je několik úrovní podrobnosti zpráv souboru protokolu ladění: 0 ... 8. Čím vyšší hodnota, tím více podrobností.",
+"desc":"K dispozici je několik úrovní podrobnosti zpráv souboru protokolu ladění: 1 ... 8. Čím vyšší hodnota, tím více podrobností.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Zadejte kladné číslo 0 ... 8"
+,"errorText":"Zadejte kladné číslo 1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Balíček generuje zprávy DSM na ploše, které se zobrazují na ploše konfigurovatelným skupinám uživatelů nebo uživatelům. K názvům skupin připojte znak @, např. @users pro všechny uživatele."
+,"desc":"Balíček generuje zprávy na ploše DSM, které se zobrazují na ploše konfigurovatelné skupině uživatelů nebo uživateli. K názvům skupin připojte znak @, např. @users pro všechny uživatele."
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Zobrazení zprávy na"
@@ -116,6 +117,7 @@
 ,"desc":"Vrácení kódů bez zprávy"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"např. 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Indikace stavu při spuštění skriptu.",
+"desc":"<br/>Používání pípáku skriptem: Krátké pípnutí na začátku a na konci, trojité dlouhé pípnutí při chybě.",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Pípnutí na začátku a na konci",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Konfigurace zabezpečení",
 "items": [{
 "type": "combobox",
-"desc":"Skript s odpovídajícím názvem na vašem zařízení USB se spustí s právy roota na vašem DSM! To by mohlo představovat bezpečnostní riziko! Pro lepší zabezpečení je možné omezení na skripty s předem zaregistrovanými hodnotami hash sha256 (otisky prstů).<br/>Ve skutečnosti jsou zaregistrovány @ENTRY_COUNT@ hashe skriptů.<br/>0: Bezpečnostní funkce se nepoužívá. Všechny skripty se shodným názvem jsou povoleny. Žádná změna registrovaných hashů.<br/>1: Pravděpodobně jsou nyní všechny předchozí registrované hashe smazány. První skript po instalaci/konfiguraci bude zaregistrován a je povoleno jej pak znovu a znovu provádět.<br/>2: Hodnota hashe každého skriptu se shodným názvem bude zaregistrována a provedena! (Přidejte hashe)<br/>3: Povoleny jsou pouze dříve registrované skripty. (Registrace zmražena)",
+"desc":"Skript s odpovídajícím názvem je spuštěn s právy roota na vašem DSM! To by mohlo představovat bezpečnostní riziko, zejména pokud je umístěn na externím zařízení! Pro lepší zabezpečení je možné omezení na skripty s předem zaregistrovanými hodnotami hash sha256 (otisky prstů).<br/><b>Ve skutečnosti jsou zaregistrovány hashe skriptů @ENTRY_COUNT@.</b><br/>0: Bezpečnostní funkce se nepoužívá. Všechny skripty se shodným názvem jsou povoleny. Žádná změna registrovaných hashů.<br/>1: @HASH_DELETION@První skript po instalaci/konfiguraci bude zaregistrován a je povoleno jej pak provádět znovu a znovu.<br/>2: Hodnota hashe jakéhokoli skriptu se shodným názvem bude zaregistrována a provedena! (Přidejte hashe)<br/>3: Povoleny jsou pouze dříve registrované skripty. (Registrace je zmrazena)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Registrace skriptu Hash",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Registrace skriptu Hash"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"Při absenci dříve registrovaných hashů nemá výběr \"3\" žádný smysl"
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"DŮLEŽITÉ: Nutná ruční akce!",
 "items": [{
 "type": "textfield",
-"desc":"Balíčky třetích stran jsou v systému DSM 7.x omezeny společností Synology! Vzhledem k tomu, že autorun vyžaduje ke své práci oprávnění roota, je po instalaci nutný další ruční krok.<br/><br/>Připojte se pomocí SSH k NAS (jako uživatel s oprávněním správce) a po dokončení instalace spusťte následující příkaz. Nyní jej můžete zkopírovat!",
+"desc":"Balíčky třetích stran jsou v systému DSM 7.x omezeny společností Synology! Vzhledem k tomu, že autorun vyžaduje ke své práci oprávnění uživatele root, je po instalaci nutný další ruční krok.<br/><br/>Otevřete příkazový shell SSH k NAS (jako uživatel admin) a proveďte následující příkaz <b>po dokončení instalace</b>.<br>Místo přes příkazové okno SSH můžete tento příkaz provést prostřednictvím uživatelem definovaného skriptu (jako uživatel 'root'), vytvořeného přes ovládací panel, naplánovanou úlohu. A ten spusťte po dokončení instalace.<br>Příkaz si nyní můžete zkopírovat!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Příkaz",

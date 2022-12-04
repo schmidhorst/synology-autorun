@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>Tutti i diritti riservati.<br><br>La distribuzione e l'utilizzo in forma sorgente e binaria, con o senza modifiche, sono consentiti a condizione che siano rispettate le seguenti condizioni:<br>1. Le ridistribuzioni di codice sorgente devono mantenere la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità.<br>2. Le ridistribuzioni in forma binaria devono riprodurre la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità nella documentazione e/o in altro materiale fornito con la distribuzione.<br>3. Né il nome del titolare del copyright né i nomi dei suoi collaboratori possono essere utilizzati per sostenere o promuovere prodotti derivati da questo software senza una specifica autorizzazione scritta.<br><br>QUESTO SOFTWARE È FORNITO DAI TITOLARI DEL DIRITTO D'AUTORE E DAI CONTRIBUTORI \"COSÌ COM'È\" E QUALSIASI GARANZIA ESPLICITA O IMPLICITA, INCLUSE, MA NON SOLO, LE GARANZIE IMPLICITE DI COMMERCIABILITÀ E DI IDONEITÀ PER UNO SCOPO PARTICOLARE, SONO ESCLUSE. IN NESSUN CASO IL TITOLARE DEL COPYRIGHT O I COLLABORATORI SARANNO RESPONSABILI DI DANNI DIRETTI, INDIRETTI, INCIDENTALI, SPECIALI, ESEMPLARI O CONSEQUENZIALI (INCLUSI, A TITOLO ESEMPLIFICATIVO MA NON ESAUSTIVO, L'ACQUISTO DI BENI O SERVIZI SOSTITUTIVI, LA PERDITA DI UTILIZZO, DI DATI O DI PROFITTI O L'INTERRUZIONE DELL'ATTIVITÀ), COMUNQUE CAUSATI E IN BASE A QUALSIASI TEORIA DI RESPONSABILITÀ, PER CONTRATTO, RESPONSABILITÀ OGGETTIVA O ILLECITO (INCLUSA LA NEGLIGENZA O ALTRO), DERIVANTI IN QUALSIASI MODO DALL'USO DI QUESTO SOFTWARE, ANCHE SE AVVISATI DELLA POSSIBILITÀ DI TALI DANNI.",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>Tutti i diritti riservati.<br><br>La distribuzione e l'uso in forma sorgente e binaria, con o senza modifiche, sono consentiti a condizione che siano rispettate le seguenti condizioni:<br>1. Le ridistribuzioni di codice sorgente devono mantenere la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità.<br>2. Le ridistribuzioni in forma binaria devono riprodurre la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità nella documentazione e/o in altro materiale fornito con la distribuzione.<br>3. Né il nome del titolare del copyright né i nomi dei suoi collaboratori possono essere utilizzati per sostenere o promuovere prodotti derivati da questo software senza una specifica autorizzazione scritta.<br><br>QUESTO SOFTWARE È FORNITO DAI TITOLARI DEL DIRITTO D'AUTORE E DAI CONTRIBUENTI \"COSÌ COM'È\" E QUALSIASI GARANZIA ESPLICITA O IMPLICITA, INCLUSE, MA NON SOLO, LE GARANZIE IMPLICITE DI COMMERCIABILITÀ E DI IDONEITÀ PER UNO SCOPO PARTICOLARE, SONO ESCLUSE. IN NESSUN CASO IL TITOLARE DEL COPYRIGHT O I COLLABORATORI SARANNO RESPONSABILI DI DANNI DIRETTI, INDIRETTI, INCIDENTALI, SPECIALI, ESEMPLARI O CONSEQUENZIALI (INCLUSI, A TITOLO ESEMPLIFICATIVO MA NON ESAUSTIVO, L'ACQUISTO DI BENI O SERVIZI SOSTITUTIVI, LA PERDITA DI UTILIZZO, DI DATI O DI PROFITTI O L'INTERRUZIONE DELL'ATTIVITÀ), COMUNQUE CAUSATI E IN BASE A QUALSIASI TEORIA DI RESPONSABILITÀ, PER CONTRATTO, RESPONSABILITÀ OGGETTIVA O ILLECITO (INCLUSA LA NEGLIGENZA O ALTRO), DERIVANTI IN QUALSIASI MODO DALL'USO DI QUESTO SOFTWARE, ANCHE SE AVVISATI DELLA POSSIBILITÀ DI TALI DANNI.",
 "subitems": [
 {
 "key": "id1",
@@ -22,17 +22,18 @@
 "step_title":"Configurazione",
 "items": [
 {"type": "textfield",
-"desc":"Lo script deve trovarsi nella directory principale del dispositivo esterno ed essere impostato come eseguibile per l'utente 'root'. Ottiene il punto di montaggio del dispositivo (ad esempio /volumeUSB1/usbshare/) come primo parametro ($1) e la partizione del dispositivo (ad esempio usb1p1) come secondo ($2). Suggerimento: lo script viene eseguito con l'ambiente vuoto, è necessario specificare tutti i comandi utilizzati con il percorso!",
+"desc":"Esistono due possibilità per la posizione dello script, che deve essere eseguito dopo la connessione del dispositivo:<br>a) Lo script si trova nella directory principale del dispositivo di archiviazione esterno. Nessuna azione per i dispositivi privi di tale script. Per questo inserire il nome dello script senza percorso, senza '/'.<br>b) Lo script si trova nel DSM. Verrà avviato a ogni connessione del dispositivo di archiviazione. Inserire il nome completo con il percorso, ad esempio '/volume1/mysyn/auto.sh'.<br>Lo script deve essere eseguibile per l'utente 'root'. Lo script otterrà il punto di montaggio del dispositivo (ad esempio, /volumeUSB1/usbshare/) come primo parametro ($1) e la partizione del dispositivo (ad esempio, usb1p1) come secondo ($2). Suggerimenti: Lo script viene avviato con un ambiente <b>vuoto</b>, è necessario specificare tutti i comandi utilizzati con il percorso! Il nome dello script è sensibile alle maiuscole!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Script da eseguire"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"Nome dello script"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Un valore di uscita di 100 dallo script smonterà ed espellerà il dispositivo al termine dello script, mentre tutti gli altri valori di uscita lo lasceranno montato. È possibile interrompere l'autorun nel centro pacchetti per disabilitarlo temporaneamente.<br/><br/>Il tempo di ricerca è il tempo successivo all'attivazione da parte di udev per trovare il punto di montaggio quando viene collegato un dispositivo. Il tempo di attesa aggiuntivo dà al DSM un certo margine di manovra per montare correttamente l'unità prima di avviare lo script.<br/>Potrebbe essere necessario aumentare questi tempi a seconda del proprio hardware.",
+"desc":"Un valore di uscita pari a 100 dallo script smonterà ed espellerà il dispositivo al termine dello script, mentre tutti gli altri valori di uscita lo lasceranno montato.<br/><br/>Il tempo di ricerca è il tempo successivo all'attivazione di 'udev' per trovare il punto di montaggio quando è stato collegato un dispositivo. Il tempo di attesa aggiuntivo dà al DSM un certo margine di manovra per montare correttamente l'unità prima di avviare lo script.<br/>Potrebbe essere necessario aumentare questi tempi a seconda del proprio hardware.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Sono disponibili diversi livelli di dettaglio dei messaggi del file di log di debug: 0 ... 8. Più alto è il valore, maggiore è il numero di dettagli.",
+"desc":"Sono disponibili diversi livelli di dettaglio dei messaggi del file di log di debug: 1 ... 8. Più alto è il valore, maggiore è il numero di dettagli.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Inserire un numero positivo 0 ... 8"
+,"errorText":"Inserire un numero positivo 1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Il pacchetto genera messaggi desktop DSM, che vengono mostrati sul desktop a gruppi di utenti o utenti configurabili. Aggiungere una @ ai nomi dei gruppi, ad esempio @users per tutti gli utenti."
+,"desc":"Il pacchetto genera messaggi desktop DSM, che vengono mostrati sul desktop a un gruppo di utenti configurabile o a un utente. Aggiungere una @ ai nomi dei gruppi, ad esempio @users per tutti gli utenti."
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Visualizzazione del messaggio a"
@@ -110,12 +111,13 @@
 
 ,{
 "type": "textfield"
-,"desc":"Normalmente, al termine dello script viene generato un messaggio sul desktop DSM. Il messaggio contiene il codice di ritorno dello script e lo spazio libero rimanente sul dispositivo di memorizzazione. È possibile specificare qui un elenco di codici di ritorno che non generano questo messaggio."
+,"desc":"Normalmente, al termine dello script viene generato un messaggio sul desktop del DSM. Il messaggio contiene il codice di ritorno dello script e lo spazio libero rimanente sul dispositivo di memorizzazione. È possibile specificare un elenco di codici di ritorno che non generano questo messaggio."
 ,"subitems": [{
 "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
 ,"desc":"Codici di ritorno senza messaggio"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"ad esempio 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -127,7 +129,7 @@
 }
 ,{
 "type": "combobox",
-"desc":"Uso di 'Copy LED':<br/>0: il LED non viene utilizzato affatto.<br/>1: acceso durante l'esecuzione o l'espulsione, successivamente spento<br/>2: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento<br/>3: acceso durante l'esecuzione o l'espulsione, successivamente spento (0/100) o lampeggiante (altri codici)<br/>4: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento o lampeggiante (altri codici o espulsione fallita)<br/>5: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento (0/100) o acceso (altri codici o espulsione fallita)",
+"desc":"Utilizzo di 'Copy LED':<br/>0: il LED non viene utilizzato affatto.<br/>1: acceso durante l'esecuzione o l'espulsione, successivamente spento<br/>2: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento<br/>3: acceso durante l'esecuzione o l'espulsione, successivamente spento (0/100) o lampeggiante (altri codici)<br/>4: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento o lampeggiante (altri codici o espulsione fallita)<br/>5: lampeggiante durante l'esecuzione o l'espulsione, successivamente spento (0/100) o acceso (altri codici o espulsione fallita)",
 "subitems": [{
 "key": "config_LED_COPY",
 "autoSelect": true,
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Indicazione di stato durante l'esecuzione dello script.",
+"desc":"<br/>Utilizzo del segnale acustico da parte dello script: Bip breve all'inizio e alla fine, bip triplo lungo in caso di errore.",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Segnale acustico all'inizio e alla fine",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Configurazione della sicurezza",
 "items": [{
 "type": "combobox",
-"desc":"Lo script con il nome corrispondente sul dispositivo USB viene eseguito con privilegi di root sul DSM! Questo potrebbe essere un rischio per la sicurezza! Per una maggiore sicurezza è possibile limitare gli script con valori di hash sha256 pre-registrati (impronte digitali).<br/>In realtà ci sono @ENTRY_COUNT@ hash di script registrati.<br/>0: La funzione di sicurezza non viene utilizzata. Tutti gli script con nome corrispondente sono consentiti. Nessuna modifica degli hash registrati.<br/>1: Probabilmente gli hash registrati in precedenza sono stati tutti eliminati. Il primo script dopo l'installazione/configurazione sarà registrato e potrà essere eseguito più volte.<br/>2: Il valore hash di qualsiasi script con nome corrispondente sarà registrato ed eseguito! (Aggiungi hash)<br/>3: Sono consentiti solo gli script registrati in precedenza. (Registrazione congelata)",
+"desc":"Lo script con il nome corrispondente viene eseguito con privilegi di root sul DSM! Questo potrebbe essere un rischio per la sicurezza, soprattutto se si trova su un dispositivo esterno! Per una maggiore sicurezza è possibile limitare gli script con valori di hash sha256 pre-registrati (impronte digitali).<br/><b>In realtà ci sono @ENTRY_COUNT@ hash di script registrati.</b><br/>0: La funzione di sicurezza non viene utilizzata. Tutti gli script con nome corrispondente sono consentiti. Nessun cambiamento degli hash registrati.<br/>1: @HASH_DELETION@Il primo script dopo l'installazione/configurazione sarà registrato e potrà essere eseguito più volte.<br/>2: Il valore hash di qualsiasi script con nome corrispondente sarà registrato ed eseguito! (Aggiungi hash)<br/>3: Sono consentiti solo gli script registrati in precedenza. (Registrazione congelata)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Registrazione dello script Hash",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Registrazione dello script Hash"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"Senza hashtag registrati in precedenza, la selezione \"3\" non ha senso."
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"IMPORTANTE: è necessaria un'azione manuale!",
 "items": [{
 "type": "textfield",
-"desc":"I pacchetti di terze parti sono limitati da Synology in DSM 7.x! Poiché l'autorun richiede i permessi di root per svolgere il suo lavoro, è necessario un ulteriore passaggio manuale dopo l'installazione.<br/><br/>SSH al NAS (come utente amministratore) ed eseguire il seguente comando al termine dell'installazione. Ora è possibile copiarlo!",
+"desc":"I pacchetti di terze parti sono limitati da Synology in DSM 7.x! Poiché l'autorun richiede i permessi di root per eseguire il suo lavoro, è necessario un ulteriore passaggio manuale dopo l'installazione.<br/><br/>Aprire una shell di comando SSH sul NAS (come utente amministratore) ed eseguire il seguente comando <b>dopo</b> che l'installazione è terminata.<br>Invece che tramite una finestra di comando SSH, è possibile eseguire questo comando tramite uno script definito dall'utente (come utente 'root'), generato tramite il pannello di controllo, attività pianificata. Ed eseguirlo al termine dell'installazione.<br>Potete copiare il comando ora!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Comando",

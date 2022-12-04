@@ -29,7 +29,7 @@ SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
 # change that entry automatically if the maintainer_url is changed: 
 githubRawInfoUrl=$(echo "${maintainer_url}/main/INFO.sh" | sed 's/github.com/raw.githubusercontent.com/')
 # patch githubRawInfoUrl directly to the index.cgi file:
-sed -i "s|^githubRawInfoUrl=.*\$|${new} #patched from INFO.sh|" "$SCRIPTPATHTHIS/package/ui/index.cgi"
+sed -i "s|^githubRawInfoUrl=.*\$|githubRawInfoUrl=\"${githubRawInfoUrl}\" #patched from INFO.sh|" "$SCRIPTPATHTHIS/package/ui/index.cgi"
 
 if [[ "$1" != "" ]]; then  # Generation without toolkit scripts
   line0=$(grep "SYNO.SDS." "package/ui/config")

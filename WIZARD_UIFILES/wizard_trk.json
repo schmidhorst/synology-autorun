@@ -22,17 +22,18 @@
 "step_title":"Konfigürasyon",
 "items": [
 {"type": "textfield",
-"desc":"Betik harici aygıtın kök dizininde bulunmalı ve 'root' kullanıcısı için çalıştırılabilir olarak ayarlanmalıdır. İlk parametre ($1) olarak aygıtın bağlama noktasını (örn. /volumeUSB1/usbshare/) ve ikinci parametre ($2) olarak aygıt bölümünü (örn. usb1p1) alır. İpucu: Komut dosyası boş ortamla çalıştırılır, kullanılan tüm komutları yol ile belirtmeniz gerekir!",
+"desc":"Cihaz bağlandıktan sonra çalıştırılması gereken komut dosyasının konumu için iki olasılık vardır:<br>a) Komut dosyası harici depolama cihazının kök dizininde bulunur. Böyle bir komut dosyası olmayan cihazlar için işlem yapılmaz. Bunun için komut dosyanızın adını yol olmadan, '/' olmadan girin.<br>b) Komut dosyası DSM'nizdedir. Ve herhangi bir depolama aygıtı bağlandığında başlatılacaktır. Yol ile birlikte tam adını girin, örneğin '/volume1/mysyn/auto.sh'.<br>Betik 'root' kullanıcısı için çalıştırılabilir olmalıdır. Betik, ilk parametre ($1) olarak cihazın bağlama noktasını (örn. /volumeUSB1/usbshare/) ve ikinci parametre ($2) olarak cihaz bölümünü (örn. usb1p1) alacaktır. İpuçları: Komut dosyası <b>boş bir ortam</b> ile başlatılır, kullanılan tüm komutları yol ile belirtmeniz gerekir! Komut dosyası adı büyük/küçük harfe duyarlıdır!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Yürütülecek komut dosyası"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"Komut dosyası adı"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Komut dosyasından 100 çıkış değeri, komut dosyası bittiğinde aygıtın bağlantısını kaldıracak ve çıkaracaktır, diğer tüm çıkış değerleri aygıtı takılı bırakacaktır. Geçici olarak devre dışı bırakmak için paket merkezinde otomatik çalıştırmayı durdurabilirsiniz.<br/><br/>Arama süresi, bir aygıt takıldığında bağlama noktasını bulmak için udev tarafından tetiklendikten sonra geçen süredir. Ek bekleme süresi, DSM'ye betiği başlatmadan önce sürücüyü düzgün bir şekilde bağlaması için biraz zaman verir.<br/>Donanımınıza bağlı olarak bu süreleri artırmanız gerekebilir.",
+"desc":"Betikten çıkış değerinin 100 olması, betik tamamlandığında aygıtın bağlantısını kesecek ve aygıtı çıkaracaktır, diğer tüm çıkış değerleri aygıtı takılı bırakacaktır.<br/><br/>Arama süresi, bir aygıt takıldığında bağlama noktasını bulmak için 'udev' tarafından tetiklendikten sonra geçen süredir. Ek bekleme süresi, DSM'ye betiği başlatmadan önce sürücüyü düzgün bir şekilde bağlaması için biraz boşluk verir.<br/>Donanımınıza bağlı olarak bu süreleri artırmanız gerekebilir.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Çeşitli hata ayıklama günlük dosyası mesaj detay seviyeleri mevcuttur: 0 ... 8. Değer ne kadar yüksek olursa o kadar fazla ayrıntı olur.",
+"desc":"Çeşitli hata ayıklama günlük dosyası mesaj detay seviyeleri mevcuttur: 1 ... 8. Değer ne kadar yüksek olursa o kadar fazla ayrıntı olur.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Pozitif bir sayı girin 0 ... 8"
+,"errorText":"Pozitif bir sayı girin 1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Paket, yapılandırılabilir kullanıcı gruplarına veya kullanıcılara masaüstünde gösterilen DSM masaüstü mesajları oluşturur. Grup adlarının başına bir @ ekleyin, örneğin tüm kullanıcılar için @users"
+,"desc":"Paket, masaüstünde yapılandırılabilir bir kullanıcı grubuna veya bir kullanıcıya gösterilen DSM masaüstü mesajları oluşturur. Grup adlarının başına bir @ ekleyin, örneğin tüm kullanıcılar için @users"
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Mesaj ekranı"
@@ -110,12 +111,13 @@
 
 ,{
 "type": "textfield"
-,"desc":"Normalde, komut dosyanız tamamlandıktan sonra bir DSM masaüstü mesajı oluşturulur. Mesaj, komut dosyanızın dönüş kodunu ve depolama aygıtında kalan boş alanı içerir. Burada böyle bir mesaj oluşturmayan dönüş kodlarının listesini belirtebilirsiniz."
+,"desc":"Normalde, komut dosyanız tamamlandıktan sonra bir DSM masaüstü mesajı oluşturulur. Mesaj, komut dosyanızın dönüş kodunu ve depolama aygıtında kalan boş alanı içerir. Burada böyle bir mesaj oluşturmayan dönüş kodlarının bir listesini belirtebilirsiniz."
 ,"subitems": [{
 "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
 ,"desc":"Mesajsız dönüş kodları"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"örn. 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Komut dosyasını çalıştırırken durum göstergesi.",
+"desc":"<br/>Script tarafından bip sesi kullanımı: Başlangıç ve bitişte kısa bip sesi, hata için üç kat uzun bip sesi",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Başlangıçta ve bitişte bip sesi",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Güvenlik Yapılandırması",
 "items": [{
 "type": "combobox",
-"desc":"USB cihazınızdaki eşleşen isme sahip betik, DSM'nizde root yetkileriyle çalıştırılır! Bu bir güvenlik riski olabilir! Daha iyi güvenlik için önceden kaydedilmiş sha256 hash değerlerine (parmak izleri) sahip betiklerle kısıtlama mümkündür.<br/>Aslında @ENTRY_COUNT@ betik hashleri kayıtlıdır.<br/>0: Güvenlik özelliği kullanılmaz. Eşleşen ada sahip tüm komut dosyalarına izin verilir. Kayıtlı hash'lerde değişiklik yok.<br/>1: Muhtemelen önceki kayıtlı hash'lerin tümü şimdi silinmiştir. Kurulum / yapılandırmadan sonraki ilk komut dosyası kaydedilecek ve daha sonra tekrar tekrar yürütülmesine izin verilecektir.<br/>2: Eşleşen ada sahip herhangi bir komut dosyasının karma değeri kaydedilecek ve yürütülecektir! (Hash ekle)<br/>3: Sadece önceden kaydedilmiş betiklere izin verilir. (Kayıt donduruldu)",
+"desc":"Eşleşen isme sahip betik DSM'nizde root yetkileriyle çalıştırılır! Bu bir güvenlik riski oluşturabilir, özellikle de harici bir cihazda bulunuyorsa! Daha iyi güvenlik için, önceden kaydedilmiş sha256 hash değerlerine (parmak izleri) sahip betiklerle bir kısıtlama mümkündür.<br/><b>Aslında @ENTRY_COUNT@ betik hashleri kayıtlıdır.</b><br/>0: Güvenlik özelliği kullanılmaz. Eşleşen ada sahip tüm betiklere izin verilir. Kayıtlı hash'lerde değişiklik yok.<br/>1: @HASH_DELETION@Kurulum/konfigürasyondan sonraki ilk script kaydedilecek ve daha sonra tekrar tekrar çalıştırılmasına izin verilecektir.<br/>2: Eşleşen isme sahip herhangi bir script'in hash değeri kaydedilecek ve çalıştırılacaktır! (Hash ekle)<br/>3: Sadece önceden kaydedilmiş betiklere izin verilir. (Kayıt donduruldu)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Script Hash kaydı",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Script Hash kaydı"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"Önceden kaydedilmiş hash'ler olmadığında '3' seçiminin bir anlamı yoktur"
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"ÖNEMLİ: Manuel İşlem Gerekli!",
 "items": [{
 "type": "textfield",
-"desc":"Üçüncü taraf paketleri DSM 7.x'de Synology tarafından kısıtlanmıştır! Otomatik çalıştırma işini gerçekleştirmek için kök izni gerektirdiğinden, kurulumdan sonra ek bir manuel adım gereklidir.<br/><br/>SSH ile NAS'ınıza bağlanın (yönetici kullanıcı olarak) ve kurulum tamamlandıktan sonra aşağıdaki komutu çalıştırın. Şimdi kopyalayabilirsiniz!",
+"desc":"Üçüncü taraf paketleri DSM 7.x'de Synology tarafından kısıtlanmıştır! Otomatik çalıştırma işini gerçekleştirmek için kök izni gerektirdiğinden, kurulumdan sonra ek bir manuel adım gereklidir.<br/><br/>NAS'ınıza bir SSH komut kabuğu açın (yönetici kullanıcı olarak) ve kurulum tamamlandıktan <b>sonra</b> aşağıdaki komutu çalıştırın.<br>Bu komutu bir SSH komut penceresi yerine, kontrol paneli, zamanlanmış görev aracılığıyla oluşturulan kullanıcı tanımlı bir komut dosyası ('root' kullanıcısı olarak) aracılığıyla çalıştırabilirsiniz. Ve bunu kurulum bittikten sonra çalıştırın.<br>Komutu şimdi kopyalayabilirsiniz!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Komuta",

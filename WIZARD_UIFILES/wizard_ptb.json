@@ -22,17 +22,18 @@
 "step_title":"Configuração",
 "items": [
 {"type": "textfield",
-"desc":"O script deve estar localizado no diretório raiz do dispositivo externo e definido como executável para o usuário 'raiz'. Ele obtém o ponto de montagem do dispositivo (por exemplo, /volumeUSB1/usbshare/) como o primeiro parâmetro ($1) e a partição do dispositivo (por exemplo, usb1p1) como o segundo ($2). Dica: O script é executado com ambiente vazio, você tem que especificar todos os comandos usados com caminho!",
+"desc":"Há duas possibilidades para a localização do script, que deve ser executada após a conexão do dispositivo:<br>a) O script está localizado no diretório raiz do dispositivo de armazenamento externo. Nenhuma ação para dispositivos sem tal script. Para isso, digite o nome de seu script sem caminho, sem '/'.<br>b) O script está em seu DSM. E será iniciado em qualquer dispositivo de armazenamento conectado. Digite o nome completo com o caminho, por exemplo '/volume1/mysyn/auto.sh'.<br> O script deve ser executável para o usuário 'root'. O script terá o ponto de montagem do dispositivo (por exemplo, /volumeUSB1/usbshare/) como o primeiro parâmetro ($1) e a partição do dispositivo (por exemplo, usb1p1) como o segundo ($2). Dicas: O script é iniciado com um ambiente <b>empty</b>, você tem que especificar todos os comandos usados com caminho! O nome do script é sensível a maiúsculas e minúsculas!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Roteiro para executar"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"Nome do roteiro"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Um valor de saída de 100 do script irá desmontar e ejetar o dispositivo quando o script for terminado, todos os outros valores de saída o deixarão montado. Você pode parar o autorun no centro do pacote para desativá-lo temporariamente.<br/><br/> O tempo de busca é o tempo após o disparo pelo udev para encontrar o ponto de montagem quando um dispositivo é anexado. O tempo de espera adicional dá ao DSM alguma margem de manobra para montar corretamente o drive antes de iniciar o script.<br/> Você pode ter que aumentar esses tempos dependendo de seu hardware.",
+"desc":"Um valor de saída de 100 do script irá desmontar e ejetar o dispositivo quando o script estiver terminado, todos os outros valores de saída o deixarão montado.<br/><br/> O tempo de busca é o tempo após o disparo por 'udev' para encontrar o ponto de montagem quando um dispositivo tiver sido anexado. O tempo de espera adicional dá ao DSM alguma margem de manobra para montar corretamente o drive antes de iniciar o script.<br/> Você pode ter que aumentar esses tempos, dependendo do seu hardware.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Estão disponíveis vários níveis de detalhes de mensagens do arquivo de registro de depuração: 0 ... 8. Quanto mais alto o valor, mais detalhes.",
+"desc":"Estão disponíveis vários níveis de detalhes de mensagens do arquivo de registro de depuração: 1 ... 8. Quanto mais alto o valor, mais detalhes.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Digite um número positivo 0 ... 8"
+,"errorText":"Digite um número positivo 1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"O pacote gera mensagens DSM na área de trabalho, que são mostradas na área de trabalho para grupos de usuários configuráveis ou usuários. Prefira um @ a nomes de grupos, por exemplo, @usuários para todos os usuários"
+,"desc":"O pacote gera mensagens DSM desktop, que são mostradas no desktop para um grupo de usuários configurável ou para um usuário. Gaste um @ para agrupar nomes, por exemplo, @usuários para todos os usuários"
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Exibição de mensagens para"
@@ -116,6 +117,7 @@
 ,"desc":"Códigos de retorno sem mensagem"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"por exemplo 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Indicação de status durante a execução do roteiro.",
+"desc":"<br/>Beper use pelo roteiro: Bip curto no início e no final, bip longo triplo para um erro",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Bipar no início e no final",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Configuração de segurança",
 "items": [{
 "type": "combobox",
-"desc":"O script com o nome correspondente em seu dispositivo USB é executado com privilégios de raiz em seu DSM! Isso pode ser um risco de segurança! Para melhor segurança é possível uma restrição aos scripts com valores de hash sha256 (impressões digitais) pré-registados.<br/>Atualmente existem @ENTRY_COUNT@ hashes de script registerd.<br/>0: O recurso de segurança não é utilizado. Todos os scripts com nome correspondente são permitidos. Nenhuma mudança de hashes registrados.<br/>1: Provavelmente os hashes registrados anteriormente são todos apagados agora. O 1º script após a instalação/configuração será registrado e será permitido executar então repetidamente.<br/>2: O valor do hash de qualquer script com nome correspondente será registrado e executado! (Adicionar hashes)<br/>3: Somente scripts previamente registrados são permitidos. (Registro congelado)",
+"desc":"O roteiro com o nome correspondente é executado com privilégios de raiz em seu DSM! Isso pode ser um risco de segurança, especialmente se estiver localizado no dispositivo externo! Para maior segurança é possível uma restrição aos scripts com valores de hash sha256 (impressões digitais) pré-registados.<br/><b>Atualmente existem @ENTRY_COUNT@ hashes script registerd.</b><br/>0: O recurso de segurança não é utilizado. Todos os scripts com nome correspondente são permitidos. Nenhuma mudança de hashes registrados.<br/>1: @HASH_DELETION@ O 1º script após a instalação/configuração será registrado e poderá ser executado repetidamente.<br/>2: O valor do hash de qualquer script com nome correspondente será registrado e executado! (Adicionar hashes)<br/>3: Somente scripts previamente registrados são permitidos. (Registro congelado)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Registro de Hash Script",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Registro de Hash Script"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"Sem hashes previamente registrados, a seleção '3' não faz sentido"
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"IMPORTANTE: Ação Manual Necessária!",
 "items": [{
 "type": "textfield",
-"desc":"Os pacotes de terceiros são restritos pela Synology no DSM 7.x! Uma vez que a autorun requer permissão da raiz para realizar seu trabalho, uma etapa manual adicional é necessária após a instalação.<br/>>br/>SSH ao seu NAS (como usuário administrador) e executar o seguinte comando após a instalação ser concluída. Você pode copiá-lo agora!",
+"desc":"Os pacotes de terceiros são restritos pela Synology no DSM 7.x! Uma vez que a autorun requer permissão do root para realizar seu trabalho, uma etapa manual adicional é necessária após a instalação.<br/>>abrir uma shell de comando SSH para seu NAS (como usuário administrador) e executar o seguinte comando <b>after</b> a instalação é concluída.<br>Em vez de através de uma janela de comando SSH você pode executar este comando através de um script definido pelo usuário (como usuário 'root'), gerado através do painel de controle, tarefa agendada. E execute-o após a instalação concluída.<br> Você pode copiar o comando agora!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Comando",

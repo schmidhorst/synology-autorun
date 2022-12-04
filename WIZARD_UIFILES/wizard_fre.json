@@ -22,17 +22,18 @@
 "step_title":"Configuration",
 "items": [
 {"type": "textfield",
-"desc":"Le script doit être situé dans le répertoire racine du périphérique externe et défini comme exécutable pour l'utilisateur 'root'. Il obtient le point de montage du périphérique (par exemple /volumeUSB1/usbshare/) comme premier paramètre ($1) et la partition du périphérique (par exemple usb1p1) comme second ($2). Astuce : Le script est exécuté avec un environnement vide, vous devez spécifier toutes les commandes utilisées avec le chemin !",
+"desc":"Il existe deux posibilités pour l'emplacement du script, qui doit être exécuté après la connexion du périphérique :<br>a) Le script est situé dans le répertoire racine du périphérique de stockage externe. Aucune action pour les périphériques sans un tel script. Pour cela, entrez le nom de votre script sans chemin, sans '/'.<br>b) Le script est sur votre DSM. Et sera lancé à toute connexion de périphérique de stockage. Entrez le nom complet avec le chemin, par exemple '/volume1/mysyn/auto.sh'.<br>Le script doit être exécutable pour l'utilisateur 'root'. Le script obtiendra le point de montage du périphérique (par exemple, /volumeUSB1/usbshare/) comme premier paramètre ($1) et la partition du périphérique (par exemple, usb1p1) comme second ($2). Conseils : Le script est lancé avec un <b>environnement vide</b>, vous devez spécifier toutes les commandes utilisées avec path ! Le nom du script est sensible à la casse !",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Script à exécuter"
 ,"defaultValue": "@SCRIPT@"
+,"emptyText":"Nom du script"
 ,"validator": { "allowBlank": false }
 }]
 }
 ,{
 "type": "textfield",
-"desc":"Une valeur de sortie de 100 du script démontera et éjectera le périphérique lorsque le script sera terminé, toutes les autres valeurs de sortie le laisseront monté. Vous pouvez arrêter l'autorun dans le centre de paquets pour le désactiver temporairement.<br/><br/>Le temps de recherche est le temps après le déclenchement par udev pour trouver le point de montage lorsqu'un périphérique est attaché. Le temps d'attente supplémentaire donne au DSM une certaine marge de manœuvre pour monter correctement le lecteur avant de lancer le script.<br/>Vous devrez peut-être augmenter ces temps en fonction de votre matériel.",
+"desc":"Une valeur de sortie de 100 du script démontera et éjectera le périphérique lorsque le script sera terminé, toutes les autres valeurs de sortie le laisseront monté.<br/><br/>Le temps de recherche est le temps après le déclenchement par 'udev' pour trouver le point de montage lorsqu'un périphérique a été attaché. Le temps d'attente supplémentaire donne au DSM une certaine marge de manœuvre pour monter correctement le lecteur avant de lancer le script.<br/>Vous devrez peut-être augmenter ces temps en fonction de votre matériel.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -80,7 +81,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Plusieurs niveaux de détail des messages du fichier journal de débogage sont disponibles : 0 ... 8. Plus la valeur est élevée, plus les détails sont nombreux.",
+"desc":"Plusieurs niveaux de détail des messages du fichier journal de débogage sont disponibles : 1 ... 8. Plus la valeur est élevée, plus les détails sont nombreux.",
 "subitems": [
 {
 "key": "config_LOGLEVEL"
@@ -90,7 +91,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-8]$/"
-,"errorText":"Entrez un nombre positif 0 ... 8"
+,"errorText":"Entrez un nombre positif 1 ... 8"
 }
 }
 }
@@ -98,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Le paquetage génère des messages de bureau DSM, qui sont affichés sur le bureau pour des groupes d'utilisateurs ou des utilisateurs configurables. Ajoutez un @ aux noms de groupes, par exemple @users pour tous les utilisateurs."
+,"desc":"Le paquetage génère des messages de bureau DSM, qui sont affichés sur le bureau à un groupe d'utilisateurs configurable ou à un utilisateur. Ajoutez un @ aux noms de groupes, par exemple @users pour tous les utilisateurs."
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Affichage du message sur"
@@ -116,6 +117,7 @@
 ,"desc":"Codes de retour sans message"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
+,"emptyText":"par exemple 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
@@ -167,7 +169,7 @@
 }
 ,{
 "type": "multiselect",
-"desc":"<br/>Indicateur d'état pendant l'exécution du script.",
+"desc":"<br/>Utilisation du beep par le script : Bip court au début et à la fin, bip long trippant pour une erreur.",
 "subitems": [{
 "key": "config_BEEP",
 "desc":"Bip au début et à la fin",
@@ -202,27 +204,34 @@
 "allowBlank": true
 }
 }]
-}]
+}
+]
 }
 ,{
 "step_title":"Configuration de la sécurité",
 "items": [{
 "type": "combobox",
-"desc":"Le script avec le nom correspondant sur votre périphérique USB est exécuté avec les privilèges root sur votre DSM ! Cela peut constituer un risque pour la sécurité ! Pour une meilleure sécurité, une restriction aux scripts avec des valeurs de hachage sha256 préenregistrées (empreintes digitales) est possible.<br/>En fait, il y a @ENTRY_COUNT@ hachages de scripts enregistrés.<br/>0 : La fonction de sécurité n'est pas utilisée. Tous les scripts dont le nom correspond sont autorisés. Aucun changement des hashs enregistrés.<br/>1 : Les hashs enregistrés précédents sont probablement tous supprimés maintenant. Le 1er script après l'installation/configuration sera enregistré et est autorisé à être exécuté ensuite encore et encore.<br/>2 : La valeur de hachage de tout script avec le nom correspondant sera enregistrée et exécutée ! (Ajouter les hachages)<br/>3 : Seuls les scripts précédemment enregistrés sont autorisés. (Enregistrement gelé)",
+"desc":"Le script avec le nom correspondant est exécuté avec les privilèges root sur votre DSM ! Cela pourrait être un risque de sécurité, surtout si son emplacement est sur le périphérique externe ! Pour une meilleure sécurité, une restriction aux scripts avec des valeurs de hachage sha256 préenregistrées (empreintes digitales) est possible.<br/><b>En fait, il y a @ENTRY_COUNT@ hachages de script enregistrés.</b><br/>0 : La fonction de sécurité n'est pas utilisée. Tous les scripts dont le nom correspond sont autorisés. Pas de changement des hashs enregistrés.<br/>1 : @HASH_DELETION@Le 1er script après l'installation/configuration sera enregistré et est autorisé à être exécuté ensuite encore et encore.<br/>2 : La valeur de hachage de tout script avec le nom correspondant sera enregistrée et exécutée ! (Ajout de hachages)<br/>3 : Seuls les scripts précédemment enregistrés sont autorisés. (Enregistrement gelé)",
 "subitems": [{
-"key": "config_ADD_NEW_FINGERPRINTS",
-"autoSelect": true,
-"editable": false,
-"desc":"Enregistrement de Script Hash",
-"width": "360",
-"mode": "local",
-"valueField": "myId",
-"displayField": "displayText",
-"defaultValue": "@ADD_NEW_FINGERPRINTS@",
-"store": {
-"xtype": "arraystore",
-"fields": ["myId", "displayText"],
-"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+"key": "config_ADD_NEW_FINGERPRINTS"
+,"autoSelect": true
+,"editable": false
+,"desc":"Enregistrement de Script Hash"
+,"width": "360"
+,"mode": "local"
+,"valueField": "myId"
+,"displayField": "displayText"
+,"defaultValue": "@ADD_NEW_FINGERPRINTS@"
+,"store": {
+"xtype": "arraystore"
+,"fields": ["myId", "displayText"]
+,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+}
+,"validator": {
+"regex": {
+"expr": "/^[@SECURITY_RANGE@].*/"
+,"errorText":"En l'absence de hachages précédemment enregistrés, la sélection '3' n'a aucun sens."
+}
 }
 }]
 }]
@@ -231,7 +240,7 @@
 "step_title":"IMPORTANT : Action manuelle requise !",
 "items": [{
 "type": "textfield",
-"desc":"Les paquets tiers sont restreints par Synology dans DSM 7.x ! Étant donné que l'autorun nécessite une autorisation root pour effectuer son travail, une étape manuelle supplémentaire est nécessaire après l'installation.<br/><br/>SSH à votre NAS (en tant qu'utilisateur admin) et exécutez la commande suivante une fois l'installation terminée. Vous pouvez maintenant le copier !",
+"desc":"Les paquets tiers sont restreints par Synology dans DSM 7.x ! Puisque autorun nécessite l'autorisation de root pour effectuer son travail, une étape manuelle supplémentaire est nécessaire après l'installation.<br/><br/>Ouvrir une fenêtre de commande SSH sur votre NAS (en tant qu'utilisateur admin) et exécuter la commande suivante <b>après</b> l'installation est terminée.<br>Au lieu de passer par une fenêtre de commande SSH, vous pouvez exécuter cette commande via un script défini par l'utilisateur (en tant qu'utilisateur 'root'), généré via le panneau de configuration, tâche planifiée. Et exécuter cela après l'installation terminée.<br>Vous pouvez copier la commande maintenant !",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Commande",

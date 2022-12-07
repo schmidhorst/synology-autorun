@@ -13,12 +13,15 @@
 [![tr](https://flagcdn.com/w20/tr.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.tr.md)
 [![zh](https://flagcdn.com/w20/cn.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.zh.md)
 
-# autorun
-Execute scripts when connecting external storage (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files. 
-In Synologies Task Scheduler there is the posibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.  
+# autorun package for Synology NAS
+Execute scripts when connecting external storage (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files.
+In Synologies Task Scheduler there is the possibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.
 
-# install
-* Download the *.spk file from "Releases", "Assets" in Github and use "Manual Install" in the Package Center.
+## Issue Tracker
+For issues please use the [issue tracker](https://github.com/schmidhorst/synology-autorun/issues)
+
+# Installation
+* Download the *.spk file from ["Releases"](https://github.com/schmidhorst/synology-autorun/releases), "Assets" to your computer and use "Manual Install" in the Package Center.
 
 Third Party packages are restricted by Synology in DSM 7. Since autorun does require root
 permission to perform its job an additional manual step is required after the installation.
@@ -28,15 +31,21 @@ SSH to your NAS (as an admin user) and execute the following command:
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 Alternative to SSH:
-Goto Control Panel => Task Scheduler => Create => Scheduled Task => User-defined Script. In the "General" tab set any task name, select 'root' as user. In the "Task Settings" tab enter
+Go to Control Panel => Task Scheduler => Create => Scheduled Task => User-defined Script. In the "General" tab set any task name, select 'root' as user. In the "Task Settings" tab enter
 ```shell
 cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
-as "Run command". Finish it with OK. When you are requested to execute that command now during pckage installation, then go to the task scheduler, select that task and "Run" it.
+as "Run command". Finish it with OK. When you are requested to execute that command now during package installation, then go to the task scheduler, select that task and "Run" it.
 
-Under https://www.cphub.net/ in the Package Center there are elder versions for elder DSM versions available:
+Under https://www.cphub.net/ in the Package Center there are [elder versions](https://github.com/reidemei/synology-autorun) for elder DSM versions available:
 * DSM 7: actually still only 1.8
 * DSM 6: 1.7
 * DSM 5: 1.6
 * elder: 1.3
+
+## Credits and References
+- Thanks to [Jan Reidemeister](https://github.com/reidemei) for his [Version 1.8](https://github.com/reidemei/synology-autorun) and his [License](https://github.com/reidemei/synology-autorun/blob/main/LICENSE)
+- Thanks to the [Synology Forum Thread about that autorun package](https://www.synology-forum.de/threads/autorun-fuer-ext-datentraeger.18360/)
+- Thanks to [toafez Tommes](https://github.com/toafez) and his [Demo Package](https://github.com/toafez/DSM7DemoSPK)
+- Thanks to  [geimist Stephan Geisler](https://github.com/geimist) and hit tip to use the [DeepL API](https://www.deepl.com/docs-api) for translations to other languages.
 

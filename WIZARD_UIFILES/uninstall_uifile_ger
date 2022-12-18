@@ -3,7 +3,7 @@
 "items":
 [{
 "type": "multiselect",
-"desc" : "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>Or you can delete all settings and logfiles of the package</p>",
+"desc":"<p>Bei der Deinstallation des Pakets ist es möglich, die Einstellungen für eine spätere Neuinstallation zu erhalten<br>Oder Sie können alle Einstellungen und Logdateien des Pakets löschen</p>",
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",

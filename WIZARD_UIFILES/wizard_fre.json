@@ -22,7 +22,7 @@
 "step_title":"Configuration",
 "items": [
 {"type": "textfield",
-"desc":"Il existe deux posibilités pour l'emplacement du script, qui doit être exécuté après la connexion du périphérique :<br>a) Le script est situé dans le répertoire racine du périphérique de stockage externe. Aucune action pour les périphériques sans un tel script. Pour cela, entrez le nom de votre script sans chemin, sans '/'.<br>b) Le script est sur votre DSM. Et sera lancé à toute connexion de périphérique de stockage. Entrez le nom complet avec le chemin, par exemple '/volume1/mysyn/auto.sh'.<br>Le script doit être exécutable pour l'utilisateur 'root'. Le script obtiendra le point de montage du périphérique (par exemple, /volumeUSB1/usbshare/) comme premier paramètre ($1) et la partition du périphérique (par exemple, usb1p1) comme second ($2). Conseils : Le script est lancé avec un <b>environnement vide</b>, vous devez spécifier toutes les commandes utilisées avec path ! Le nom du script est sensible à la casse !",
+"desc":"Il existe deux posibilités pour l'emplacement du script, qui doit être exécuté après la connexion du périphérique :<br>a) Le script est situé dans le répertoire racine du périphérique de stockage externe. Aucune action pour les périphériques sans un tel script. Pour cela, entrez le nom de votre script sans chemin, sans '/'.<br>b) Le script est sur votre DSM. Et sera lancé à toute connexion de périphérique de stockage. Entrez le nom complet avec le chemin, par exemple '/volume1/mysyn/auto.sh'.<br>Le script doit être exécutable pour l'utilisateur 'root'. Le script obtiendra le point de montage du périphérique (par exemple, /volumeUSB1/usbshare/) comme premier paramètre (\$1) et la partition du périphérique (par exemple, usb1p1) comme second (\$2). Conseils : Le script est lancé avec un <b>environnement vide</b>, vous devez spécifier toutes les commandes utilisées avec path ! Le nom du script est sensible à la casse !",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Script à exécuter"
@@ -99,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Le paquetage génère des messages de bureau DSM, qui sont affichés sur le bureau à un groupe d'utilisateurs configurable ou à un utilisateur. Ajoutez un @ aux noms de groupe, par exemple @users pour tous les utilisateurs."
+,"desc":"Le paquetage génère des messages de bureau DSM, qui sont affichés sur le bureau à un groupe d'utilisateurs configurable ou à un utilisateur. Ajoutez un @ aux noms de groupes, par exemple @users pour tous les utilisateurs."
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Affichage du message sur"
@@ -196,11 +196,12 @@
 "type": "textfield",
 "desc":"Vous pouvez éventuellement spécifier un autre script (avec le chemin d'accès complet !) qui, en cas d'éjection demandée (avec le code de sortie 100 de votre premier script), sera exécuté après l'éjection. Ceci peut être utilisé, par exemple, pour éteindre votre périphérique USB. Si l'éjection a échoué, l'argument sera 'Ejection failed', en cas de succès aucun argument !",
 "subitems": [{
-"key": "config_SCRIPT_AFTER_EJECT",
-"desc":"Script après éjection (sur DSM)",
-"width": "350",
-"defaultValue": "@SCRIPT_AFTER_EJECT@",
-"validator": {
+"key": "config_SCRIPT_AFTER_EJECT"
+,"desc":"Script après éjection (sur DSM)"
+,"width": "350"
+,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+,"emptyText":"Nom du script (facultatif)"
+,"validator": {
 "allowBlank": true
 }
 }]

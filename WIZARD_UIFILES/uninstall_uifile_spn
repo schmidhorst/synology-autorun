@@ -1,9 +1,9 @@
 [{
-"step_title":"Eliminar los archivos de registro y la configuración",
+"step_title":"Eliminar archivos de registro y configuraciones",
 "items":
 [{
 "type": "multiselect",
-"desc" : "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>Or you can delete all settings and logfiles of the package</p>",
+"desc":"<p>Durante la desinstalación del paquete es posible conservar los ajustes para una nueva instalación posterior<br>O puede eliminar todos los ajustes y archivos de registro del paquete</p>",
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",

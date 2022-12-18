@@ -22,7 +22,7 @@
 "step_title":"Configuração",
 "items": [
 {"type": "textfield",
-"desc":"Existem duas possibilidades para a localização do script, que deve ser executada após a ligação do dispositivo:<br>a) O script está localizado no directório raiz do dispositivo de armazenamento externo. Nenhuma acção para dispositivos sem um tal script. Para tal, introduza o nome do seu script sem caminho, sem '/'.<br>b) O script está no seu DSM. E será iniciado em qualquer dispositivo de armazenamento ligado. Introduza o nome completo com o caminho, por exemplo '/volume1/mysyn/auto.sh'.<br> O script deve ser executável para o utilizador 'root'. O script obterá o ponto de montagem do dispositivo (ex. /volumeUSB1/usbshare/) como o primeiro parâmetro ($1) e a partição do dispositivo (ex. usb1p1) como o segundo ($2). Dicas: O script é iniciado com um ambiente <b>empty</b>, é necessário especificar todos os comandos utilizados com caminho! O nome do script é sensível a maiúsculas e minúsculas!",
+"desc":"Existem duas possibilidades para a localização do script, que deve ser executada após a ligação do dispositivo:<br>a) O script está localizado no directório raiz do dispositivo de armazenamento externo. Nenhuma acção para dispositivos sem um tal script. Para tal, introduza o nome do seu script sem caminho, sem '/'.<br>b) O script está no seu DSM. E será iniciado em qualquer dispositivo de armazenamento ligado. Introduza o nome completo com o caminho, por exemplo '/volume1/mysyn/auto.sh'.<br> O script deve ser executável para o utilizador 'root'. O script obterá o ponto de montagem do dispositivo (ex. /volumeUSB1/usbshare/) como o primeiro parâmetro (\$1) e a partição do dispositivo (ex. usb1p1) como o segundo (\$2). Dicas: O script é iniciado com um ambiente <b>empty</b>, é necessário especificar todos os comandos utilizados com caminho! O nome do script é sensível a maiúsculas e minúsculas!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Roteiro a executar"
@@ -196,11 +196,12 @@
 "type": "textfield",
 "desc":"Pode opcionalmente especificar um outro script (com caminho completo!), que é em caso de ejeção solicitada (com código de saída 100 do seu primeiro script) executada após a ejeção. Isto pode ser utilizado, por exemplo, para desligar o seu dispositivo USB. Se a ejecção falhar, o argumento será \"Ejecção falhada\", sem sucesso nenhum argumento!",
 "subitems": [{
-"key": "config_SCRIPT_AFTER_EJECT",
-"desc":"Roteiro após ejectar (em DSM)",
-"width": "350",
-"defaultValue": "@SCRIPT_AFTER_EJECT@",
-"validator": {
+"key": "config_SCRIPT_AFTER_EJECT"
+,"desc":"Roteiro após ejectar (em DSM)"
+,"width": "350"
+,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+,"emptyText":"Nome do guião (opcional)"
+,"validator": {
 "allowBlank": true
 }
 }]

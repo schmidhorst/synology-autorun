@@ -3,7 +3,7 @@
 "items":
 [{
 "type": "multiselect",
-"desc" : "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>Or you can delete all settings and logfiles of the package</p>",
+"desc":"<p>Paketin kaldırılması sırasında, daha sonra yeni bir kurulum için ayarları korumak mümkündür<br>Ya da paketin tüm ayarlarını ve günlük dosyalarını silebilirsiniz</p>",
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",

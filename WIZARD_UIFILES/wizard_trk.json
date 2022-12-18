@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister and Horst Schmid<br>Tüm hakları saklıdır.<br><br>Kaynak ve ikili formlarda, değişiklik yapılarak veya yapılmadan yeniden dağıtıma ve kullanıma, aşağıdaki koşulların karşılanması şartıyla izin verilir:<br>1. Kaynak kodun yeniden dağıtımları yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi muhafaza etmelidir.<br>2. İkili formdaki yeniden dağıtımlar yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi dağıtımla birlikte sağlanan belgelerde ve/veya diğer materyallerde yeniden üretmelidir.<br>3. Ne telif hakkı sahibinin adı ne de katkıda bulunanların adları, önceden yazılı izin alınmadan bu yazılımdan türetilen ürünleri desteklemek veya tanıtmak için kullanılamaz.<br><br>BU YAZILIM, TELİF HAKKI SAHİPLERİ VE KATKIDA BULUNANLAR TARAFINDAN 'OLDUĞU GİBİ' SAĞLANMAKTADIR VE SATILABİLİRLİK VE BELİRLİ BİR AMACA UYGUNLUK ZIMNİ GARANTİLERİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE HER TÜRLÜ AÇIK VEYA ZIMNİ GARANTİ REDDEDİLMEKTEDİR. HİÇBİR DURUMDA TELİF HAKKI SAHİBİ VEYA KATKIDA BULUNANLAR, BU YAZILIMIN KULLANIMINDAN KAYNAKLANAN HERHANGİ BİR ŞEKİLDE ORTAYA ÇIKAN DOĞRUDAN, DOLAYLI, ARIZİ, ÖZEL, ÖRNEK VEYA DOLAYLI ZARARLARDAN (İKAME MAL VEYA HİZMETLERİN TEMİNİ; KULLANIM, VERİ VEYA KAR KAYBI VEYA İŞ KESİNTİSİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE), BU TÜR BİR ZARARIN OLASILIĞI BİLDİRİLMİŞ OLSA DAHİ, SÖZLEŞME, KUSURSUZ SORUMLULUK VEYA HAKSIZ FİİL (İHMAL VEYA BAŞKA BİR ŞEKİLDE) İLE İLGİLİ HERHANGİ BİR SORUMLULUK TEORİSİNDEN SORUMLU TUTULAMAZ.",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister and Horst Schmid<br>Tüm hakları saklıdır.<br><br>Kaynak ve ikili formlarda, değişiklik yapılarak veya yapılmadan yeniden dağıtıma ve kullanıma, aşağıdaki koşulların karşılanması şartıyla izin verilir:<br>1. Kaynak kodun yeniden dağıtımları yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi muhafaza etmelidir.<br>2. İkili formdaki yeniden dağıtımlar yukarıdaki telif hakkı bildirimini, bu koşullar listesini ve aşağıdaki feragatnameyi dağıtımla birlikte sağlanan belgelerde ve/veya diğer materyallerde yeniden üretmelidir.<br>3. Ne telif hakkı sahibinin adı ne de katkıda bulunanların adları, önceden yazılı izin alınmadan bu yazılımdan türetilen ürünleri desteklemek veya tanıtmak için kullanılamaz.<br><br>BU YAZILIM, TELİF HAKKI SAHİPLERİ VE KATKIDA BULUNANLAR TARAFINDAN 'OLDUĞU GİBİ' SAĞLANMAKTADIR VE SATILABİLİRLİK VE BELİRLİ BİR AMACA UYGUNLUK ZIMNİ GARANTİLERİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE HER TÜRLÜ AÇIK VEYA ZIMNİ GARANTİ REDDEDİLMEKTEDİR. HİÇBİR DURUMDA TELİF HAKKI SAHİBİ VEYA KATKIDA BULUNANLAR, BU YAZILIMIN KULLANIMINDAN KAYNAKLANAN HERHANGİ BİR ŞEKİLDE ORTAYA ÇIKAN DOĞRUDAN, DOLAYLI, ARIZİ, ÖZEL, ÖRNEK VEYA DOLAYLI ZARARLARDAN (İKAME MAL VEYA HİZMETLERİN TEMİNİ; KULLANIM, VERİ VEYA KAR KAYBI VEYA İŞ KESİNTİSİ DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE), BU TÜR BİR ZARAR OLASILIĞI BİLDİRİLMİŞ OLSA DAHİ, SÖZLEŞME, KUSURSUZ SORUMLULUK VEYA HAKSIZ FİİL (İHMAL VEYA BAŞKA BİR ŞEKİLDE) İLE İLGİLİ HERHANGİ BİR SORUMLULUK TEORİSİNDEN SORUMLU TUTULAMAZ.",
 "subitems": [
 {
 "key": "id1",
@@ -22,7 +22,7 @@
 "step_title":"Konfigürasyon",
 "items": [
 {"type": "textfield",
-"desc":"Cihaz bağlandıktan sonra çalıştırılması gereken komut dosyasının konumu için iki olasılık vardır:<br>a) Komut dosyası harici depolama cihazının kök dizininde bulunur. Böyle bir komut dosyası olmayan cihazlar için işlem yapılmaz. Bunun için komut dosyanızın adını yol olmadan, '/' olmadan girin.<br>b) Komut dosyası DSM'nizdedir. Ve herhangi bir depolama aygıtı bağlandığında başlatılacaktır. Yol ile birlikte tam adını girin, örneğin '/volume1/mysyn/auto.sh'.<br>Betik 'root' kullanıcısı için çalıştırılabilir olmalıdır. Betik, ilk parametre ($1) olarak cihazın bağlama noktasını (örn. /volumeUSB1/usbshare/) ve ikinci parametre ($2) olarak cihaz bölümünü (örn. usb1p1) alacaktır. İpuçları: Komut dosyası <b>boş bir ortam</b> ile başlatılır, kullanılan tüm komutları yol ile belirtmeniz gerekir! Komut dosyası adı büyük/küçük harfe duyarlıdır!",
+"desc":"Cihaz bağlandıktan sonra çalıştırılması gereken komut dosyasının konumu için iki olasılık vardır:<br>a) Komut dosyası harici depolama cihazının kök dizininde bulunur. Böyle bir komut dosyası olmayan cihazlar için işlem yapılmaz. Bunun için komut dosyanızın adını yol olmadan, '/' olmadan girin.<br>b) Komut dosyası DSM'nizdedir. Ve herhangi bir depolama aygıtı bağlandığında başlatılacaktır. Yol ile birlikte tam adını girin, örneğin '/volume1/mysyn/auto.sh'.<br>Betik 'root' kullanıcısı için çalıştırılabilir olmalıdır. Betik, ilk parametre (\$1) olarak cihazın bağlama noktasını (örn. /volumeUSB1/usbshare/) ve ikinci parametre (\$2) olarak cihaz bölümünü (örn. usb1p1) alacaktır. İpuçları: Komut dosyası <b>boş bir ortam</b> ile başlatılır, kullanılan tüm komutları yol ile belirtmeniz gerekir! Komut dosyası adı büyük/küçük harfe duyarlıdır!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Yürütülecek komut dosyası"
@@ -33,7 +33,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Betikten çıkış değerinin 100 olması, betik tamamlandığında aygıtın bağlantısını kesecek ve aygıtı çıkaracaktır, diğer tüm çıkış değerleri aygıtı takılı bırakacaktır.<br/><br/>Arama süresi, bir aygıt takıldığında bağlama noktasını bulmak için 'udev' tarafından tetiklendikten sonra geçen süredir. Ek bekleme süresi, DSM'ye betiği başlatmadan önce sürücüyü düzgün bir şekilde bağlaması için biraz boşluk verir.<br/>Donanımınıza bağlı olarak bu süreleri artırmanız gerekebilir.",
+"desc":"Komut dosyasından 100 çıkış değeri, komut dosyası tamamlandığında aygıtın bağlantısını kesecek ve çıkaracaktır, diğer tüm çıkış değerleri aygıtı takılı bırakacaktır.<br/><br/>Arama süresi, bir aygıt takıldığında bağlama noktasını bulmak için 'udev' tarafından tetiklendikten sonra geçen süredir. Ek bekleme süresi, DSM'ye betiği başlatmadan önce sürücüyü düzgün bir şekilde bağlaması için biraz boşluk verir.<br/>Donanımınıza bağlı olarak bu süreleri artırmanız gerekebilir.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -178,7 +178,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Kod 100 çıkış koduyla sona ererse, aygıtın çıkarılması denenecektir. Aygıtı çıkarmak için zaman aşımını (saniye cinsinden) belirtebilirsiniz"
+,"desc":"Kod 100 çıkış koduyla sona ererse, aygıtın çıkarılması denenecektir. Aygıtın çıkarılması için zaman aşımını (saniye cinsinden) belirtebilirsiniz"
 ,"subitems": [{
 "key": "config_EJECT_TIMEOUT"
 ,"desc":"Çıkarma Zaman Aşımı [s]"
@@ -196,11 +196,12 @@
 "type": "textfield",
 "desc":"İsteğe bağlı olarak, talep edilen çıkarma durumunda (1. komut dosyanızdan çıkış kodu 100 ile) çıkarma işleminden sonra çalıştırılan başka bir komut dosyası (tam yolla!) belirtebilirsiniz. Bu, örneğin USB cihazınızı kapatmak için kullanılabilir. Çıkarma başarısız olursa, argüman 'Çıkarma başarısız' olacaktır, başarıda argüman yoktur!",
 "subitems": [{
-"key": "config_SCRIPT_AFTER_EJECT",
-"desc":"Çıkardıktan sonra komut dosyası (DSM'de)",
-"width": "350",
-"defaultValue": "@SCRIPT_AFTER_EJECT@",
-"validator": {
+"key": "config_SCRIPT_AFTER_EJECT"
+,"desc":"Çıkardıktan sonra komut dosyası (DSM'de)"
+,"width": "350"
+,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+,"emptyText":"Komut dosyası adı (isteğe bağlı)"
+,"validator": {
 "allowBlank": true
 }
 }]

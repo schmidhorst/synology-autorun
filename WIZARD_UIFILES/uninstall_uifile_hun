@@ -3,7 +3,7 @@
 "items":
 [{
 "type": "multiselect",
-"desc" : "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>Or you can delete all settings and logfiles of the package</p>",
+"desc":"<p>A csomag eltávolítása során lehetőség van a beállítások megőrzésére egy későbbi új telepítéshez<br>Vagy törölheti a csomag összes beállítását és naplófájlját</p>",
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",

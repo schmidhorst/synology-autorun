@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister és Horst Schmid<br>Minden jog fenntartva.<br><br>Az újraelosztás és felhasználás forrás- és bináris formában, módosítással vagy anélkül, a következő feltételek teljesülése esetén engedélyezett:<br>1. A forráskód újraelosztásának meg kell tartania a fenti szerzői jogi közleményt, a jelen feltétellistát és az alábbi nyilatkozatot.<br>2. A bináris formában történő újraelosztásnak a fenti szerzői jogi közleményt, a jelen feltétellistát és az alábbi nyilatkozatot a dokumentációban és/vagy a terjesztéshez mellékelt egyéb anyagokban meg kell ismételnie.<br>3. Sem a szerzői jog tulajdonosának neve, sem a szerzői jogban közreműködők neve nem használható fel a szoftverből származó termékek támogatására vagy népszerűsítésére külön előzetes írásbeli engedély nélkül.<br><br>A SZOFTVERT A TULAJDONSÁGI JOGTULAJOK FENNTARTÓI ÉS SZERZŐI \"AZONNAL\" TÁLLÍTJÁK, ÉS MINDEN KIFEJEZETT VAGY KELETLEN JÓTÉRVÉNY, BELEÉRTVE, DE NEM KORLÁTOZVA A KELETLEN JÓTÉRVÉNYRE ÉS A MEGHATÁROZOTT CÉLRA VALÓ ALKALMAZHATÓSÁGRA VONATKOZÓ KIFEJEZETT JÓTÉRVÉNYEKET KIZÁRÓLAG. A SZERZŐI JOGTULAJDONOS VAGY A KÖZREMŰKÖDŐK SEMMILYEN KÖRÜLMÉNYEK KÖZÖTT NEM FELELNEK SEMMILYEN KÖZVETLEN, KÖZVETETT, VÉLETLEN, KÜLÖNLEGES, PÉLDAMUTATÓ VAGY KÖVETKEZMÉNYES KÁRÉRT (BELEÉRTVE, DE NEM KIZÁRÓLAGOSAN A HELYETTESÍTŐ ÁRUK VAGY SZOLGÁLTATÁSOK BESZERZÉSÉT; A HASZNÁLAT, AZ ADATOK VAGY A NYERESÉG ELVESZTÉSÉT; VAGY AZ ÜZLETMENET MEGSZAKÍTÁSÁT), BÁRMILYEN OKBÓL ÉS BÁRMILYEN FELELŐSSÉGI ELMÉLET ALAPJÁN, AKÁR SZERZŐDÉS, SZIGORÚ FELELŐSSÉG, AKÁR KÁROKOZÁS (BELEÉRTVE A GONDATLANSÁGOT VAGY MÁS OKBÓL), AMELY BÁRMILYEN MÓDON A SZOFTVER HASZNÁLATÁBÓL ERED, MÉG AKKOR SEM, HA TUDTAK AZ ILYEN KÁR LEHETŐSÉGÉRŐL.",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister és Horst Schmid<br>Minden jog fenntartva.<br><br>Az újraelosztás és felhasználás forrás- és bináris formában, módosítással vagy anélkül, a következő feltételek teljesülése esetén engedélyezett:<br>1. A forráskód újraelosztásának meg kell tartania a fenti szerzői jogi közleményt, a jelen feltétellistát és az alábbi nyilatkozatot.<br>2. A bináris formában történő újraelosztásnak a fenti szerzői jogi közleményt, a jelen feltétellistát és az alábbi nyilatkozatot a dokumentációban és/vagy a terjesztéshez mellékelt egyéb anyagokban meg kell ismételnie.<br>3. A szerzői jog jogosultjának neve és a közreműködők neve nem használható fel a szoftverből származó termékek támogatására vagy népszerűsítésére külön előzetes írásbeli engedély nélkül.<br><br>A SZOFTVERT A TULAJDONSÁGI JOGTULAJOK FENNTARTÓI ÉS SZERZŐI \"AZONNAL\" TÁLLÍTJÁK, ÉS MINDEN KIFEJEZETT VAGY KELETLEN JÓTÉRVÉNY, BELEÉRTVE, DE NEM KORLÁTOZVA A KELETLEN JÓTÉRVÉNYRE ÉS A MEGHATÁROZOTT CÉLRA VALÓ ALKALMAZHATÓSÁGRA VONATKOZÓ KIFEJEZETT JÓTÉRVÉNYEKET KIZÁRÓLAG. A SZERZŐI JOGTULAJDONOS VAGY A KÖZREMŰKÖDŐK SEMMILYEN KÖRÜLMÉNYEK KÖZÖTT NEM FELELNEK SEMMILYEN KÖZVETLEN, KÖZVETETT, VÉLETLEN, KÜLÖNLEGES, PÉLDAMUTATÓ VAGY KÖVETKEZMÉNYES KÁRÉRT (BELEÉRTVE, DE NEM KIZÁRÓLAGOSAN A HELYETTESÍTŐ ÁRUK VAGY SZOLGÁLTATÁSOK BESZERZÉSÉT; A HASZNÁLAT, AZ ADATOK VAGY A NYERESÉG ELVESZTÉSÉT; VAGY AZ ÜZLETMENET MEGSZAKÍTÁSÁT), BÁRMILYEN OKBÓL ÉS BÁRMILYEN FELELŐSSÉGI ELMÉLET ALAPJÁN, AKÁR SZERZŐDÉS, SZIGORÚ FELELŐSSÉG, AKÁR KÁROKOZÁS (BELEÉRTVE A GONDATLANSÁGOT VAGY MÁS OKBÓL), AMELY BÁRMILYEN MÓDON A SZOFTVER HASZNÁLATÁBÓL ERED, MÉG AKKOR SEM, HA TUDTAK AZ ILYEN KÁR LEHETŐSÉGÉRŐL.",
 "subitems": [
 {
 "key": "id1",
@@ -22,7 +22,7 @@
 "step_title":"Konfiguráció",
 "items": [
 {"type": "textfield",
-"desc":"Két lehetőség van a szkript helyére, amelyet az eszköz csatlakoztatása után kell végrehajtani:<br>a) A szkript a külső tárolóeszköz gyökérkönyvtárában található. Ilyen szkript nélküli eszközök esetében nincs művelet. Ehhez adja meg a szkript nevét elérési útvonal nélkül, '/' nélkül.<br>b) A szkript a DSM-en van. És minden tárolóeszköz csatlakoztatásakor elindul. Adja meg a teljes nevet az elérési úttal együtt, pl. '/volume1/mysyn/auto.sh'.<br>A szkriptnek futtathatónak kell lennie a 'root' felhasználó számára. A szkript az első paraméterként ($1) az eszköz csatolási pontját (pl. /volumeUSB1/usbshare/), a második paraméterként ($2) pedig az eszköz partícióját (pl. usb1p1) kapja meg. Tippek: A szkript <b>üres környezettel</b> indul, minden használt parancsot meg kell adnunk a path-val! A szkript neve nagy- és kisbetűkre érzékeny!",
+"desc":"Két lehetőség van a szkript helyére, amelyet az eszköz csatlakoztatása után kell végrehajtani:<br>a) A szkript a külső tárolóeszköz gyökérkönyvtárában található. Ilyen szkript nélküli eszközök esetében nincs művelet. Ehhez adja meg a szkript nevét elérési útvonal nélkül, '/' nélkül.<br>b) A szkript a DSM-en van. És minden tárolóeszköz csatlakoztatásakor elindul. Adja meg a teljes nevet az elérési úttal együtt, pl. '/volume1/mysyn/auto.sh'.<br>A szkriptnek futtathatónak kell lennie a 'root' felhasználó számára. A szkript az első paraméterként (\$1) az eszköz csatolási pontját (pl. /volumeUSB1/usbshare/), a második paraméterként (\$2) pedig az eszköz partícióját (pl. usb1p1) kapja meg. Tippek: A szkript <b>üres környezettel</b> indul, minden használt parancsot meg kell adnunk a path-val! A szkript neve nagy- és kisbetűkre érzékeny!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Végrehajtandó szkript"
@@ -111,7 +111,7 @@
 
 ,{
 "type": "textfield"
-,"desc":"A szkript befejezése után általában egy DSM asztali üzenet jelenik meg. Az üzenet tartalmazza a szkript visszatérési kódját és a tárolóeszközön fennmaradó szabad helyet. Itt megadhat egy listát a visszatérési kódokról, amelyek nem generálnak ilyen üzenetet."
+,"desc":"A szkript befejezése után általában egy DSM asztali üzenet jelenik meg. Az üzenet tartalmazza a szkript visszatérési kódját és a tárolóeszközön fennmaradó szabad helyet. Itt megadhatja azoknak a visszatérési kódoknak a listáját, amelyek nem generálnak ilyen üzenetet."
 ,"subitems": [{
 "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
 ,"desc":"Visszatérési kódok üzenet nélkül"
@@ -196,11 +196,12 @@
 "type": "textfield",
 "desc":"Opcionálisan megadhat egy további szkriptet (teljes elérési úttal!), amely a kért kilövés esetén (az 1. szkript 100-as kilépési kódjával) a kilövés után végrehajtódik. Ez például az USB-eszköz kikapcsolására használható. Sikertelen kilövés esetén az argumentum 'Ejection failed' lesz, siker esetén nincs argumentum!",
 "subitems": [{
-"key": "config_SCRIPT_AFTER_EJECT",
-"desc":"Szkript a kioldás után (DSM-en)",
-"width": "350",
-"defaultValue": "@SCRIPT_AFTER_EJECT@",
-"validator": {
+"key": "config_SCRIPT_AFTER_EJECT"
+,"desc":"Szkript a kioldás után (DSM-en)"
+,"width": "350"
+,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+,"emptyText":"Script neve (opcionális)"
+,"validator": {
 "allowBlank": true
 }
 }]
@@ -211,7 +212,7 @@
 "step_title":"Biztonsági konfiguráció",
 "items": [{
 "type": "combobox",
-"desc":"A megfelelő nevű szkriptet root jogosultságokkal hajtja végre a DSM-en! Ez biztonsági kockázatot jelenthet, különösen, ha a külső eszközön található! A nagyobb biztonság érdekében lehetőség van az előre regisztrált sha256 hash-értékekkel (ujjlenyomatok) rendelkező szkriptekre való korlátozásra.<br/><b>Currently there are @ENTRY_COUNT@ script hashes registd.</b><br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ek nem változnak.<br/>1: @HASH_DELETION@A telepítés/konfigurálás utáni 1. szkript regisztrálva lesz, majd újra és újra engedélyezett a végrehajtása.<br/>2: Minden azonos nevű szkript hash-értéke regisztrálva lesz és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
+"desc":"A megfelelő nevű szkriptet root jogosultságokkal hajtja végre a DSM-en! Ez biztonsági kockázatot jelenthet, különösen, ha a külső eszközön található! A nagyobb biztonság érdekében lehetőség van az előre regisztrált sha256 hash-értékekkel (ujjlenyomatok) rendelkező szkriptek korlátozására.<br/><b>Currently there are @ENTRY_COUNT@ script hashes registd.</b><br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ek nem változnak.<br/>1: @HASH_DELETION@A telepítés/konfigurálás utáni 1. szkript regisztrálva lesz, majd újra és újra engedélyezett a végrehajtása.<br/>2: Minden azonos nevű szkript hash-értéke regisztrálva lesz és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true

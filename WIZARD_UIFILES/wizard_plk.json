@@ -22,7 +22,7 @@
 "step_title":"Konfiguracja",
 "items": [
 {"type": "textfield",
-"desc":"Istnieją dwie możliwości lokalizacji skryptu, który powinien zostać wykonany po podłączeniu urządzenia:<br>a) Skrypt znajduje się w katalogu głównym zewnętrznego urządzenia pamięci masowej. Brak działania dla urządzeń bez takiego skryptu. Dla tego wpisz nazwę swojego skryptu bez ścieżki, bez '/'.<br>b) Skrypt znajduje się na DSM. I zostanie uruchomiony przy każdym podłączeniu urządzenia pamięci masowej. Wpisz pełną nazwę ze ścieżką, np. '/volume1/mysyn/auto.sh'.<br>Skrypt musi być wykonywalny dla użytkownika 'root'. Skrypt otrzyma punkt montowania urządzenia (np. /volumeUSB1/usbshare/) jako pierwszy parametr ($1) i partycję urządzenia (np. usb1p1) jako drugi ($2). Wskazówki: Skrypt jest uruchamiany z <b>pustym środowiskiem</b>, należy podać wszystkie używane polecenia ze ścieżką! W nazwie skryptu rozróżniana jest wielkość liter!",
+"desc":"Istnieją dwie możliwości lokalizacji skryptu, który powinien zostać wykonany po podłączeniu urządzenia:<br>a) Skrypt znajduje się w katalogu głównym zewnętrznego urządzenia pamięci masowej. Brak działania dla urządzeń bez takiego skryptu. Dla tego wpisz nazwę swojego skryptu bez ścieżki, bez '/'.<br>b) Skrypt znajduje się na DSM. I zostanie uruchomiony przy każdym podłączeniu urządzenia pamięci masowej. Wpisz pełną nazwę ze ścieżką, np. '/volume1/mysyn/auto.sh'.<br>Skrypt musi być wykonywalny dla użytkownika 'root'. Skrypt otrzyma punkt montowania urządzenia (np. /volumeUSB1/usbshare/) jako pierwszy parametr (\$1) i partycję urządzenia (np. usb1p1) jako drugi (\$2). Wskazówki: Skrypt jest uruchamiany z <b>pustym środowiskiem</b>, należy podać wszystkie używane polecenia ze ścieżką! W nazwie skryptu rozróżniana jest wielkość liter!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Skrypt do wykonania"
@@ -33,7 +33,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Wartość wyjścia 100 ze skryptu będzie odmontować i wysunąć urządzenie po zakończeniu skryptu, wszystkie inne wartości wyjścia pozostawia go zamontowany.<br/><br/>Czas wyszukiwania jest czas po wyzwoleniu przez 'udev' do znalezienia punktu mocowania, gdy urządzenie zostało dołączone. Dodatkowy czas oczekiwania daje DSM trochę swobody, aby prawidłowo zamontować dysk przed rozpoczęciem skryptu.<br/>Możesz mieć do zwiększenia tych czasów w zależności od sprzętu.",
+"desc":"Wartość wyjścia 100 ze skryptu będzie odmontować i wysunąć urządzenie po zakończeniu skryptu, wszystkie inne wartości wyjścia będzie zostawić go zamontowane.<br/><br/>Czas wyszukiwania jest czas po wyzwoleniu przez 'udev' do znalezienia punktu mocowania, gdy urządzenie zostało dołączone. Dodatkowy czas oczekiwania daje DSM trochę swobody, aby prawidłowo zamontować dysk przed rozpoczęciem skryptu.<br/>Możesz mieć do zwiększenia tych czasów w zależności od sprzętu.",
 "subitems": [
 {
 "key": "config_TRIES"
@@ -129,7 +129,7 @@
 }
 ,{
 "type": "combobox",
-"desc":"Zastosowanie \"Copy LED\":<br/>0: diody nie są w ogóle używane.<br/>1: włączona podczas biegu lub wysuwania, wyłączona po tym<br/>2: migająca podczas biegu lub wysuwania, wyłączona po tym<br/>3: włączona podczas biegu lub wysuwania, po tym wyłączona (0/100) lub migająca (inne kody)<br/>4: migająca podczas biegu lub wysuwania, po tym wyłączona lub migająca (inne kody lub wysuwanie nieudane)<br/>5: migająca podczas biegu lub wysuwania, po tym wyłączona (0/100) lub włączona (inne kody lub wysuwanie nieudane)",
+"desc":"Zastosowanie 'Copy LED':<br/>0: diody nie są w ogóle używane.<br/>1: włączona podczas biegu lub wysuwania, wyłączona po tym<br/>2: migająca podczas biegu lub wysuwania, wyłączona po tym<br/>3: włączona podczas biegu lub wysuwania, po tym wyłączona (0/100) lub migająca (inne kody)<br/>4: migająca podczas biegu lub wysuwania, po tym wyłączona lub migająca (inne kody lub wysuwanie nieudane)<br/>5: migająca podczas biegu lub wysuwania, po tym wyłączona (0/100) lub włączona (inne kody lub wysuwanie nieudane)",
 "subitems": [{
 "key": "config_LED_COPY",
 "autoSelect": true,
@@ -196,11 +196,12 @@
 "type": "textfield",
 "desc":"Możesz opcjonalnie określić kolejny skrypt (z pełną ścieżką!), który w przypadku żądania wyrzucenia (z kodem wyjścia 100 z pierwszego skryptu) zostanie wykonany po wyrzuceniu. Może to być użyte np. do wyłączenia urządzenia USB. Jeśli wyrzucenie nie powiedzie się, argumentem będzie 'Ejection failed', przy sukcesie brak argumentu!",
 "subitems": [{
-"key": "config_SCRIPT_AFTER_EJECT",
-"desc":"Skrypt po wysunięciu (na DSM)",
-"width": "350",
-"defaultValue": "@SCRIPT_AFTER_EJECT@",
-"validator": {
+"key": "config_SCRIPT_AFTER_EJECT"
+,"desc":"Skrypt po wysunięciu (na DSM)"
+,"width": "350"
+,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+,"emptyText":"Nazwa skryptu (opcjonalnie)"
+,"validator": {
 "allowBlank": true
 }
 }]

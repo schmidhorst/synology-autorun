@@ -22,7 +22,7 @@
 "step_title":"Konfiguration",
 "items": [
 {"type": "textfield",
-"desc":"Der er to muligheder for placeringen af scriptet, som skal udføres efter tilslutning af enheden:<br>a) Scriptet er placeret i rodmappen på den eksterne lagerenhed. Ingen handling for enheder uden et sådant script. Indtast navnet på dit script uden sti, uden '/'.<br>b) Scriptet ligger på din DSM. Og vil blive startet ved enhver tilslutning af lagerenhed. Indtast det fulde navn med sti, f.eks. '/volume1/mysyn/auto.sh'.<br>Scriptet skal kunne udføres for brugeren 'root'. Scriptet får enhedens monteringspunkt (f.eks. /volumeUSB1/usbshare/) som den første parameter ($1) og enhedspartitionen (f.eks. usb1p1) som den anden ($2). Tips: Du skal angive alle de anvendte kommandoer med sti! Skriptnavnet er stregfølsomt!",
+"desc":"Der er to muligheder for placeringen af scriptet, som skal udføres efter tilslutning af enheden:<br>a) Scriptet er placeret i rodmappen på den eksterne lagerenhed. Ingen handling for enheder uden et sådant script. Indtast navnet på dit script uden sti, uden '/'.<br>b) Scriptet ligger på din DSM. Og vil blive startet ved enhver tilslutning af lagerenhed. Indtast det fulde navn med sti, f.eks. '/volume1/mysyn/auto.sh'.<br>Scriptet skal kunne udføres for brugeren 'root'. Scriptet får enhedens monteringspunkt (f.eks. /volumeUSB1/usbshare/) som den første parameter (\$1) og enhedspartitionen (f.eks. usb1p1) som den anden (\$2). Tips: Du skal angive alle de anvendte kommandoer med sti! Skriptnavnet er stregfølsomt!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Script til udførelse"
@@ -194,13 +194,14 @@
 }
 ,{
 "type": "textfield",
-"desc":"Du kan eventuelt angive et yderligere script (med fuld sti!), som i tilfælde af anmodet udkast (med exitkode 100 fra dit første script) udføres efter udkastet. Dette kan f.eks. bruges til at slukke for din USB-enhed. Hvis udsmidningen mislykkedes, vil argumentet være \"Ejection failed\", ved succes intet argument!",
+"desc":"Du kan eventuelt angive et yderligere script (med fuld sti!), som i tilfælde af anmodet udkast (med exitkode 100 fra dit første script) udføres efter udkastningen. Dette kan f.eks. bruges til at slukke for din USB-enhed. Hvis udsmidningen mislykkedes, vil argumentet være \"Ejection failed\", ved succes intet argument!",
 "subitems": [{
-"key": "config_SCRIPT_AFTER_EJECT",
-"desc":"Script efter udkast (på DSM)",
-"width": "350",
-"defaultValue": "@SCRIPT_AFTER_EJECT@",
-"validator": {
+"key": "config_SCRIPT_AFTER_EJECT"
+,"desc":"Script efter udkast (på DSM)"
+,"width": "350"
+,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+,"emptyText":"Scriptnavn (valgfrit)"
+,"validator": {
 "allowBlank": true
 }
 }]

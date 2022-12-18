@@ -3,11 +3,11 @@
 "items":
 [{
 "type": "multiselect",
-"desc" : "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>Or you can delete all settings and logfiles of the package</p>",
+"desc":"<p>Při odinstalaci balíčku je možné zachovat nastavení pro pozdější novou instalaci<br>Nebo můžete odstranit všechna nastavení a soubory protokolu balíčku</p>",
 "subitems":
 [{
 "key": "pkgwizard_remove_settings",
-"desc":"Odstranění stránky"
+"desc":"Odstranění adresy"
 }]
 }]
 }]

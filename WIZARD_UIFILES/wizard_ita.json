@@ -4,7 +4,7 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>Tutti i diritti riservati.<br><br>La distribuzione e l'utilizzo in forma sorgente e binaria, con o senza modifiche, sono consentiti a condizione che siano rispettate le seguenti condizioni:<br>1. Le ridistribuzioni di codice sorgente devono mantenere la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità.<br>2. Le ridistribuzioni in forma binaria devono riprodurre la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità nella documentazione e/o in altro materiale fornito con la distribuzione.<br>3. Né il nome del titolare del copyright né i nomi dei suoi collaboratori possono essere utilizzati per sostenere o promuovere prodotti derivati da questo software senza una specifica autorizzazione scritta.<br><br>QUESTO SOFTWARE È FORNITO DAI TITOLARI DEL DIRITTO D'AUTORE E DAI CONTRIBUTORI \"COSÌ COM'È\" E QUALSIASI GARANZIA ESPLICITA O IMPLICITA, INCLUSE, MA NON SOLO, LE GARANZIE IMPLICITE DI COMMERCIABILITÀ E DI IDONEITÀ PER UNO SCOPO PARTICOLARE, SONO ESCLUSE. IN NESSUN CASO IL TITOLARE DEL COPYRIGHT O I COLLABORATORI SARANNO RESPONSABILI DI DANNI DIRETTI, INDIRETTI, INCIDENTALI, SPECIALI, ESEMPLARI O CONSEQUENZIALI (INCLUSI, A TITOLO ESEMPLIFICATIVO MA NON ESAUSTIVO, L'ACQUISTO DI BENI O SERVIZI SOSTITUTIVI, LA PERDITA DI UTILIZZO, DI DATI O DI PROFITTI O L'INTERRUZIONE DELL'ATTIVITÀ), COMUNQUE CAUSATI E IN BASE A QUALSIASI TEORIA DI RESPONSABILITÀ, PER CONTRATTO, RESPONSABILITÀ OGGETTIVA O ILLECITO (INCLUSA LA NEGLIGENZA O ALTRO), DERIVANTI IN QUALSIASI MODO DALL'USO DI QUESTO SOFTWARE, ANCHE SE AVVISATI DELLA POSSIBILITÀ DI TALI DANNI.",
+"desc":"BSD 3-Clause License<br><br>Copyright (c) 2011-2022, Jan Reidemeister e Horst Schmid<br>Tutti i diritti riservati.<br><br>La distribuzione e l'uso in forma sorgente e binaria, con o senza modifiche, sono consentiti a condizione che siano rispettate le seguenti condizioni:<br>1. Le ridistribuzioni di codice sorgente devono mantenere la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità.<br>2. Le ridistribuzioni in forma binaria devono riprodurre la suddetta nota di copyright, il presente elenco di condizioni e la seguente clausola di esclusione della responsabilità nella documentazione e/o in altro materiale fornito con la distribuzione.<br>3. Né il nome del titolare del copyright né i nomi dei suoi collaboratori possono essere utilizzati per sostenere o promuovere prodotti derivati da questo software senza una specifica autorizzazione scritta.<br><br>QUESTO SOFTWARE È FORNITO DAI TITOLARI DEL DIRITTO D'AUTORE E DAI CONTRIBUENTI \"COSÌ COM'È\" E QUALSIASI GARANZIA ESPLICITA O IMPLICITA, INCLUSE, MA NON SOLO, LE GARANZIE IMPLICITE DI COMMERCIABILITÀ E DI IDONEITÀ PER UNO SCOPO PARTICOLARE, SONO ESCLUSE. IN NESSUN CASO IL TITOLARE DEL COPYRIGHT O I COLLABORATORI SARANNO RESPONSABILI DI DANNI DIRETTI, INDIRETTI, INCIDENTALI, SPECIALI, ESEMPLARI O CONSEQUENZIALI (INCLUSI, A TITOLO ESEMPLIFICATIVO MA NON ESAUSTIVO, L'ACQUISTO DI BENI O SERVIZI SOSTITUTIVI, LA PERDITA DI UTILIZZO, DI DATI O DI PROFITTI O L'INTERRUZIONE DELL'ATTIVITÀ), COMUNQUE CAUSATI E IN BASE A QUALSIASI TEORIA DI RESPONSABILITÀ, PER CONTRATTO, RESPONSABILITÀ OGGETTIVA O ILLECITO (INCLUSA LA NEGLIGENZA O ALTRO), DERIVANTI IN QUALSIASI MODO DALL'USO DI QUESTO SOFTWARE, ANCHE SE AVVISATI DELLA POSSIBILITÀ DI TALI DANNI.",
 "subitems": [
 {
 "key": "id1",
@@ -22,7 +22,7 @@
 "step_title":"Configurazione",
 "items": [
 {"type": "textfield",
-"desc":"Esistono due possibilità per la posizione dello script, che deve essere eseguito dopo la connessione del dispositivo:<br>a) Lo script si trova nella directory principale del dispositivo di archiviazione esterno. Nessuna azione per i dispositivi privi di tale script. Per questo inserire il nome dello script senza percorso, senza '/'.<br>b) Lo script si trova nel DSM. Verrà avviato a ogni connessione del dispositivo di archiviazione. Inserire il nome completo con il percorso, ad esempio '/volume1/mysyn/auto.sh'.<br>Lo script deve essere eseguibile per l'utente 'root'. Lo script otterrà il punto di montaggio del dispositivo (ad esempio, /volumeUSB1/usbshare/) come primo parametro ($1) e la partizione del dispositivo (ad esempio, usb1p1) come secondo ($2). Suggerimenti: Lo script viene avviato con un ambiente <b>vuoto</b>, è necessario specificare tutti i comandi utilizzati con il percorso! Il nome dello script è sensibile alle maiuscole!",
+"desc":"Esistono due possibilità per la posizione dello script, che deve essere eseguito dopo la connessione del dispositivo:<br>a) Lo script si trova nella directory principale del dispositivo di archiviazione esterno. Nessuna azione per i dispositivi privi di tale script. Per questo inserire il nome dello script senza percorso, senza '/'.<br>b) Lo script si trova nel DSM. Verrà avviato a ogni connessione del dispositivo di archiviazione. Inserire il nome completo con il percorso, ad esempio '/volume1/mysyn/auto.sh'.<br>Lo script deve essere eseguibile per l'utente 'root'. Lo script otterrà il punto di montaggio del dispositivo (ad esempio, /volumeUSB1/usbshare/) come primo parametro (\$1) e la partizione del dispositivo (ad esempio, usb1p1) come secondo (\$2). Suggerimenti: Lo script viene avviato con un ambiente <b>vuoto</b>, è necessario specificare tutti i comandi utilizzati con il percorso! Il nome dello script è sensibile alle maiuscole!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Script da eseguire"
@@ -196,11 +196,12 @@
 "type": "textfield",
 "desc":"È possibile specificare un ulteriore script (con percorso completo!), che in caso di espulsione richiesta (con codice di uscita 100 dal primo script) viene eseguito dopo l'espulsione. Questo può essere utilizzato, ad esempio, per spegnere il dispositivo USB. Se l'espulsione non è riuscita, l'argomento sarà \"Espulsione fallita\", in caso di successo nessun argomento!",
 "subitems": [{
-"key": "config_SCRIPT_AFTER_EJECT",
-"desc":"Script dopo l'espulsione (su DSM)",
-"width": "350",
-"defaultValue": "@SCRIPT_AFTER_EJECT@",
-"validator": {
+"key": "config_SCRIPT_AFTER_EJECT"
+,"desc":"Script dopo l'espulsione (su DSM)"
+,"width": "350"
+,"defaultValue": "@SCRIPT_AFTER_EJECT@"
+,"emptyText":"Nome dello script (facoltativo)"
+,"validator": {
 "allowBlank": true
 }
 }]
@@ -240,7 +241,7 @@
 "step_title":"IMPORTANTE: è necessaria un'azione manuale!",
 "items": [{
 "type": "textfield",
-"desc":"I pacchetti di terze parti sono limitati da Synology in DSM 7.x! Poiché l'autorun richiede i permessi di root per eseguire il suo lavoro, è necessario un ulteriore passaggio manuale dopo l'installazione.<br/><br/>Aprire una shell di comando SSH sul NAS (come utente amministratore) ed eseguire il seguente comando <b>dopo</b> che l'installazione è terminata.<br>Invece di utilizzare una finestra di comando SSH, è possibile eseguire questo comando tramite uno script definito dall'utente (come utente 'root'), generato tramite il pannello di controllo, attività pianificata. Ed eseguirlo al termine dell'installazione.<br>Potete copiare il comando ora!",
+"desc":"I pacchetti di terze parti sono limitati da Synology in DSM 7.x! Poiché l'autorun richiede i permessi di root per eseguire il suo lavoro, è necessario un ulteriore passaggio manuale dopo l'installazione.<br/><br/>Aprire una shell di comando SSH sul NAS (come utente amministratore) ed eseguire il seguente comando <b>dopo</b> che l'installazione è terminata.<br>Invece che tramite una finestra di comando SSH, è possibile eseguire questo comando tramite uno script definito dall'utente (come utente 'root'), generato tramite il pannello di controllo, attività pianificata. Ed eseguirlo al termine dell'installazione.<br>Potete copiare il comando ora!",
 "subitems": [{
 "key": "ignore_value",
 "desc":"Comando",

@@ -25,6 +25,12 @@ fields="config_SCRIPT config_SCRIPT_AFTER_EJECT config_ADD_NEW_FINGERPRINTS conf
  # 2 = allow only previously registered hashes,
  # 3 = register the new onces
 msg=""
+if [[ -f "${SYNOPKG_PKGVAR}/config" ]]; then
+  # get old version from config file if it's an upgrade or only settings change
+  oldVers=$(/bin/get_key_value "${SYNOPKG_PKGVAR}/config" "VERSION")
+fi
+echo "$(date "$DTFMT"): postinst: oldVers='$oldVers', SYNOPKG_PKGVER='$SYNOPKG_PKGVER'" >> "$LOG"
+
 rm -f "$SYNOPKG_PKGVAR/config"
 echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generated now ...<br/>" >> "$LOG"
 
@@ -34,7 +40,7 @@ echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generate
 # 2) is user or group config_NOTIFY_USERS valid? Check for valid entry requires root access and is done in the start-stop-status script
 
 for f1 in $fields; do
-	item="$(env | grep "^$f1=")" # Attention: Values without quotes 
+	item="$(env | grep "^$f1=")" # Attention: Some values without quotes
 	# eval "$item" # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'", the ";99" is lost!???
   # msg="$msg, $f1='${!f1}'"  # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'"
   # f2=${f1#*config_}
@@ -43,20 +49,42 @@ for f1 in $fields; do
 	val="${item#*=}"
   msg="$msg, $key='$val'"
   f2=${key#*config_}
-  echo "$f2=\"${val}\"" >> "$SYNOPKG_PKGVAR/config"	  
+  echo "$f2=\"${val}\"" >> "$SYNOPKG_PKGVAR/config"
 done
 echo "$(date "$DTFMT"): from ENV: $msg" >> "$LOG"
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
   KNOWNSCRIPTSFILEPATHNAME="$SYNOPKG_PKGVAR/FINGERPRINTS"
-  rm -f "$KNOWNSCRIPTSFILEPATHNAME" 
+  res=$(rm -f "$KNOWNSCRIPTSFILEPATHNAME")
+  ret=$?
+  echo "$(date "$DTFMT"): Deletion of old fingerprints: $ret, $res" >> "$LOG"
 fi
 
 chmod 755 "$SYNOPKG_PKGVAR/config"
-if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
-  echo "$(date "$DTFMT"): Installation, upgrade or change of settings done, previously registered script fingerprints deleted" >> "$SYNOPKG_PKGVAR/execLog" 
+# Distinguish between a) new Installation, b) upgrade or c) change of settings
+action="Installation, upgrade or change of settings"
+
+if [[ -z "$oldVers" ]]; then
+  action="Installation of V$SYNOPKG_PKGVER"
+elif [[ "$oldVers" == "$SYNOPKG_PKGVER" ]]; then
+  action="Re-Installation (change of settings) of V$SYNOPKG_PKGVER"
 else
-  echo "$(date "$DTFMT"): Installation, upgrade or change of settings done" >> "$SYNOPKG_PKGVAR/execLog" 
+  action="Upgrade from V$oldVers to V$SYNOPKG_PKGVER"
+fi
+
+if grep -q "^VERSION=" "${SYNOPKG_PKGVAR}/config"; then
+  sed "s|^VERSION=.*|VERSION=\"$SYNOPKG_PKGVER\"|" -i "${SYNOPKG_PKGVAR}/config"
+  echo "$(date "$DTFMT"): Version $SYNOPKG_PKGVER in '${SYNOPKG_PKGVAR}/config' updated" >> "$LOG"
+else
+  sed "$ a\VERSION=\"$SYNOPKG_PKGVER\"" -i "${SYNOPKG_PKGVAR}/config"
+  echo "$(date "$DTFMT"): Version $SYNOPKG_PKGVER appended to '${SYNOPKG_PKGVAR}/config'" >> "$LOG"
+fi
+
+if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
+  echo "$(date "$DTFMT"): $action done, previously registered script fingerprints deleted" >> "$SYNOPKG_PKGVAR/execLog"
+else
+  echo "$(date "$DTFMT"): $action done" >> "$SYNOPKG_PKGVAR/execLog"
 fi
 echo "$(date "$DTFMT"): postinst done, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
+# next script may be post_upgrade
 exit 0
 

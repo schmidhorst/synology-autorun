@@ -34,6 +34,7 @@ user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
   # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
 LOG="/var/log/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
+# $SHELL' is here "/sbin/nologin"
 echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' with parameters '$QUERY_STRING' ..." >> "$LOG"
 # $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
 ah="/volume*/@appstore/$app_name/ui"
@@ -261,114 +262,122 @@ if [[ "$REQUEST_METHOD" == "POST" ]]; then
   logInfoNoEcho 8 "Count of cgi POST items = ${#POST_vars[@]}, HTTP_CONTENT_LENGTH='$HTTP_CONTENT_LENGTH'"  # Zero!?
   read -n${HTTP_CONTENT_LENGTH} postData  # e.g. 'logNewlevel=8&fname=xyz'
   logInfoNoEcho 8 "postData='$postData'"
-  mapfile -d "&" -t POST_vars  < <(printf '%s' "$postData")
-  for ((i=0; i<${#POST_vars[@]}; i+=1)); do
-    key=${POST_vars[i]%%=*}
-    key=$(urldecode "$key")
-    val=${POST_vars[i]#*=}
-    val=$(urldecode "$val")
-    logInfoNoEcho 8 "Post i=$i, key='$key', value='$val'"
-    if [[ -n "$key" ]]; then
-      get[$key]=$val
-    fi
-    # Saving POST request items for later processing:
-    # /usr/syno/bin/synosetkeyvalue "${post_request}" "$key" "$val"
-  done
-  if [[ ${#POST_vars[@]} -gt 0 ]]; then
-    logInfoNoEcho 6 "get[] setup from received POST data."
+  if [[ -n "$postData" ]]; then
+    mapfile -d "&" -t POST_vars  < <(/bin/printf '%s' "$postData")
+    # mapfile -d "&" -t POST_vars  <<< "$postData"
+    # POST_vars[-1]=$(echo "${POST_vars[-1]}" | sed -z 's|\n$||' ) # remove the \n which was appended to last item by "<<<"
+    for ((i=0; i<${#POST_vars[@]}; i+=1)); do
+      key=${POST_vars[i]%%=*}
+      key=$(urldecode "$key")
+      val=${POST_vars[i]#*=}
+      val=$(urldecode "$val")
+      logInfoNoEcho 8 "Post i=$i, key='$key', value='$val'"
+      if [[ -n "$key" ]]; then
+        get[$key]=$val
+      fi
+      # Saving POST request items for later processing:
+      # /usr/syno/bin/synosetkeyvalue "${post_request}" "$key" "$val"
+    done
+    if [[ ${#POST_vars[@]} -gt 0 ]]; then
+      logInfoNoEcho 7 "get[] setup from received POST data."
+    fi    
   fi
 fi
 
-# mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}" here-string <<< appends a newline!
-mapfile -d "&" -t GET_vars < <(printf '%s' "$QUERY_STRING") # also for POST set!
 
-script="<script>"
-# Analyze incoming GET requests and process them to ${get[key]}="$value" variables
-logInfoNoEcho 8 "Count of cgi GET items = ${#GET_vars[@]}"
-for ((i=0; i<${#GET_vars[@]}; i+=1)); do
-  key=${GET_vars[i]%%=*}
-  key=$(urldecode "$key")
-  val=${GET_vars[i]#*=}
-  val=$(urldecode "$val")
-  logInfoNoEcho 8 "GET i=$i, key='$key', value='$val'"
-  get[$key]=$val
-  if [[ "$key" == "action" ]]; then
-    if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]] || [[ "$val" == "chgDetailLogLevel" ]] || [[ "$val" == "SupportEMail" ]]; then
-      logfile="$appCfgDataPath/detailLog"  # Link to /var/log/tmp/autorun.log
-      pageTitle=$(echo "$logTitleDetail") # with actual LOGLEVEL
-    fi
-    if [[ "$val" == "delSimpleLog" ]] || [[ "$val" == "delDetailLog" ]]; then
-      echo "" > "$logfile"
-      logInfoNoEcho 4 "Old content of '$logfile' removed"
-    fi
-    if [[ "$val" == "SupportEMail" ]]; then # net yet working, not yet used!
+if [[ -n "${QUERY_STRING}" ]]; then
+  script="<script>"
+  # QUERY_STRING may be set also in POST mode
+  # mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}" # here-string <<< appends a newline!
+  mapfile -d "&" -t GET_vars < <(/bin/printf '%s' "$QUERY_STRING")
+  GET_vars[-1]=$(echo "${GET_vars[-1]}" | sed -z 's|\n$||' ) # remove the \n which was appended to last item by "<<<"
 
-      # https://community.synology.com/enu/forum/10/post/135979
+  # Analyze incoming GET requests and process them to ${get[key]}="$value" variables
+  logInfoNoEcho 8 "Count of cgi GET items = ${#GET_vars[@]}"
+  for ((i=0; i<${#GET_vars[@]}; i+=1)); do
+    key=${GET_vars[i]%%=*}
+    key=$(urldecode "$key")
+    val=${GET_vars[i]#*=}
+    val=$(urldecode "$val")
+    logInfoNoEcho 8 "GET i=$i, key='$key', value='$val'"
+    get[$key]=$val
+    if [[ "$key" == "action" ]]; then
+      if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]] || [[ "$val" == "chgDetailLogLevel" ]] || [[ "$val" == "SupportEMail" ]]; then
+        logfile="$appCfgDataPath/detailLog"  # Link to /var/log/tmp/autorun.log
+        pageTitle=$(echo "$logTitleDetail") # with actual LOGLEVEL
+      fi
+      if [[ "$val" == "delSimpleLog" ]] || [[ "$val" == "delDetailLog" ]]; then
+        echo "" > "$logfile"
+        logInfoNoEcho 4 "Old content of '$logfile' removed"
+      fi
+      if [[ "$val" == "SupportEMail" ]]; then # net yet working, not yet used!
 
-      # not yet working:
-      if [[ "${REQUEST_METHOD}" == "GET" ]]; then
-        OLD_REQUEST_METHOD="GET"
-        REQUEST_METHOD="POST"
+        # https://community.synology.com/enu/forum/10/post/135979
+
+        # not yet working:
+        if [[ "${REQUEST_METHOD}" == "GET" ]]; then
+          OLD_REQUEST_METHOD="GET"
+          REQUEST_METHOD="POST"
+        fi
+
+        echo "Content-type: text/html; charset=utf-8"
+        echo
+        echo "<!doctype html><html lang=\"${SYNO2ISO[${used_lang}]}\"><head>"
+        echo '<meta charset="utf-8" /><link rel="shortcut icon" href="images/icon_32.png" type="image/x-icon" />
+              <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+              <link rel="stylesheet" type="text/css" href="dsm3.css"/></head><body>'
+        echo "<p>Please describe your problem in Englisch or German language in the generated E-Mail</p>"
+        echo '<p><a target="_blank" rel="noopener noreferrer" href="mailto:synoapps@schmidhorst.de?subject=Autorun&body='
+        echo "Not yet working!"
+        # urlencode "$(cat "$logfile")"
+        #echo ""
+        # urlencode "$(env)"
+        #echo ""
+        # urlencode "$(cat "$SCRIPT_EXEC_LOG")"
+        echo '">Generate Email</a></p></body>'
+
+        # Set REQUEST_METHOD back to GET again:
+        if [[ "${OLD_REQUEST_METHOD}" == "POST" ]]; then
+          REQUEST_METHOD="GET"
+          unset OLD_REQUEST_METHOD
+        fi
+        exit
+      fi
+      if [[ "$val" == "downloadSimpleLog" ]] || [[ "$val" == "downloadDetailLog" ]]; then
+        logInfoNoEcho 4 "Download content of '$logfile' requested, disposition='$disposition'"
+        echo "Content-type: text/plain; charset=utf-8"
+        echo "Content-Disposition: attachment; filename=$(basename "$logfile").txt"
+        echo
+        # echo "<!doctype html>"
+        cat "$logfile"
+        if [[ "$val" == "downloadDetailLog" ]]; then
+          echo -e "\n"
+          env || printenv
+          echo ""
+          # lets append the content of $SCRIPT_EXEC_LOG for full debug info:
+          cat "$SCRIPT_EXEC_LOG"
+        fi
+        exit
       fi
 
-      echo "Content-type: text/html; charset=utf-8"
-      echo
-      echo "<!doctype html><html lang=\"${SYNO2ISO[${used_lang}]}\"><head>"
-      echo '<meta charset="utf-8" /><link rel="shortcut icon" href="images/icon_32.png" type="image/x-icon" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <link rel="stylesheet" type="text/css" href="dsm3.css"/></head><body>'
-      echo "<p>Please describe your problem in Englisch or German language in the generated E-Mail</p>"
-      echo '<p><a target="_blank" rel="noopener noreferrer" href="mailto:synoapps@schmidhorst.de?subject=Autorun&body='
-      echo "Not yet working!"
-      # urlencode "$(cat "$logfile")"
-      #echo ""
-      # urlencode "$(env)"
-      #echo ""
-      # urlencode "$(cat "$SCRIPT_EXEC_LOG")"
-      echo '">Generate Email</a></p></body>'
-
-      # Set REQUEST_METHOD back to GET again:
-      if [[ "${OLD_REQUEST_METHOD}" == "POST" ]]; then
-        REQUEST_METHOD="GET"
-        unset OLD_REQUEST_METHOD
-      fi
-      exit
-    fi
-    if [[ "$val" == "downloadSimpleLog" ]] || [[ "$val" == "downloadDetailLog" ]]; then
-      logInfoNoEcho 4 "Download content of '$logfile' requested, disposition='$disposition'"
-      echo "Content-type: text/plain; charset=utf-8"
-      echo "Content-Disposition: attachment; filename=$(basename "$logfile").txt"
-      echo
-      # echo "<!doctype html>"
-      cat "$logfile"
-      if [[ "$val" == "downloadDetailLog" ]]; then
-        echo -e "\n"
-        env || printenv
-        echo ""
-        # lets append the content of $SCRIPT_EXEC_LOG for full debug info:
-        cat "$SCRIPT_EXEC_LOG"
-      fi
-      exit
-    fi
-
-    if [[ "$val" == "chgDetailLogLevel" ]]; then
-      newlevel=$(echo "${get[logNewlevel]}" | grep "[1-8]")
-      if [[ -n "$newlevel" ]]; then
-        if [[ -f "$appCfgDataPath/config" ]]; then
-          res="$(sed -i "s|^LOGLEVEL=.*$|LOGLEVEL=\"$newlevel\"|" "$appCfgDataPath/config")"
-          result=$?
-          logInfoNoEcho 4 "index.cgi LogLevel change to '$newlevel' in file '$appCfgDataPath/config': result='$result', res='$res'"
-          LOGLEVEL="$newlevel"
-          # $logTitleDetail and pageTitle has still old loglevel:
-       	  eval "$(grep "logTitleDetail=" "$lngFile")" # lngfile was set in parse_language.sh to texts/${used_lang}/lang.txt
-          pageTitle="$logTitleDetail"
+      if [[ "$val" == "chgDetailLogLevel" ]]; then
+        newlevel=$(echo "${get[logNewlevel]}" | grep "[1-8]")
+        if [[ -n "$newlevel" ]]; then
+          if [[ -f "$appCfgDataPath/config" ]]; then
+            res="$(sed -i "s|^LOGLEVEL=.*$|LOGLEVEL=\"$newlevel\"|" "$appCfgDataPath/config")"
+            result=$?
+            logInfoNoEcho 4 "index.cgi LogLevel change to '$newlevel' in file '$appCfgDataPath/config': result='$result', res='$res'"
+            LOGLEVEL="$newlevel"
+            # $logTitleDetail and pageTitle has still old loglevel:
+         	  eval "$(grep "logTitleDetail=" "$lngFile")" # lngfile was set in parse_language.sh to texts/${used_lang}/lang.txt
+            pageTitle="$logTitleDetail"
+          fi
         fi
       fi
-    fi
 
-    if [[ "$val" == "reloadSimpleLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then
-      logInfoNoEcho 7 "Page reload"
-      script="${script} window.onload=function(){ window.scrollTo(0, document.body.scrollHeight);}"  # scroll to bottom
+      if [[ "$val" == "reloadSimpleLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then
+        logInfoNoEcho 7 "Page reload"
+        script="${script} window.onload=function(){ window.scrollTo(0, document.body.scrollHeight);}"  # scroll to bottom
 
 # https://stackoverflow.com/questions/17642872/refresh-page-and-keep-scroll-position
 # not working:
@@ -381,20 +390,21 @@ for ((i=0; i<${#GET_vars[@]}; i+=1)); do
 #           };
 #         }"
 
-    fi # reload
-  fi # action
+      fi # reload
+    fi # action
 
-  # Reset saved GET/POST requests if main is set
-  #if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
-  #  [ -f "${get_request}" ] && rm "${get_request}"
-  #  [ -f "${post_request}" ] && rm "${post_request}"
-  #fi
+    # Reset saved GET/POST requests if main is set
+    #if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
+    #  [ -f "${get_request}" ] && rm "${get_request}"
+    #  [ -f "${post_request}" ] && rm "${post_request}"
+    #fi
 
-  # Saving GET requests for later processing
-  # /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
-done # $QUERY_STRING with GET parameters
+    # Saving GET requests for later processing
+    # /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
+  done # $QUERY_STRING with GET parameters
+  script="$script</script>"
+fi # if [[ -n "${QUERY_STRING}" ]];
 
-script="$script</script>"
 if [[ "$logfile" == "$appCfgDataPath/detailLog" ]]; then
   pageTitle=$(echo "$logTitleDetail") # read it again and insert the changed LOGLEVEL
 fi

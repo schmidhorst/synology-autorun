@@ -83,7 +83,9 @@ findFileIgnoreCase() {
   else
     file=""
   fi
-  mapfile -d "/" -t pathItems  < <(printf '%s' "$filePath")
+  mapfile -d "/" -t pathItems  < <(/bin/printf '%s' "$filePath") # if called from udev: /bin/ required for printf!!!
+  # mapfile -d "/" -t pathItems  <<< "$filePath" # here string appends an newline to last element
+  # pathItems[-1]=$(echo "${pathItems[-1]}" | sed -z 's|\n$||' ) # remove the \n which was appended to last item by "<<<"
   found=1
   #echo "path item count ${#pathItems[@]}"
   for ((i=0; i<${#pathItems[@]}; i+=1)); do # check path

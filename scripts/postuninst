@@ -1,38 +1,46 @@
 #!/bin/bash
-bDebug=1  # 0: delete log files, 1: preserve log files
+bDebug=0  # 0: delete log files, 1: preserve log files
 LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
-SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-echo "$(date "$DTFMT"): postuninst V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
+# SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # /var/packages/autorun/scripts/
+user=$(whoami)
+echo "$(date "$DTFMT"): postuninst V$SYNOPKG_PKGVER started as $user...<br/>" >> "$LOG"
+# echo "$(date "$DTFMT"): p0='$0'" >> "$LOG" # $app_name is empty!!
+configFilePathName="${SYNOPKG_PKGVAR}/config"  # $SYNOPKG_PKGVAR is /volume1/@appdata/autorun and is o.k., still available
+# echo "$(date "$DTFMT"): configFilePathName='$configFilePathName'" >> "$LOG"
+# after uninstall is /var/packages/$SYNOPKG_PKGNAME no more available, only /volume1/@appdata/autorun !!!
 # Attention: If a new version is installed, then this file from the old version
 #   is executed before the preinst of the new version!
 if [[ "${pkgwizard_remove_settings}" == "true" ]] || [[ "${pkgwizard_remove_settings}" == "false" ]]; then
-	# WIZZARD_UIFILES/uninstall_uifile_<lng> was done before! So it's a real uninstall, not an upgrade! 
-  if [[ -d "${SYNOPKG_PKGVAR}" ]]; then
-	  echo "$(date "$DTFMT"): Folder link ${SYNOPKG_PKGVAR} still available" >> "$LOG"
-	else
-	  echo "$(date "$DTFMT"): Folder link ${SYNOPKG_PKGVAR} no more available" >> "$LOG"
-    # after uninstall is /var/packages/$SYNOPKG_PKGNAME no more available, only /volume1/@appdata/autorun/config !!! 
-    # configFilePathName="/var/packages/$SYNOPKG_PKGNAME/var/config"
-    configFilePathName="${SCRIPTPATHTHIS%%/@*}/@appdata/${SYNOPKG_PKGNAME}/config"
-    if [[ -d "${SYNOPKG_PKGVAR}" ]]; then
-	    echo "$(date "$DTFMT"): Folder ${configFilePathName} still available" >> "$LOG"
-    fi    
-	fi
+	# WIZZARD_UIFILES/uninstall_uifile_<lng> was done before! So it's a real uninstall, not an upgrade!
   if [[ "$bDebug" -eq "0" ]]; then
     rm "$LOG"
     rm "/var/tmp/resource.$SYNOPKG_PKGNAME.*"
     rm "/var/log/tmp/resource.$SYNOPKG_PKGNAME.*"
     rm "/var/log/packages/$SYNOPKG_PKGNAME.log"
     rm "/var/log/packages/$SYNOPKG_PKGNAME.log.*.xz"
-    echo "$(date "$DTFMT"): Old logfiles removed" >> "$LOG"
+    rm "${SYNOPKG_PKGVAR}/execLog"
+    # echo "$(date "$DTFMT"): Old logfiles removed" >> "$LOG"
   else
     echo "$(date "$DTFMT"): Logfiles preserved due to bDebug!=0" >> "$LOG"
   fi
 fi
 if [[ "${pkgwizard_remove_settings}" == "true" ]]; then
-  rm -r "${configFilePathName}"
-  echo "$(date "$DTFMT"): Old settings ${SYNOPKG_PKGVAR} = $configFilePathName removed<br/>" >> "$LOG"     
+  res=$(rm -r --interactive=never "${SYNOPKG_PKGVAR}") # remove folder
+  ret=$?
+  # if [[ "$bDebug" -ne "0" ]]; then
+    echo "$(date "$DTFMT"): Result from 'rm -r \"${SYNOPKG_PKGVAR}\"': $ret, '$res'" >> "$LOG"
+  # fi
+else
+  if [[ -f "${SYNOPKG_PKGVAR}\config" ]]; then
+    # put old version to config file, so that postinst can check whether its an upgrade or only settings change
+    res=$(grep "VERSION=" "${SYNOPKG_PKGVAR}\config")
+    if [[ -n "$res" ]]; then
+      res="$(sed -i "s|^VERSION=.*$|VERSION=\"${SYNOPKG_PKGVAR}\"|" "${SYNOPKG_PKGVAR}\config")"
+    else
+      echo "VERSION=\"${SYNOPKG_PKGVAR}\"" >> "${SYNOPKG_PKGVAR}\config"
+    fi
+  fi
 fi
 echo "$(date "$DTFMT"): ... postuninst done<br/>" >> "$LOG"
 exit 0

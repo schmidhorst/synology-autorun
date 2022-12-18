@@ -91,5 +91,6 @@ fi
 
 echo "$(date "$DTFMT"): Values from config put to template '$SYNOPKG_TEMP_LOGFILE'" >> "$LOG"
 echo "$(date "$DTFMT"): ... $0 done" >> "$LOG"
+# putting here somthing to ENV for use in postinst script is not working!
 exit 0
 

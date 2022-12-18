@@ -5,6 +5,9 @@ SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # preinst starts from an temporary folder like /volume1/@tmp/synopkg/install.XDdQUB/scripts/preinst
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
 echo "$(date "$DTFMT"): preinst $0 V$SYNOPKG_PKGVER (physical path SCRIPTPATHTHIS: $SCRIPTPATHTHIS, user=$user, UID=$(id -u "$user"))... <br/>" >> "$LOG"
+versShell="$($SHELL --version | sed -n '1p')" # Environment variable SHELL may be 'ash', but /bin/ash may be a link to bash
+# this may be somthing like "GNU bash, version 4.4.23(1)-release (x86_64-pc-linux-gnu)"
+echo "$(date "$DTFMT"): Shell: SHELL='$SHELL' ($versShell)" >> "$LOG"
 # user is equal to $SYNOPKG_PKGNAME, SCRIPTPATHTHIS is e.g. /volume1/@tmp/synopkg/install.HbEips/scripts/
 # ${SYNOPKG_TEMP_UPGRADE_FOLDER} # e.g. /volume1/@tmp/synopkg.tmp, empty
 scriptpathParent=${SCRIPTPATHTHIS%/*}
@@ -47,6 +50,6 @@ if [[ "$vers" -ne "1" ]]; then
 	fi	
 	exit 1
 fi
-echo "$(date "$DTFMT"): ... OS version checked (${dsmMajor}.${dsmMinor}-${dsmBuild} >= ${osMin}), preinst finished<br/>" >> "$LOG"
+echo "$(date "$DTFMT"): ... DSM OS version checked (${dsmMajor}.${dsmMinor}-${dsmBuild} >= ${osMin}), preinst finished<br/>" >> "$LOG"
 exit 0
 

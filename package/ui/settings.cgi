@@ -1,8 +1,8 @@
 #!/bin/bash
 # Filename: settings.cgi - coded in utf-8
-#    taken from 
+#    taken from
 #  DSM7DemoSPK (https://github.com/toafez/DSM7DemoSPK) and adopted to autorun by Horst Schmid
-#        Copyright (C) 2022 by Tommes 
+#        Copyright (C) 2022 by Tommes
 # Member of the German Synology Community Forum
 
 #             License GNU GPLv3
@@ -25,7 +25,7 @@ if [[ -z "$SCRIPT_NAME" ]]; then  # direct start in debug run
   bDebug=1
   echo "###### index.cgi executed in debug mode!!  ######"
 fi
-  # $0=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi 
+  # $0=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
 app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
 app_name=${app_link##*/} # "<appName>"
   # DOCUMENT_URI=/webman/3rdparty/<appName>/settings.cgi
@@ -33,14 +33,15 @@ app_name=${app_link##*/} # "<appName>"
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
   # REQUEST_URI=/webman/3rdparty/<appName>/settings.cgi
   # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
-display_name="Tool for an script autorun at storage (USB or eSATA) to DSM 7" # used as title of Page 
+display_name="Tool for an script autorun at storage (USB or eSATA) to DSM 7" # used as title of Page
 LOG="/var/log/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
 echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' ..." >> "$LOG"
 echo -e "$(date "$DTFMT"): with parameters '$QUERY_STRING'" >> "$LOG" # e.g. "action=copyLedOff"
 # $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
-ah="/volume*/@appstore/$app_name/ui"
-app_home=$(find $ah -maxdepth 0 -type d) # Attention: find is not working with quotet path!!
+# ah="/volume*/@appstore/$app_name/ui"
+# app_home=$(find $ah -maxdepth 0 -type d) # Attention: find is not working with the wildcard in the quotet part of path!!
+app_home=$(find /volume*/@appstore/"$app_name/ui" -maxdepth 0 -type d)
 
 # Load urlencode and urldecode function from ../modules/parse_hlp.sh:
 if [ -f "${app_home}/modules/parse_hlp.sh" ]; then
@@ -92,7 +93,10 @@ if [[ "$bDebug" -eq 0 ]]; then
     exit
   fi
   # Set REQUEST_METHOD back to POST again:
-  [[ "${OLD_REQUEST_METHOD}" == "POST" ]] && REQUEST_METHOD="POST" && unset OLD_REQUEST_METHOD
+  if [[ "${OLD_REQUEST_METHOD}" == "POST" ]]; then
+    REQUEST_METHOD="POST"
+    unset OLD_REQUEST_METHOD
+  fi
   # Reading user/group from authenticate.cgi
   syno_user=$(/usr/syno/synoman/webman/authenticate.cgi) # authenticate.cgi is a Synology binary
   logInfoNoEcho 6 "authenticate.cgi: syno_user=$syno_user"
@@ -125,7 +129,7 @@ else
 fi
 
 # parse_language.sh: out of ${HTTP_ACCEPT_LANGUAGE} tried to set $used_lang
-# if no siutable language found: fallbackToEnu=1 
+# if no siutable language found: fallbackToEnu=1
 
 # Resetting access permissions
 unset syno_login rar_data syno_privilege syno_token syno_user user_exist is_authenticated
@@ -182,7 +186,7 @@ readonly syno_token syno_user user_exist is_admin # is_authenticated
 
 if [ "$is_admin" != "yes" ]; then
   echo "Content-type: text/html"
-  echo  
+  echo
   echo "<!doctype html><html lang=\"${SYNO2ISO[${used_lang}]}\">"
   echo "<HEAD><TITLE>$app_name: ${LoginRequired}</TITLE></HEAD><BODY>${PleaseLogin}<br/>"
   echo "<br/></BODY></HTML>"
@@ -198,54 +202,58 @@ if [ ! -d "${appCfgDataPath}" ]; then
   echo "$(date "$DTFMT"): ls -l /:" >> "$LOG"
   ls -l / >> "$LOG"
   exit
-fi  
+fi
 
 # Generate the text with the actual settings values and the language specific descriptions:
 st=$(echo "$settingsTitle")  # = eval the $app_name in the $settingsTitle
 ledResetHintRequired=0
+securityWarningDone=0
 while read line; do # read all settings from config file
   itemName=${line%%=*}
-  eval "$line"
-  settings="${settings}$itemName='${!itemName}'<br/>"
-  if [[ "$itemName" == "ADD_NEW_FINGERPRINTS" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">"
-    fp=$(echo "$settingFingerprint")  # replace variables like script '/$SCRIPT' is attached in original string
-    settings="${settings}$fp<br/>" # echo because $SCRIPT is included
-    settings="${settings}</p>"
-  elif [[ "$itemName" == "SCRIPT" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingScript}<br/></p>"
-  elif [[ "$itemName" == "SCRIPT_AFTER_EJECT" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingScriptAfter}<br/></p>"
-  elif [[ "$itemName" == "TRIES" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingTries}<br/></p>"
-  elif [[ "$itemName" == "WAIT" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingWait}<br/></p>"
-  elif [[ "$itemName" == "BEEP" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingBeep}<br/></p>"
-  elif [[ "$itemName" == "LED" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingLedStatus}<br/></p>"
-		if [[ "${!itemName}" -ne "0" ]]; then
-		  ledResetHintRequired=1
-		fi
-  elif [[ "$itemName" == "LED_COPY" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingLedCopy}<br/></p>"
-		if [[ "${!itemName}" -ne "0" ]]; then
-		  ledResetHintRequired=1
-		fi
-  elif [[ "$itemName" == "EJECT_TIMEOUT" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingEjectTimeout}<br/></p>"
-  elif [[ "$itemName" == "LOG_MAX_LINES" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingLogMaxLines}<br/></p>"
-  elif [[ "$itemName" == "NOTIFY_USERS" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingNotifyUsers}<br/></p>"
-  elif [[ "$itemName" == "NO_DSM_MESSAGE_RETURN_CODES" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingNoDsmMessageReturnCodes}<br/></p>"
-  elif [[ "$itemName" == "LOGLEVEL" ]]; then
-    settings="${settings}<p style=\"margin-left:30px;\">${settingLogVerbose}<br/></p>"
-  fi
-  if [[ "$ADD_NEW_FINGERPRINTS" == "0" ]] || [[ "$ADD_NEW_FINGERPRINTS" == "2" ]]; then
-    if [[ "$SCRIPT" != *"/"* ]]; then
-      settings="${settings}<p>${settingSecurityWarning}<br/></p>"
+  if [[ "$itemName" != "VERSION" ]]; then # skip the VERSION entry as this is not a real setting and only used for re-installation
+    eval "$line"
+    settings="${settings}$itemName='${!itemName}'<br/>"
+    if [[ "$itemName" == "ADD_NEW_FINGERPRINTS" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">"
+      fp=$(echo "$settingFingerprint")  # replace variables like script '/$SCRIPT' is attached in original string
+      settings="${settings}$fp<br/>" # echo because $SCRIPT is included
+      settings="${settings}</p>"
+    elif [[ "$itemName" == "SCRIPT" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingScript}<br/></p>"
+    elif [[ "$itemName" == "SCRIPT_AFTER_EJECT" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingScriptAfter}<br/></p>"
+    elif [[ "$itemName" == "TRIES" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingTries}<br/></p>"
+    elif [[ "$itemName" == "WAIT" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingWait}<br/></p>"
+    elif [[ "$itemName" == "BEEP" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingBeep}<br/></p>"
+    elif [[ "$itemName" == "LED" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingLedStatus}<br/></p>"
+      if [[ "${!itemName}" -ne "0" ]]; then
+        ledResetHintRequired=1
+      fi
+    elif [[ "$itemName" == "LED_COPY" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingLedCopy}<br/></p>"
+      if [[ "${!itemName}" -ne "0" ]]; then
+        ledResetHintRequired=1
+      fi
+    elif [[ "$itemName" == "EJECT_TIMEOUT" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingEjectTimeout}<br/></p>"
+    elif [[ "$itemName" == "LOG_MAX_LINES" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingLogMaxLines}<br/></p>"
+    elif [[ "$itemName" == "NOTIFY_USERS" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingNotifyUsers}<br/></p>"
+    elif [[ "$itemName" == "NO_DSM_MESSAGE_RETURN_CODES" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingNoDsmMessageReturnCodes}<br/></p>"
+    elif [[ "$itemName" == "LOGLEVEL" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingLogVerbose}<br/></p>"
+    fi
+    if [[ "$ADD_NEW_FINGERPRINTS" == "0" ]] || [[ "$ADD_NEW_FINGERPRINTS" == "2" ]]; then
+      if [[ "$SCRIPT" != *"/"* ]] && [[ "$securityWarningDone" -eq "0" ]]; then
+        settings="${settings}<p>${settingSecurityWarning}<br/></p>"
+        securityWarningDone="1"
+      fi
     fi
   fi
   # echo "  line='$line', itemName='$itemName', value='${!itemName}'" >> "$LOG"
@@ -271,9 +279,9 @@ settings="${settings}<p><strong>${runInstallationAgain}</strong></p><br/>"
 # --------------------------------------------------------------
 # Set up folder for temporary data:
 app_temp="${app_home}/temp" # /volume*/@appstore/${app_name}/ui/temp
-#  or /volume*/@apptemp/$app_name ?? 
+#  or /volume*/@apptemp/$app_name ??
 if [ ! -d "${app_temp}" ]; then
-  mkdir -p -m 755 "${app_temp}"  
+  mkdir -p -m 755 "${app_temp}"
 fi
 # result="${app_temp}/result.txt"
 
@@ -292,7 +300,7 @@ fi
 # Processing GET/POST request variables
 # CONTENT_LENGTH: CGI meta variable https://stackoverflow.com/questions/59839481/what-is-the-content-length-varaible-of-a-cgi
 
-# https://www.parckwart.de/computer_stuff/bash_and_cgi_parsing_get_and_post_requests  
+# https://www.parckwart.de/computer_stuff/bash_and_cgi_parsing_get_and_post_requests
   #if [ -z "${POST_STRING}" ] && [ "${REQUEST_METHOD}" = "POST" ] && [ -n "${CONTENT_LENGTH}" ]; then
   #  read -n ${CONTENT_LENGTH} POST_STRING
   #fi
@@ -306,66 +314,74 @@ if [[ "$REQUEST_METHOD" == "POST" ]]; then
   logInfoNoEcho 8 "Count of cgi POST items = ${#POST_vars[@]}, HTTP_CONTENT_LENGTH='$HTTP_CONTENT_LENGTH'"  # Zero!?
   read -n${HTTP_CONTENT_LENGTH} postData  # e.g. 'logNewlevel=8&fname=xyz'
   logInfoNoEcho 8 "postData='$postData'"
-  mapfile -d "&" -t POST_vars  < <(printf '%s' "$postData")
-  for ((i=0; i<${#POST_vars[@]}; i+=1)); do
-    key=${POST_vars[i]%%=*}
-    key=$(urldecode "$key")
-    val=${POST_vars[i]#*=}
-    val=$(urldecode "$val")
-    logInfoNoEcho 8 "Post i=$i, key='$key', value='$val'"
-    if [[ -n "$key" ]]; then
-      get[$key]=$val
+  if [[ -n "$postData" ]]; then
+    mapfile -d "&" -t POST_vars  < <(/bin/printf '%s' "$postData") # process substitution <(...) may not be available
+    # mapfile -d "&" -t POST_vars  <<< "$postData"
+    # POST_vars[-1]=$(echo "${POST_vars[-1]}" | sed -z 's|\n$||' ) # remove the \n which was appended to last item by "<<<"
+    for ((i=0; i<${#POST_vars[@]}; i+=1)); do
+      key=${POST_vars[i]%%=*}
+      key=$(urldecode "$key")
+      val=${POST_vars[i]#*=}
+      val=$(urldecode "$val")
+      logInfoNoEcho 8 "Post i=$i, key='$key', value='$val'"
+      if [[ -n "$key" ]]; then
+        get[$key]=$val
+      fi
+      # Saving POST request items for later processing:
+      # /usr/syno/bin/synosetkeyvalue "${post_request}" "$key" "$val"
+    done
+    if [[ ${#POST_vars[@]} -gt 0 ]]; then
+      logInfoNoEcho 7 "get[] setup from received POST data."
     fi
-    # Saving POST request items for later processing:
-    # /usr/syno/bin/synosetkeyvalue "${post_request}" "$key" "$val"
-  done
-  if [[ ${#POST_vars[@]} -gt 0 ]]; then
-    logInfoNoEcho 7 "get[] setup from received POST data."
   fi
 fi
 
-# mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}" here-string <<< appends a newline!
-mapfile -d "&" -t GET_vars < <(printf '%s' "$QUERY_STRING") # also for POST set!
+if [[ -n "${QUERY_STRING}" ]]; then
+  # mapfile -d "&" -t GET_vars <<< "${QUERY_STRING}" # here-string <<< appends a newline!
+  mapfile -d "&" -t GET_vars < <(/bin/printf '%s' "$QUERY_STRING") # process substitution <(...) may be not available
+  # GET_vars[-1]=$(echo "${GET_vars[-1]}" | sed -z 's|\n$||' ) # remove the \n which was appended to last item by "<<<"
 
-# Analyze incoming GET requests and process them to ${get[key]}="$value" variables
-logInfoNoEcho 8 "Count of cgi GET items = ${#GET_vars[@]}"
-for ((i=0; i<${#GET_vars[@]}; i+=1)); do
-  key=${GET_vars[i]%%=*}
-  key=$(urldecode "$key")
-  val=${GET_vars[i]#*=}
-  val=$(urldecode "$val")
-  logInfoNoEcho 8 "GET i=$i, key='$key', value='$val'"
-  get[$key]=$val
-  if [[ "$key" == "action" ]]; then
-    if [[ "$val" == "copyLedOn" ]]; then # not working!!! Would require root permission!
-      res=$(/bin/echo "@" > /dev/ttyS1) # @ 	0x40 	Copy LED on
-      ret=$?
-      logInfoNoEcho 8 "CopyLED ON done with $ret: '$res'"
-    elif [[ "$val" == "copyLedOff" ]]; then # not working!!! Would require root permission!
-      res=$(/bin/echo "B" > /dev/ttyS1) # B 	0x42 	Copy LED off
-      ret=$?
-      logInfoNoEcho 8 "CopyLED OFF done with $ret: '$res'"
-    elif [[ "$val" == "statusLedGreen" ]]; then  # not working!!! Would require root permission!  
-      /bin/echo "8" > /dev/ttyS1 # 8 	0x38 	Status LED green (default)
-      logInfoNoEcho 8 "StatusLED green done"
-    elif [[ "$val" == "statusLedOff" ]]; then  # not working!!! Would require root permission!   
-      /bin/echo "7" > /dev/ttyS1 # 7 	0x37 	Status LED off
-      logInfoNoEcho 8 "StatusLED green done"
+  # Analyze incoming GET requests and process them to ${get[key]}="$value" variables
+  logInfoNoEcho 8 "Count of cgi GET items = ${#GET_vars[@]}"
+  for ((i=0; i<${#GET_vars[@]}; i+=1)); do
+    key=${GET_vars[i]%%=*}
+    key=$(urldecode "$key")
+    val=${GET_vars[i]#*=}
+    val=$(urldecode "$val")
+    logInfoNoEcho 8 "GET i=$i, key='$key', value='$val'"
+    get[$key]=$val
+    if [[ "$key" == "action" ]]; then
+
+      if [[ "$val" == "copyLedOn" ]]; then # not working!!! Would require root permission!
+        res=$(/bin/echo "@" > /dev/ttyS1) # @   0x40  Copy LED on
+        ret=$?
+        logInfoNoEcho 8 "CopyLED ON done with $ret: '$res'"
+      elif [[ "$val" == "copyLedOff" ]]; then # not working!!! Would require root permission!
+        res=$(/bin/echo "B" > /dev/ttyS1) # B   0x42  Copy LED off
+        ret=$?
+        logInfoNoEcho 8 "CopyLED OFF done with $ret: '$res'"
+      elif [[ "$val" == "statusLedGreen" ]]; then  # not working!!! Would require root permission!
+        /bin/echo "8" > /dev/ttyS1 # 8  0x38  Status LED green (default)
+        logInfoNoEcho 8 "StatusLED green done"
+      elif [[ "$val" == "statusLedOff" ]]; then  # not working!!! Would require root permission!
+        /bin/echo "7" > /dev/ttyS1 # 7  0x37  Status LED off
+        logInfoNoEcho 8 "StatusLED green done"
+      fi
     fi
-  fi
 
-  # Reset saved GET/POST requests if main is set
-  #if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
-  #  [ -f "${get_request}" ] && rm "${get_request}"
-  #  [ -f "${post_request}" ] && rm "${post_request}"
-  #fi
+    # Reset saved GET/POST requests if main is set
+    #if [[ "${get[page]}" == "main" ]] && [ -z "${get[section]}" ]; then
+    #  [ -f "${get_request}" ] && rm "${get_request}"
+    #  [ -f "${post_request}" ] && rm "${post_request}"
+    #fi
 
-  # Saving GET requests for later processing
-  # /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
-done # $QUERY_STRING with GET parameters
+    # Saving GET requests for later processing
+    # /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
+  done # $QUERY_STRING with GET parameters
+fi # if [[ -n "${QUERY_STRING}" ]];
 
 if [[ ${#GET_vars[@]} -gt 0 ]]; then
-  logInfoNoEcho 6 "get[] array setup."
+  logInfoNoEcho 8 "get[] array setup."
 fi
 
 # Adding the SynoToken to the GET request processing
@@ -410,16 +426,16 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           echo "<button onclick=\"location.href='index.cgi'\" type=\"button\">${btnShowSimpleLog}</button>"
           #echo '<br \>'
           echo "<p><strong>$st</strong></p>"
-          echo "${settings}" 
+          echo "${settings}"
         else
           # Infotext: Access allowed only for users from the Administrators group
           echo '<p>'${txtAlertOnlyAdmin}'</p>'
         fi
-				if [[ "$fallbackToEnu" -eq "0" ]]; then
-				  echo '<p>'${txtLanguageSource}'</p>'
-				else
-				  echo "<p>Could not find a supported language in your webbrowser regional preferences '${HTTP_ACCEPT_LANGUAGE}'. Therefore English is used.</p>"				
-				fi
+        if [[ "$fallbackToEnu" -eq "0" ]]; then
+          echo '<p>'${txtLanguageSource}'</p>'
+        else
+          echo "<p>Could not find a supported language in your webbrowser regional preferences '${HTTP_ACCEPT_LANGUAGE}'. Therefore English is used.</p>"
+        fi
         if [[ "$bDebug" -eq "1" ]]; then # LED control is not working, permission denied!
           echo "$ledCtrlHint<br/>"
           echo "<button onclick=\"location.href='index.cgi?action=copyLedOn'\" type=\"button\">CopyLED ON</button> "

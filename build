@@ -39,7 +39,16 @@ echo "'$0' started ..."
 # non-UTF-8 files with international characters and Windows-CR-LF may cause problems. 
 # Detect such files by checking all source files ...
 echo "File coding check ..."
-checkCoding "$SCRIPTPATHTHIS/" 
+# checkCoding needs the 'file' command, which is e.g. in "SynoCli File Tools":
+res=$(which "file")
+if [[ -n "$res" ]]; then
+  checkCoding "$SCRIPTPATHTHIS/"
+else
+  echo "=================================================================================================================="
+  echo "Linux command 'file' is not available. Checking source files for correct line terminator and UTF-8-coding skipped!"
+  echo "The 'file' command is part of the package 'SynoCli File Tools'! You may install that from https://packages.synocommunity.com/"
+  echo "=================================================================================================================="
+fi
 echo "... finished file coding check"
 
 # "$(./translate.sh)" # Update tranlations via DeepL if necessary

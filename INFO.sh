@@ -28,9 +28,11 @@ SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
 # index.cgi uses https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh to check for an new version
 # change that entry automatically if the maintainer_url is changed: 
 githubRawInfoUrl=$(echo "${maintainer_url}/main/INFO.sh" | sed 's/github.com/raw.githubusercontent.com/')
-# patch githubRawInfoUrl directly to the index.cgi file:
-sed -i "s|^githubRawInfoUrl=.*\$|githubRawInfoUrl=\"${githubRawInfoUrl}\" #patched from INFO.sh|" "$SCRIPTPATHTHIS/package/ui/index.cgi"
-
+# patch githubRawInfoUrl directly to the index.cgi file if necessary:
+lineInfoUrl=$(grep "githubRawInfoUrl=" "$SCRIPTPATHTHIS/package/ui/index.cgi")
+if [[ "$lineInfoUrl" != "githubRawInfoUrl=\"${githubRawInfoUrl}\"" ]]; then
+  sed -i "s|^githubRawInfoUrl=.*\$|githubRawInfoUrl=\"${githubRawInfoUrl}\" #patched from INFO.sh|" "$SCRIPTPATHTHIS/package/ui/index.cgi"
+fi
 if [[ "$1" != "" ]]; then  # Generation without toolkit scripts
   line0=$(grep "SYNO.SDS." "package/ui/config")
   # echo "from ui/config: '$line0'"

@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/ash
+# Shell for root is ash. But /bin/ash is on DS220+ a link to bash!
 SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # /volumeX/@appstore/<app>
 APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
 source "$SCRIPTPATHTHIS/common" udev # e.g. $APPDATA = "/var/packages/$APPNAME/var" is setup there
@@ -21,7 +22,11 @@ if [ "$(/bin/find "$TMPPATH" -mmin -2)" != "" ] ; then
 fi
 /bin/touch "$TMPPATH" # to filter subsequent events
 # run autorun
-logInfo 5 "udev done, starting now $SCRIPTPATHTHIS/autorun"
-"$SCRIPTPATHTHIS/autorun" "$1" &
+versShell="$($SHELL --version | sed -n '1p')" # gest 1st line from e.g. "ash --version"
+logInfo 7 "udev done, shell is '$SHELL' ($versShell), starting now $SCRIPTPATHTHIS/autorun"
+"$SCRIPTPATHTHIS/autorun" "$1" &  # this ignores the shebang and runs it in ash!
+# bin/bash "$SCRIPTPATHTHIS/autorun" "$1" & # this ignores the shebang and runs it in ash!
+# cd "$SCRIPTPATHTHIS"
+# /usr/bin/bash ./autorun "$1" &  # this ignores the shebang and runs it in ash!
 exit
 

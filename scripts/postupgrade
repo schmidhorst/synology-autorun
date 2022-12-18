@@ -4,7 +4,7 @@ LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 echo "$(date "$DTFMT"): postupgrade V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
 if [[ ! -f "${SYNOPKG_PKGVAR}/config" ]]; then # not e.g. preserved from uninstall
-  tempStorageFolder="/tmp/net.reidemeister.$SYNOPKG_PKGNAME" 
+  tempStorageFolder="/tmp/net.reidemeister.$SYNOPKG_PKGNAME"
   if [ -d "$tempStorageFolder" ]; then
     echo "$(date "$DTFMT"): temp data folder $tempStorageFolder found<br/>" >> "$LOG"
     # restore log

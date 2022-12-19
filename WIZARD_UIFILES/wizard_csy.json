@@ -22,7 +22,7 @@
 "step_title":"Konfigurace",
 "items": [
 {"type": "textfield",
-"desc":"Existují dvě možnosti umístění skriptu, který by se měl spustit po připojení zařízení:<br>a) Skript je umístěn v kořenovém adresáři externího paměťového zařízení. U zařízení bez takového skriptu se akce neprovádí. Pro tento případ zadejte název skriptu bez cesty, bez '/'.<br>b) Skript se nachází na vašem DSM. A bude spuštěn při každém připojení úložného zařízení. Zadejte celý název s cestou, například '/volume1/mysyn/auto.sh'.<br>Skript musí být spustitelný pro uživatele 'root'. Skript získá přípojný bod zařízení (např. /volumeUSB1/usbshare/) jako první parametr (\$1) a oddíl zařízení (např. usb1p1) jako druhý (\$2). Nápověda: Skript je spuštěn s <b>prázdným prostředím</b>, všechny použité příkazy musíte zadat pomocí cesty! V názvu skriptu se rozlišují malá a velká písmena!",
+"desc":"Existují dvě možnosti umístění skriptu, který by se měl spustit po připojení zařízení:<br>a) Skript je umístěn v kořenovém adresáři externího paměťového zařízení. U zařízení bez takového skriptu se akce neprovádí. Pro tento případ zadejte název skriptu bez cesty, bez '/'.<br>b) Skript se nachází na vašem DSM. A bude spuštěn při každém připojení úložného zařízení. Zadejte celý název s cestou, například '/volume1/mysyn/auto.sh'.<br>Skript musí být spustitelný pro uživatele 'root'. Skript získá přípojný bod zařízení (např. /volumeUSB1/usbshare/) jako první parametr (\\$1) a oddíl zařízení (např. usb1p1) jako druhý (\\$2). Nápověda: Skript je spuštěn s <b>prázdným prostředím</b>, všechny použité příkazy musíte zadat pomocí cesty! V názvu skriptu se rozlišují malá a velká písmena!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Skript k provedení"

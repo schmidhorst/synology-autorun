@@ -295,7 +295,7 @@ for sourcefile in "${wizzardfiles[@]}"; do
                 echo "stopped!" | tee -a "$LOG"
                 exit 2
               fi
-              tr2="$(echo "$translated" | sed 's|\"|\\"|g' | sed 's|\$|\\$|g' )"
+              tr2="$(echo "$translated" | sed 's|\"|\\\\"|g' | sed 's|\$|\\\\$|g' )"
               echo "$synoLang $targetIsoLang: $tr2" | tee -a "$LOG"
               echo "${prefix}:\"${tr2}\"$postfix" >> "$targetFile"
             else # If the curl above was NOT sucessful
@@ -415,4 +415,5 @@ for sourcefile in "${htmlfiles[@]}"; do
   done # for synoLang in $synoLangs; do
 done # for sourcefile in $htmlfiles; do
 echo "... Translation script done!" | tee -a "$LOG"
+echo "Hint: The README.xxx.md there is no translation included in the script!"
 

@@ -22,7 +22,7 @@
 "step_title":"Konfiguration",
 "items": [
 {"type": "textfield",
-"desc":"Det finns två möjligheter när det gäller platsen för skriptet som ska köras efter anslutning av enheten:<br>a) Skriptet finns i rotkatalogen för den externa lagringsenheten. Ingen åtgärd för enheter som inte har ett sådant skript. Ange namnet på skriptet utan sökväg, utan \"/\".<br>b) Skriptet finns på din DSM. Och kommer att startas vid varje anslutning av lagringsenhet. Ange det fullständiga namnet med sökväg, t.ex. \"/volume1/mysyn/auto.sh\".<br>Skriptet måste vara körbart för användaren \"root\". Skriptet hämtar enhetens monteringspunkt (t.ex. /volumeUSB1/usbshare/) som första parameter (\$1) och enhetens partition (t.ex. usb1p1) som andra parameter (\$2). Tips: Du måste ange alla använda kommandon med path! Skriptnamnet är skiftlägeskänsligt!",
+"desc":"Det finns två möjligheter när det gäller platsen för skriptet som ska köras efter anslutning av enheten:<br>a) Skriptet finns i rotkatalogen för den externa lagringsenheten. Ingen åtgärd för enheter som inte har ett sådant skript. Ange namnet på skriptet utan sökväg, utan \"/\".<br>b) Skriptet finns på din DSM. Och kommer att startas vid varje anslutning av lagringsenhet. Ange det fullständiga namnet med sökväg, t.ex. \"/volume1/mysyn/auto.sh\".<br>Skriptet måste vara körbart för användaren \"root\". Skriptet hämtar enhetens monteringspunkt (t.ex. /volumeUSB1/usbshare/) som första parameter (\\$1) och enhetens partition (t.ex. usb1p1) som andra parameter (\\$2). Tips: Du måste ange alla använda kommandon med path! Skriptnamnet är skiftlägeskänsligt!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Skript som ska exekveras"

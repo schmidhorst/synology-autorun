@@ -1,16 +1,16 @@
 #!/bin/bash
 # $SYNOPKG_PKGNAME is available if pre-processing was well done! 
-LOG="/var/log/tmp/autorun.log"
+LOG="/var/tmp/autorun.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 user=$(whoami)
 scriptpathParent=${SCRIPTPATHTHIS%/*}
 echo "$(date "$DTFMT"): Start of $0 to put values from config file (if available) to '$SYNOPKG_TEMP_LOGFILE', which replaces install_uifile (as $user)" >> "$LOG"
 if [[ -z "$SYNOPKG_PKGNAME" ]]; then
-  LOG="/var/log/tmp/autorun.log"
+  LOG="/var/tmp/autorun.log"
   echo "$(date "$DTFMT"): Error: SYNOPKG_PKGNAME is not set in install_uifile.sh !!!???" >> "$LOG"
 else
-  LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+  LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
   echo "$(date "$DTFMT"): install_uifile.sh SYNOPKG_PKGNAME is available: '$SYNOPKG_PKGNAME'" >> "$LOG"
 fi
 

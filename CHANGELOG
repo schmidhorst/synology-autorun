@@ -3,7 +3,7 @@
 
  - Eject USB Drive (at exit code 100) reworked, so that it works also on DSM 7.x
  - Allow to use the status LED and/or the copy LED
- - Logfile for installation/upgrade actions moved from @appstore (target) to /var/log/tmp/autorun.log folder
+ - Debug logfile for installation/upgrade actions moved from @appstore (target) to /var/tmp/autorun.log folder
  - Logfile for drive connect and drive eject actions added (in @appdata / var folder)
  - Config files moved from @appstore (target) to @appdata (var) folder
  - At upgrade the WIZARD is used like during the 1st installation, but the presets are read from actual configuration
@@ -13,13 +13,11 @@
  - A new GUI added
  - Desktop notification implemented again
  - Internationalization done with machine tranlations via DeepL
-       
+ - The script, which is started after external drive mounting can now be located either on the external drive or internally.
+
  - note: for DSM 6.x use the version 1.7, which can be found
    at https://github.com/reidemei/synology-autorun/releases/tag/v1.7
 
-Known Issues:
- - The Web pages do not use the language setting of the actual user but the general DSM language setting 
-   as the file /volume1/@userpreference/<user>/usersettings is not accessible.  
 
 1.8.x/1.9
   Forks from Jip-Hop (https://github.com/Jip-Hop/synology-autorun) and JC-23 (https://github.com/JC-23/synology-autorun)

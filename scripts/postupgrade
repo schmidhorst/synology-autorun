@@ -1,6 +1,6 @@
 #!/bin/sh
 # executed after postinst!
-LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 echo "$(date "$DTFMT"): postupgrade V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
 if [[ ! -f "${SYNOPKG_PKGVAR}/config" ]]; then # not e.g. preserved from uninstall

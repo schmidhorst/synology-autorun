@@ -41,7 +41,7 @@ else
   app_name=${app_link##*/} # "<appName>"
 fi
 
-LOG="/var/log/tmp/${app_name}.log"
+LOG="/var/tmp/${app_name}.log"
 logInfoNoEcho 6 "parse_language.sh started with param1='$1', whoami=$(whoami) ..."
 if [[ "$bDebugPL" -eq "1" ]]; then
   echo "see $LOG"

@@ -1,5 +1,5 @@
 #!/bin/bash
-LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami) # EnvVar $USER may be not well set
 echo "$(date "$DTFMT"): postinst V$SYNOPKG_PKGVER started as user '$user' ...<br/>" >> "$LOG"

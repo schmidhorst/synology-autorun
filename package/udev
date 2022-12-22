@@ -4,7 +4,7 @@ SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
 APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
 source "$SCRIPTPATHTHIS/common" udev # e.g. $APPDATA = "/var/packages/$APPNAME/var" is setup there
 echo "$(date "$DTFMT"): udev after common, LOG is now '$LOG'"
-# LOG="/var/log/tmp/$APPNAME.log"
+# LOG="/var/tmp/$APPNAME.log"
 
 TMPPATH="/tmp/net.reidemeister.$APPNAME.$1"  # Marker-File for time stamp to filter events
 if [[ -z "$DTFMT" ]]; then

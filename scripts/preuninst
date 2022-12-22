@@ -1,5 +1,5 @@
 #!/bin/sh
-LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 # real uninstall: uninstall wizzard was done and $pkgwizard_remove_settings setup
 # update: uninstall wizzard was not done! $pkgwizard_remove_settings was not setup!  
 if [ "${pkgwizard_remove_settings}" == "true" ]; then

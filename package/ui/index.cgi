@@ -32,7 +32,7 @@ app_name=${app_link##*/} # "<appName>"
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
   # REQUEST_URI=/webman/3rdparty/<appName>/index.cgi
   # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
-LOG="/var/log/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
+LOG="/var/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
 # $SHELL' is here "/sbin/nologin"
 echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' with parameters '$QUERY_STRING' ..." >> "$LOG"
@@ -303,7 +303,7 @@ if [[ -n "${QUERY_STRING}" ]]; then
     get[$key]=$val
     if [[ "$key" == "action" ]]; then
       if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]] || [[ "$val" == "chgDetailLogLevel" ]] || [[ "$val" == "SupportEMail" ]]; then
-        logfile="$appCfgDataPath/detailLog"  # Link to /var/log/tmp/autorun.log
+        logfile="$appCfgDataPath/detailLog"  # Link to /var/tmp/autorun.log
         pageTitle=$(echo "$logTitleDetail") # with actual LOGLEVEL
       fi
       if [[ "$val" == "delSimpleLog" ]] || [[ "$val" == "delDetailLog" ]]; then

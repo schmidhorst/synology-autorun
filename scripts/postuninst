@@ -1,6 +1,6 @@
 #!/bin/bash
 bDebug=0  # 0: delete log files, 1: preserve log files
-LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 # SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # /var/packages/autorun/scripts/
 user=$(whoami)
@@ -16,7 +16,6 @@ if [[ "${pkgwizard_remove_settings}" == "true" ]] || [[ "${pkgwizard_remove_sett
   if [[ "$bDebug" -eq "0" ]]; then
     rm "$LOG"
     rm "/var/tmp/resource.$SYNOPKG_PKGNAME.*"
-    rm "/var/log/tmp/resource.$SYNOPKG_PKGNAME.*"
     rm "/var/log/packages/$SYNOPKG_PKGNAME.log"
     rm "/var/log/packages/$SYNOPKG_PKGNAME.log.*.xz"
     rm "${SYNOPKG_PKGVAR}/execLog"

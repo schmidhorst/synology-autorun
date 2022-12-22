@@ -1,5 +1,5 @@
 #!/bin/sh
-LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami)
 echo -e "\n$(date "$DTFMT"): $0 ($SYNOPKG_PKGVER) started with account '$user' ..." >> "$LOG"

@@ -34,7 +34,7 @@ user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
   # REQUEST_URI=/webman/3rdparty/<appName>/settings.cgi
   # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
 display_name="Tool for an script autorun at storage (USB or eSATA) to DSM 7" # used as title of Page
-LOG="/var/log/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
+LOG="/var/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
 echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' ..." >> "$LOG"
 echo -e "$(date "$DTFMT"): with parameters '$QUERY_STRING'" >> "$LOG" # e.g. "action=copyLedOff"

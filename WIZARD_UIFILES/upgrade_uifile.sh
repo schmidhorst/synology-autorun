@@ -1,5 +1,5 @@
 #!/bin/bash
-LOG="/var/log/tmp/$SYNOPKG_PKGNAME.log"
+LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami)
 echo "$(date "$DTFMT"): Start of $0 to put values from config file to $SYNOPKG_TEMP_LOGFILE, which replaces upgrade_uifile (as $user)" >> "$LOG"

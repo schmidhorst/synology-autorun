@@ -160,7 +160,7 @@ if [[ -z "$LOGFILE" ]]; then
   # LOGFILE="$APPDATA/log" # equal to /volumeX/@appdata/<app>
   # LOGFILE="/var/log/packages/$APPNAME.log" # permission denied
   # /var/log/$APPNAME.log: Permission denied
-  LOGFILE="/var/log/tmp/$APPNAME.log" # A link /var/packages/$SYNOPKG_PKGNAME/var/detailLog is set to this (see start-stop-status script)
+  LOGFILE="/var/tmp/$APPNAME.log" # A link /var/packages/$SYNOPKG_PKGNAME/var/detailLog is set to this (see start-stop-status script)
   # echo "common LOGFILE changed, now='$LOGFILE'"
 fi
 LOG="$LOGFILE"

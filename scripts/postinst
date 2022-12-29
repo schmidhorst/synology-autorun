@@ -3,9 +3,12 @@ LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami) # EnvVar $USER may be not well set
 echo "$(date "$DTFMT"): postinst V$SYNOPKG_PKGVER started as user '$user' ...<br/>" >> "$LOG"
-# postinst starts from var/packages/autorun/scripts, not from temporary folder like preupgrade
-
-fields="config_SCRIPT config_SCRIPT_AFTER_EJECT config_ADD_NEW_FINGERPRINTS config_TRIES config_WAIT config_BEEP config_LED config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS config_NO_DSM_MESSAGE_RETURN_CODES config_LOGLEVEL"
+# need to fetch values entered by user from environment and put to the strings file for each language
+# configFilePathName="$(dirname "$0")/initial_config.txt" is no more available!
+items="$(env | grep "^config_")"
+# keys="config_WAIT config_BEEP config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS config_LOGLEVEL"
+mapfile -t itemArray < <(/bin/printf '%s' "$items")
+# echo "$(date "$DTFMT"): Config-Items from ENV: '${itemArray[*]}'" >> "$LOG"
 # config_LED, Status LED usage:
  # 0 = not used,
  # 1 = orange while script is running, green when done,
@@ -24,13 +27,7 @@ fields="config_SCRIPT config_SCRIPT_AFTER_EJECT config_ADD_NEW_FINGERPRINTS conf
  # 1 = clear hash list now and register the hash of each newly executed script,
  # 2 = allow only previously registered hashes,
  # 3 = register the new onces
-msg=""
-if [[ -f "${SYNOPKG_PKGVAR}/config" ]]; then
-  # get old version from config file if it's an upgrade or only settings change
-  oldVers=$(/bin/get_key_value "${SYNOPKG_PKGVAR}/config" "VERSION")
-fi
-echo "$(date "$DTFMT"): postinst: oldVers='$oldVers', SYNOPKG_PKGVER='$SYNOPKG_PKGVER'" >> "$LOG"
-
+echo "$(date "$DTFMT"): postinst: SYNOPKG_OLD_PKGVER='$SYNOPKG_OLD_PKGVER', SYNOPKG_PKGVER='$SYNOPKG_PKGVER'" >> "$LOG"
 rm -f "$SYNOPKG_PKGVAR/config"
 echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generated now ...<br/>" >> "$LOG"
 
@@ -39,17 +36,18 @@ echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generate
 # 1) Is the $config_SCRIPT_AFTER_EJECT file available, and has it correct line break and UTF8-Coding?
 # 2) is user or group config_NOTIFY_USERS valid? Check for valid entry requires root access and is done in the start-stop-status script
 
-for f1 in $fields; do
-	item="$(env | grep "^$f1=")" # Attention: Some values without quotes
-	# eval "$item" # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'", the ";99" is lost!???
-  # msg="$msg, $f1='${!f1}'"  # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'"
-  # f2=${f1#*config_}
-  # echo "$f2=\"${!f1}\"" >> "$SYNOPKG_PKGVAR/config"
-	key="${item%%=*}"
-	val="${item#*=}"
-  msg="$msg, $key='$val'"
-  f2=${key#*config_}
-  echo "$f2=\"${val}\"" >> "$SYNOPKG_PKGVAR/config"
+msg=""
+for item in "${itemArray[@]}"; do
+  # eval "$item" # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'", the ";99" is lost!???
+  key="${item%%=*}"
+  # Some values with, some without quotes, remove them:
+  val="$(sed -e 's/^\"//' -e 's/\"$//' <<<"${item#*=}")"
+  key2=${key#*config_}
+  if [[ -n "$key2" ]]; then
+    echo "$key2=\"${val}\"" >> "$SYNOPKG_PKGVAR/config"
+  fi
+  # echo "$item:  $key2=\"${val}\"" >> "$LOG"
+  msg="$msg  $key2='${val}'"
 done
 echo "$(date "$DTFMT"): from ENV: $msg" >> "$LOG"
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
@@ -62,21 +60,12 @@ fi
 chmod 755 "$SYNOPKG_PKGVAR/config"
 # Distinguish between a) new Installation, b) upgrade or c) change of settings
 action="Installation, upgrade or change of settings"
-
-if [[ -z "$oldVers" ]]; then
+if [[ -z "$SYNOPKG_OLD_PKGVER" ]]; then
   action="Installation of V$SYNOPKG_PKGVER"
-elif [[ "$oldVers" == "$SYNOPKG_PKGVER" ]]; then
+elif [[ "$SYNOPKG_OLD_PKGVER" == "$SYNOPKG_PKGVER" ]]; then
   action="Re-Installation (change of settings) of V$SYNOPKG_PKGVER"
 else
   action="Upgrade from V$oldVers to V$SYNOPKG_PKGVER"
-fi
-
-if grep -q "^VERSION=" "${SYNOPKG_PKGVAR}/config"; then
-  sed "s|^VERSION=.*|VERSION=\"$SYNOPKG_PKGVER\"|" -i "${SYNOPKG_PKGVAR}/config"
-  echo "$(date "$DTFMT"): Version $SYNOPKG_PKGVER in '${SYNOPKG_PKGVAR}/config' updated" >> "$LOG"
-else
-  sed "$ a\VERSION=\"$SYNOPKG_PKGVER\"" -i "${SYNOPKG_PKGVAR}/config"
-  echo "$(date "$DTFMT"): Version $SYNOPKG_PKGVER appended to '${SYNOPKG_PKGVAR}/config'" >> "$LOG"
 fi
 
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then

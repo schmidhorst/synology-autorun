@@ -1,13 +1,13 @@
 {
   ".url": {
     "SYNO.SDS._ThirdParty.App.autorun": {
-      "desc": "Autorun",
+      "title": "Autorun on USB/eSATA connect",
+      "desc": "Autorun script starter for external drives",
       "icon": "images/icon_{0}.png",
 			"appWindow": "SYNO.SDS._ThirdParty.App.autorun",
       "allUsers": true,
       "texts": "texts",
       "protocol": "https",
-      "title": "Autorun on USB/eSATA connect",
 			"type": "legacy",
 			"width": 550,
 			"height": 400,

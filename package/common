@@ -3,7 +3,7 @@
 # Variante a:  $1 = log entry
 # Variante b: $1= LogLevel, $2 log entry: Only if $1 is smaler or equal to the loglevel it will be reported
 logInfo() {
-  if [[ $# -ge 2 ]]; then # more than one parameter
+  if [[ "$1" =~ ^[0-9]+$ ]] && [[ $# -ge 2 ]]; then # Attention: No single or double quotes for regExp allowed!
     ll=$1 # 1st parameter is log level
     shift
   else
@@ -72,7 +72,14 @@ beepError() {  # 3 times long beep
 # Check whether file $1 exists: Result 0: yes, identical name, 1: upper/lower case is different, 2: no
 # The -iname item of find command is not allowed to contain '/' ==> need to loop through path elements!
 # not yet supported: multiple directories with same ignore-case-name
+
+# shell option nocaseglob is only working for parts with wildcard!!!!!!
+# https://unix.stackexchange.com/questions/16516/shopt-s-nocaseglob-is-not-working-on-ubuntu
+# https://unix.stackexchange.com/questions/60162/how-to-make-cd-arguments-case-insensitive
 findFileIgnoreCase() {
+  if [[ -f "$1" ]]; then # if no support for possibly multiple results is required, e.g. log, Log, LOG this shortcut can be used!
+    return 0 # identical
+  fi
   filePath="$(dirname "$1")"
   fileName="$(basename "$1")"
   # echo "path='$filePath', name='$fileName'"
@@ -171,8 +178,8 @@ if [[ -z "$lngUser" ]]; then
   logInfo 5 "common: SYNOPKG_DSM_LANGUAGE is not available, trying maillang='$lngMail'"
   lngUser="$lngMail"  
 fi
-if [[ ! -f "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt" ]]; then
-  logInfo 5 "common: /var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt not available, switched to enu"
+if [[ ! -f "/var/packages/$APPNAME/target/ui/texts/$lngUser/lang.txt" ]]; then
+  logInfo 5 "common: /var/packages/$APPNAME/target/ui/texts/$lngUser/lang.txt not available, switched to enu"
   lngUser="enu"
 fi
 

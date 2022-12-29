@@ -79,25 +79,27 @@ if [ -n "${HTTP_ACCEPT_LANGUAGE}" ] ; then  # WebBrowser-Preset available in cgi
     # mapfile -d "," -t httpLngs <<< "${HTTP_ACCEPT_LANGUAGE}" # here-string <<< appends a newline!
     mapfile -d "," -t httpLngs < <(/bin/printf '%s' "$HTTP_ACCEPT_LANGUAGE") # process substitution should be available also in ash with bash-compatibility
     # httpLngs[-1]=$(echo "${httpLngs[-1]}" | sed -z 's|\n$||' ) # remove the \n which was appended to last item by "<<<"
-
-    logInfoNoEcho 8 "${#httpLngs[@]} Elments in httpLngs[@]"
+    msg1="${#httpLngs[@]} Elments in httpLngs[@]"
     for ((i=0; i<${#httpLngs[@]}; i+=1)); do
       b1=${httpLngs[i]%%;*} # remove e.g. ";q=0.7", remaining e.g. "pt-PT, de-DE"
       b2=${httpLngs[i]:0:2}
       b2=${b2,,} # to lower case, should not be necessary
-      logInfoNoEcho 8 "http lng $i: '${httpLngs[i]}', b1='$b1'==>'${ISO2SYNO[$b1]}', b2='$b2'==>'${ISO2SYNO[$b2]}'"
+      msg1=";  $msg1 ${httpLngs[i]}"
+      [[ -n ${ISO2SYNO[$b1]} ]] && msg1="$msg1, b1='$b1'==>'${ISO2SYNO[$b1]}"
+      [[ -n ${ISO2SYNO[$b1]} ]] && msg1="$msg1, b2='$b2'==>'${ISO2SYNO[$b2]}"
       if [[ -n "${ISO2SYNO[$b1]}" ]] && [[ "$httpSynLngs" != *"${ISO2SYNO[$b1]}"* ]]; then
         httpSynLngs="$httpSynLngs${ISO2SYNO[$b1]} "
       elif [[ -n "${ISO2SYNO[$b2]}" ]] && [[ "$httpSynLngs" != *"${ISO2SYNO[$b2]}"* ]]; then
         httpSynLngs="$httpSynLngs${ISO2SYNO[$b2]} "
       elif [[ -z "${ISO2SYNO[$b1]}" ]] && [[ -z "${ISO2SYNO[$b2]}" ]]; then
-        logInfoNoEcho 6 "No Syno language abbreviation found for '$b1' and '$b2'"
+        msg1="$msg1: no Syno language"
       fi
     done
+    logInfoNoEcho 8 "$msg1"
   fi
 fi
 
-logInfoNoEcho 6 "lngDsmUser='$lngDsmUser', httpLng='$httpSynLngs',lngDsm2='$lngDsm2', env_LANG='$env_lng', gui_lang='$gui_lang', lngMail='$lngMail'"
+logInfoNoEcho 8 "lngDsmUser='$lngDsmUser', httpLng='$httpSynLngs',lngDsm2='$lngDsm2', env_LANG='$env_lng', gui_lang='$gui_lang', lngMail='$lngMail'"
 languages=( $lngDsmUser $httpSynLngs $lngDsm2 $env_lng $gui_lang $lngMail )
 # logInfoNoEcho 6 "languages with precedence to check for an available translation: ${languages[@]}"
 used_lang=""

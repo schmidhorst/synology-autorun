@@ -2,7 +2,7 @@
 LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami)
-echo "$(date "$DTFMT"): Start of $0 to put values from config file to $SYNOPKG_TEMP_LOGFILE, which replaces upgrade_uifile (as $user)" >> "$LOG"
+echo "$(date "$DTFMT"): Start of $0 to put values from wizard_enu.json and the config file to $SYNOPKG_TEMP_LOGFILE, which replaces upgrade_uifile (as $user)" >> "$LOG"
 
 if [[ -n "$SYNOPKG_DSM_LANGUAGE" ]]; then
   lng="$SYNOPKG_DSM_LANGUAGE" # lng of actual user
@@ -30,7 +30,7 @@ if [ ! -f "$JSON" ]; then
   echo "$(date "$DTFMT"): No upgrade_uifile ($$SYNOPKG_TEMP_LOGFILE) generated (only empty file)" >> "$LOG"
   exit 11 # should we use exit 0 ?
 fi
-echo "$(date "$DTFMT"): WIZARD template file available" >> "$LOG"
+echo "$(date "$DTFMT"): WIZARD template file '$JSON' available" >> "$LOG"
 configFilePathName="/var/packages/$SYNOPKG_PKGNAME/var/config"
 if [ ! -f "$configFilePathName" ]; then
   configFilePathName="/var/packages/$SYNOPKG_PKGNAME/target/config"  # old version used config in this folder  
@@ -48,7 +48,6 @@ fields="SCRIPT SCRIPT_AFTER_EJECT ADD_NEW_FINGERPRINTS TRIES WAIT BEEP LED LED_C
 msg=""
 for f1 in $fields; do
   line=$(grep "^$f1=" "$configFilePathName")
-  # echo "$(date "$DTFMT"): Item '$f1' line from $configFilePathName: '$line' " >> "$LOG"
   if [[ -z "$line" ]]; then # new item in this version
     line=$(grep "^$f1=" "$(dirname "$0")/initial_config.txt")  
     echo "$(date "$DTFMT"): Item '$f1' line from initial_config.txt: '$line' " >> "$LOG"

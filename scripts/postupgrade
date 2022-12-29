@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # executed after postinst!
 LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
@@ -9,7 +9,7 @@ if [[ ! -f "${SYNOPKG_PKGVAR}/config" ]]; then # not e.g. preserved from uninsta
     echo "$(date "$DTFMT"): temp data folder $tempStorageFolder found<br/>" >> "$LOG"
     # restore log
     if [ -f "$tempStorageFolder/log" ]; then
-      $(cp -v "$tempStorageFolder/log" "${SYNOPKG_PKGVAR}") 2>&1 >> "$LOG"
+      (cp -v "$tempStorageFolder/log" "${SYNOPKG_PKGVAR}") 2>&1 >> "$LOG"
       echo "$(date "$DTFMT"): temp logfile copied<br/>" >> "$LOG"
     fi
     # clean-up

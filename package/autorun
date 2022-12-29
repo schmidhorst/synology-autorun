@@ -1,5 +1,5 @@
 #!/bin/bash
-# called from udev.
+# called from udev. Attention: Environment (e.g. PATH) is not set!
 # https://raw.githubusercontent.com/reidemei/synology-autorun/main/package/autorun
 # re-written Horst Schmid 2022-12
 
@@ -12,27 +12,27 @@ SCRIPT_AFTER_EJECT=""
 
 # $1 is e.g. 'usb1p1'
 
-
 # if the last line in "$SCRIPT_EXEC_LOG" contains $1, then replace that line by $2, else append $2
+# This is to reduce the number of entries in $SCRIPT_EXEC_LOG
 replaceLastLogLineIfSimilar() {
   latestEntry="$(tail -1 "$SCRIPT_EXEC_LOG")"
   if [[ "$latestEntry" == *"$1"* ]]; then
     lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
     sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"
-    echo "$(date "$DTFMT"): $2" >> "$SCRIPT_EXEC_LOG"
+    /bin/echo "$(date "$DTFMT"): $2" >> "$SCRIPT_EXEC_LOG"
     logInfo 8 "Last Entry in SCRIPT_EXEC_LOG replaced"
   else
     logInfo 8 "Item '$1' not found in SCRIPT_EXEC_LOG last line: '$latestEntry'"
   fi # if [[ "$latestEntry" == *"$diskName"* ]]
 }
 
-executeFoundScript(){
+executeConfiguredScript(){
   # $1 is e.g. 'usb1p1'
   # run it:
   logInfo 3 "starting now '$scriptFullPathName' ..."
   dateStart_s=$(date +"%s")
   dateStart_string=$(date "$DTFMT")
-  echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was started and is running ..." >> "$SCRIPT_EXEC_LOG"
+  /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was started and is running ..." >> "$SCRIPT_EXEC_LOG"
   if (((LED & 1)!=0)); then  # by default this LED is OFF of GREEN
     beep LED_STATUS_GREEN
   elif (((LED & 2)!=0)); then
@@ -46,7 +46,7 @@ executeFoundScript(){
   /bin/sh "$scriptFullPathName" "$MOUNTPATH" "$1" 2>&1 | /bin/tee -a "$LOGFILE"; RESULT=${PIPESTATUS[0]}
   lastScriptMsg=$(tail -n 1 "$LOGFILE")
   # /bin is a link to /usr/bin. And /bin/sh is a link to /usr/bin/bash.
-  echo "Back in $srciptThisFullPhysicalPathName from $scriptFullPathName with result='$RESULT'"
+  /bin/echo "Back in $scriptThisFullPhysicalPathName from $scriptFullPathName with result='$RESULT'"
   dateFinished_s=$(date +"%s")
   if [[ "$LED" == "1" ]]; then
     beep LED_STATUS_GREEN_FLASH
@@ -74,24 +74,24 @@ executeFoundScript(){
   else
     execTime="$execTime_s seconds"
   fi
-  #echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
+  #/bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT" >> "$SCRIPT_EXEC_LOG"
   # get the free space
   FREE=$(/bin/df -h "$MOUNTPATH" | /bin/grep "$MOUNTPATH" | /bin/awk '{ print $4 }')  # e.g. "2.1T"
   ejected=0 # 0: no eject, 1: ejecting, 2: eject success, 3: eject fail
   # unmount when the result is 100
   if [ "$RESULT" == "100" ]; then
-    echo "Result 100 detected"
+    /bin/echo "Result 100 detected"
     if [ "$LED" = "1" ];then
       # beep 5 # Power LED flashing
       beep LED_STATUS_GREEN_FLASH
     fi
     logInfo 2 "device '$1' - script '$scriptFullPathName' finished with $RESULT ($FREE left on device), starting unmount"
-    d1=$(/bin/echo "$1" | /bin/sed 's:/dev/::' | /bin/sed 's:p.*::') # d1 is now e.g. 'usb1'
+    d1=$(/bin/echo "$1" | /bin/sed 's:/dev/::' | /bin/sed 's:p.*::') # # $1 is e.g. 'usb1p1' or '/dev/usb1p1', d1 is now e.g. 'usb1'
     info=$(/usr/syno/bin/synousbdisk -info "$d1")
     sn=$(/bin/echo "$info" | /bin/grep "Share Name:") # catch line with the share name
     sn=${sn#*:} # remove the label
     sn=$(/bin/echo "$sn") # remove blanks, so we get e.g. usbshare4
-    ejected=1  # 0: no eject, 1: ejecting, 2: eject success, 3: eject fail
+    ejected=1  #1: ejecting, 2: eject success, 3: eject fail
     endTime=$(($(date +%s) + EJECT_TIMEOUT))
     k=$TRIES # $TRIES is from the config file
     while [[ $(date +%s) -le $endTime ]]; do # loop with counter as the external drive may be in use ...
@@ -127,16 +127,16 @@ executeFoundScript(){
         break
       fi
     if [[ $ejected -eq 1 ]]; then
-      echo 4 "Drive seems busy! k=$k Please wait ..."
+      logInfo 4 "Drive seems busy! k=$k Please wait ..."
     fi
     sleep 60
     ((k--))
     done # while not timeout
     if [[ $ejected -eq 1 ]]; then
-      echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Attention: The requested ejection of the device failed!!" >> "$SCRIPT_EXEC_LOG"
+      /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Attention: The requested ejection of the device failed!!" >> "$SCRIPT_EXEC_LOG"
       ejected=3 # failed
     fi
-    logInfo 4 "Eject part finisched with $ejected. (0: no eject, 2: eject success, 3: eject fail) "
+    logInfo 4 "Eject part finisched with $ejected. (2: eject success, 3: eject fail) "
     if [[ -n "$SCRIPT_AFTER_EJECT" ]]; then
       if [ -x "$SCRIPT_AFTER_EJECT" ]; then
         if [[ "$ejected" -eq "2" ]]; then
@@ -148,7 +148,7 @@ executeFoundScript(){
           # if $ejected != 2
           logInfo 3 "Script '$SCRIPT_AFTER_EJECT' will be started with 'Ejection failed'!"
           sh "$SCRIPT_AFTER_EJECT" "Ejection failed"
-          echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Device ejecting was failing. The script '$SCRIPT_AFTER_EJECT' with parameter 'Ejection failed' done." >> "$SCRIPT_EXEC_LOG"
+          /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Device ejecting was failing. The script '$SCRIPT_AFTER_EJECT' with parameter 'Ejection failed' done." >> "$SCRIPT_EXEC_LOG"
         fi # if [[ "$ejected" -eq "2" ]] else
       else
         logInfo 0 "The script '$SCRIPT_AFTER_EJECT' is not executable for actual user"
@@ -167,7 +167,7 @@ executeFoundScript(){
       if [[ -n "$NOTIFY_USERS" ]]; then
         /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg7" "$scriptFullPathName" "$MOUNTPATH" "$RESULT"
       fi
-      echo "$(date "$DTFMT"): Ejection of '$diskName', mounted as $MOUNTPATH failed!" >> "$SCRIPT_EXEC_LOG"
+      /bin/echo "$(date "$DTFMT"): Ejection of '$diskName', mounted as $MOUNTPATH failed!" >> "$SCRIPT_EXEC_LOG"
     else
       if [[ -n "$NOTIFY_USERS" ]] && [[ ";$NO_DSM_MESSAGE_RETURN_CODES;" != *";$RESULT;"* ]]; then
         /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg8" "$scriptFullPathName" "$MOUNTPATH" "$RESULT" "$FREE"
@@ -175,7 +175,7 @@ executeFoundScript(){
     fi
   else # result != 100
     replaceLastLogLineIfSimilar "The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH" "The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was started $dateStart_string and finished after $execTime with return code $RESULT. ${FREE}Bytes free."
-    echo "Result $RESULT != 100"
+    /bin/echo "Result $RESULT != 100"
     logInfo 5 "device '$1' - script '$scriptFullPathName' finished with $RESULT ($lastScriptMsg) ($FREE left on device), no unmount requested"
     if [[ -n "$NOTIFY_USERS" ]] && [[ ";$NO_DSM_MESSAGE_RETURN_CODES;" != *";$RESULT;"* ]]; then
       /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg9" "$scriptFullPathName" "$MOUNTPATH" "$RESULT" "$FREE"
@@ -205,7 +205,7 @@ executeFoundScript(){
   if (((LED_COPY & 3)!=0)); then
     beep LED_COPY_OFF
   fi
-} # executeFoundScript()
+} # executeConfiguredScript()
 
 
 ########################################### start point #####################
@@ -213,7 +213,7 @@ executeFoundScript(){
 
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # e.g. /volumeX/@appstore/<app>
 baseNameThis="$(basename "$0")"
-srciptThisFullPhysicalPathName=$SCRIPTPATHTHIS/$baseNameThis # with physical path
+scriptThisFullPhysicalPathName=$SCRIPTPATHTHIS/$baseNameThis # with physical path
 if [[ -z "$SYNOPKG_PKGNAME" ]]; then
   SYNOPKG_PKGNAME=${SCRIPTPATHTHIS##*/}
   myMsg="SYNOPKG_PKGNAME='$SYNOPKG_PKGNAME' extracted from SCRIPTPATHTHIS"
@@ -224,9 +224,9 @@ source "/var/packages/$SYNOPKG_PKGNAME/var/config" # import our config
 
 # import helper functions logInfo(), beepError() and beep() (also used for LED control):
 if [[ ! -x "/var/packages/$SYNOPKG_PKGNAME/target/common" ]]; then
-  echo "###########################################################################"
-  echo "Error: File '/var/packages/$SYNOPKG_PKGNAME/target/common' not available or not executable!" | tail -a "/var/log/packages/$SYNOPKG_PKGNAME.log"
-  echo "###########################################################################"
+  /bin/echo "###########################################################################"
+  /bin/echo "Error: File '/var/packages/$SYNOPKG_PKGNAME/target/common' not available or not executable!" | tail -a "/var/log/packages/$SYNOPKG_PKGNAME.log"
+  /bin/echo "###########################################################################"
   exit 1
 fi
 source "/var/packages/$SYNOPKG_PKGNAME/target/common" "$SYNOPKG_PKGNAME" # lngUser, lngMail (for Logfile) set, $APPDATA/config read
@@ -236,7 +236,7 @@ versShell="$($SHELL --version | sed -n '1p')"
 logInfo 3 "Start of $0 as user '$user' with SHELL='$SHELL' ($versShell) ..."
 logInfo 6 "$myMsg"
 if [ -z "$1" ]; then
-  echo "incorrect '\$1' - aborting ..."
+  /bin/echo "incorrect '\$1' - aborting ..."
   logInfo 0 "Error: Parameter 1 missing in $0"
   beepError
   exit 1
@@ -254,7 +254,7 @@ if [[ -f "$SCRIPT_EXEC_LOG" ]]; then
   logInfo 6 "File $SCRIPT_EXEC_LOG exists"
   lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
   logInfo 6 "The log file '$SCRIPT_EXEC_LOG' has $lineCount lines, configured maximum is $LOG_MAX_LINES"
-  # echo "lineCount=$lineCount"
+  # /bin/echo "lineCount=$lineCount"
   if [[ "$lineCount" -gt "$LOG_MAX_LINES" ]]; then
     newLineCount=$((LOG_MAX_LINES / 2))
     delLines=$((lineCount - newLineCount))
@@ -306,15 +306,15 @@ logInfo 3 "device '$1' - mount point '$MOUNTPATH' found after $COUNT seconds"
 bError=0
 usbNo=${MOUNTPATH%/*} # remove /usbshare from e.g. /volumeUSB2/ussbshare
 usbNo=${usbNo#*volumeUSB}
-# echo "usbNo=$usbNo"
+# /bin/echo "usbNo=$usbNo"
 diskID=$(grep "${usbNo}=" "/usr/syno/etc/usbno_guid.map") # e.g. 14="20190123456780"
 diskID=${diskID%0\"}  # remove trailing '0"'
 diskID=${diskID#*=\"} # Remove leading Quote, now e.g. "2019012345678"
-# echo "diskID=$diskID"
+# /bin/echo "diskID=$diskID"
 diskName=$(/usr/syno/bin/lsusb | grep "$diskID") # e.g. "|__2-2.2 1234:5678:90AB 00 3.00 5000MBit/s 8mA 1IF (...)"
 diskName=${diskName#*(}
 diskName=${diskName%)*}
-# echo "diskName=$diskName" # e.g. "Intenso external USB 3.0 2019012345678"
+# /bin/echo "diskName=$diskName" # e.g. "Intenso external USB 3.0 2019012345678"
 
 # is there the script according to SCRIPT="..." in the config file on our DSM or external drive?
 if [[ "$SCRIPT" == *"/"* ]]; then
@@ -332,7 +332,7 @@ else
     res="$(find -L "$MOUNTPATH" -maxdepth 1 -iname "$SCRIPT" -type f)" # -L Follow symbolic links
     if [[ -n "$res" ]]; then
       logInfo 1 "device '$1' - script '$res' found, but it's different in upper/lower case and will not ignored!"
-      echo "$(date "$DTFMT"): Suspicous: There is a script '$res', but it's name is different in upper/lower case and therefore will be ignored!" >> "$SCRIPT_EXEC_LOG"
+      /bin/echo "$(date "$DTFMT"): Suspicous: There is a script '$res', but it's name is different in upper/lower case and therefore will be ignored!" >> "$SCRIPT_EXEC_LOG"
     fi
   fi
 fi
@@ -382,18 +382,18 @@ if [ -x "$scriptFullPathName" ];then
     if [[ "$ENTRY_COUNT" -eq 0 ]]; then
       # no old fingerprints: Create file and add the new one including some details as comment ...
       if [[ "$scriptExternal" -eq "1" ]]; then
-        echo "$FINGERPRINT # $(date "$DTFMT") added from $diskName for $SCRIPT ($scriptDateLastChange)" > "$KNOWNSCRIPTSFILEPATHNAME"
+        /bin/echo "$FINGERPRINT # $(date "$DTFMT") added from $diskName for $SCRIPT ($scriptDateLastChange)" > "$KNOWNSCRIPTSFILEPATHNAME"
       else
-        echo "$FINGERPRINT # $(date "$DTFMT") added for $scriptFullPathName ($scriptDateLastChange)" > "$KNOWNSCRIPTSFILEPATHNAME"
+        /bin/echo "$FINGERPRINT # $(date "$DTFMT") added for $scriptFullPathName ($scriptDateLastChange)" > "$KNOWNSCRIPTSFILEPATHNAME"
       fi
       chmod 644 "$KNOWNSCRIPTSFILEPATHNAME"
       chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$KNOWNSCRIPTSFILEPATHNAME"  # allow postuninst and postinst to delete the file
       if [ -f "$KNOWNSCRIPTSFILEPATHNAME" ]; then
         logInfo 4 "New fingerprint of '$scriptFullPathName' registered"
         if [[ "$scriptExternal" -eq "1" ]]; then
-          echo "$(date "$DTFMT"): The fingerprint of the script '$SCRIPT' ($scriptDateLastChange) on '$diskName', mounted as $MOUNTPATH was now registered as allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
+          /bin/echo "$(date "$DTFMT"): The fingerprint of the script '$SCRIPT' ($scriptDateLastChange) on '$diskName', mounted as $MOUNTPATH was now registered as allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
         else
-          echo "$(date "$DTFMT"): The fingerprint of the script '$scriptFullPathName' ($scriptDateLastChange) was now registered as allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
+          /bin/echo "$(date "$DTFMT"): The fingerprint of the script '$scriptFullPathName' ($scriptDateLastChange) was now registered as allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
         fi
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg3" "$SCRIPT" "$scriptDateLastChange"
@@ -413,15 +413,15 @@ if [ -x "$scriptFullPathName" ];then
     if [[ "$line" == "" ]]; then
       logInfo 3 "New fingerprint of '$scriptFullPathName' registered"
       if [[ "$scriptExternal" -eq "1" ]]; then
-        echo "$FINGERPRINT # $(date "$DTFMT") added from $diskName for $SCRIPT ($scriptDateLastChange)" >> "$KNOWNSCRIPTSFILEPATHNAME"
-        echo "$(date "$DTFMT"): The fingerprint of the script '$SCRIPT' on '$diskName' ($scriptDateLastChange), mounted as $MOUNTPATH was now registered as additionally allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
+        /bin/echo "$FINGERPRINT # $(date "$DTFMT") added from $diskName for $SCRIPT ($scriptDateLastChange)" >> "$KNOWNSCRIPTSFILEPATHNAME"
+        /bin/echo "$(date "$DTFMT"): The fingerprint of the script '$SCRIPT' on '$diskName' ($scriptDateLastChange), mounted as $MOUNTPATH was now registered as additionally allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
       else
-        echo "$FINGERPRINT # $(date "$DTFMT") added for $scriptFullPathName ($scriptDateLastChange)" >> "$KNOWNSCRIPTSFILEPATHNAME"
-        echo "$(date "$DTFMT"): The fingerprint of the script '$scriptFullPathName' ($scriptDateLastChange) was now registered as additionally allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
+        /bin/echo "$FINGERPRINT # $(date "$DTFMT") added for $scriptFullPathName ($scriptDateLastChange)" >> "$KNOWNSCRIPTSFILEPATHNAME"
+        /bin/echo "$(date "$DTFMT"): The fingerprint of the script '$scriptFullPathName' ($scriptDateLastChange) was now registered as additionally allowed fingerprint." >> "$SCRIPT_EXEC_LOG"
       fi
       if [[ "$ENTRY_COUNT" -eq 0 ]]; then # file was just created with owner root:root
-        chmod 644 "$KNOWNSCRIPTSFILEPATHNAME"
-        chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$KNOWNSCRIPTSFILEPATHNAME"  # allow postuninst and postinst to delete the file
+        /bin/chmod 644 "$KNOWNSCRIPTSFILEPATHNAME"
+        /bin/chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$KNOWNSCRIPTSFILEPATHNAME"  # allow postuninst and postinst to delete the file
       fi
       if [[ -n "$NOTIFY_USERS" ]]; then
         /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg3" "$scriptFullPathName" "$scriptDateLastChange"
@@ -451,7 +451,7 @@ if [ -x "$scriptFullPathName" ];then
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg14" "$scriptFullPathName"
         fi
-        echo "$(date "$DTFMT"): Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong line break CR/LF (Windows). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
+        /bin/echo "$(date "$DTFMT"): Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong line break CR/LF (Windows). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
         bError=1
       elif [[ $res == *"CR line terminators"* ]]; then # MAC format
         bExec=0 # don't try to execute the script
@@ -459,7 +459,7 @@ if [ -x "$scriptFullPathName" ];then
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg16" "$scriptFullPathName"
         fi
-        echo "$(date "$DTFMT"): Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong line break CR (MAC). Please use a siutable Editor to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
+        /bin/echo "$(date "$DTFMT"): Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong line break CR (MAC). Please use a siutable Editor to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
         bError=1
       elif [[ "$res" == *"ISO-8859 text"* ]]; then
         bExec=0 # don't try to execute the script
@@ -468,24 +468,24 @@ if [ -x "$scriptFullPathName" ];then
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg15" "$scriptFullPathName"
         fi
-        echo "$(date "$DTFMT"): Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong coding (Windows ISO-8859). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to UTF-8!" >> "$SCRIPT_EXEC_LOG"
+        /bin/echo "$(date "$DTFMT"): Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong coding (Windows ISO-8859). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to UTF-8!" >> "$SCRIPT_EXEC_LOG"
         bError=1
       fi
     fi # if [[ -z "$res" ]] else
   fi # if [[ "$bExec" == "1" ]]
   if [[ "$bExec" == "1" ]]; then
     # execute the script, $1 = mount path
-    executeFoundScript "$1"
+    executeConfiguredScript "$1"
   else
     if [[ "$bError" == "0" ]]; then # not yet error message done
       if [[ "$scriptExternal" -eq "1" ]]; then
-        echo "$(date "$DTFMT"): The script '$SCRIPT' ($scriptDateLastChange) on '$diskName' with fingerprint $FINGERPRINT, mounted as $MOUNTPATH does not match registered fingerprints" >> "$SCRIPT_EXEC_LOG"
+        /bin/echo "$(date "$DTFMT"): The script '$SCRIPT' ($scriptDateLastChange) on '$diskName' with fingerprint $FINGERPRINT, mounted as $MOUNTPATH does not match registered fingerprints" >> "$SCRIPT_EXEC_LOG"
         logInfo 2 "This skript '$SCRIPT' ($scriptDateLastChange) on '$diskName' with fingerprint $FINGERPRINT with it's fingerprint is not permitted to run. No autorun!"
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg4" "$SYNOPKG_PKGNAME" "$SCRIPT" "$scriptDateLastChange"
         fi
       else
-        echo "$(date "$DTFMT"): The script '$scriptFullPathName' ($scriptDateLastChange) with fingerprint $FINGERPRINT does not match registered fingerprints" >> "$SCRIPT_EXEC_LOG"
+        /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' ($scriptDateLastChange) with fingerprint $FINGERPRINT does not match registered fingerprints" >> "$SCRIPT_EXEC_LOG"
         logInfo 2 "This skript '$scriptFullPathName' ($scriptDateLastChange) with fingerprint $FINGERPRINT with it's fingerprint is not permitted to run. No autorun!"
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg4" "$SYNOPKG_PKGNAME" "$scriptFullPathName" "$scriptDateLastChange"
@@ -519,13 +519,13 @@ else # no executable script
   if [ -f "$scriptFullPathName" ];then
     if [[ "$scriptExternal" -eq "1" ]]; then
       logInfo 1 "The script file '$SCRIPT' on $1 is not executable. Exiting from $SYNOPKG_PKGNAME now."
-      echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH is not executable" >> "$SCRIPT_EXEC_LOG"
+      /bin/echo "$(date "$DTFMT"): The script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH is not executable" >> "$SCRIPT_EXEC_LOG"
       if [[ -n "$NOTIFY_USERS" ]]; then
         /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg6" "$SCRIPT"
       fi
     else
       logInfo 1 "The script file '$scriptFullPathName' is not executable. Exiting from $SYNOPKG_PKGNAME now."
-      echo "$(date "$DTFMT"): The script '$scriptFullPathName' is not executable" >> "$SCRIPT_EXEC_LOG"
+      /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' is not executable" >> "$SCRIPT_EXEC_LOG"
       if [[ -n "$NOTIFY_USERS" ]]; then
         /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg6" "$scriptFullPathName"
       fi
@@ -533,10 +533,10 @@ else # no executable script
   else
     if [[ "$scriptExternal" -eq "1" ]]; then
       logInfo 3 "On the device '$1' there is no file '$SCRIPT'. Exiting from $SYNOPKG_PKGNAME now."
-      # echo "$(date "$DTFMT"): There is no script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH" >> "$SCRIPT_EXEC_LOG"
+      # /bin/echo "$(date "$DTFMT"): There is no script '$SCRIPT' on '$diskName', mounted as $MOUNTPATH" >> "$SCRIPT_EXEC_LOG"
     else
       logInfo 1 "The script file '$scriptFullPathName' is missing. Exiting from $SYNOPKG_PKGNAME now."
-      echo "$(date "$DTFMT"): The script file '$scriptFullPathName' is missing" >> "$SCRIPT_EXEC_LOG"
+      /bin/echo "$(date "$DTFMT"): The script file '$scriptFullPathName' is missing" >> "$SCRIPT_EXEC_LOG"
     fi
   fi
 fi # script available on USB disk

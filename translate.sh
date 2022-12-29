@@ -6,8 +6,23 @@ bExec=1 # 0: do not translate, only list files, which would be processed, 1: tra
 bUpdateAll=0 # 0: update only outdated files, 1:translate all
 previousVersionPath="" # if set then are the sourceable files not completely, but only changed items are updated
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
-source "$SCRIPTPATHTHIS/package/ui/modules/parse_hlp.sh" # urlencode, urldecode
 cd "$SCRIPTPATHTHIS"
+
+# parse_hlp.sh needs $app_name! otherwise it uses ${scriptpathParent##*/}, which would be wrong here!
+if [[ -f "INFO.sh" ]]; then
+  file="INFO.sh"
+elif [[ -f "INFO" ]]; then
+  file="INFO"
+fi
+if [[ -z "$file" ]]; then
+  echo "Error: Could not find INFO.sh or INFO for extraction of the package name!"
+  exit 2
+fi
+line="$(grep -i "^package=" "$file")"
+app_name="$(sed -e 's/\"//g' <<<"${line#*=}")"
+
+source "package/ui/modules/parse_hlp.sh" # urlencode, urldecode
+
 LOG="translation.log"
 echo "Translation script started ..." | tee -a "$LOG"
 SCRIPTPATHPARENT=${SCRIPTPATHTHIS%/*}

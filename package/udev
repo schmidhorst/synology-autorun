@@ -3,13 +3,24 @@
 SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # /volumeX/@appstore/<app>
 APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
 source "$SCRIPTPATHTHIS/common" udev # e.g. $APPDATA = "/var/packages/$APPNAME/var" is setup there
-echo "$(date "$DTFMT"): udev after common, LOG is now '$LOG'"
+
+# https://unix.stackexchange.com/questions/56243/how-to-run-long-time-process-on-udev-event
+# How to run long time process on Udev event?
+set -m # turn on "JOB CONTROL", so that Background processes are running in a separate process group and not blocking udev
+# set -o monitor
+cmd="$(cat /proc/$PPID/comm)"
+echo "$(date "$DTFMT"): $(basename "$0"), P1='$1', P2='$2', Parent is $PPID: $cmd" >> "$LOG"
+if [ "$2" != "fo_real" ]; then
+  echo "$(date "$DTFMT"): udev 1st start direct from udev deamon, re-start now again via setsid ..." >> "$LOG"
+  # https://stackoverflow.com/questions/10932592/why-fork-twice
+  /usr/bin/setsid --fork $(/usr/bin/dirname $0)/$(/usr/bin/basename $0) $1 "fo_real" &
+  exit
+fi
+
+echo "$(date "$DTFMT"): udev after setsid --fork ..." >> "$LOG"
 # LOG="/var/tmp/$APPNAME.log"
 
-TMPPATH="/tmp/net.reidemeister.$APPNAME.$1"  # Marker-File for time stamp to filter events
-if [[ -z "$DTFMT" ]]; then
-  DTFMT="+%Y-%m-%d %H:%M:%S"
-fi
+TMPPATH="/tmp/net.$APPNAME.$1"  # Marker-File for time stamp to filter events
 /bin/echo "$(date "$DTFMT"): $0: device '$1' - event received from udev" >> "$LOG"
 # /bin/echo "$(date "$DTFMT"): Dump of actual environment:" >> /var/packages/$APPNAME/var/log
 # env >> /var/packages/$APPNAME/var/log
@@ -22,11 +33,9 @@ if [ "$(/bin/find "$TMPPATH" -mmin -2)" != "" ] ; then
 fi
 /bin/touch "$TMPPATH" # to filter subsequent events
 # run autorun
-versShell="$($SHELL --version | sed -n '1p')" # gest 1st line from e.g. "ash --version"
-logInfo 7 "udev done, shell is '$SHELL' ($versShell), starting now $SCRIPTPATHTHIS/autorun"
+logInfo 7 "starting now $SCRIPTPATHTHIS/autorun ..."
+
 "$SCRIPTPATHTHIS/autorun" "$1" &  # this ignores the shebang and runs it in ash!
-# bin/bash "$SCRIPTPATHTHIS/autorun" "$1" & # this ignores the shebang and runs it in ash!
-# cd "$SCRIPTPATHTHIS"
-# /usr/bin/bash ./autorun "$1" &  # this ignores the shebang and runs it in ash!
+logInfo 7 "... udev finished"
 exit
 

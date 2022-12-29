@@ -1,18 +1,16 @@
 #!/bin/bash
-# $SYNOPKG_PKGNAME is available if pre-processing was well done! 
-LOG="/var/tmp/autorun.log"
+if [[ -n "$SYNOPKG_PKGNAME" ]]; then
+  # $SYNOPKG_PKGNAME is available if pre-processing was well done! 
+  LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
+else
+  LOG="/var/tmp/autorun.log"
+  echo "$(date "$DTFMT"): Error: SYNOPKG_PKGNAME is not set in install_uifile.sh !!!???" >> "$LOG"
+fi  
 DTFMT="+%Y-%m-%d %H:%M:%S"
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 user=$(whoami)
 scriptpathParent=${SCRIPTPATHTHIS%/*}
 echo "$(date "$DTFMT"): Start of $0 to put values from config file (if available) to '$SYNOPKG_TEMP_LOGFILE', which replaces install_uifile (as $user)" >> "$LOG"
-if [[ -z "$SYNOPKG_PKGNAME" ]]; then
-  LOG="/var/tmp/autorun.log"
-  echo "$(date "$DTFMT"): Error: SYNOPKG_PKGNAME is not set in install_uifile.sh !!!???" >> "$LOG"
-else
-  LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
-  echo "$(date "$DTFMT"): install_uifile.sh SYNOPKG_PKGNAME is available: '$SYNOPKG_PKGNAME'" >> "$LOG"
-fi
 
 if [[ -n "$SYNOPKG_DSM_LANGUAGE" ]]; then
   lng="$SYNOPKG_DSM_LANGUAGE" # lng of actual user
@@ -40,7 +38,7 @@ if [ ! -f "$JSON" ]; then
   echo "$(date "$DTFMT"): No upgrade_uifile ($$SYNOPKG_TEMP_LOGFILE) generated (only empty file)" >> "$LOG"
   exit 11 # should we use exit 0 ?
 fi
-echo "$(date "$DTFMT"): WIZARD template file available" >> "$LOG"
+echo "$(date "$DTFMT"): WIZARD template file '$JSON' is available" >> "$LOG"
 # after uninstall is /var/packages/$SYNOPKG_PKGNAME no more available, only /volume1/@appdata/autorun/config !!! 
 #configFilePathName="/var/packages/$SYNOPKG_PKGNAME/var/config"
 configFilePathName="${SCRIPTPATHTHIS%%/@*}/@appdata/${SYNOPKG_PKGNAME}/config"

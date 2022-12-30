@@ -2,6 +2,7 @@
  !!! A MANUAL STEP IS REQUIRED AFTER THE INSTALLATION !!!  See V1.8 below!
 
  - Eject USB Drive (at exit code 100) reworked, so that it works also on DSM 7.x
+ - UDEV daemon is no more blocked if a long running scripts is strarted by this tool
  - Allow to use the status LED and/or the copy LED
  - Debug logfile for installation/upgrade actions moved from @appstore (target) to /var/tmp/autorun.log folder
  - Logfile for drive connect and drive eject actions added (in @appdata / var folder)

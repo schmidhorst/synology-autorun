@@ -15,10 +15,10 @@ SCRIPT_AFTER_EJECT=""
 # if the last line in "$SCRIPT_EXEC_LOG" contains $1, then replace that line by $2, else append $2
 # This is to reduce the number of entries in $SCRIPT_EXEC_LOG
 replaceLastLogLineIfSimilar() {
-  latestEntry="$(tail -1 "$SCRIPT_EXEC_LOG")"
+  latestEntry="$(/bin/tail -1 "$SCRIPT_EXEC_LOG")"
   if [[ "$latestEntry" == *"$1"* ]]; then
-    lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
-    sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"
+    lineCount=$(/bin/wc -l < "$SCRIPT_EXEC_LOG")
+    /bin/sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"
     /bin/echo "$(date "$DTFMT"): $2" >> "$SCRIPT_EXEC_LOG"
     logInfo 8 "Last Entry in SCRIPT_EXEC_LOG replaced"
   else
@@ -30,9 +30,9 @@ executeConfiguredScript(){
   # $1 is e.g. 'usb1p1'
   # run it:
   logInfo 3 "starting now '$scriptFullPathName' ..."
-  dateStart_s=$(date +"%s")
-  dateStart_string=$(date "$DTFMT")
-  /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was started and is running ..." >> "$SCRIPT_EXEC_LOG"
+  dateStart_s=$(/bin/date +"%s")
+  dateStart_string=$(/bin/date "$DTFMT")
+  /bin/echo "$(/bin/date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was started and is running ..." >> "$SCRIPT_EXEC_LOG"
   if (((LED & 1)!=0)); then  # by default this LED is OFF of GREEN
     beep LED_STATUS_GREEN
   elif (((LED & 2)!=0)); then
@@ -44,10 +44,10 @@ executeConfiguredScript(){
     beep LED_COPY_FLASH
   fi
   /bin/sh "$scriptFullPathName" "$MOUNTPATH" "$1" 2>&1 | /bin/tee -a "$LOGFILE"; RESULT=${PIPESTATUS[0]}
-  lastScriptMsg=$(tail -n 1 "$LOGFILE")
+  lastScriptMsg=$(/bin/tail -n 1 "$LOGFILE")
   # /bin is a link to /usr/bin. And /bin/sh is a link to /usr/bin/bash.
   /bin/echo "Back in $scriptThisFullPhysicalPathName from $scriptFullPathName with result='$RESULT'"
-  dateFinished_s=$(date +"%s")
+  dateFinished_s=$(/bin/date +"%s")
   if [[ "$LED" == "1" ]]; then
     beep LED_STATUS_GREEN_FLASH
   fi
@@ -92,9 +92,9 @@ executeConfiguredScript(){
     sn=${sn#*:} # remove the label
     sn=$(/bin/echo "$sn") # remove blanks, so we get e.g. usbshare4
     ejected=1  #1: ejecting, 2: eject success, 3: eject fail
-    endTime=$(($(date +%s) + EJECT_TIMEOUT))
+    endTime=$(($(/bin/date +%s) + EJECT_TIMEOUT))
     k=$TRIES # $TRIES is from the config file
-    while [[ $(date +%s) -le $endTime ]]; do # loop with counter as the external drive may be in use ...
+    while [[ $(/bin/date +%s) -le $endTime ]]; do # loop with counter as the external drive may be in use ...
       # try to do the unmount
       logInfo 8 "till eject timeout left $(( endTime - $(date +%s) ))"
       /bin/sleep 3
@@ -111,7 +111,7 @@ executeConfiguredScript(){
         results=$(/usr/syno/bin/synousbdisk -umount "$sn")
         retvals=$?
       fi
-      sleep 45
+      /bin/sleep 45
       logInfo 7 "Loop $k: synousbdisk -umount $d1 was $retvald ($resultd), synousbdisk -umount $sn was $retvals ($results)"
       # check whether now realy no more mounted:
       resultm=$(/bin/mount 2>&1 | /bin/grep "/dev/$1" | /bin/cut -d ' ' -f3)
@@ -119,9 +119,9 @@ executeConfiguredScript(){
         logInfo 5 "Updating now /tmp/usbtab ..."
         ejected=2 # 0: no eject, 1: ejecting, 2: eject success, 3: eject fail
         # Remove it now from the 'gui' list:
-        cp /tmp/usbtab /tmp/usbtab.old
+        /bin/cp /tmp/usbtab /tmp/usbtab.old
         /bin/grep -v "$d1" /tmp/usbtab.old > /tmp/usbtab  # copy all non-matching lines
-        rm -f /tmp/usbtab.old
+        /bin/rm -f /tmp/usbtab.old
         # unbind ??? # Optional !!!????
         logInfo 3 "device '$1' successfully unmounted and removed from GUI!"
         break
@@ -129,7 +129,7 @@ executeConfiguredScript(){
     if [[ $ejected -eq 1 ]]; then
       logInfo 4 "Drive seems busy! k=$k Please wait ..."
     fi
-    sleep 60
+    /bin/sleep 60
     ((k--))
     done # while not timeout
     if [[ $ejected -eq 1 ]]; then
@@ -141,13 +141,13 @@ executeConfiguredScript(){
       if [ -x "$SCRIPT_AFTER_EJECT" ]; then
         if [[ "$ejected" -eq "2" ]]; then
           logInfo 5 "Script '$SCRIPT_AFTER_EJECT' will be started without parameter!"
-          sh "$SCRIPT_AFTER_EJECT"
+          /bin/sh "$SCRIPT_AFTER_EJECT"
           res="$?"
           replaceLastLogLineIfSimilar "The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH" "The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was started $dateStart_string and finished after $execTime with return code $RESULT ($lastScriptMsg). Device successfully ejected and the script '$SCRIPT_AFTER_EJECT' done with return code $res. ${FREE}Bytes free"
         else
           # if $ejected != 2
           logInfo 3 "Script '$SCRIPT_AFTER_EJECT' will be started with 'Ejection failed'!"
-          sh "$SCRIPT_AFTER_EJECT" "Ejection failed"
+          /bin/sh "$SCRIPT_AFTER_EJECT" "Ejection failed"
           /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Device ejecting was failing. The script '$SCRIPT_AFTER_EJECT' with parameter 'Ejection failed' done." >> "$SCRIPT_EXEC_LOG"
         fi # if [[ "$ejected" -eq "2" ]] else
       else
@@ -252,34 +252,34 @@ COUNT=0
 SCRIPT_EXEC_LOG="$APPDATA/execLog" # logfile with 1 ..2 lines per executed script
 if [[ -f "$SCRIPT_EXEC_LOG" ]]; then
   logInfo 6 "File $SCRIPT_EXEC_LOG exists"
-  lineCount=$(wc -l < "$SCRIPT_EXEC_LOG")
+  lineCount=$(/bin/wc -l < "$SCRIPT_EXEC_LOG")
   logInfo 6 "The log file '$SCRIPT_EXEC_LOG' has $lineCount lines, configured maximum is $LOG_MAX_LINES"
   # /bin/echo "lineCount=$lineCount"
   if [[ "$lineCount" -gt "$LOG_MAX_LINES" ]]; then
     newLineCount=$((LOG_MAX_LINES / 2))
     delLines=$((lineCount - newLineCount))
-    sed -i -e "1,${delLines}d" "$SCRIPT_EXEC_LOG"
+    /bin/sed -i -e "1,${delLines}d" "$SCRIPT_EXEC_LOG"
     logInfo 4 "The log file '$SCRIPT_EXEC_LOG' was trimmed from $lineCount to $newLineCount lines"
   fi
 else
-  touch "$SCRIPT_EXEC_LOG" # created an empty file
-  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
-  chmod 644 "$SCRIPT_EXEC_LOG"
+  /bin/touch "$SCRIPT_EXEC_LOG" # created an empty file
+  /bin/chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$SCRIPT_EXEC_LOG" # make it accessable & readable for the cgi scripts
+  /bin/chmod 644 "$SCRIPT_EXEC_LOG"
 fi
 
 if [[ -f "$LOG" ]]; then
-  lineCount=$(wc -l < "$LOG")
+  lineCount=$(/bin/wc -l < "$LOG")
   logInfo 6 "The log file '$LOG' has $lineCount lines, configured maximum is $LOG_MAX_LINES"
   if [[ $lineCount -gt "$LOG_MAX_LINES" ]]; then
     newLineCount=$((LOG_MAX_LINES / 2))
     delLines=$((lineCount - newLineCount))
-    sed -i -e "1,${delLines}d" "$LOG"
+    /bin/sed -i -e "1,${delLines}d" "$LOG"
     logInfo 4 "The log file '$LOG' was trimmed from $lineCount to $newLineCount lines"
   fi
 else
-  touch "$LOG"
-  chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG"
-  chmod 644 "$LOG"
+  /bin/touch "$LOG"
+  /bin/chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG"
+  /bin/chmod 644 "$LOG"
 fi
 
 # try to get the mount path
@@ -307,11 +307,11 @@ bError=0
 usbNo=${MOUNTPATH%/*} # remove /usbshare from e.g. /volumeUSB2/ussbshare
 usbNo=${usbNo#*volumeUSB}
 # /bin/echo "usbNo=$usbNo"
-diskID=$(grep "${usbNo}=" "/usr/syno/etc/usbno_guid.map") # e.g. 14="20190123456780"
+diskID=$(/bin/grep "${usbNo}=" "/usr/syno/etc/usbno_guid.map") # e.g. 14="20190123456780"
 diskID=${diskID%0\"}  # remove trailing '0"'
 diskID=${diskID#*=\"} # Remove leading Quote, now e.g. "2019012345678"
 # /bin/echo "diskID=$diskID"
-diskName=$(/usr/syno/bin/lsusb | grep "$diskID") # e.g. "|__2-2.2 1234:5678:90AB 00 3.00 5000MBit/s 8mA 1IF (...)"
+diskName=$(/usr/syno/bin/lsusb | /bin/grep "$diskID") # e.g. "|__2-2.2 1234:5678:90AB 00 3.00 5000MBit/s 8mA 1IF (...)"
 diskName=${diskName#*(}
 diskName=${diskName%)*}
 # /bin/echo "diskName=$diskName" # e.g. "Intenso external USB 3.0 2019012345678"
@@ -329,7 +329,7 @@ else
   elif [[ -f "$scriptFullPathName" ]]; then
     logInfo 1 "device '$1' - script '$scriptFullPathName' found, but not executable!"
   else
-    res="$(find -L "$MOUNTPATH" -maxdepth 1 -iname "$SCRIPT" -type f)" # -L Follow symbolic links
+    res="$(/bin/find -L "$MOUNTPATH" -maxdepth 1 -iname "$SCRIPT" -type f)" # -L Follow symbolic links
     if [[ -n "$res" ]]; then
       logInfo 1 "device '$1' - script '$res' found, but it's different in upper/lower case and will not ignored!"
       /bin/echo "$(date "$DTFMT"): Suspicous: There is a script '$res', but it's name is different in upper/lower case and therefore will be ignored!" >> "$SCRIPT_EXEC_LOG"
@@ -386,8 +386,8 @@ if [ -x "$scriptFullPathName" ];then
       else
         /bin/echo "$FINGERPRINT # $(date "$DTFMT") added for $scriptFullPathName ($scriptDateLastChange)" > "$KNOWNSCRIPTSFILEPATHNAME"
       fi
-      chmod 644 "$KNOWNSCRIPTSFILEPATHNAME"
-      chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$KNOWNSCRIPTSFILEPATHNAME"  # allow postuninst and postinst to delete the file
+      /bin/chmod 644 "$KNOWNSCRIPTSFILEPATHNAME"
+      /bin/chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$KNOWNSCRIPTSFILEPATHNAME"  # allow postuninst and postinst to delete the file
       if [ -f "$KNOWNSCRIPTSFILEPATHNAME" ]; then
         logInfo 4 "New fingerprint of '$scriptFullPathName' registered"
         if [[ "$scriptExternal" -eq "1" ]]; then
@@ -438,11 +438,11 @@ if [ -x "$scriptFullPathName" ];then
   bError=0
   if [[ "$bExec" == "1" ]];then
     # checkCoding needs the 'file' command, which is e.g. in "SynoCli File Tools":
-    res=$(which "file")
-    if [[ -z "$res" ]]; then
+    rFile=$(/bin/which "file")
+    if [[ -z "$rFile" ]]; then
       logInfo 3 "Linux command 'file' is not available. Checking source files for correct line terminator and UTF-8-coding skipped! The 'file' command is part of the package 'SynoCli File Tools'! You may install that from https://packages.synocommunity.com/"
     else
-      res=$(file -b "$scriptFullPathName")
+      res=$(rFile -b "$scriptFullPathName")
       ret=$?
       logInfo 5 "File coding check '$scriptFullPathName' result $ret: $res"
       if [[ $res == *"CRLF line terminators"* ]]; then # Windows Format

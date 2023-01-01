@@ -17,6 +17,8 @@
 Executes scripts when connecting external storages (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files.
 In Synologies Task Scheduler there is the possibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.
 
+## [!(License)](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_enu.html)
+
 ## Disclaimer and Issue Tracker
 You are using everything here at your own risk.
 For issues please use the [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) with German or English language

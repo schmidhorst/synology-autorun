@@ -1,5 +1,6 @@
 #!/bin/ash
 # Shell for root is ash. But /bin/ash is on DS220+ a link to bash!
+
 SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # /volumeX/@appstore/<app>
 APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
 source "$SCRIPTPATHTHIS/common" udev # e.g. $APPDATA = "/var/packages/$APPNAME/var" is setup there
@@ -9,13 +10,16 @@ source "$SCRIPTPATHTHIS/common" udev # e.g. $APPDATA = "/var/packages/$APPNAME/v
 set -m # turn on "JOB CONTROL", so that Background processes are running in a separate process group and not blocking udev
 # set -o monitor
 cmd="$(cat /proc/$PPID/comm)"
-echo "$(date "$DTFMT"): $(basename "$0"), P1='$1', P2='$2', Parent is $PPID: $cmd" >> "$LOG"
-if [ "$2" != "fo_real" ]; then
+echo "$(date "$DTFMT"): $(basename "$0"), P1='$1', P2='$2', P3='$3', Parent is $PPID: $cmd" >> "$LOG"
+if [ "$1" != "fo_real" ]; then
   echo "$(date "$DTFMT"): udev 1st start direct from udev deamon, re-start now again via setsid ..." >> "$LOG"
   # https://stackoverflow.com/questions/10932592/why-fork-twice
-  /usr/bin/setsid --fork $(/usr/bin/dirname $0)/$(/usr/bin/basename $0) $1 "fo_real" &
+  /usr/bin/setsid --fork "$(/usr/bin/dirname "$0")/$(/usr/bin/basename "$0")" "fo_real" "$@" &
   exit
+else
+  shift
 fi
+# $1 is now e.g. usb1p1, $2: N.A. if started from rules, $2="xxx" may by used if started from start-stop-status script
 
 echo "$(date "$DTFMT"): udev after setsid --fork ..." >> "$LOG"
 # LOG="/var/tmp/$APPNAME.log"
@@ -27,15 +31,15 @@ TMPPATH="/tmp/net.$APPNAME.$1"  # Marker-File for time stamp to filter events
 # /bin/echo "$(date "$DTFMT"): ... environment done" >> /var/packages/$APPNAME/var/log
 
 # filter duplicate events for 2 minutes
-if [ "$(/bin/find "$TMPPATH" -mmin -2)" != "" ] ; then
-	logInfo 6 "device '$1' - additional event within 2 minutes for $1 is ignored"
+if [ "$(/bin/find "$TMPPATH" -mmin -0.5)" != "" ] ; then
+	logInfo 6 "device '$1' - additional event within 0.5 minutes for $1 is ignored"
 	exit
 fi
 /bin/touch "$TMPPATH" # to filter subsequent events
 # run autorun
 logInfo 7 "starting now $SCRIPTPATHTHIS/autorun ..."
 
-"$SCRIPTPATHTHIS/autorun" "$1" &  # this ignores the shebang and runs it in ash!
+"$SCRIPTPATHTHIS/autorun" "$@" &  # this ignores the shebang and runs it in ash!
 logInfo 7 "... udev finished"
 exit
 

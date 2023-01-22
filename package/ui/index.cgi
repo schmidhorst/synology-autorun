@@ -5,6 +5,9 @@
 #        Copyright (C) 2022 by Tommes
 # Member of the German Synology Community Forum
 
+# Adopted to need of Autorun by Horst Schmid
+#      Copyright (C) 2022...2023 by Horst Schmid
+
 #             License GNU GPLv3
 #   https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -35,20 +38,20 @@ user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
 LOG="/var/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
 # $SHELL' is here "/sbin/nologin"
-echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' with parameters '$QUERY_STRING' ..." >> "$LOG"
+echo -e "\n$(date "$DTFMT"): App '$app_name' file '$(basename "$0")' started as user '$user' with parameters '$QUERY_STRING' ..." >> "$LOG"
 # $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
 ah="/volume*/@appstore/$app_name/ui"
 app_home=$(find $ah -maxdepth 0 -type d) # Attention: find is not working with quoted path!!
 
 # env >> LOG"
 
-# Load urlencode and urldecode function from ../modules/parse_hlp.sh:
+# Load urlencode and urldecode, logInfo, ... function from ../modules/parse_hlp.sh:
 if [ -f "${app_home}/modules/parse_hlp.sh" ]; then
   source "${app_home}/modules/parse_hlp.sh"
   res=$?
-  echo "$(date "$DTFMT"): Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
+  # echo "$(date "$DTFMT"): Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
   if [[ "$res" -gt 1 ]]; then
-    echo "### Loading ${app_home}/modules/parse_hlp.sh failed!! ###"
+    echo "### Loading ${app_home}/modules/parse_hlp.sh failed!! res='$res' ###" >> "$LOG"
     exit
   fi
 else
@@ -64,6 +67,7 @@ if [[ "$bDebug" -eq 0 ]]; then
   cgiLogin # see parse_hlp.sh, sets $syno_login, $syno_token, $syno_user, $is_admin
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
+    echo "$(date "$DTFMT"): $(basename "$0"), calling cgiLogin failed, ret='$ret' " >> "$LOG"
     exit
   fi
 else
@@ -76,7 +80,7 @@ local_version=$(cat "/var/packages/${app_name}/INFO" | grep ^version | cut -d '"
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
   source "${app_home}/modules/parse_language.sh" "${syno_user}"
   res=$?
-  logInfoNoEcho 7 "Loading ${app_home}/modules/parse_language.sh done with result $res"
+  logInfoNoEcho 7 "$(basename "$0"), Loading ${app_home}/modules/parse_language.sh done with result $res"
   # || exit
 else
   logInfo 1 "Loading ${app_home}/modules/parse_language.sh failed"
@@ -90,9 +94,10 @@ declare -A get # associative array for parameters (POST, GET)
 
 # Evaluate app authentication
 if [[ "$bDebug" -eq 0 ]]; then
-  evaluateCgiLogin #
+  evaluateCgiLogin # in parse_hlp.sh
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
+    logInfo 1 "$(basename "$0"), execution of evaluateCgiLogin failed, ret='$ret'"
     exit
   fi
 else
@@ -161,14 +166,14 @@ logfile="$SCRIPT_EXEC_LOG" # default, later optionally set to "$appCfgDataPath/d
 pageTitle=$(echo "$logTitleExec")  # default, later optionally set to "$logTitleDetail"
 
 # Analyze incoming POST requests and process them to ${get[key]}="$value" variables
-cgiDataEval 
+cgiDataEval # parse_hlp.sh, setup associative array get[] from the request (POST and GET)
 
 versionUpdateHint=""
-githubRawInfoUrl="https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh" #patched from INFO.sh
+githubRawInfoUrl="https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh" #patched to distributor_url from INFO.sh
  # above line will be patched from INFO.sh and is used to check for a newer version
 if [[ -n "$githubRawInfoUrl" ]]; then
   git_version=$(wget --timeout=30 --tries=1 -q -O- "$githubRawInfoUrl" | grep ^version | cut -d '"' -f2)
-  logInfoNoEcho 6 "local_version='$local_version', git_version='$git_version'"
+  logInfoNoEcho 6 "index.cgi, local_version='$local_version', git_version='$git_version'"
   if [ -n "${git_version}" ] && [ -n "${local_version}" ]; then
     if dpkg --compare-versions "${git_version}" gt "${local_version}"; then
     # if dpkg --compare-versions ${git_version} lt ${local_version}; then # for debugging
@@ -178,7 +183,8 @@ if [[ -n "$githubRawInfoUrl" ]]; then
   fi
 fi
 
-
+myScript="<script>
+ function setBoxHeight() { var h0=window.innerHeight; var o1=document.getElementById('mybox'); var h1=o1.style.height; var t1=o1.getBoundingClientRect().top; h2=h0 - t1- 65; o1.style.height = h2+'px'; }"
 if [[ -n "${get[action]}" ]]; then
   val="${get[action]}"
   if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]] || [[ "$val" == "chgDetailLogLevel" ]] || [[ "$val" == "SupportEMail" ]]; then
@@ -253,10 +259,9 @@ if [[ -n "${get[action]}" ]]; then
       fi
     fi
   fi
-
   if [[ "$val" == "reloadSimpleLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then
     logInfoNoEcho 7 "Page reload"
-    script="${script} window.onload=function(){ window.scrollTo(0, document.body.scrollHeight);}"  # scroll to bottom
+    #myScript="${myScript} window.onload=function(){ window.scrollTo(0, document.body.scrollHeight);}"  # scroll to bottom
 
 # https://stackoverflow.com/questions/17642872/refresh-page-and-keep-scroll-position
 # not working:
@@ -271,6 +276,14 @@ if [[ -n "${get[action]}" ]]; then
 
   fi # reload
 fi # action
+
+if [[ "${get[action]}" == "reloadSimpleLog" ]] || [[ "${get[action]}" == "reloadDetailLog" ]]; then
+  myScript="${myScript}
+    function myLoad() { setBoxHeight(); var o1=document.getElementById('mybox'); var sy=o1.scrollHeight; if (!!sy) {o1.scrollTo(0, sy);} else {alert('ScrollY null');} } "
+else
+  myScript="${myScript}
+   function myLoad() { setBoxHeight(); var o1=document.getElementById('mybox'); var sy=o1.scrollHeight; if (!!sy) {o1.scrollTo(0, sy);} else {alert ('ScrollY null')} }"
+fi
 
 if [[ "$logfile" == "$appCfgDataPath/detailLog" ]]; then
   pageTitle=$(echo "$logTitleDetail") # read it again and insert the changed LOGLEVEL
@@ -288,10 +301,11 @@ else
   filesize_Bytes=$(stat -c%s "$logfile")  # if it's a link this returns size of the link, not of linked file!
   lineCount=$(wc -l < "$logfile")
 fi
-logInfoNoEcho 8 "Size of $logfile is $lineCount lines, $filesize_Bytes Bytes"
+logInfoNoEcho 8 "index.cgi, Size of $logfile is $lineCount lines, $filesize_Bytes Bytes"
 if [[ "$bDebug" -ne 0 ]]; then
   echo "starting to generate html document ..."
 fi
+myScript="$myScript </script>"
 # Layout output
 # --------------------------------------------------------------
 if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
@@ -307,14 +321,14 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
       <link rel="shortcut icon" href="images/icon_32.png" type="image/x-icon" />
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <link rel="stylesheet" type="text/css" href="dsm3.css"/>'
-  echo "$script"
+  echo "$myScript"
   echo '</head>
-    <body>
+    <body onload="myLoad()" onresize="setBoxHeight()">
       <header>'
   echo "$versionUpdateHint"
         # Load page content
         # --------------------------------------------------------------
-        if [[ "${is_admin}" == "yes" ]]; then
+        if [[ "$is_admin" == "yes" ]]; then
           # Infotext: Enable application level authentication
           # [ -n "${txtActivatePrivileg}" ] && echo ''${txtActivatePrivileg}''
           # Dynamic page output:
@@ -332,7 +346,10 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           fi
           echo "<button onclick=\"location.href='settings.cgi'\" type=\"button\">${btnShowSettings}</button> "
           echo "<button onclick=\"location.href='$licenceFile'\" type=\"button\">${btnShowLicence}</button> "
-          echo "<p><strong>$pageTitle</strong></p></header><table>"
+# https://stackoverflow.com/questions/21168521/table-fixed-header-and-scrollable-body
+# https://www.quackit.com/html/codes/html_scroll_box.cfm
+# https://www.w3schools.com/jsref/prop_win_innerheight.asp
+          echo "<p><strong>$pageTitle</strong></p></header><div id='mybox' style='height:360px;width:100%;overflow:auto;'><table>"
 
           if [[ -f "$logfile" ]]; then
             if [[ filesize_Bytes -lt 10 ]]; then
@@ -360,7 +377,7 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           echo '<p>'${txtAlertOnlyAdmin}'</p>'
         fi
         echo '
-      </table>
+      </table></div>
       <p style="margin-left:22px; line-height: 16px;">'
 
       if [[ "$logfile" == "$SCRIPT_EXEC_LOG" ]]; then

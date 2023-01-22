@@ -2,6 +2,8 @@
 Führt Skripte aus, wenn externe Speicher (USB / eSATA) an ein Synology NAS mit DSM 7.x angeschlossen werden. Typische Anwendung ist das Kopieren oder Sichern von Dateien.
 In Synologies Task Scheduler gibt es die Möglichkeit, ausgelöste Aufgaben zu erstellen. Aber für das Trigger-Ereignis sind nur Boot-up und Shutdown verfügbar. Es sind keine USB-Ereignisse verfügbar. Dieses Defizit wird durch dieses Tool ausgeglichen.
 
+## [Lizens](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_ger.html)
+
 ## Haftungsausschluss und Issue Tracker
 Sie benutzen alles hier auf eigenes Risiko.
 Für Probleme benutzen Sie bitte den [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) mit deutscher oder englischer Sprache

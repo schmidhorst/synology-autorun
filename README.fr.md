@@ -2,9 +2,11 @@
 Exécute des scripts lors de la connexion de stockages externes (USB / eSATA) sur un Synology NAS avec DSM 7.x. L'utilisation typique est de copier ou de sauvegarder certains fichiers.
 Dans le planificateur de tâches de Synology, il y a la possibilité de créer des tâches déclenchées. Mais pour l'événement déclencheur, seuls les événements Boot-up et Shutdown sont disponibles. Il n'y a pas d'événements USB disponibles. Ce déficit est compensé par cet outil.
 
-### Disclaimer et Issue Tracker
-Vous utilisez tout ici à vos propres risques.
-Pour les problèmes, veuillez utiliser le [Issue Tracker] (https://github.com/schmidhorst/synology-autorun/issues) en allemand ou en anglais.
+## [Licence](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_fre.html)
+
+## Haftungsausschluss und Issue Tracker
+Sie benutzen alles hier auf eigenes Risiko.
+Für Probleme benutzen Sie bitte den [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) mit deutscher oder englischer Sprache
 
 # Installation
 * Téléchargez le fichier *.spk depuis ["Releases"](https://github.com/schmidhorst/synology-autorun/releases), "Assets" sur votre ordinateur et utilisez "Manual Install" dans le Package Center.

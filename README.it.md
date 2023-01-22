@@ -2,6 +2,8 @@
 Esegue gli script quando si collegano archivi esterni (USB / eSATA) su un Synology NAS con DSM 7.x. L'uso tipico è la copia o il backup di alcuni file.
 In Synology Task Scheduler esiste la possibilità di creare attività attivate. Ma per l'evento di attivazione sono disponibili solo l'avvio e lo spegnimento. Non sono disponibili eventi USB. Questo deficit è compensato da questo strumento.
 
+## [Licenza](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_ita.html)
+
 ## Disclaimer e tracciamento dei problemi
 L'utilizzo di questo strumento è a proprio rischio e pericolo.
 Per i problemi si prega di utilizzare il [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) in lingua tedesca o inglese.

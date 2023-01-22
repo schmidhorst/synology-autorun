@@ -2,6 +2,8 @@
 DSM 7.x を搭載した Synology NAS に外部ストレージ (USB / eSATA) を接続すると、スクリプトを実行することができます。
 Synologies Task Scheduler では、トリガーされたタスクを作成することができます。しかし、トリガー イベントには、起動とシャットダウンのみが用意されています。USB イベントはありません。この欠点は、このツールで補うことができます。
 
+## [ライセンス](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_jpn.html)
+
 ## 免責事項および問題追跡システム
 ここにあるものはすべて自己責任で使用してください。
 問題は[issue tracker](https://github.com/schmidhorst/synology-autorun/issues)を使って、ドイツ語か英語で解決してください。

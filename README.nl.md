@@ -2,6 +2,8 @@
 Voert scripts uit bij het aansluiten van externe opslagmedia (USB / eSATA) op een Synology NAS met DSM 7.x. Typisch gebruik is het kopiëren of back-uppen van bepaalde bestanden.
 In Synologies Task Scheduler is er de mogelijkheid om getriggerde taken aan te maken. Maar voor de trigger event zijn alleen Boot-up en Shutdown beschikbaar. Er zijn geen USB events beschikbaar. Deze tekortkoming wordt gecompenseerd door deze tool.
 
+## [Licentie](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_nld.html)
+
 ## Disclaimer en Issue Tracker
 U gebruikt alles hier op eigen risico.
 Gebruik voor problemen de [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) met Duitse of Engelse taal.

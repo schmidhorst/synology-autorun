@@ -2,6 +2,8 @@
 在使用DSM 7.x的Synology NAS上连接外部存储设备（USB / eSATA）时执行脚本。
 在Synologies任务调度器中，有可能创建被触发的任务。但是对于触发事件，只有开机和关机可以使用。没有USB事件可用。这个缺陷可以通过这个工具来弥补。
 
+## [许可](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_chs.html)
+
 ## 免责声明和问题跟踪器
 你使用这里的一切，风险自负。
 对于问题，请使用德语或英语的[问题跟踪器](https://github.com/schmidhorst/synology-autorun/issues)。

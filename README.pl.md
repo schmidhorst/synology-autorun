@@ -2,6 +2,8 @@
 Wykonuje skrypty podczas podłączania zewnętrznych pamięci masowych (USB / eSATA) do serwera Synology NAS z DSM 7.x. Typowym zastosowaniem jest kopiowanie lub tworzenie kopii zapasowych niektórych plików.
 W Harmonogramie zadań Synology istnieje możliwość tworzenia zadań wyzwalanych. Jednak dla zdarzeń wyzwalających dostępne są tylko Uruchomienie i Zamknięcie. Nie ma dostępnych zdarzeń USB. Ten brak jest rekompensowany przez to narzędzie.
 
+## [Licencja](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_plk.html)
+
 ## Disclaimer and Issue Tracker
 Używasz wszystkiego tutaj na własne ryzyko.
 Do rozwiązywania problemów używaj [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) z niemieckim lub angielskim językiem.

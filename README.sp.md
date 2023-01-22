@@ -2,6 +2,8 @@
 Ejecuta scripts cuando se conectan almacenamientos externos (USB / eSATA) en un Synology NAS con DSM 7.x. El uso típico es copiar o realizar copias de seguridad de algunos archivos.
 En el Programador de tareas de Synologies existe la posibilidad de crear tareas activadas. Sin embargo, para el evento de activación sólo están disponibles los eventos de arranque y apagado. No hay eventos USB disponibles. Este déficit se compensa con esta herramienta.
 
+## [Licencia](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_spn.html)
+
 ## Descargo de responsabilidad y seguimiento de problemas
 Usted está usando todo aquí bajo su propio riesgo.
 Para problemas por favor use el [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) con idioma Alemán o Inglés

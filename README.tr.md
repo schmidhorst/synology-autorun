@@ -2,6 +2,8 @@
 DSM 7.x ile bir Synology NAS üzerinde harici depolar (USB / eSATA) bağlanırken komut dosyalarını yürütür. Tipik kullanım bazı dosyaları kopyalamak veya yedeklemektir.
 Synologies Görev Zamanlayıcı'da tetiklenen görevler oluşturma olanağı vardır. Ancak tetikleme olayı için yalnızca Önyükleme ve Kapatma kullanılabilir. USB olayları mevcut değildir. Bu açık bu araçla telafi edilir.
 
+## [Lisans](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_trk.html)
+
 ## Sorumluluk Reddi ve Sorun İzleyici
 Buradaki her şeyi kendi sorumluluğunuzda kullanıyorsunuz.
 Sorunlar için lütfen [issue tracker] (https://github.com/schmidhorst/synology-autorun/issues) adresini Almanca veya İngilizce olarak kullanın

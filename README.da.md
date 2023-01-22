@@ -2,6 +2,8 @@
 Udfører scripts, når der tilsluttes eksterne lagre (USB / eSATA) på en Synology NAS med DSM 7.x. Typisk brug er at kopiere eller sikkerhedskopiere nogle filer.
 I Synologies Task Scheduler er der mulighed for at oprette udløste opgaver. Men for den udløsende begivenhed er der kun Boot-up og Shutdown tilgængelige. Der er ingen USB-hændelser tilgængelige. Denne mangel kompenseres af dette værktøj.
 
+## [Licens](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_dan.html)
+
 ## Ansvarsfraskrivelse og problemtracker
 Du bruger alt her på egen risiko.
 For problemer bedes du bruge [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) med tysk eller engelsk sprog

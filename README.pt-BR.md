@@ -2,6 +2,8 @@
 Executa scripts ao conectar armazenamentos externos (USB / eSATA) em um NAS Synology com DSM 7.x. O uso típico é copiar ou fazer backup de alguns arquivos.
 Em Synologies Task Scheduler há a possibilidade de criar tarefas acionadas. Mas para o evento de acionamento, só há Boot-up e Shutdown disponíveis. Não há eventos USB disponíveis. Este déficit é compensado por esta ferramenta.
 
+## [Licença](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_ptb.html)
+
 ## Isenção de Responsabilidade e Rastreador de Problemas
 Você está usando tudo aqui por sua própria conta e risco.
 Para questões, use o [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) com o idioma alemão ou inglês

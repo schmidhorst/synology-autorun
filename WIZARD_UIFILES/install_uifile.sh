@@ -100,4 +100,9 @@ fi
 echo "$(date "$DTFMT"): Wizzard template copied to '$SYNOPKG_TEMP_LOGFILE' and values from config inserted" >> "$LOG"
 echo "$(date "$DTFMT"): ... $0 done" >> "$LOG"
 exit 0
+# next steps will be: start-stop prestop, start-stop stop of old package if it's an upgrade
+#                     preupgrade (optional)
+#                     preuninst and postuninst from old package if it's an upgrade
+#                     prereplace ??
+#                     preinst
 

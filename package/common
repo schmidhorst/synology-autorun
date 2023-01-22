@@ -57,6 +57,7 @@ NO_DSM_MESSAGE_RETURN_CODES=""
 beep() {  # also used for LED control
   # requires root!
   /bin/echo "$1" > /dev/ttyS1
+  #synoexternal  -susled disk_green/disk_orange/power none/steady/blink
 }
 
 
@@ -163,7 +164,7 @@ if [[ -n "$LOGFILEold" ]]; then
 fi
 # echo "common LOGFILE='$LOGFILE'"
 if [[ -z "$LOGFILE" ]]; then
-  ## LOGFILE="/var/packages/autorun/target/log"
+  ## LOGFILE="/var/packages/$APPNAME/target/log"
   # LOGFILE="$APPDATA/log" # equal to /volumeX/@appdata/<app>
   # LOGFILE="/var/log/packages/$APPNAME.log" # permission denied
   # /var/log/$APPNAME.log: Permission denied

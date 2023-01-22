@@ -88,7 +88,7 @@ fi
 # Fill ComboBox with the configured scheduled Tasks:
 # not possible as the command $(synoschedtask --get) is not working as actual user = $SYNOPKG_PKGNAME
 
-echo "$(date "$DTFMT"): Values from config put to template '$SYNOPKG_TEMP_LOGFILE'" >> "$LOG"
+echo "$(date "$DTFMT"): Values from '$JSON' and '$configFilePathName' put to template '$SYNOPKG_TEMP_LOGFILE'" >> "$LOG"
 echo "$(date "$DTFMT"): ... $0 done" >> "$LOG"
 # putting here somthing to ENV for use in postinst script is not working!
 exit 0

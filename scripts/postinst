@@ -1,4 +1,5 @@
 #!/bin/bash
+# this is started already from /var/packages/<pckName>/scripts folder, no more from a temp folder
 LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 user=$(whoami) # EnvVar $USER may be not well set
@@ -49,7 +50,7 @@ for item in "${itemArray[@]}"; do
   # echo "$item:  $key2=\"${val}\"" >> "$LOG"
   msg="$msg  $key2='${val}'"
 done
-echo "$(date "$DTFMT"): from ENV: $msg" >> "$LOG"
+echo "$(date "$DTFMT"): from ENV extracted: $msg" >> "$LOG"
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
   KNOWNSCRIPTSFILEPATHNAME="$SYNOPKG_PKGVAR/FINGERPRINTS"
   res=$(rm -f "$KNOWNSCRIPTSFILEPATHNAME")
@@ -69,11 +70,11 @@ else
 fi
 
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
-  echo "$(date "$DTFMT"): $action done, previously registered script fingerprints deleted" >> "$SYNOPKG_PKGVAR/execLog"
+  echo "$(date "$DTFMT"): $action done, previously registered script fingerprints deleted, not yet started" >> "$SYNOPKG_PKGVAR/execLog"
 else
-  echo "$(date "$DTFMT"): $action done" >> "$SYNOPKG_PKGVAR/execLog"
+  echo "$(date "$DTFMT"): $action done, not yet started" >> "$SYNOPKG_PKGVAR/execLog"
 fi
-echo "$(date "$DTFMT"): postinst done, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
+echo "$(date "$DTFMT"): postinst done, not yet started, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
 # next script may be post_upgrade
 exit 0
 

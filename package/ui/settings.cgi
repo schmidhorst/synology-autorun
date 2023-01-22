@@ -1,9 +1,12 @@
 #!/bin/bash
 # Filename: settings.cgi - coded in utf-8
 #    taken from
-#  DSM7DemoSPK (https://github.com/toafez/DSM7DemoSPK) and adopted to autorun by Horst Schmid
+#  DSM7DemoSPK (https://github.com/toafez/DSM7DemoSPK)
 #        Copyright (C) 2022 by Tommes
 # Member of the German Synology Community Forum
+
+# Adopted to need of Autorun by Horst Schmid
+#      Copyright (C) 2022...2023 by Horst Schmid
 
 #             License GNU GPLv3
 #   https://www.gnu.org/licenses/gpl-3.0.html

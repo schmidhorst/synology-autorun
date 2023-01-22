@@ -1,4 +1,23 @@
 #!/bin/bash
+
+appendToLastLogLineIfSimilar() {
+  latestEntry="$(/bin/tail -1 "$SCRIPT_EXEC_LOG")"
+  if [[ "$latestEntry" == *"$1"* ]]; then
+    # future Option: Check time in $latestEntry and and replace only if not too old
+    lineCount=$(/bin/wc -l < "$SCRIPT_EXEC_LOG")
+    /bin/sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"
+
+    /bin/echo "${latestEntry//$2/} $3" >> "$SCRIPT_EXEC_LOG"
+    # logInfo 8 "Last Entry in SCRIPT_EXEC_LOG replaced"
+  else
+    /bin/echo "$(date "$DTFMT"): $latestEntry $2" >> "$SCRIPT_EXEC_LOG"
+    # logInfo 8 "Item '$1' not found in SCRIPT_EXEC_LOG last line: '$latestEntry'"
+  fi # if [[ "$latestEntry" == *"$diskName"* ]]
+}
+
+
+
+
 # This start-stop-status is called about once per second!
 user=$(whoami) # EnvVar $USER may be not well set
 # user = "root" if the sudo cp /var/packages/$SYNOPKG_PKGNAME/conf/privilege.root /var/packages/$SYNOPKG_PKGNAME/conf/privilege
@@ -6,7 +25,7 @@ user=$(whoami) # EnvVar $USER may be not well set
 LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
 DTFMT="+%Y-%m-%d %H:%M:%S"
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # /var/packages/autorun/scripts !!
-SCRIPT_EXEC_LOG="$APPDATA/execLog" # 2022-12-23: "start-stop-status: line 167/168: No such file or directory" found in /var/log/bash_err.log
+SCRIPT_EXEC_LOG="$APPDATA/execLog" # 2022-12-23: "start-stop-status: line 167/168: No such file or directory" found in /var/log/bash_err.log????
 ruleDfilePathName="/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules"
 case $1 in
   prestart)
@@ -48,7 +67,7 @@ case $1 in
       #else # if [[ -n "$SCRIPT_AFTER_EJECT" ]]
         #echo "$(date "$DTFMT"): start-stop-status: No script after eject<br/>" >> "$LOG"
       fi # if [[ -n "$SCRIPT_AFTER_EJECT" ]]
-      resWhichFile=$(which "file")
+      resWhichFile=$(which "file") # Is 'which' always available? 'file' is only available after installation of "SynoCLI File Tools"!
       if [[ -z "$resWhichFile" ]]; then
         echo "$(date "$DTFMT"): Linux command 'file' (part of package 'SynoCli File Tools') is not available. Checking source files for correct line terminator and UTF-8-coding skipped!" >> LOG
       fi
@@ -57,7 +76,7 @@ case $1 in
           eval $(grep -s "scriptNA=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
           echo "$scriptNA" > "$SYNOPKG_TEMP_LOGFILE"
           echo "$(date "$DTFMT"): Error: The script file '$f' is not available!" >> "$LOG"
-          res=$(findFileIgnoreCase $f)
+          res=$(findFileIgnoreCase "$f")
           result=$?
           #echo "$(date "$DTFMT"): findFileIgnoreCase result: $result, '$res'" >> "$LOG"
           if [[ "$result" -eq "1" ]]; then # with "ignore case script found!"
@@ -144,7 +163,8 @@ case $1 in
         # chown root:root "$ruleDfilePathName" # required?
         /usr/bin/udevadm control --reload-rules
         if [ -f "$ruleDfilePathName" ];  then
-          echo "$(date "$DTFMT"): Package '$SYNOPKG_PKGNAME' was STARTED!" >> "$SCRIPT_EXEC_LOG"
+          # echo "$(date "$DTFMT"): Package '$SYNOPKG_PKGNAME' was STARTED!" >> "$SCRIPT_EXEC_LOG"
+          appendToLastLogLineIfSimilar "Re-Installation (change of settings)" "not yet started" "Package '$SYNOPKG_PKGNAME' was STARTED!"
           echo "$(date "$DTFMT"): ... start via start-stop-status script successfully finished<br/>" >> "$LOG"
         fi
       else

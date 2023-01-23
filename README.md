@@ -15,7 +15,9 @@
 
 # autorun package V1.10 for Synology NAS
 Executes a script when connecting external storages (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files.
-In Synologies Task Scheduler there is the possibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.
+In Synologies Task Scheduler there is the possibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events like 'external storage mounted' available. This deficit is compensated by this tool.
+
+During the package installation to your NAS you have to enter the name of the shell script, which should be executed at the trigger event 'external storage device mounted'. The script can be located either in the root folder of the external device or internal on your NAS. Optionally you can exject that external device after your script is finished. A security option is to register the SHA256 checksum of the executed script and to restrict further executions to scripts matching the previously registered checksums.
 
 ## [License](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_enu.html)
 

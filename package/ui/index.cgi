@@ -1,7 +1,7 @@
 #!/bin/bash
 # Filename: index.cgi - coded in utf-8
 #    taken from
-#  DSM7DemoSPK (https://github.com/toafez/DSM7DemoSPK) and adopted to autorun by Horst Schmid
+#  DSM7DemoSPK (https://github.com/toafez/DSM7DemoSPK)
 #        Copyright (C) 2022 by Tommes
 # Member of the German Synology Community Forum
 
@@ -45,7 +45,7 @@ app_home=$(find $ah -maxdepth 0 -type d) # Attention: find is not working with q
 
 # env >> LOG"
 
-# Load urlencode and urldecode, logInfo, ... function from ../modules/parse_hlp.sh:
+# Load urlencode and urldecode, logInfoNoEcho, ... function from ../modules/parse_hlp.sh:
 if [ -f "${app_home}/modules/parse_hlp.sh" ]; then
   source "${app_home}/modules/parse_hlp.sh"
   res=$?
@@ -65,10 +65,11 @@ fi
 # Read out and check the login authorization  ( login.cgi )
 if [[ "$bDebug" -eq 0 ]]; then
   cgiLogin # see parse_hlp.sh, sets $syno_login, $syno_token, $syno_user, $is_admin
+  # this may fail with persission denied and result 3
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
     echo "$(date "$DTFMT"): $(basename "$0"), calling cgiLogin failed, ret='$ret' " >> "$LOG"
-    exit
+    # exit
   fi
 else
   echo "Due to debug mode login skipped"
@@ -83,7 +84,7 @@ if [ -x "${app_home}/modules/parse_language.sh" ]; then
   logInfoNoEcho 7 "$(basename "$0"), Loading ${app_home}/modules/parse_language.sh done with result $res"
   # || exit
 else
-  logInfo 1 "Loading ${app_home}/modules/parse_language.sh failed"
+  logInfoNoEcho 1 "Loading ${app_home}/modules/parse_language.sh failed"
   exit
 fi
 # ${used_lang} is now setup, e.g. enu
@@ -97,7 +98,7 @@ if [[ "$bDebug" -eq 0 ]]; then
   evaluateCgiLogin # in parse_hlp.sh
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
-    logInfo 1 "$(basename "$0"), execution of evaluateCgiLogin failed, ret='$ret'"
+    logInfoNoEcho 1 "$(basename "$0"), execution of evaluateCgiLogin failed, ret='$ret'"
     exit
   fi
 else
@@ -130,7 +131,7 @@ fi
 #appCfgDataPath=$(find /volume*/@appdata/${app_name} -maxdepth 0 -type d)
 appCfgDataPath="/var/packages/${app_name}/var"
 if [ ! -d "${appCfgDataPath}" ]; then
-  logInfo 1 "... terminating index.cgi as app home folder '$appCfgDataPath' not found!"
+  logInfoNoEcho 1 "... terminating $(basename "$0") as app home folder '$appCfgDataPath' not found!"
   echo "$(date "$DTFMT"): ls -l /:" >> "$LOG"
   ls -l / >> "$LOG"
   exit
@@ -413,6 +414,6 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
         </body>
       </html>"
 fi # if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]
-logInfoNoEcho 4 "$(basename "$0") done"
+logInfoNoEcho 4 "... $(basename "$0") done"
 exit
 

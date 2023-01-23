@@ -1,16 +1,18 @@
 #!/bin/bash
 
+# if the last entry of $SCRIPT_EXEC_LOG contains $1, then remove possibly available $2, append $3 and use that as new last entry
+# else write $3 with actual timestamp as new entry
+# e.g.  appendToLastLogLineIfSimilar "Re-Installation (change of settings)" "not yet started" "Package '$SYNOPKG_PKGNAME' was STARTED!"
 appendToLastLogLineIfSimilar() {
   latestEntry="$(/bin/tail -1 "$SCRIPT_EXEC_LOG")"
   if [[ "$latestEntry" == *"$1"* ]]; then
     # future Option: Check time in $latestEntry and and replace only if not too old
     lineCount=$(/bin/wc -l < "$SCRIPT_EXEC_LOG")
-    /bin/sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG"
-
+    /bin/sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG" # remove the last line
     /bin/echo "${latestEntry//$2/} $3" >> "$SCRIPT_EXEC_LOG"
     # logInfo 8 "Last Entry in SCRIPT_EXEC_LOG replaced"
   else
-    /bin/echo "$(date "$DTFMT"): $latestEntry $2" >> "$SCRIPT_EXEC_LOG"
+    /bin/echo "$(date "$DTFMT"): $3" >> "$SCRIPT_EXEC_LOG"
     # logInfo 8 "Item '$1' not found in SCRIPT_EXEC_LOG last line: '$latestEntry'"
   fi # if [[ "$latestEntry" == *"$diskName"* ]]
 }

@@ -26,7 +26,7 @@ You are using everything here at your own risk.
 For issues please use the [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) with German or English language
 
 ## Build and Installation
-* If you want to build the package yourself from the source: Download all files. Set the file 'build' to executable and run that script to generate the *.spk file.
+* If you want to build the package yourself from the source: Download all files. Set the file 'build' to executable and run that script to generate the *.spk file. No toolkit needed.
 * Or download the *.spk file from ["Releases"](https://github.com/schmidhorst/synology-autorun/releases), "Assets" to your computer.
 
 Then use "Manual Install" in the Package Center.

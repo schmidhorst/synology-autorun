@@ -8,10 +8,17 @@ msg3="Der Fingerabdruck des Skripts '{0}' ({1}) wurde jetzt als erlaubtes Skript
 msg4="Auf dem eingefügten Gerät befindet sich ein Skript '{1}' ({2}). Der Skriptname stimmt mit der Einrichtung des {0}-Pakets überein. Aber der Fingerabdruck des Skripts darf nicht ausgeführt werden."
 msg5="Auf dem eingefügten Gerät befindet sich ein Skript '{1}'. Der Skriptname stimmt mit der Einrichtung des Pakets {0} überein. Aber dieses Skript ist für {3} nicht zulässig."
 msg6="Auf dem eingefügten Gerät befindet sich ein Skript '{1}'. Der Skriptname stimmt mit der Einrichtung des Pakets {0} überein. Aber die Skriptberechtigungen erlauben die Ausführung nicht."
-msg7="Das Skript {0} auf dem Gerät {1} wurde mit dem Ergebnis {2} beendet. !!! Achtung! Der Auswurf des Geräts ist fehlgeschlagen!!!!"
-msg8="Das Skript {0} auf dem Gerät {1} wurde mit dem Ergebnis {2} beendet. Das Gerät wurde ausgeworfen. Auf dem Gerät sind noch {3}Bytes frei."
-msg9="Das Skript {0} auf dem Gerät {1} wurde mit dem Ergebnis {2} beendet. Auf dem Gerät sind noch {3}Bytes frei."
-msg10="Fehler: Im Falle des Ergebnisses 100 des Skripts {1} auf dem USB/eSATA-Gerät sollte das Paket {0} das Gerät auswerfen und dann das Skript {2} auf der Diskstation ausführen. Das Skript {2} ist nicht verfügbar oder nicht ausführbar!"
-msg14="Fehler: Das Skript '{0}', das ausgeführt werden soll, verwendet den falschen Zeilenumbruch CR/LF (Windows). Bitte verwenden Sie einen geeigneten Editor (Linux oder Windows Notepad  , PSPad, ...), um ihn in LF (UNIX) zu ändern!"
-msg15="Fehler: Das Skript '{0}', das ausgeführt werden soll, verwendet die falsche Kodierung (Windows ISO-8859). Bitte verwenden Sie einen geeigneten Editor (Linux oder Windows Notepad  , PSPad, ...), um es in UTF-8 zu ändern!"
+msg7="Das Skript {0} auf dem Gerät {1} wurde mit dem Ergebnis {2} beendet. !!! Achtung! Der Auswurf des Geräts ist fehlgeschlagen!!!!{3}"
+msg8="Das Skript {0} auf dem Gerät {1} wurde mit dem Ergebnis {2} beendet.{3}Das Gerät wurde ausgeworfen. Auf dem Gerät sind noch {4}Bytes frei."
+msg9="Das Skript {0} auf dem Gerät {1} wurde mit dem Ergebnis {2} beendet.{3}Auf dem Gerät sind noch {4}Bytes frei."
+msg10="Fehler: Im Falle des Ergebnisses 100 des Skripts {1} auf dem USB/eSATA-Gerät sollte das Paket {0} das Gerät auswerfen und dann das Skript {2} auf der Diskstation ausführen. Das Skript {2} ist nicht verfügbar oder nicht ausführbar!{3}"
+msg14="Fehler: Das Skript '{0}', das ausgeführt werden soll, verwendet den falschen Zeilenumbruch CR/LF (Windows). Bitte verwenden Sie einen geeigneten Editor (Linux oder Windows Notepad++, PSPad, ...), um ihn in LF (UNIX) zu ändern!"
+msg15="Fehler: Das Skript '{0}', das ausgeführt werden soll, verwendet die falsche Kodierung (Windows ISO-8859). Bitte verwenden Sie einen geeigneten Editor (Linux oder Windows Notepad++, PSPad, ...), um es in UTF-8 zu ändern!"
 msg16="Fehler: Das Skript '{0}', das ausgeführt werden soll, verwendet den falschen Zeilenumbruch CR (MAC). Bitte verwenden Sie einen geeigneten Editor (z.B. BBEdit/TextWrangler), um ihn in LF (UNIX) zu ändern!"
+
+[app_help]
+index="Autorun Index (GER)"
+node01="Autorun 01 (GER)"
+node01_child="Autorun 01 Child (GER)"
+node02="Autorun 02 (GER)"
+

@@ -54,4 +54,5 @@ update_available="<span style='color:red'>A ${app_name} update is available on G
 txtAlertOnlyAdmin="Access is allowed only for members od the administrators group"
 txtLanguageSource="The language of this page was selected according to your webbrowser regional settings."
 preinstDsmVersError="This package version can only be used in DSM ${osMin} and above! Earlier package versions may be possible on your DSM version, see <a target='_blank' rel='noopener noreferrer' href='https://github.com/reidemei/synology-autorun#install'>https://github.com/reidemei/synology-autorun#install</a>"
+details="Details"
 

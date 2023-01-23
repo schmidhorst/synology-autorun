@@ -4,8 +4,8 @@ if [[ "$1" == "" ]]; then # Generation with toolkit scripts
   source /pkgscripts-ng/include/pkg_util.sh
 fi
 package="autorun"
-version="1.10.0-0009"
-beta="yes"
+version="1.10.0-0010"
+# beta="yes"
 arch="noarch"
 os_min_ver="7.0-40000"
 # install_dep_packages="WebStation>=3.0.0-0323:PHP7.4>=7.4.18-0114:Apache2.4>=2.4.46-0122"
@@ -23,7 +23,7 @@ silent_upgrade="no"
 # precheckstartstop="yes"
 arch="noarch"
 helpurl="https://www.synology-forum.de/showthread.html?18360-Autorun-fuer-ext.-Datentraeger"
-support_url="https://github.com/reidemei/synology-autorun/issues"
+support_url="https://github.com/schmidhorst/synology-${package}/issues"
 dsmappname="SYNO.SDS._ThirdParty.App.$package"
 
 SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
@@ -35,7 +35,7 @@ if [[ -n "$maintainer_url" ]]; then
   # patch githubRawInfoUrl directly to the index.cgi file if necessary:
   lineInfoUrl=$(grep "githubRawInfoUrl=" "$SCRIPTPATHTHIS/package/ui/index.cgi")
   if [[ "$lineInfoUrl" != "githubRawInfoUrl=\"${githubRawInfoUrl}\"" ]]; then
-    sed -i "s|^githubRawInfoUrl=.*\$|githubRawInfoUrl=\"${githubRawInfoUrl}\" #patched from INFO.sh|" "$SCRIPTPATHTHIS/package/ui/index.cgi"
+    sed -i "s|^githubRawInfoUrl=.*\$|githubRawInfoUrl=\"${githubRawInfoUrl}\" #patched to distributor_url from INFO.sh|" "$SCRIPTPATHTHIS/package/ui/index.cgi"
   fi
 fi
 if [[ "$1" != "" ]]; then  # Generation without toolkit scripts

@@ -13,8 +13,8 @@
 [![tr](https://flagcdn.com/w20/tr.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.tr.md)
 [![zh](https://flagcdn.com/w20/cn.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.zh.md)
 
-# autorun package for Synology NAS
-Executes scripts when connecting external storages (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files.
+# autorun package V1.10 for Synology NAS
+Executes a script when connecting external storages (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files.
 In Synologies Task Scheduler there is the possibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events available. This deficit is compensated by this tool.
 
 ## [License](https://htmlpreview.github.io/?https://github.com/schmidhorst/synology-autorun/blob/main/package/ui/licence_enu.html)
@@ -23,11 +23,13 @@ In Synologies Task Scheduler there is the possibility to create triggered tasks.
 You are using everything here at your own risk.
 For issues please use the [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) with German or English language
 
-# Installation
-* Download the *.spk file from ["Releases"](https://github.com/schmidhorst/synology-autorun/releases), "Assets" to your computer and use "Manual Install" in the Package Center.
+# Build and Installation
+* If you want to build the package yourself from the source: Download all files. Set the file 'build' in the root folder to executable and run that script to generate the *.spk file.
+* Or download the *.spk file from ["Releases"](https://github.com/schmidhorst/synology-autorun/releases), "Assets" to your computer.
 
-Third Party packages are restricted by Synology in DSM 7. Since autorun does require root
-permission to perform its job an additional manual step is required after the installation.
+Then use "Manual Install" in the Package Center.
+
+Third Party packages are restricted by Synology in DSM 7. Since autorun does require root permission to perform its job an additional manual step is required after the installation before a "Run" can be done successfully.
 
 SSH to your NAS (as an admin user) and execute the following command:
 ```shell
@@ -41,7 +43,7 @@ cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privileg
 as "Run command". Finish it with OK. When you are requested to execute that command now during package installation, then go to the task scheduler, select that task and "Run" it.
 
 Under https://www.cphub.net/ in the Package Center there are [elder versions](https://github.com/reidemei/synology-autorun) for elder DSM versions available:
-* DSM 7: actually still only 1.8
+* DSM 7: 1.8
 * DSM 6: 1.7
 * DSM 5: 1.6
 * elder: 1.3

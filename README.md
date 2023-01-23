@@ -23,8 +23,8 @@ In Synologies Task Scheduler there is the possibility to create triggered tasks.
 You are using everything here at your own risk.
 For issues please use the [issue tracker](https://github.com/schmidhorst/synology-autorun/issues) with German or English language
 
-# Build and Installation
-* If you want to build the package yourself from the source: Download all files. Set the file 'build' in the root folder to executable and run that script to generate the *.spk file.
+## Build and Installation
+* If you want to build the package yourself from the source: Download all files. Set the file 'build' to executable and run that script to generate the *.spk file.
 * Or download the *.spk file from ["Releases"](https://github.com/schmidhorst/synology-autorun/releases), "Assets" to your computer.
 
 Then use "Manual Install" in the Package Center.

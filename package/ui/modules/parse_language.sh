@@ -6,7 +6,10 @@
 #   Member of the German Synology Community Forum
 #     License GNU GPLv3
 #   https://www.gnu.org/licenses/gpl-3.0.html
-# Changed by Horst Schmid
+
+# Adopted to the needs of Autorun by Horst Schmid
+#      Copyright (C) 2022...2023 by Horst Schmid
+
 #********************************************************************#
 #  Description: Script get the currently used language               #
 #               Either the language setup for the logged-in user     #
@@ -15,10 +18,10 @@
 #  Author 1:    QTip from the german Synology support forum          #
 #  Copyright:   2016-2018 by QTip                                    #
 #  Author 2:    Modified 2022 by Tommes                              #
-#  Author 3:    Horst Schmid, 2022                                   #
+#  Author 3:    Horst Schmid, 2022...2023                            #
 #  License:     GNU GPLv3                                            #
 #  ----------------------------------------------------------------  #
-#  Version:     2022-11-25                                           #
+#  Version:     2023-01-06                                           #
 #********************************************************************#
 bDebugPL=0
 DTFMT="+%Y-%m-%d %H:%M:%S"
@@ -79,12 +82,12 @@ if [ -n "${HTTP_ACCEPT_LANGUAGE}" ] ; then  # WebBrowser-Preset available in cgi
     # mapfile -d "," -t httpLngs <<< "${HTTP_ACCEPT_LANGUAGE}" # here-string <<< appends a newline!
     mapfile -d "," -t httpLngs < <(/bin/printf '%s' "$HTTP_ACCEPT_LANGUAGE") # process substitution should be available also in ash with bash-compatibility
     # httpLngs[-1]=$(echo "${httpLngs[-1]}" | sed -z 's|\n$||' ) # remove the \n which was appended to last item by "<<<"
-    msg1="${#httpLngs[@]} Elments in httpLngs[@]"
+    msg1="${#httpLngs[@]} Elments in httpLngs[@]:"
     for ((i=0; i<${#httpLngs[@]}; i+=1)); do
       b1=${httpLngs[i]%%;*} # remove e.g. ";q=0.7", remaining e.g. "pt-PT, de-DE"
       b2=${httpLngs[i]:0:2}
       b2=${b2,,} # to lower case, should not be necessary
-      msg1=";  $msg1 ${httpLngs[i]}"
+      msg1="$msg1 ${httpLngs[i]}"
       [[ -n ${ISO2SYNO[$b1]} ]] && msg1="$msg1, b1='$b1'==>'${ISO2SYNO[$b1]}"
       [[ -n ${ISO2SYNO[$b1]} ]] && msg1="$msg1, b2='$b2'==>'${ISO2SYNO[$b2]}"
       if [[ -n "${ISO2SYNO[$b1]}" ]] && [[ "$httpSynLngs" != *"${ISO2SYNO[$b1]}"* ]]; then
@@ -95,7 +98,7 @@ if [ -n "${HTTP_ACCEPT_LANGUAGE}" ] ; then  # WebBrowser-Preset available in cgi
         msg1="$msg1: no Syno language"
       fi
     done
-    logInfoNoEcho 8 "$msg1"
+    logInfoNoEcho 6 "$msg1"
   fi
 fi
 

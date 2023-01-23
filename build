@@ -85,7 +85,7 @@ echo "dsmuidir='$dsmuidir'"
 
 # Check for well formed JSON:
 errCnt=0
-for f1 in "package/$dsmuidir/config" "package/$dsmuidir/index.conf" conf/*
+for f1 in "package/$dsmuidir/config" "package/$dsmuidir/index.conf" "package/$dsmuidir/helptoc.conf" conf/*
 # for f1 in package/$dsmuidir/config package/$dsmuidir/index.conf conf/* WIZARD_UIFILES/uninstall_uifile* WIZARD_UIFILES/wizard_*.json
 do
   f2="$SCRIPTPATHTHIS/$1$f1"

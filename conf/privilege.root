@@ -2,7 +2,7 @@
   "defaults": {
     "run-as": "root"
     }
-  ,"join-groupname": "http"
+  ,"join-groupname": "system"
   ,"tool": [
     {
       "relpath": "autorun"

@@ -1,7 +1,7 @@
 #!/bin/bash
 # called from udev. Attention: Environment (e.g. PATH) is not set!
 # https://raw.githubusercontent.com/reidemei/synology-autorun/main/package/autorun
-# re-written Horst Schmid 2022-12
+# re-written Horst Schmid 2022...2023
 
 # default settings
 TRIES=20
@@ -22,6 +22,7 @@ replaceLastLogLineIfSimilar() {
     /bin/echo "$(date "$DTFMT"): $2" >> "$SCRIPT_EXEC_LOG"
     logInfo 8 "Last Entry in SCRIPT_EXEC_LOG replaced"
   else
+    /bin/echo "$(date "$DTFMT"): $2" >> "$SCRIPT_EXEC_LOG"
     logInfo 8 "Item '$1' not found in SCRIPT_EXEC_LOG last line: '$latestEntry'"
   fi # if [[ "$latestEntry" == *"$diskName"* ]]
 }
@@ -126,12 +127,16 @@ executeConfiguredScript(){
         logInfo 3 "device '$1' successfully unmounted and removed from GUI!"
         break
       fi
-    if [[ $ejected -eq 1 ]]; then
-      logInfo 4 "Drive seems busy! k=$k Please wait ..."
-    fi
-    /bin/sleep 60
-    ((k--))
+      if [[ $ejected -eq 1 ]]; then
+        logInfo 4 "Drive seems busy! k=$k Please wait ..."
+      fi
+      /bin/sleep 60
+      ((k--))
     done # while not timeout
+    if [[ -z "$details" ]]; then # not in lang.txt
+      details="Details"
+    fi
+    detailLink="<a href='/usr/syno/synoman/webman/3rdparty/$SYNOPKG_PKGNAME/index.cgi'> details </a>" # is the token needed?
     if [[ $ejected -eq 1 ]]; then
       /bin/echo "$(date "$DTFMT"): The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was finished after $execTime with return code $RESULT. Attention: The requested ejection of the device failed!!" >> "$SCRIPT_EXEC_LOG"
       ejected=3 # failed
@@ -153,7 +158,7 @@ executeConfiguredScript(){
       else
         logInfo 0 "The script '$SCRIPT_AFTER_EJECT' is not executable for actual user"
         if [[ -n "$NOTIFY_USERS" ]]; then
-          /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg10" "$SYNOPKG_PKGNAME" "$scriptFullPathName" "$SCRIPT_AFTER_EJECT"
+          /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg10" "$SYNOPKG_PKGNAME" "$scriptFullPathName" "$SCRIPT_AFTER_EJECT" "$detailLink"
                                         # $dsmappname is setup in INFO file, e.g. "SYNO.SDS._ThirdParty.App.autorun"
         fi
       fi # if [ -x "$SCRIPT_AFTER_EJECT" ] else
@@ -165,12 +170,12 @@ executeConfiguredScript(){
     if [[ $ejected -eq 3 ]]; then
       # Ejection of device failed!
       if [[ -n "$NOTIFY_USERS" ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg7" "$scriptFullPathName" "$MOUNTPATH" "$RESULT"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg7" "$scriptFullPathName" "$MOUNTPATH" "$RESULT" "$detailLink"
       fi
       /bin/echo "$(date "$DTFMT"): Ejection of '$diskName', mounted as $MOUNTPATH failed!" >> "$SCRIPT_EXEC_LOG"
     else
       if [[ -n "$NOTIFY_USERS" ]] && [[ ";$NO_DSM_MESSAGE_RETURN_CODES;" != *";$RESULT;"* ]]; then
-        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg8" "$scriptFullPathName" "$MOUNTPATH" "$RESULT" "$FREE"
+        /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg8" "$scriptFullPathName" "$MOUNTPATH" "$RESULT" "$detailLink" "$FREE"
       fi
     fi
   else # result != 100
@@ -178,7 +183,7 @@ executeConfiguredScript(){
     /bin/echo "Result $RESULT != 100"
     logInfo 5 "device '$1' - script '$scriptFullPathName' finished with $RESULT ($lastScriptMsg) ($FREE left on device), no unmount requested"
     if [[ -n "$NOTIFY_USERS" ]] && [[ ";$NO_DSM_MESSAGE_RETURN_CODES;" != *";$RESULT;"* ]]; then
-      /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg9" "$scriptFullPathName" "$MOUNTPATH" "$RESULT" "$FREE"
+      /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg9" "$scriptFullPathName" "$MOUNTPATH" "$RESULT" "$detailLink" "$FREE"
     fi
   fi # if [ "$RESULT" == "100" ] else
 

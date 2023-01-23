@@ -5,10 +5,11 @@
 #        Copyright (C) 2022 by Tommes
 # Member of the German Synology Community Forum
 # Part 2:
-#  DSM7DemoSPK (https://github.com/toafez/DSM7DemoSPK) and adopted to UsbEject by Horst Schmid
-#        Copyright (C) 2022 by Tommes
-# Member of the German Synology Community Forum
-#
+#  DSM7DemoSPK (https://github.com/toafez/DSM7DemoSPK)
+
+# Adopted to need of UsbEject by Horst Schmid
+#      Copyright (C) 2022...2023 by Horst Schmid
+
 #             License GNU GPLv3
 #   https://www.gnu.org/licenses/gpl-3.0.html
 # Changed & extended by Horst Schmid
@@ -64,6 +65,9 @@ function cgiLogin() {
     REQUEST_METHOD="GET"
   fi
   syno_login=$(/usr/syno/synoman/webman/login.cgi) # login.cgi is a binary ELF file
+  # with "join-groupname": "http" in priviledge file the "journalctl -f" gives
+  #        /usr/syno/synoman/webman/login.cgi: Permission denied
+  # with "join-groupname": "system" it works
   # echo -e "\n$(date "$DTFMT"): syno_login='$syno_login'" >> "$LOG" # X-Content-Type-Options, Content-Security-Policy, Set-Cookie, SynoToken
   # and "{"SynoToken"	"xxxxxxxxx", "result"	"success", "success"	true}"
 
@@ -162,6 +166,7 @@ function evaluateCgiLogin() {
 
 function cgiDataEval() {
 # Analyze incoming POST requests and process them to ${get[key]}="$value" variables
+  msg1=""
   if [[ "$REQUEST_METHOD" == "POST" ]]; then
     # post_request="$app_temp/post_request.txt" # that files would allow to save settings from this main page for sub pages
     # Analyze incoming POST requests and process to ${var[key]}="$value" variables:
@@ -178,6 +183,7 @@ function cgiDataEval() {
         val=${POST_vars[i]#*=}
         val=$(urldecode "$val")
         logInfoNoEcho 8 "Post i=$i, key='$key', value='$val'"
+        msg1="$msg1  $key='$val'"
         if [[ -n "$key" ]]; then
           get[$key]=$val
         fi
@@ -185,7 +191,7 @@ function cgiDataEval() {
         # /usr/syno/bin/synosetkeyvalue "${post_request}" "$key" "$val"
       done
       if [[ ${#POST_vars[@]} -gt 0 ]]; then
-        logInfoNoEcho 7 "get[] setup from received POST data."
+        logInfoNoEcho 7 "get[] setup from received ${#POST_vars[@]} POST data items."
       fi
     fi
   fi
@@ -204,13 +210,14 @@ function cgiDataEval() {
       val=${GET_vars[i]#*=}
       val=$(urldecode "$val")
       logInfoNoEcho 8 "GET i=$i, key='$key', value='$val'"
+      msg1="$msg1  $key='$val'"
       get[$key]=$val
       # Saving GET requests for later processing
       # /usr/syno/bin/synosetkeyvalue "${get_request}" "$key" "$val"
     done # $QUERY_STRING with GET parameters
   fi # if [[ -n "${QUERY_STRING}" ]];
   if [[ ${#GET_vars[@]} -gt 0 ]]; then
-    logInfoNoEcho 8 "get[] array setup with ${#get[@]} items"
+    logInfoNoEcho 6 "get[] array setup with ${#get[@]} items: $msg1"
   fi
 }
 

@@ -447,7 +447,7 @@ if [ -x "$scriptFullPathName" ];then
     if [[ -z "$rFile" ]]; then
       logInfo 3 "Linux command 'file' is not available. Checking source files for correct line terminator and UTF-8-coding skipped! The 'file' command is part of the package 'SynoCli File Tools'! You may install that from https://packages.synocommunity.com/"
     else
-      res=$(rFile -b "$scriptFullPathName")
+      res=$($rFile -b "$scriptFullPathName")
       ret=$?
       logInfo 5 "File coding check '$scriptFullPathName' result $ret: $res"
       if [[ $res == *"CRLF line terminators"* ]]; then # Windows Format

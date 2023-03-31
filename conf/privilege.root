@@ -5,7 +5,7 @@
   ,"join-groupname": "system"
   ,"tool": [
     {
-      "relpath": "autorun"
+      "relpath": "auto.sh"
       ,"user": "package"
       ,"group": "package"
       ,"permission": "0700"

@@ -1,26 +1,4 @@
 #!/bin/bash
-# write an info entry to out log file
-# Variante a:  $1 = log entry
-# Variante b: $1= LogLevel, $2 log entry: Only if $1 is smaler or equal to the loglevel it will be reported
-logInfo() {
-  if [[ "$1" =~ ^[0-9]+$ ]] && [[ $# -ge 2 ]]; then # Attention: No single or double quotes for regExp allowed!
-    ll=$1 # 1st parameter is log level
-    shift
-  else
-    ll=1 # defaultvalue
-  fi
-  if [[ "$ll" -le  "$LOGLEVEL" ]]; then
-	  /bin/echo -e "$(date "$DTFMT"): $*" | /bin/tee -a "$LOGFILE"
-  fi
-}
-
-# write an error entry to out log file
-#   $1 - log entry
-logError() {
-	/bin/echo "$(date "$DTFMT"): <span style=\"color:red;\">$*</span><br/>" | /bin/tee -a "$LOGFILE"
-  # https://stackoverflow.com/questions/692000/how-do-i-write-standard-error-to-a-file-while-using-tee-with-a-pipe
- 	# /bin/echo "$(date "$DTFMT"): <span style=\"color:red;\">$1</span><br/>" > >(tee -a stdout.log) 2> >(tee -a stderr.log >&2)
-}
 
 
 # set the led or send a beep
@@ -41,11 +19,12 @@ logError() {
 # A 	0x41 	Copy LED blinkend
 # B 	0x42 	Copy LED aus 
 
+#shellcheck disable=2034
 BEEP_SHORT=2
 BEEP_LONG=3
 # LED_POWER_FLASH=5
 LED_STATUS_OFF=7
-LED_STATUS_GREEN=8
+LED_STATUS_GREEN=8 # Default state while DSM is ON
 LED_STATUS_GREEN_FLASH=9
 LED_STATUS_ORANGE=:
 LED_STATUS_ORANGE_FLASH=;
@@ -56,7 +35,7 @@ NO_DSM_MESSAGE_RETURN_CODES=""
 
 beep() {  # also used for LED control
   # requires root!
-  /bin/echo "$1" > /dev/ttyS1
+  /bin/echo "$1" > /dev/ttyS1 # on virtual DSM: write error: Input/output error
   #synoexternal  -susled disk_green/disk_orange/power none/steady/blink
 }
 
@@ -126,65 +105,74 @@ findFileIgnoreCase() {
 }
 
 
+# if the file $1 has more than $2 lines: Delete the 1st $2/2 lines
+logfileTrim() {
+  f2="$1"
+  f2="$(readlink "$1")" # result 1 if it's not a link, 0 if its a link
+  noLink=$?
+  if [[ -f "$f2" ]]; then
+    lineCount=$(/bin/wc -l < "$f2")
+    logInfo 6 "The log file '$f2' exists and has $lineCount lines, configured maximum is $LOG_MAX_LINES"
+    if [[ "$lineCount" -gt "$LOG_MAX_LINES" ]]; then
+      newLineCount=$((LOG_MAX_LINES / 2))
+      lastdeline=$((lineCount - newLineCount))
+      # lastdeline=5 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! for debugging set!!!!
+      res="$( { /bin/sed -i -e "1,${lastdeline}d" "$f2"; } 2>&1 )"
+      ret=$?
+      if [[ "$ret" -ne "0" ]]; then
+        logError "Error $ret to cut down log file '$f2' from $lineCount to $newLineCount lines with sed: '$res'"
+      else
+        echo "The log file '$f2' was trimmed from $lineCount to $newLineCount lines"
+      fi # if [[ "$ret" -ne "0" ]] else
+    fi # if [[ "$lineCount" -gt "$LOG_MAX_LINES" ]]
+  fi # if [[ -f "$f2" ]]
+}
+
+
 ####################### start #############################
 if [[ -z "$PATH" ]]; then
   PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
 fi
-SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # e.g. /volumeX/@appstore/<app>
-# echo "common: SCRIPTPATHTHIS='$SCRIPTPATHTHIS'"
-# /volumeX/@appstore/<app>, not /var/packages/<app>/target (Link)
-if [[ -n "${app_name}" ]]; then
-  APPNAME="${app_name}"
-else
-  APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
-  # echo "common: APPNAME: '$APPNAME' extracted from script path"
-  if [[ "$APPNAME" == "scripts" ]]; then # Why "scripts" if called from start-stop-status???
-    # echo "common: APPNAME wrong: '$APPNAME'='scripts' !! ????"
-    scriptpathParent=${SCRIPTPATHTHIS%/*}
-    APPNAME=${scriptpathParent##*/} # APPNAME="autorun"
-    # echo "common: APPNAME corrected: '$APPNAME'"
-  fi
+SCRIPTPATHTHIScommon="$( cd -- "$(/bin/dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )" # e.g. /volumeX/@appstore/<app>
+# Attention: In case of "source <somePath>/common" don't overwrite here the previous SCRIPTPATHTHIS!
+if [[ -z "${app_name}" ]]; then
+  app_name="${SCRIPTPATHTHIScommon##*/}"
 fi
-APPDATA="/var/packages/$APPNAME/var" # appCfgDataPath="/var/packages/${app_name}/var"
+APPDATA="/var/packages/$app_name/var" # appCfgDataPath="/var/packages/${app_name}/var"
 LOGLEVEL=8 # preset, may be chanded in parse_hlp.sh from config 
-# DTFMT="+%Y-%m-%d %H:%M:%S" # set in parse_hlp.sh
-
-source "/var/packages/$APPNAME/target/ui/modules/parse_hlp.sh" #  logInfoNoEcho(), DTFMT, LOGLEVEL, urlencode(), urldecode()
+# shellcheck source=../WIZARD_UIFILES/log_hlp.sh
+source "/var/packages/$app_name/WIZARD_UIFILES/log_hlp.sh"
+# shellcheck source=ui\modules\parse_hlp.sh
+source "/var/packages/$app_name/target/ui/modules/parse_hlp.sh" #  logInfoNoEcho(), DTFMT, LOGLEVEL, urlencode(), urldecode()
 SCRIPT_EXEC_LOG="$APPDATA/execLog"
 
-# the LOGFILE may be set already different:
-LOGFILEold=$LOGFILE
-# echo "common: LOGFILEold=$LOGFILEold"
-# source $scriptpathThis/bckCfg.txt # setup DsmNotifyClass, DsmNotifyCategory, DsmNotifyTitle, CcuIpAdrPort
-
+# shellcheck source=..\WIZARD_UIFILES\initial_config.txt
 source "$APPDATA/config"
-if [[ -n "$LOGFILEold" ]]; then
-  # echo "common: resetting LOGFILE from $LOGFILE (read from bckCfg.txt) to $LOGFILEold"
-  LOGFILE=$LOGFILEold
+if [[ -z "$LOG" ]]; then # should be set in log_hlp.sh!!!!!
+  if [[ -w "/var/log/packages/autorun.log" ]]; then
+    LOG="/var/log/packages/autorun.log"
+  fi
+  ## LOG="/var/packages/$app_name/target/log"
+  # LOG="$APPDATA/log" # equal to /volumeX/@appdata/<app>
+  # LOG="/var/log/packages/$app_name.log" # permission denied
+  # /var/log/$app_name.log: Permission denied
+  if [[ -z "$LOG" ]]; then
+    LOG="/var/tmp/$app_name.log"
+  fi
+  logInfo 2 "LOGFILE was not set! Now='$LOG'"
 fi
-# echo "common LOGFILE='$LOGFILE'"
-if [[ -z "$LOGFILE" ]]; then
-  ## LOGFILE="/var/packages/$APPNAME/target/log"
-  # LOGFILE="$APPDATA/log" # equal to /volumeX/@appdata/<app>
-  # LOGFILE="/var/log/packages/$APPNAME.log" # permission denied
-  # /var/log/$APPNAME.log: Permission denied
-  LOGFILE="/var/tmp/$APPNAME.log" # A link /var/packages/$SYNOPKG_PKGNAME/var/detailLog is set to this (see start-stop-status script)
-  # echo "common LOGFILE changed, now='$LOGFILE'"
-fi
-LOG="$LOGFILE"
-logInfo 7 "common ($0) was called with param1='$1', app_name='${app_name}', APPNAME='$APPNAME', APPDATA='$APPDATA', SCRIPTPATHTHIS='$SCRIPTPATHTHIS'"
+# A link /var/packages/$SYNOPKG_PKGNAME/var/detailLog to $LOG is set to this (see start-stop-status script)
+logInfo 7 "common (${BASH_SOURCE[0]}) was called with param1='$1', app_name='$app_name', APPDATA='$APPDATA', SCRIPTPATHTHIScommon='$SCRIPTPATHTHIScommon'"
 lngUser=$SYNOPKG_DSM_LANGUAGE # not global DSM language but actual user language! Never 'def'
 lngMail=$(/bin/get_key_value "/etc/synoinfo.conf" "maillang") # global setting, not individual user!
 if [[ -z "$lngUser" ]]; then
   logInfo 5 "common: SYNOPKG_DSM_LANGUAGE is not available, trying maillang='$lngMail'"
   lngUser="$lngMail"  
 fi
-if [[ ! -f "/var/packages/$APPNAME/target/ui/texts/$lngUser/lang.txt" ]]; then
-  logInfo 5 "common: /var/packages/$APPNAME/target/ui/texts/$lngUser/lang.txt not available, switched to enu"
+if [[ ! -f "/var/packages/$app_name/target/ui/texts/$lngUser/lang.txt" ]]; then
+  logInfo 5 "common: /var/packages/$app_name/target/ui/texts/$lngUser/lang.txt not available, switched to enu"
   lngUser="enu"
 fi
-
 user=$(whoami) # EnvVar $USER may be not well set
-  
-logInfo 7 "common: user='$user', SYNOPKG_DSM_LANGUAGE='$SYNOPKG_DSM_LANGUAGE', lngMail='$lngMail', selected lngUser='$lngUser'"
+logInfo 7 "common done: user='$user', SYNOPKG_DSM_LANGUAGE='$SYNOPKG_DSM_LANGUAGE', lngMail='$lngMail', selected lngUser='$lngUser'"
 

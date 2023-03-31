@@ -1,46 +1,64 @@
 #!/bin/bash
-bDebug=0  # 0: delete log files, 1: preserve log files
-LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
-DTFMT="+%Y-%m-%d %H:%M:%S"
-# SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # /var/packages/autorun/scripts/
+SCRIPTPATHscripts="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
+scriptpathParent=${SCRIPTPATHscripts%/*}
+if [[ -f "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh" ]]; then
+  # shellcheck source=..\WIZARD_UIFILES\log_hlp.sh
+  source "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh"
+  # logInfo 8 "postuninst: logInfo / logError available!"
+else
+  LOG="/var/tmp/$SYNOPKG_PKGNAME.log" # possibly no permission
+  DTFMT="+%Y-%m-%d %H:%M:%S"
+  echo "$(date "$DTFMT"): postuninst: '$scriptpathParent/WIZARD_UIFILES/log_hlp.sh' not available!" >> "$LOG"
+fi
 user=$(whoami)
-echo "$(date "$DTFMT"): postuninst V$SYNOPKG_PKGVER started as $user...<br/>" >> "$LOG"
-# echo "$(date "$DTFMT"): p0='$0'" >> "$LOG" # $app_name is empty!!
+logInfo 6 "postuninst V$SYNOPKG_PKGVER started as $user..."
+# echo "$(date "$DTFMT"): p0='${BASH_SOURCE[0]}'" >> "$LOG" # $app_name is empty!!
 configFilePathName="${SYNOPKG_PKGVAR}/config"  # $SYNOPKG_PKGVAR is /volume1/@appdata/autorun and is o.k., still available
 # echo "$(date "$DTFMT"): configFilePathName='$configFilePathName'" >> "$LOG"
 # after uninstall is /var/packages/$SYNOPKG_PKGNAME no more available, only /volume1/@appdata/autorun !!!
 # Attention: If a new version is installed, then this file from the old version
 #   is executed before the preinst of the new version!
-if [[ "${pkgwizard_remove_settings}" == "true" ]] || [[ "${pkgwizard_remove_settings}" == "false" ]]; then
+msgui="V$SYNOPKG_PKGVER, post-uninstall "
+# shellcheck disable=2154
+if [[ "${config_remove_settings}" == "true" ]] || [[ "${config_remove_settings}" == "false" ]]; then
 	# WIZZARD_UIFILES/uninstall_uifile_<lng> was done before! So it's a real uninstall, not an upgrade!
-  if [[ "$bDebug" -eq "0" ]]; then
-    rm "$LOG"
-    rm "/var/tmp/resource.$SYNOPKG_PKGNAME.*"
-    rm "/var/log/packages/$SYNOPKG_PKGNAME.log"
-    rm "/var/log/packages/$SYNOPKG_PKGNAME.log.*.xz"
-    rm "${SYNOPKG_PKGVAR}/execLog"
-    # echo "$(date "$DTFMT"): Old logfiles removed" >> "$LOG"
-  else
-    echo "$(date "$DTFMT"): Logfiles preserved due to bDebug!=0" >> "$LOG"
-  fi
-fi
-if [[ "${pkgwizard_remove_settings}" == "true" ]]; then
-  res=$(rm -r --interactive=never "${SYNOPKG_PKGVAR}") # remove folder
-  ret=$?
-  # if [[ "$bDebug" -ne "0" ]]; then
-    echo "$(date "$DTFMT"): Result from 'rm -r \"${SYNOPKG_PKGVAR}\"': $ret, '$res'" >> "$LOG"
-  # fi
-else
-  if [[ -f "${SYNOPKG_PKGVAR}\config" ]]; then
-    # put old version to config file, so that postinst can check whether its an upgrade or only settings change
-    res=$(grep "VERSION=" "${SYNOPKG_PKGVAR}\config")
-    if [[ -n "$res" ]]; then
-      res="$(sed -i "s|^VERSION=.*$|VERSION=\"${SYNOPKG_PKGVAR}\"|" "${SYNOPKG_PKGVAR}\config")"
+  if [[ "$config_remove_log" == "true" ]]; then
+    res1=$( { rm "$LOG";} 2>&1 )
+    ret1=$?
+    msg="'rm $LOG': $ret1 ($res1)"
+    res2="$( { rm "/var/tmp/resource.$SYNOPKG_PKGNAME.log";} 2>&1 )"
+    ret2=$?
+    msg="$msg, 'rm /var/tmp/resource.$SYNOPKG_PKGNAME.log': $ret2 ($res2)"
+    res3="$( { rm "/var/log/packages/$SYNOPKG_PKGNAME.*";} 2>&1 )"
+    ret3=$?
+    msg="$msg, 'rm /var/tmp/resource.$SYNOPKG_PKGNAME.*': $ret3 ($res3)"
+    res4="$( { rm "/var/log/packages/$SYNOPKG_PKGNAME.log.*.xz";} 2>&1 )"
+    ret4=$?
+    msg="$msg, 'rm /var/log/resource.$SYNOPKG_PKGNAME.*': $ret4 ($res4)"
+    res5=$( { rm "${SYNOPKG_PKGVAR}/execLog";} 2>&1 )
+    ret5=$?
+    msg="$msg, 'rm ${SYNOPKG_PKGVAR}/execLog': $ret5 ($res5)"
+    if [[ "$ret1" -ne "0" ]] || [[ "$ret5" -ne "0" ]]; then
+      msgui="$msgui, removing old logfiles failed: ret1='$ret1', res1='$res1', ret2='$ret2', res2='$res2', ret3='$ret3', res3='$res3', ret4='$ret4', res4='$res4', ret5='$ret5', res5='$res5'"
     else
-      echo "VERSION=\"${SYNOPKG_PKGVAR}\"" >> "${SYNOPKG_PKGVAR}\config"
+      msgui="$msgui, logfiles successfully removed"
     fi
+  else
+    msgui="$msgui, logfiles preserved on uninstall due wizard selection!"
   fi
+  if [[ "${config_remove_settings}" == "true" ]]; then
+    # Problem: after an uninstallation with "${config_remove_settings}" == "true" this value is still set at next installation!!!!!
+    res=$( { rm -r --interactive=never "${SYNOPKG_PKGVAR}"; } 2>&1 ) # remove folder
+    ret=$?
+    if [[ "$ret" -ne "0" ]]; then
+      msgui="$msgui, removing settings failed! Result from 'rm -r --interactive=never \"${SYNOPKG_PKGVAR}\"': $ret, '$res'"
+    fi
+  else
+    msgui="$msgui, settings preserved on uninstall due wizard selection!"
+  fi
+  logInfo 4 "$msgui, postuninst done"
+  exit 0
 fi
-echo "$(date "$DTFMT"): ... postuninst done<br/>" >> "$LOG"
+logInfo 4 "... postuninst done"
 exit 0
 

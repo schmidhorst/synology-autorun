@@ -1,21 +1,35 @@
-#!/bin/sh
-LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
-DTFMT="+%Y-%m-%d %H:%M:%S"
+#!/bin/bash
+
+# Script Environment Variables
+# -------------------------------------------------------------------------------------
+# SYNOPKG_PKGNAME				=	Package identify which is defined in INFO
+# SYNOPKG_PKGVER				=	Package version which is defined in INFO
+# SYNOPKG_OLD_PKGVER    = if already installed, that verrsion
+# SYNOPKG_PKGDEST				=	Package destination path
+#                       			/volume[x]/@appstore/[Package Name]
+# SYNOPKG_TEMP_UPGRADE_FOLDER 	= 	Temporary upgrade folder
+#                                   /volume1/@tmp/synopkg.tmp/[Package Name]
+# -------------------------------------------------------------------------------------
+SCRIPTPATHscripts="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
+scriptpathParent=${SCRIPTPATHscripts%/*}
+# shellcheck source=..\WIZARD_UIFILES\log_hlp.sh
+source "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh"
+
 user=$(whoami)
-echo -e "\n$(date "$DTFMT"): $0 ($SYNOPKG_PKGVER) started with account '$user' ..." >> "$LOG"
+logInfo 6 "${BASH_SOURCE[0]} ($SYNOPKG_PKGVER) started with account '$user' ... done"
 # preupgrade starts from an temporary folder like /volume1/@tmp/synopkg/install.XDdQUB/scripts/preupgrade
 # Attention: if in the WIZARD_UIFILES folder a script is used for a dynamic ..._uifile, then it's not allowed to write here somthing to $SYNOPKG_TEMP_LOGFILE !!!
 
 #Developer Guide 7, Page 54, Script Execution Order
-#            Upgrade                         Installation     Uninstall
+#            Upgrade                         Installation       Uninstall
 #  ------------------------------------------------------------------------------------------
-#  newScript upgrade_uifile.sh            install_uifile.sh   uninstall_uifile.sh  (if available)
-#  oldScript start-stop prestop (if running)                  start-stop prestop (if running)
-#  oldScript start-stop stop (if running)                     start-stop stop (if running)
+#  newScript upgrade_uifile.sh (as autorun)  install_uifile.sh  uninstall_uifile.sh  (if available)
+#  oldScript start-stop prestop (if running)                    start-stop prestop (if running)
+#  oldScript start-stop stop (if running)                       start-stop stop (if running)
 #  newScript preupgrade  
-#  oldScript preuninst                                        preuninst
+#  oldScript preuninst (as root!)                               preuninst
 #  @appstore/<app> and @apptemp/<app> are deleted
-#  oldScript postuninst                                       postuninst
+#  oldScript postuninst (as autorun)                            postuninst
 #  newScript prereplace??                    prereplace??
 #  newScript preinst                         preinst
 #  newScript postinst                        postinst  
@@ -28,5 +42,6 @@ echo -e "\n$(date "$DTFMT"): $0 ($SYNOPKG_PKGVER) started with account '$user' .
 # /volumeX/@appdata/<app>	(= /var/packages/<app>/var) is preserved during upgrade!
 # So there is no need for an temporary stprage folder.
 
-echo "$(date "$DTFMT"): ... preupgrade done<br/>" >> "$LOG"
+# echo "$(date "$DTFMT"): ... preupgrade done" >> "$LOG"
+unset config_remove_settings # may be set from previous uninstall and would possibly delete the logfile if postuninst is executed during upgrade!
 exit 0

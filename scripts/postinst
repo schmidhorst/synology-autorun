@@ -1,36 +1,49 @@
 #!/bin/bash
 # this is started already from /var/packages/<pckName>/scripts folder, no more from a temp folder
-LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
-DTFMT="+%Y-%m-%d %H:%M:%S"
+SCRIPTPATHscripts="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
+scriptpathParent=${SCRIPTPATHscripts%/*}
+if [[ -f "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh" ]]; then
+  # shellcheck source=..\WIZARD_UIFILES\log_hlp.sh
+  source "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh"
+else
+  LOG="/var/tmp/$SYNOPKG_PKGNAME.log" # possibly no permission
+  DTFMT="+%Y-%m-%d %H:%M:%S"
+  echo "$(date "$DTFMT"): postinst: '$scriptpathParent/WIZARD_UIFILES/log_hlp.sh' not available!" >> "$LOG"
+fi
 user=$(whoami) # EnvVar $USER may be not well set
-echo "$(date "$DTFMT"): postinst V$SYNOPKG_PKGVER started as user '$user' ...<br/>" >> "$LOG"
+logInfo 6 "postinst V$SYNOPKG_PKGVER started as user '$user'$msg ..."
 # need to fetch values entered by user from environment and put to the strings file for each language
-# configFilePathName="$(dirname "$0")/initial_config.txt" is no more available!
+# configFilePathName="$(dirname "${BASH_SOURCE[0]}")/initial_config.txt" is no more available!
 items="$(env | grep "^config_")"
-# keys="config_WAIT config_BEEP config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS config_LOGLEVEL"
-mapfile -t itemArray < <(/bin/printf '%s' "$items")
-# echo "$(date "$DTFMT"): Config-Items from ENV: '${itemArray[*]}'" >> "$LOG"
+if [[ -z "$items" ]]; then
+  logError "Somthing went wrong with the Synology Installation Wizzard: The values from the keys from the file wizard_xxx.json have not been stored to the environment!"
+  keys="config_WAIT config_BEEP config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS config_LOGLEVEL"
+  mapfile -d " " -t itemArray < <(/bin/printf '%s' "$keys")
+else
+  mapfile -t itemArray < <(/bin/printf '%s' "$items")
+fi
+logInfo 7 "$(date "$DTFMT"): Config-Items from ENV: '${itemArray[*]}'"
 # config_LED, Status LED usage:
  # 0 = not used,
  # 1 = orange while script is running, green when done,
- # 2 = orange flashing if script result is neither 0 nor 100,
- # 3 = orange while running, flashing if neither 0 nor 100, else green
+ # 2 = orange flashing if script result indicates an error,
+ # 3 = orange while running, flashing if indicates error, else green
 
 # config_LED_COPY, Copy LED usage:
  # 0 = not used,
  # 1 = on while script is running, off after end,
  # 2 = flashing while script is running, off after the end,
- # 4 = flashing if script result is neither 0 nor 100,
- # 5 = on while running, flashing if script result is neither 0 nor 100, else off after end.
+ # 4 = flashing if script result indicated error,
+ # 5 = on while running, flashing if script result indicates error, else off after end.
 
 # config_ADD_NEW_FINGERPRINTS, Security configuration:
  # 0 = unrestricted, no hash check
  # 1 = clear hash list now and register the hash of each newly executed script,
  # 2 = allow only previously registered hashes,
  # 3 = register the new onces
-echo "$(date "$DTFMT"): postinst: SYNOPKG_OLD_PKGVER='$SYNOPKG_OLD_PKGVER', SYNOPKG_PKGVER='$SYNOPKG_PKGVER'" >> "$LOG"
+logInfo 6 "postinst: SYNOPKG_OLD_PKGVER='$SYNOPKG_OLD_PKGVER', SYNOPKG_PKGVER='$SYNOPKG_PKGVER'"
 rm -f "$SYNOPKG_PKGVAR/config"
-echo "$(date "$DTFMT"): file pathName: '$SYNOPKG_PKGVAR/config' will be generated now ...<br/>" >> "$LOG"
+logInfo 8 "'$SYNOPKG_PKGVAR/config' will be generated new now ..."
 
 # Messages (send to $SYNOPKG_TEMP_LOGFILE) are not shown up!? ==> Do the checks in start-stop-status
 # If terminated with "exit 1" then the old setting are lost. ==> Do the checks in start-stop-status 
@@ -42,7 +55,7 @@ for item in "${itemArray[@]}"; do
   # eval "$item" # e.g. ", config_NO_DSM_MESSAGE_RETURN_CODES='98'", the ";99" is lost!???
   key="${item%%=*}"
   # Some values with, some without quotes, remove them:
-  val="$(sed -e 's/^\"//' -e 's/\"$//' <<<"${item#*=}")"
+  val="$(sed -e 's/^"//' -e 's/"$//' <<<"${item#*=}")"
   key2=${key#*config_}
   if [[ -n "$key2" ]]; then
     echo "$key2=\"${val}\"" >> "$SYNOPKG_PKGVAR/config"
@@ -50,12 +63,17 @@ for item in "${itemArray[@]}"; do
   # echo "$item:  $key2=\"${val}\"" >> "$LOG"
   msg="$msg  $key2='${val}'"
 done
-echo "$(date "$DTFMT"): from ENV extracted: $msg" >> "$LOG"
+# logInfo 7 "$(date "$DTFMT"): from ENV extracted: $msg" # should be equal to ${itemArray[*]}
+fpDel=""
+# shellcheck disable=2154
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
   KNOWNSCRIPTSFILEPATHNAME="$SYNOPKG_PKGVAR/FINGERPRINTS"
-  res=$(rm -f "$KNOWNSCRIPTSFILEPATHNAME")
-  ret=$?
-  echo "$(date "$DTFMT"): Deletion of old fingerprints: $ret, $res" >> "$LOG"
+  if [[ -f "$KNOWNSCRIPTSFILEPATHNAME" ]]; then
+    fpDel=", previously registered script fingerprints deleted"
+    res=$( { rm -f "$KNOWNSCRIPTSFILEPATHNAME"; } 2>&1 )
+    ret=$?
+    logInfo 6 "Deletion of old fingerprints due to ADD_NEW_FINGERPRINTS == 1: $ret, $res"
+  fi
 fi
 
 chmod 755 "$SYNOPKG_PKGVAR/config"
@@ -66,15 +84,15 @@ if [[ -z "$SYNOPKG_OLD_PKGVER" ]]; then
 elif [[ "$SYNOPKG_OLD_PKGVER" == "$SYNOPKG_PKGVER" ]]; then
   action="Re-Installation (change of settings) of V$SYNOPKG_PKGVER"
 else
-  action="Upgrade from V$oldVers to V$SYNOPKG_PKGVER"
+  action="Upgrade from V$SYNOPKG_OLD_PKGVER to V$SYNOPKG_PKGVER"
 fi
 
 if [[ "$config_ADD_NEW_FINGERPRINTS" -eq "1" ]]; then
-  echo "$(date "$DTFMT"): $action done, previously registered script fingerprints deleted, not yet started" >> "$SYNOPKG_PKGVAR/execLog"
+  echo "$(date "$DTFMT"): $action done${fpDel}, not yet started" >> "$SYNOPKG_PKGVAR/execLog"
 else
   echo "$(date "$DTFMT"): $action done, not yet started" >> "$SYNOPKG_PKGVAR/execLog"
 fi
-echo "$(date "$DTFMT"): postinst done, not yet started, $SYNOPKG_PKGNAME installed<br/>" >> "$LOG"
+logInfo 6 "postinst done, not yet started, $SYNOPKG_PKGNAME installed<br/>"
 # next script may be post_upgrade
 exit 0
 

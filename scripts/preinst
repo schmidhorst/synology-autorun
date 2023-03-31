@@ -1,57 +1,74 @@
 #!/bin/bash
-LOG="/var/tmp/$SYNOPKG_PKGNAME.log" # /var/log/tmp is a link to /var/tmp !!
-DTFMT="+%Y-%m-%d %H:%M:%S"
-SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # preinst starts from an temporary folder like /volume1/@tmp/synopkg/install.XDdQUB/scripts/preinst
+SCRIPTPATHscripts="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
-echo "$(date "$DTFMT"): preinst $0 V$SYNOPKG_PKGVER (physical path SCRIPTPATHTHIS: $SCRIPTPATHTHIS, user=$user, UID=$(id -u "$user"))... <br/>" >> "$LOG"
+msg="preinst ${BASH_SOURCE[0]} V$SYNOPKG_PKGVER (physical path SCRIPTPATHscripts: $SCRIPTPATHscripts, user=$user, UID=$(id -u "$user"))... "
 # SHELL='/sbin/nologin', $SHELL: causes "No such file or directory error" in /var/log/bash_err.log!
 # versShell="$($SHELL --version | sed -n '1p')" # Environment variable SHELL may be 'ash', but /bin/ash may be a link to bash
 # this may be somthing like "GNU bash, version 4.4.23(1)-release (x86_64-pc-linux-gnu)"
 # echo "$(date "$DTFMT"): Shell: SHELL='$SHELL' ($versShell)" >> "$LOG"
 
-# user is equal to $SYNOPKG_PKGNAME, SCRIPTPATHTHIS is e.g. /volume1/@tmp/synopkg/install.HbEips/scripts/
+# user is equal to $SYNOPKG_PKGNAME, SCRIPTPATHscripts is e.g. /volume1/@tmp/synopkg/install.HbEips/scripts/
 # ${SYNOPKG_TEMP_UPGRADE_FOLDER} # e.g. /volume1/@tmp/synopkg.tmp, empty
-scriptpathParent=${SCRIPTPATHTHIS%/*}
-# echo "$(date "$DTFMT"): ls -l $scriptpathParent: $(ls -l "$scriptpathParent")" >> "$LOG"
-osMin=$(/bin/get_key_value "$scriptpathParent/INFO" "os_min_ver")  # os_min_ver="7.0-40000"
-echo "$(date "$DTFMT"): From INFO file: os_min_ver='$osMin' via get_key_value" >> "$LOG"
-
-osMinMajor="${osMin%%.*}"
-osMinBuild="${osMin#*-}"
-osMinMinor="${osMin#*.}"
-osMinMinor="${osMinMinor%-*}"
-# productversion="7.1.1", majorversion="7", minorversion="1", major="7", minor="1", micro="1", buildnumber="42962"
-# DSMMAJOR=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
-dsmMajor=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
-dsmMinor=$(/bin/get_key_value /etc.defaults/VERSION minorversion)
-dsmBuild=$(/bin/get_key_value /etc.defaults/VERSION buildnumber)
-# if [ "$DSMMAJOR" -lt 7 ]; then
-vers=0 # not ok
-if [[ "$dsmMajor" -gt "$osMinMajor" ]]; then
-  vers=1
-elif [[ "$dsmMajor" -eq "$osMinMajor" ]]; then
-  if [[ "$dsmMinor" -gt "$osMinMinor" ]]; then
-    vers=1  
-  elif [[ "$dsmMinor" -eq "$osMinMinor" ]]; then
-    if [[ "$dsmBuild" -ge "$osMinBuild" ]]; then
-      vers=1  
-    fi
-  fi  
+scriptpathParent=${SCRIPTPATHscripts%/*}
+if [[ -f "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh" ]]; then
+  # shellcheck source=..\WIZARD_UIFILES\log_hlp.sh
+  source "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh"
+  logInfo 6 "$msg, preinst: logInfo / logError available! user=$(whoami)"
+  # is account $SYNOPKG_PKGNAME already available?
+else
+  LOG="/var/tmp/$SYNOPKG_PKGNAME.log" # possibly no permission
+  DTFMT="+%Y-%m-%d %H:%M:%S"
+  echo "$(date "$DTFMT"): preinst: '$scriptpathParent/WIZARD_UIFILES/log_hlp.sh' not available!" >> "$LOG"
 fi
-if [[ "$vers" -ne "1" ]]; then
-  lngUser="$SYNOPKG_DSM_LANGUAGE"
-  # echo "$(date "$DTFMT"): lngUser=SYNOPKG_DSM_LANGUAGE='$lngUser'" >> "$LOG"
-	# package.tgz and also the extracted package are available!
-	if [[ -f "$scriptpathParent/package/ui/texts/$lngUser/lang.txt" ]]; then
-    # preinstDsmVersError=$(/bin/get_key_value "$scriptpathParent/package/ui/texts/$lngUser/lang.txt" "preinstDsmVersError")  # "... ${osMin} ..." is not yet expanded
-		eval "$(grep "preinstDsmVersError=" "$scriptpathParent/package/ui/texts/$lngUser/lang.txt")" # "... ${osMin} ..." is expanded
-		echo "$preinstDsmVersError" > "$SYNOPKG_TEMP_LOGFILE"      
-	else
-    echo "This package version can only be used in DSM $osMin and above! Earlier package versions may be possible on your DSM version, see <a target='_blank' rel='noopener noreferrer' href='https://github.com/reidemei/synology-autorun#install'>https://github.com/reidemei/synology-autorun#install</a>" > "$SYNOPKG_TEMP_LOGFILE"
-	fi	
-	exit 1
+if grep -q "^${SYNOPKG_PKGNAME}:" "/etc/passwd"; then
+  logUser=$(stat -c '%U' "$LOG")
+  logGrp=$(stat -c '%G' "$LOG")
+  logInfo 6 "The account '${SYNOPKG_PKGNAME}' exists already, user and group of $LOG: $logUser:$logGrp"
+  if [[ "$(whoami)" == "root" ]] && [[ "$logUser" != "${SYNOPKG_PKGNAME}" ]]; then
+    chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG" 
+    logInfo 6 "chown $SYNOPKG_PKGNAME:$SYNOPKG_PKGNAME $LOG done!"
+  fi
 fi
-echo "$(date "$DTFMT"): ... DSM OS version checked (${dsmMajor}.${dsmMinor}-${dsmBuild} >= ${osMin}), preinst finished<br/>" >> "$LOG"
+# Checking osMin is done by Synology Installation Wizzard, therfore deactivated here
+# osMin=$(/bin/get_key_value "$scriptpathParent/INFO" "os_min_ver")  # os_min_ver="7.0-40000"
+# osMinMajor="${osMin%%.*}"
+# osMinBuild="${osMin#*-}"
+# osMinMinor="${osMin#*.}"
+# osMinMinor="${osMinMinor%-*}"
+# # productversion="7.1.1", majorversion="7", minorversion="1", major="7", minor="1", micro="1", buildnumber="42962"
+# # DSMMAJOR=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
+# dsmMajor=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
+# dsmMinor=$(/bin/get_key_value /etc.defaults/VERSION minorversion)
+# dsmBuild=$(/bin/get_key_value /etc.defaults/VERSION buildnumber)
+# # if [ "$DSMMAJOR" -lt 7 ]; then
+# vers=0 # not ok
+# if [[ "$dsmMajor" -gt "$osMinMajor" ]]; then
+#   vers=1
+# elif [[ "$dsmMajor" -eq "$osMinMajor" ]]; then
+#   if [[ "$dsmMinor" -gt "$osMinMinor" ]]; then
+#     vers=1  
+#   elif [[ "$dsmMinor" -eq "$osMinMinor" ]]; then
+#     if [[ "$dsmBuild" -ge "$osMinBuild" ]]; then
+#       vers=1  
+#     fi
+#   fi  
+# fi
+# if [[ "$vers" -ne "1" ]]; then
+#   lngUser="$SYNOPKG_DSM_LANGUAGE"
+#   # package.tgz and also the extracted package are available!
+#   logError "Actual DSM Version ${dsmMajor}.${dsmMinor}-${dsmBuild} is less than required ${osMin}, specified in INFO file!"
+#   if [[ -f "$scriptpathParent/package/ui/texts/$lngUser/lang.txt" ]]; then
+#     # preinstDsmVersError=$(/bin/get_key_value "$scriptpathParent/package/ui/texts/$lngUser/lang.txt" "preinstDsmVersError")  # "... ${osMin} ..." is not yet expanded
+#     eval "$(grep "preinstDsmVersError=" "$scriptpathParent/package/ui/texts/$lngUser/lang.txt")" # "... ${osMin} ..." is expanded
+#     #shellcheck disable=2154
+#     echo "$preinstDsmVersError" > "$SYNOPKG_TEMP_LOGFILE"
+#   else
+#     echo "This package version can only be used in DSM $osMin and above! Earlier package versions may be possible on your DSM version, see <a target='_blank' rel='noopener noreferrer' href='https://github.com/reidemei/synology-autorun#install'>https://github.com/reidemei/synology-autorun#install</a>" > "$SYNOPKG_TEMP_LOGFILE"
+#   fi
+#   exit 1
+# fi
+# logInfo 6 "... DSM OS version checked (actual ${dsmMajor}.${dsmMinor}-${dsmBuild} >= ${osMin} from INFO file), preinst finished"
+logInfo 6 "preinst finished"
 exit 0
 

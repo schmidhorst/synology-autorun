@@ -1,20 +1,46 @@
 #!/bin/bash
 # executed after postinst!
-LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
-DTFMT="+%Y-%m-%d %H:%M:%S"
-echo "$(date "$DTFMT"): postupgrade V$SYNOPKG_PKGVER started ...<br/>" >> "$LOG"
+# Script Environment Variables
+# -------------------------------------------------------------------------------------
+# SYNOPKG_PKGNAME				=	Package identify which is defined in INFO
+# SYNOPKG_PKGVER				=	Package version which is defined in INFO
+# SYNOPKG_PKGDEST				=	Package destination path
+#                       			/volume[x]/@appstore/[Package Name]
+# SYNOPKG_TEMP_UPGRADE_FOLDER 	= 	Temporary upgrade folder
+#                                   /volume1/@tmp/synopkg.tmp/[Package Name]
+# -------------------------------------------------------------------------------------
+SCRIPTPATHscripts="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
+scriptpathParent=${SCRIPTPATHscripts%/*}
+if [[ -f "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh" ]]; then
+  # shellcheck source=..\WIZARD_UIFILES\log_hlp.sh
+  source "$scriptpathParent/WIZARD_UIFILES/log_hlp.sh"
+  # source "$scriptpathParent/target/log_hlp.sh" # would also be possible!
+else
+  LOG="/var/tmp/$SYNOPKG_PKGNAME.log" # possibly no permission
+  DTFMT="+%Y-%m-%d %H:%M:%S"
+  echo "$(date "$DTFMT"): postupgrade: '$scriptpathParent/WIZARD_UIFILES/log_hlp.sh' not available!" >> "$LOG"
+fi
+
+# /volumeX/@appdata/<app>	(= /var/packages/<app>/var) is preserved during upgrade!
+# So there is no need for an temporary storage folder in/under ${SYNOPKG_TEMP_UPGRADE_FOLDER}.
+logInfo 6 "postupgrade started..."
+
 if [[ ! -f "${SYNOPKG_PKGVAR}/config" ]]; then # not e.g. preserved from uninstall
   tempStorageFolder="/tmp/net.reidemeister.$SYNOPKG_PKGNAME"
   if [ -d "$tempStorageFolder" ]; then
-    echo "$(date "$DTFMT"): temp data folder $tempStorageFolder found<br/>" >> "$LOG"
+    logInfo 3 "temp data folder from Version <=1.8 $tempStorageFolder found"
     # restore log
     if [ -f "$tempStorageFolder/log" ]; then
-      (cp -v "$tempStorageFolder/log" "${SYNOPKG_PKGVAR}") 2>&1 >> "$LOG"
-      echo "$(date "$DTFMT"): temp logfile copied<br/>" >> "$LOG"
+      cp -v "$tempStorageFolder/log" "${SYNOPKG_PKGVAR}" >> "$LOG" 2>&1
+      logInfo 3 "temp logfile copied"
     fi
     # clean-up
-    rm -r $tempStorageFolder 
+    rm -r "$tempStorageFolder"
   fi
 fi
-echo "$(date "$DTFMT"): ... postupgrade done<br/>" >> "$LOG"
+# chmod -R og-wx /var/packages/SYNOPKG_PKGNAME/target/bin # wx only for u (user, owner)
+
+# chmod -R og-wx "/var/packages/$SYNOPKG_PKGNAME/target/ui" # /usr/syno/synoman/webman/3rdparty/<app> "Run" hängt!
+chmod -R og-w "/var/packages/$SYNOPKG_PKGNAME/target/ui" # /usr/syno/synoman/webman/3rdparty/<app>
+logInfo 6 "... postupgrade done"
 exit 0

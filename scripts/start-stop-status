@@ -1,123 +1,178 @@
 #!/bin/bash
 
+
+# appendToLastLogLineIfSimilar():
 # if the last entry of $SCRIPT_EXEC_LOG contains $1, then remove possibly available $2, append $3 and use that as new last entry
-# else write $3 with actual timestamp as new entry
-# e.g.  appendToLastLogLineIfSimilar "Re-Installation (change of settings)" "not yet started" "Package '$SYNOPKG_PKGNAME' was STARTED!"
+# This is to reduce the number of entries in $SCRIPT_EXEC_LOG
+# If 4 parameters given: Replace only, if $1 is in the last line but $3 is not in the last line
+# That is to avoid e.g.
+#   "Re-Installation (change of settings) of V1.10.0-0011 done, Package 'autorun' was STARTED! Package 'autorun' was STARTED! Package 'autorun' was STARTED!"
 appendToLastLogLineIfSimilar() {
   latestEntry="$(/bin/tail -1 "$SCRIPT_EXEC_LOG")"
+  replace=0
   if [[ "$latestEntry" == *"$1"* ]]; then
-    # future Option: Check time in $latestEntry and and replace only if not too old
+    replace=1
+    if [[ "$#" -gt 3 ]]; then
+      # echo "more than 3 params"
+      if [[ "$latestEntry" == *"$4"* ]]; then
+        replace=0
+      fi
+    fi
+  fi
+  if [[ "$replace" -eq "1" ]]; then
     lineCount=$(/bin/wc -l < "$SCRIPT_EXEC_LOG")
     /bin/sed -i -e "$lineCount,\$d" "$SCRIPT_EXEC_LOG" # remove the last line
-    /bin/echo "${latestEntry//$2/} $3" >> "$SCRIPT_EXEC_LOG"
+    /bin/printf "%s\n" "${latestEntry//$2/} $3" >> "$SCRIPT_EXEC_LOG"
     # logInfo 8 "Last Entry in SCRIPT_EXEC_LOG replaced"
   else
-    /bin/echo "$(date "$DTFMT"): $3" >> "$SCRIPT_EXEC_LOG"
+    /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "$3" >> "$SCRIPT_EXEC_LOG"
     # logInfo 8 "Item '$1' not found in SCRIPT_EXEC_LOG last line: '$latestEntry'"
-  fi # if [[ "$latestEntry" == *"$diskName"* ]]
+  fi # if [[ "$replace" -eq "1" ]] else
 }
 
 
 
-
-# This start-stop-status is called about once per second!
+# This start-stop-status is called about once per second while package center is open!
 user=$(whoami) # EnvVar $USER may be not well set
 # user = "root" if the sudo cp /var/packages/$SYNOPKG_PKGNAME/conf/privilege.root /var/packages/$SYNOPKG_PKGNAME/conf/privilege
 # user = "$SYNOPKG_PKGNAME" = '<appName>' if the copy was not done
-LOG="/var/tmp/$SYNOPKG_PKGNAME.log"
-DTFMT="+%Y-%m-%d %H:%M:%S"
-SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # /var/packages/autorun/scripts !!
-SCRIPT_EXEC_LOG="$APPDATA/execLog" # 2022-12-23: "start-stop-status: line 167/168: No such file or directory" found in /var/log/bash_err.log????
+SCRIPTPATHscripts="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )" # /var/packages/autorun/scripts !!
+msgsss=""
+if [[ -z "$SYNOPKG_PKGNAME" ]]; then
+  scriptpathParent=${SCRIPTPATHscripts%/*} # /var/packages/autorun
+  SYNOPKG_PKGNAME="${scriptpathParent##*/}"
+  msgsss="missing SYNOPKG_PKGNAME was now set to '$SYNOPKG_PKGNAME'"
+fi
+# to avoid debug message in log_hlp.sh about unset LOGLEVEL:
+appData="/var/packages/$SYNOPKG_PKGNAME/var" # verbigt u.U. APPDATA in common!??
+LOGLEVEL="$(grep "LOGLEVEL=" "$appData/config" | sed -e 's/^LOGLEVEL="//' -e 's/"$//')"
+# shellcheck source=..\WIZARD_UIFILES\log_hlp.sh
+source "/var/packages/$SYNOPKG_PKGNAME/WIZARD_UIFILES/log_hlp.sh" # logInfo, logError
+# /bin/echo "log_hlp.sh done, LOG='$LOG'"
+if [[ -n "$msgsss" ]]; then
+  logInfo 6 "$msgsss, APPDATA='$APPDATA', appData='$appData'"
+fi
+SCRIPT_EXEC_LOG="$appData/execLog"
 ruleDfilePathName="/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules"
 case $1 in
   prestart)
-    echo "$(date "$DTFMT"): PRESTART of start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
+    logInfo 6 "PRESTART of start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'"
     #### is occuring if in INFO: precheckstartstop="yes"
     ;;
   start)
-    configFilePathName="/var/packages/$SYNOPKG_PKGNAME/var/config"
+    # configFilePathName="/var/packages/$SYNOPKG_PKGNAME/var/config" # $appData/config
+    lngUser="enu" # default, will be changed in common
+    # shellcheck source=../package/common
     source "/var/packages/$SYNOPKG_PKGNAME/target/common" start-stop-status # set lngUser
-    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'. SYNOPKG_DSM_LANGUAGE='$lngUser'<br/>" >> "$LOG"
+    logInfo 8 "configFilePathName='$appData/config'"
+    # logInfo 6 "V$SYNOPKG_PKGVER '$1' as user '$user'. SYNOPKG_DSM_LANGUAGE='$lngUser'"
     if [ "$user" != "root" ]; then
-      echo "$(date "$DTFMT"): start-stop-status '$1' as user '$user' != \"root\". <br/>" >> "$LOG"
-      eval $(grep -s "copyPriviledge=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
-      if [ "$copyPriviledge" != "" ]; then
-        echo "$copyPriviledge" > "$SYNOPKG_TEMP_LOGFILE"
+      logInfo 6 "V$SYNOPKG_PKGVER '$1' as user '$user' != \"root\". <span style=\"color:Orange;\">Privilege file not yet changed after installation</span>"
+      eval "$(grep -s "copyPrivilege=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
+      #shellcheck disable=2154
+      if [[ -n "$SYNOPKG_TEMP_LOGFILE" ]]; then
+        if [[ -n "$copyPrivilege" ]]; then
+          echo "$copyPrivilege" > "$SYNOPKG_TEMP_LOGFILE"
+        else
+          echo "The copy command 'cp /var/packages/$SYNOPKG_PKGNAME/conf/privilege.root /var/packages/$SYNOPKG_PKGNAME/conf/privilege' was not yet executed. Therefore the package '$SYNOPKG_PKGNAME' cannot be started" > "$SYNOPKG_TEMP_LOGFILE"
+        fi
       else
-        echo "The copy command 'cp /var/packages/$SYNOPKG_PKGNAME/conf/privilege.root /var/packages/$SYNOPKG_PKGNAME/conf/privilege' was not yet executed. Therefore the package '$SYNOPKG_PKGNAME' cannot be started" > "$SYNOPKG_TEMP_LOGFILE"
+        logError "Variable SYNOPKG_TEMP_LOGFILE is empty! Could not setup error dialog!"
       fi
       # exit 3 # this would run into repair loop and no exit possible except uninstall/re-install
     else # root
       error=0
+      if [[ -f "/tmp/$SYNOPKG_PKGNAME.log" ]] && [[ "/tmp/$SYNOPKG_PKGNAME.log" != "$LOG" ]]; then
+        /bin/printf "\t%s\n" "==== copied from /tmp/$SYNOPKG_PKGNAME.log: ===" >> "$LOG"
+        logInfo 1 "=== Previous lines have been written during installation to the file /tmp/$SYNOPKG_PKGNAME.log and now been copied to here ($LOG)! ===="
+        rm "/tmp/$SYNOPKG_PKGNAME.log"
+      fi
+      if [[ -f "/var/tmp/$SYNOPKG_PKGNAME.log" ]] && [[ "$LOG" == "/var/log/packages/$SYNOPKG_PKGNAME.log" ]]; then
+        /bin/printf "\t%s\n" "==== copied from /var/tmp/$SYNOPKG_PKGNAME.log: ===" >> "$LOG"
+        cat "/var/tmp/$SYNOPKG_PKGNAME.log" >> "$LOG"
+        logInfo 1 "=== Previous lines have been written during installation to the file /var/tmp/$SYNOPKG_PKGNAME.log and now been copied to here ($LOG)! ===="
+        rm "/var/tmp/$SYNOPKG_PKGNAME.log"      
+      fi
       # enable log deleting for ui/index.cgi:
       chmod 664 "$LOG"
       chown "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "$LOG"
+      if [[ -L "/var/packages/$SYNOPKG_PKGNAME/var/detailLog" ]] && [[ $(readlink -f "/var/packages/$SYNOPKG_PKGNAME/var/detailLog") != "$LOG" ]]; then
+        rm "/var/packages/$SYNOPKG_PKGNAME/var/detailLog"
+      fi
       if [[ ! -L "/var/packages/$SYNOPKG_PKGNAME/var/detailLog" ]]; then
         ln -s "$LOG" "/var/packages/$SYNOPKG_PKGNAME/var/detailLog" # for access from cgi file
       fi
       chmod 644 "/var/packages/$SYNOPKG_PKGNAME/var/detailLog"
       chown --no-dereference "$SYNOPKG_PKGNAME":"$SYNOPKG_PKGNAME" "/var/packages/$SYNOPKG_PKGNAME/var/detailLog"
-      eval "$(grep "^SCRIPT=" "$configFilePathName")"
+
+      eval "$(grep "^SCRIPT=" "$appData/config")"
       files="" # list of files, which we want to check for excutable, unix line break and coding
       if [[ "$SCRIPT" == *"/"* ]]; then
         files="$SCRIPT"  # The script to execute at storage connect is on the DSM, so we can check it
       fi
-      eval "$(grep "^SCRIPT_AFTER_EJECT=" "$configFilePathName")"
+      eval "$(grep "^SCRIPT_AFTER_EJECT=" "$appData/config")"
       if [[ -n "$SCRIPT_AFTER_EJECT" ]]; then # script is setup, check it!
         files="$files $SCRIPT_AFTER_EJECT"
-        #echo "$(date "$DTFMT"): start-stop-status: Script after eject '$SCRIPT_AFTER_EJECT'<br/>" >> "$LOG"
+        #logInfo 7 "start-stop-status: Script after eject '$SCRIPT_AFTER_EJECT'"
       #else # if [[ -n "$SCRIPT_AFTER_EJECT" ]]
-        #echo "$(date "$DTFMT"): start-stop-status: No script after eject<br/>" >> "$LOG"
+        #logInfo 7 "start-stop-status: No script after eject"
       fi # if [[ -n "$SCRIPT_AFTER_EJECT" ]]
       resWhichFile=$(which "file") # Is 'which' always available? 'file' is only available after installation of "SynoCLI File Tools"!
       if [[ -z "$resWhichFile" ]]; then
-        echo "$(date "$DTFMT"): Linux command 'file' (part of package 'SynoCli File Tools') is not available. Checking source files for correct line terminator and UTF-8-coding skipped!" >> LOG
+        logInfo 7 "<span style=\"color:Chocolate;\">Linux command 'file' (part of package 'SynoCli File Tools') is not available.</span><br> Checking configured script files for correct line terminator and UTF-8-coding skipped!"
       fi
       for f in $files; do # check scripts
         if [[ ! -f "$f" ]]; then
-          eval $(grep -s "scriptNA=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+          scriptNA="Error: The Script '$f' could not be found!" # default, if no translation found
+          eval "$(grep -s "scriptNA=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
           echo "$scriptNA" > "$SYNOPKG_TEMP_LOGFILE"
-          echo "$(date "$DTFMT"): Error: The script file '$f' is not available!" >> "$LOG"
+          logError "Error: The script file '$f' is not available!"
           res=$(findFileIgnoreCase "$f")
           result=$?
-          #echo "$(date "$DTFMT"): findFileIgnoreCase result: $result, '$res'" >> "$LOG"
+          #logInfo 6 "findFileIgnoreCase result: $result, '$res'"
           if [[ "$result" -eq "1" ]]; then # with "ignore case script found!"
-            eval $(grep -s "scriptNAcase=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
-            echo "$(date "$DTFMT"): Suspicious: '$f' with different upper/lower case found: '$res'. It will not be executed!!" >> "$LOG"
+            scriptNAcase="Suspicious: File with different upper/lower case found!" # default, if no translation found
+            eval "$(grep -s "scriptNAcase=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
+            logInfo 2 "Suspicious: '$f' with different upper/lower case found: '$res'. It will not be executed!!"
             echo "  $scriptNAcase" >> "$SYNOPKG_TEMP_LOGFILE"
           fi
-          eval $(grep -s "setupCorrection=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+          setupCorrection="Possibly you need to run the installation again to correct the setting!" # default, if no translation found
+          eval "$(grep -s "setupCorrection=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
           echo " $setupCorrection" >> "$SYNOPKG_TEMP_LOGFILE"
           # exit 2 # this would run into repair loop and no exit possible except uninstall/re-install
           error=1
         elif [[ ! -x "$f" ]]; then
-          eval $(grep -s "scriptNexec=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+          scriptNexec="Error: The Script '$f' is not executable!"
+          eval "$(grep -s "scriptNexec=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
           echo "$scriptNexec" > "$SYNOPKG_TEMP_LOGFILE"
-          echo "$(date "$DTFMT"): Error: The script file $f is not executable!" >> "$LOG"
+          logError "Error: The script file $f is not executable!"
           # exit 2 # this would run into repair loop and no exit possible except uninstall/re-install
           error=1
         elif [[ -n "$resWhichFile" ]]; then
           res=$(file -b "$f")
           ret=$?
-          echo "$(date "$DTFMT"): File coding check '$f' result $ret: $res" >> "$LOG"
+          logInfo 8 "File coding check '$f' result $ret: $res"
           if [[ $res == *"CRLF line terminators"* ]]; then
-            echo "  File coding check '$f' result $ret: $res"
-            echo "  ######## Windows line terminator need to be converted to Unix! #########"
-            eval $(grep -s "wrongLineBreakWin=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            logInfo 1 "File coding check '$f' result $ret: $res"
+            logError "######## Windows line terminator need to be converted to Unix! #########"
+            wrongLineBreakWin="Error: The Script '$f', which should be executed, uses the wrong line break CR/LF (Windows). Please use a suitable Editor (Linux or Windows Notepad++, PSPad, ...) to change it to LF (UNIX)!"
+            eval "$(grep -s "wrongLineBreakWin=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
             echo "$wrongLineBreakWin" > "$SYNOPKG_TEMP_LOGFILE"
             # exit 2 # this would run into repair loop and no exit possible except uninstall/re-install
             error=1
           elif [[ $res == *"with CR line terminators"* ]]; then
-            echo "  File coding check '$f' result $ret: $res"
-            echo "  ######## MAC line terminator need to be converted to Unix! #########"
-            eval $(grep -s "wrongLineBreakMac=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            logInfo 1 "File coding check '$f' result $ret: $res"
+            logError "######## MAC line terminator need to be converted to Unix! #########"
+            wrongLineBreakMac="Error: The Script '$f', which should be executed, uses the wrong line break CR (MAC). Please use a suitable Editor to change it to LF (UNIX)!"
+            eval "$(grep -s "wrongLineBreakMac=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
             echo "$wrongLineBreakMac" > "$SYNOPKG_TEMP_LOGFILE"
             # exit 2 # this would run into repair loop and no exit possible except uninstall/re-install
             error=1
           elif [[ "$res" == *"ISO-8859 text"* ]]; then
-            echo "  File coding check '$f' result $ret: $res"
-            echo "  ######## Please convert to UTF-8! ##########"
-            eval $(grep -s "wrongCodePage=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            logInfo 1 "File coding check '$f' result $ret: $res"
+            logError "######## Please convert to UTF-8! ##########"
+            wrongCodePage="Error: The Script '$f', which should be executed, uses the wrong coding (Windows ISO-8859). Please use a suitable Editor (Linux or Windows Notepad++, PSPad, ...) to change it to UTF-8!"
+            eval "$(grep -s "wrongCodePage=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
             echo "$wrongCodePage" > "$SYNOPKG_TEMP_LOGFILE"
             #exit 2
             error=1
@@ -126,7 +181,7 @@ case $1 in
       done
 
       # check whether the entered user/usergroup for desktop notification is valid:
-      notyfyUsers=$(grep "^NOTIFY_USERS=" "$configFilePathName")
+      notyfyUsers=$(grep "^NOTIFY_USERS=" "$appData/config")
       notyfyUsers=${notyfyUsers#NOTIFY_USERS=\"}
       notyfyUsers=${notyfyUsers%\"}
       if [[ -n "$notyfyUsers" ]]; then # not empty ==> desktop messages active
@@ -134,66 +189,91 @@ case $1 in
           # syngroup --enum all requires root access
           groupExist=$(synogroup --enum all | grep "${notyfyUsers:1}") # account which are allowing login
           if [[ -z $groupExist ]]; then # Fehlermeldung
-            echo "$(date "$DTFMT"): The group account '$notyfyUsers' for desktop message does not exist! Wrong entry replaced by '@users'" >> "$LOG"
-            eval $(grep -s "notifyGroupError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            logInfo 1 "The group account '$notyfyUsers' for desktop message does not exist! Wrong entry replaced by '@users'"
+            notifyGroupError="The user group '$notyfyUsers' for desktop messages does not exist! Therefore the wrong entry replaced by '@users'. Run Installation again to enter another value!"
+            eval "$(grep -s "notifyGroupError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
             echo "$notifyGroupError" > "$SYNOPKG_TEMP_LOGFILE"
-            sed -i 's/^NOTIFY_USERS=.*$/NOTIFY_USERS=@users/' "$configFilePathName"
+            sed -i 's/^NOTIFY_USERS=.*$/NOTIFY_USERS=@users/' "$appData/config"
           fi
         else # single user
           # userExist=$(grep -o "^${notyfyUsers}:" /etc/passwd) # long list of accounts!
           userExist=$(synouser --enum all | grep "${notyfyUsers}") # account which are allowing login
           # alternative: synouser --get "${notyfyUsers}"
           if [[ -z $userExist ]]; then # Fehlermeldung
-            echo "$(date "$DTFMT"): The user account '$notyfyUsers' for desktop messages does not exist! Therefore the wrong entry replaced by '@users'. Run Installation again to enter another value!" >> "$LOG"
-            eval $(grep -s "notifyUserError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")
+            logError "The user account '$notyfyUsers' for desktop messages does not exist! Therefore the wrong entry replaced by '@users'. Run Installation again to enter another value!"
+            notifyUserError="The user account '$notyfyUsers' for desktop messages does not exist! Therefore the wrong entry replaced by group '@users'. Run Installation again to enter another value!"
+            eval "$(grep -s "notifyUserError=" "/var/packages/$SYNOPKG_PKGNAME/target/ui/texts/$lngUser/lang.txt")"
             echo "$notifyUserError" > "$SYNOPKG_TEMP_LOGFILE"
-            sed -i 's/^NOTIFY_USERS=.*$/NOTIFY_USERS=@users/' "$configFilePathName"
+            sed -i 's/^NOTIFY_USERS=.*$/NOTIFY_USERS=@users/' "$appData/config"
           fi # not existing user
         fi # if goupe else user
       fi
     fi # user root
     if [ -f "$ruleDfilePathName" ];  then
-      echo "$(date "$DTFMT"): start executed, but app was already running<br/>" >> "$LOG"
+      logInfo 8 "start executed, but app was already running"
       exit 1
     else
-      if [[ "$error" -eq "0" ]]; then
-        echo "$(date "$DTFMT"): start-stop-status script 'start', SYNOPKG_PKGDEST='$SYNOPKG_PKGDEST'<br/>" >> "$LOG"
-        resultStart=$(cp "/var/packages/$SYNOPKG_PKGNAME/target/rules" "$ruleDfilePathName")
+      if [[ "$error" -eq "0" ]] && [[ "$user" == "root" ]]; then
+        logInfo 6 "'start', SYNOPKG_PKGDEST='$SYNOPKG_PKGDEST'"
+        resultStart="$( { cp "/var/packages/$SYNOPKG_PKGNAME/target/rules" "$ruleDfilePathName"; } 2>&1 )"
         retvalStart=$?
-        echo "$(date "$DTFMT"): cp rules to '$ruleDfilePathName': retval=$retvalStart, result='$resultStart'<br/>" >> "$LOG"
+        if [[ "$retvalStart" -eq "0" ]]; then
+          logInfo 7 "cp rules to '$ruleDfilePathName' successfully: retval=$retvalStart"
+        else
+          logInfo 2 "cp rules to '$ruleDfilePathName' failed: retval=$retvalStart, result='$resultStart'"
+        fi
         chmod 644 "$ruleDfilePathName"
         # chown root:root "$ruleDfilePathName" # required?
         /usr/bin/udevadm control --reload-rules
         if [ -f "$ruleDfilePathName" ];  then
-          # echo "$(date "$DTFMT"): Package '$SYNOPKG_PKGNAME' was STARTED!" >> "$SCRIPT_EXEC_LOG"
-          appendToLastLogLineIfSimilar "Re-Installation (change of settings)" "not yet started" "Package '$SYNOPKG_PKGNAME' was STARTED!"
-          echo "$(date "$DTFMT"): ... start via start-stop-status script successfully finished<br/>" >> "$LOG"
+          # /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Package '$SYNOPKG_PKGNAME' was STARTED!" >> "$SCRIPT_EXEC_LOG"
+          appendToLastLogLineIfSimilar "Re-Installation (change of settings)" "not yet started" "Package '$SYNOPKG_PKGNAME' was STARTED!" "STARTED"
+          logInfo 6 "... start via start-stop-status script successfully finished."
         fi
-      else
-        echo "$(date "$DTFMT"): start-stop-status script 'start' failed!<br/>" >> "$LOG"
+      elif [[ "$user" == "root" ]]; then
+        logError "start-stop-status script 'start' failed!"
       fi
     fi
     exit 0
   ;;
   prestop)  # can be disabled via precheckstartstop in INFO file
     #### is not occuring !!!????
-    echo "$(date "$DTFMT"): PRESTOP start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
+    logInfo 8 "PRESTOP start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'"
   ;;
   stop)
-    echo "$(date "$DTFMT"): start-stop-status script V$SYNOPKG_PKGVER '$1' as user '$user'<br/>" >> "$LOG"
+    logInfo 5 "V$SYNOPKG_PKGVER '$1' as user '$user' ..."
     if [ -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules" ]; then
       resultStop=$(rm -f "/usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules")
       retvalStop=$?
-      echo "$(date "$DTFMT"): rm $(basename "$ruleDfilePathName") retval=$retvalStop, result='$resultStop'<br/>" >> "$LOG"
+      # logInfo 6 "rm $(basename "$ruleDfilePathName") retval=$retvalStop, result='$resultStop'"
       /usr/bin/udevadm control --reload-rules
-      echo "$(date "$DTFMT"): Package '$SYNOPKG_PKGNAME' was STOPPED!" >> "$SCRIPT_EXEC_LOG"
+      /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Package '$SYNOPKG_PKGNAME' was STOPPED!" >> "$SCRIPT_EXEC_LOG"
+      logInfo 6 "rm $(basename "$ruleDfilePathName") retval=$retvalStop, result='$resultStop'<br/>... stop via start-stop-status script done"
     else
-      echo "$(date "$DTFMT"): stop executed, but app was not running<br/>" >> "$LOG"
+      logInfo 8 "stop executed, but app was not running (no file /usr/lib/udev/rules.d/99-$SYNOPKG_PKGNAME.rules)"
     fi
-    echo "$(date "$DTFMT"): ... stop via start-stop-status script done<br/>" >> "$LOG"
     exit 0
   ;;
   status)
+    # While the Package Center is open this is called periodically, about once per second
+    if [[ -f "/var/packages/$SYNOPKG_PKGNAME/var/ledChange" ]]; then # File was generated from settings.cgi
+      # this is not fully working as 'status' is not always checked regularyly!!!
+      if [[ "$user" == "root" ]]; then # permission to switch LEDs is available
+        logInfo 8 "File '/var/packages/$SYNOPKG_PKGNAME/var/ledChange' found and user is not root"
+        while IFS=$'\n' read -r line; do
+          if [[ "23456789:;@AB" == *"$line"* ]]; then # valid character for beeper and LED control
+            declare -A LEDS=( [2]=shortBeep [3]=longBeep [4]=PowerBlueON [5]=PowerBlueFlash [6]=PowerOFF [7]=StatOFF [8]=StatGreen [9]=StatGreenFlash [:]=StatusOrange [;]=StatOrangeFlash [\@]=CopyON [A]=CopyFlash [B]=CopyOFF  )
+            /bin/echo "$line" > /dev/ttyS1
+            logInfo 6 "LED change '$line'='${LEDS[$line]}' done!"
+          else
+            logInfo 3 "LED change code '$line' is not allowed!"
+          fi  
+        done < "/var/packages/$SYNOPKG_PKGNAME/var/ledChange" # Works well even if last line has no \n!
+        rm "/var/packages/$SYNOPKG_PKGNAME/var/ledChange"
+      else
+        logInfo 3 "Can't do LED change as user '$user' is not root"
+      fi # if [[ "$user" == "root" ]]
+    fi # if [[ -f "/var/packages/$SYNOPKG_PKGNAME/var/ledChange" ]]
     if [ -f "$ruleDfilePathName" ]; then
       exit 0
     else

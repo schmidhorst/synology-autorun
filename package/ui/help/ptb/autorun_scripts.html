@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Notas de Roteiro:</h1>
+    <p>Tanto o script primário, que executa a ação desejada após um dispositivo de armazenamento externo ser conectado, quanto o script secundário adicional opcional após o dispositivo de armazenamento ser ejetado, requerem algumas considerações especiais:</p>
+    <ul>
+      <li>Ambos os scripts são iniciados pelo daemon udev. Eles estão rodando com privilégios de raiz.</li>
+      <li>O ambiente dos scripts está quase vazio. Em particular, um caminho para os comandos, por exemplo, do diretório /bin/, <b>não</b> é definido como de costume! Ou seja, o caminho deve ser especificado com cada comando ou você está definindo a variável de ambiente PATH no início do script.</li>
+      <li>A variável de ambiente SHELL aponta para /bin/ash. Isto é com DSM 7.x um link para /bin/bash. Entretanto, a BASH pode estar rodando em um modo onde, por exemplo, a "substituição de processo" não está disponível. Pode acontecer que um script que roda bem quando iniciado interativamente, de repente não roda mais quando iniciado sobre o daemon udev por causa de um erro de sintaxe. Eu recomendo <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> como shebang.</li>
+      <li>Para depuração, pode ser útil observar a saída do <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> em uma janela de shell ao conectar um dispositivo de armazenamento externo. E uma olhada no arquivo /var/log/bash_err.log pode ser útil.</li>
+    </ul> 
+     
+  </body>
+</html>

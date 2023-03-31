@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="de">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Task-Scheduler</h1>
+    <p>
+    Unter bestimmten Umständen ist es sinnvoll, einen im Taskplaner definierten Task per Autorun zu starten.    </p>
+    <p>
+    Der Shell-Befehl zum Starten eines solchen Tasks lautet z.B. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. Die "Task-ID" (14 im Beispiel) kann mit <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span> ermittelt werden. 
+    Unter bestimmten Umständen ist es auch sinnvoll, das als "Command" angegebene Kommando direkt auszuführen und den Task-Scheduler zu umgehen.    </p>
+    <p>
+    Der Startbefehl des Schedulers ist dann in Nullkommanichts erledigt und der Task läuft als eigenständiger Prozess. 
+    Wenn Sie die LED-Steuerung zur Anzeige des laufenden Tasks oder zum Auswerfen der Festplatte nach Beendigung des Tasks verwenden wollen, müssen Sie in Ihrem Skript nach dem Task-Start mit einer Schleife wie dieser auf das Ende des Prozesses warten:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;Prozessname&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+  </body>
+</html>

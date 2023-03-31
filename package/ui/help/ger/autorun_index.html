@@ -1,16 +1,37 @@
-<!DOCTYPE html>
-<html class="img-no-display">
+<!DOCTYPE html><html class="img-no-display" lang="de">
   <head>
-    <meta http-equiv="Content-Type" content="text/html"; charset=UTF-8>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Autorun</title>
     <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
     <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="../../../../help/scrollbar/flexcroll.js"></script>
-    <script type="text/javascript" src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
   </head>
   <body>
     <h1>Autorun</h1>
-    <p>xxxx</p>
+    <p>
+    Das "Autorun"-Paket kann eine Aktion auslösen, wenn eine externe Festplatte an eine Synology Station angeschlossen wird. Dies ist oft sehr nützlich für das automatische Kopieren von Daten. 
+    Zumindest in DSM Version 7.1 fehlt eine solche Ereignisoption im Taskplaner. 
+    Es gibt nur "Startup" und "Shutdown" als Ereignisse in den "Triggered Tasks", aber kein "External USB storage inserted" oder ähnliches.    </p>
+    <p>
+    Mit "Aktion" ist in erster Linie die Ausführung eines BASH-Shell-Skripts gemeint. 
+    Das Skript kann dann mit Befehlen wie <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span> Dateien zwischen der Diskstation und der Platte hin und her kopieren. 
+     Oder das Skript kann z.B. auch einen im Aufgabenplaner definierten Task starten.     </p>
+    <p>
+    Als zusätzliche Aktion kann die Platte nach Abschluss der Aktion auch ausgeworfen werden. 
+    Da dadurch die Daten auf dem externen Datenträger nicht mehr direkt zugänglich sind, bietet dies einen gewissen Schutz der Daten auf dem externen Datenträger vor Zerstörung, z.B. durch Ransomware. 
+     Da der Datenträger aber auch per Software wieder in das System integriert werden kann, ist dies kein vollständiger Schutz.    </p>
+    <p>
+    Ein noch besserer Schutz vor Ransomware kann auf folgende Weise erreicht werden: Verwenden Sie einen externen Datenträger mit eigener Stromversorgung, wie es bei 3,5-Zoll-USB-Festplatten üblich ist. Die Stromversorgung wird über eine intelligente Steckdose betrieben. Diese Smart-Socket wird dann nach dem Auswerfen des Datenträgers abgeschaltet. Solange Ransomware diese Implementierung nicht außer Kraft setzt, ist der externe Datenträger, der auf diese Weise vom System getrennt wird, geschützt. 
+   <b>
+    Warnung: </b>
+    
+    Während der externe Datenträger für ein Update eingebunden ist, besteht praktisch kein Schutz vor Ransomware, die zuvor in Ihr System eingedrungen sein könnte! 
+    Verwenden Sie daher immer mindestens zwei Datenträger im Wechsel für Backups!    </p>
+    <p><a href="autorun_security.html">Sicherheitshinweis</a></p> 
+    <p><a href="autorun_scripts.html">Skript-Hinweise</a></p>
+    <p><a href="autorun_taskscheduler.html">Hinweise zur Task-Planung</a></p>
+
   </body>
 </html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    Le paquet "Autorun" peut déclencher une action lorsqu'un disque externe est branché sur une station Synology. Ceci est souvent très utile pour la copie automatisée de données. 
+    Au moins dans la version 7.1 du DSM, une telle option d'événement est absente dans le planificateur de tâches. 
+    Il n'y a que "Démarrage" et "Arrêt" comme événements dans les "Tâches déclenchées", mais pas de "Stockage USB externe inséré" ou similaire.    </p>
+    <p>
+    Par "action", on entend avant tout l'exécution d'un script shell BASH. 
+    Le script peut ensuite copier des fichiers entre la station de disque et le disque à l'aide de commandes telles que <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Le script peut également lancer une tâche définie dans le planificateur de tâches.     </p>
+    <p>
+    Comme action supplémentaire, le disque peut également être éjecté une fois l'action terminée. 
+    Étant donné que les données sur le support de données externe ne sont plus directement accessibles, elles bénéficient d'un certain degré de protection contre la destruction, par exemple par un ransomware. 
+     Toutefois, comme le support de données peut également être réintégré dans le système par le biais d'un logiciel, il ne s'agit pas d'une protection complète.    </p>
+    <p>
+    Il est possible d'améliorer encore la protection contre les ransomwares de la manière suivante : Utiliser un support de données externe doté de sa propre alimentation électrique, comme c'est souvent le cas pour les disques durs USB de 3,5 pouces. L'alimentation électrique est assurée par une prise intelligente. Cette prise intelligente est ensuite désactivée après l'éjection du support de données. Tant que le ransomware n'annule pas cette mise en œuvre, le support de données externe qui est déconnecté du système de cette manière est protégé. 
+   <b>
+    Attention : </b>
+    
+    Lorsque le disque externe est monté pour une mise à jour, il n'y a pratiquement aucune protection contre les ransomwares qui auraient pu pénétrer dans votre système auparavant ! 
+    Par conséquent, utilisez toujours au moins deux disques en alternance pour les sauvegardes ! </p>
+    <p><a href="autorun_security.html">Note de sécurité</a></p> 
+    <p><a href="autorun_scripts.html">Conseils sur les scripts</a></p>
+    <p><a href="autorun_taskscheduler.html">Conseils pour la planification des tâches</a></p>
+
+  </body>
+</html>

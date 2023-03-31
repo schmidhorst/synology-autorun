@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Автозапуск</title>
+  </head>
+  <body>
+    <h1>Примечания к сценарию:</h1>
+    <p>Как основной сценарий, выполняющий требуемое действие после подключения внешнего устройства хранения данных, так и дополнительный вторичный сценарий, выполняемый после извлечения устройства хранения данных, требуют некоторых особых соображений:</p>
+    <ul>
+      <li>Оба сценария запускаются демоном udev. Они выполняются с привилегиями root.</li>
+      <li>Среда сценариев практически пуста. В частности, путь к командам, например, из каталога /bin/, <b>не</b> задан как обычно! Т.е. путь должен быть указан либо с каждой командой, либо вы устанавливаете переменную окружения PATH в начале скрипта.</li>
+      <li>Переменная окружения SHELL указывает на /bin/ash. В DSM 7.x это ссылка на /bin/bash. Однако BASH может быть запущен в режиме, в котором, например, "подмена процесса" недоступна. Может случиться так, что скрипт, который прекрасно работает при интерактивном запуске, вдруг перестанет выполняться при запуске через демон udev из-за синтаксической ошибки. Я рекомендую использовать <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> в качестве shebang.</li>
+      <li>Для отладки может быть полезно посмотреть вывод <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> в окне оболочки при подключении внешнего устройства хранения данных. Также может быть полезен просмотр файла /var/log/bash_err.log.</li>
+    </ul> 
+     
+  </body>
+</html>

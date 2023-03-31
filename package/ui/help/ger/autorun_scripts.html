@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Skript-Hinweise:</h1>
+    <p>Sowohl das primäre Skript, das die gewünschte Aktion ausführt, nachdem ein externes Speichergerät eingesteckt wurde, als auch das optionale zusätzliche sekundäre Skript, nachdem das Speichergerät ausgeworfen wurde, erfordern einige besondere Überlegungen:</p>
+    <ul>
+      <li>Beide Skripte werden durch den udev-Daemon gestartet. Sie werden mit Root-Rechten ausgeführt.</li>
+      <li>Die Umgebung der Skripte ist nahezu leer. Insbesondere ist ein Pfad zu den Befehlen, z.B. aus dem /bin/ Verzeichnis, <b>nicht</b> wie üblich gesetzt! D.h. der Pfad muss entweder bei jedem Befehl angegeben werden oder Sie setzen die Umgebungsvariable PATH am Anfang des Skripts.</li>
+      <li>Die Umgebungsvariable SHELL zeigt auf /bin/ash. Dies ist bei DSM 7.x ein Link auf /bin/bash. BASH kann jedoch in einem Modus laufen, in dem z.B. die "Prozess-Substitution" nicht verfügbar ist. Es kann vorkommen, dass ein Skript, das beim interaktiven Start problemlos läuft, beim Start über den udev-Daemon aufgrund eines Syntaxfehlers plötzlich nicht mehr läuft. Ich empfehle <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> als shebang.</li>
+      <li>Zur Fehlersuche kann es hilfreich sein, die Ausgabe von <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> in einem Shell-Fenster zu beobachten, wenn ein externes Speichergerät angeschlossen wird. Auch ein Blick in die Datei /var/log/bash_err.log kann hilfreich sein.</li>
+    </ul> 
+     
+  </body>
+</html>

@@ -1,0 +1,23 @@
+"<!DOCTYPE html>
+<html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Script Notes:</h1>
+    <p>Both the primary script, which executes the desired action after an external storage device is plugged in, and the optional additional secondary script after the storage device is ejected, require some special considerations:</p>
+    <ul>
+      <li>Both scripts are started by the udev daemon. They are running with root privileges.</li>
+      <li>The environment of the scripts is nearly empty. In particular, a path to the commands, e.g. from the /bin/ directory, is <b>not</b> set as usual! I.e. the path must be specified either with each command or you are setting the environment variable PATH at the beginning of the script.</li>
+      <li>The environment variable SHELL points to /bin/ash. This is with DSM 7.x a link to /bin/bash. However, BASH may be running in a mode where, for example, "process substitution" is not available. It can happen that a script which runs fine when started interactively, suddenly does not run anymore when started over udev daemon because of a syntax error. I recommend <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> as shebang.</li>
+      <li>For debugging it can be helpful to watch the output of <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> in a shell window when plugging in an external storage device. And a look into the file /var/log/bash_err.log can be helpful.</li>
+    </ul> 
+     
+  </body>
+</html>"

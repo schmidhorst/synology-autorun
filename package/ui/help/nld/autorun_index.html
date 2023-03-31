@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="nl">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    Het pakket "Autorun" kan een actie activeren wanneer een externe schijf wordt aangesloten op een Synology-station. Dit is vaak zeer nuttig voor het automatisch kopiëren van gegevens. 
+    Tenminste in DSM-versie 7.1 ontbreekt een dergelijke gebeurtenisoptie in de taakplanner. 
+    Er zijn alleen "Startup" en "Shutdown" als gebeurtenissen in de "Triggered Tasks", maar geen "External USB storage inserted" of iets dergelijks.    </p>
+    <p>
+    Met "actie" wordt allereerst het uitvoeren van een BASH-shell-script bedoeld. 
+    Het script kan dan bestanden heen en weer kopiëren tussen het schijfstation en de schijf met behulp van commando's als <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Of het script kan bijvoorbeeld ook een in de taakplanner gedefinieerde taak starten.     </p>
+    <p>
+    Als extra actie kan de schijf ook worden uitgeworpen nadat de actie is voltooid. 
+    Aangezien de gegevens op de externe gegevensdrager daardoor niet meer rechtstreeks toegankelijk zijn, biedt dit een zekere bescherming van de gegevens op de externe gegevensdrager tegen vernietiging, bijvoorbeeld door ransomware. 
+     Aangezien de gegevensdrager echter ook via software opnieuw in het systeem kan worden geïntegreerd, is dit geen volledige bescherming.    </p>
+    <p>
+    Een nog betere bescherming tegen ransomware kan op de volgende manier worden bereikt: Gebruik een extern datamedium met een eigen voeding, zoals gebruikelijk bij 3,5 inch USB-harde schijven. De voeding wordt bediend via een slim stopcontact. Deze smart socket wordt dan uitgeschakeld nadat het datamedium is uitgeworpen. Zolang ransomware deze implementatie niet omzeilt, is het externe gegevensmedium dat op deze manier van het systeem wordt losgekoppeld, beschermd. 
+   <b>
+    Waarschuwing: </b>
+    
+    Terwijl de externe schijf voor een update is gemount, is er praktisch geen bescherming tegen ransomware die eerder uw systeem zou kunnen zijn binnengedrongen! 
+    Gebruik daarom altijd minstens twee schijven afwisselend voor back-ups!    </p>
+    <p><a href="autorun_security.html">Beveiligings opmerking</a></p> 
+    <p><a href="autorun_scripts.html">Script hints</a></p>
+    <p><a href="autorun_taskscheduler.html">Taakplanning hints</a></p>
+
+  </body>
+</html>

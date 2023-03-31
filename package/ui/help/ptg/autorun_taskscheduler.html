@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="pt-PT">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Agendador de Tarefas</h1>
+    <p>
+    Em determinadas circunstâncias, faz sentido iniciar uma tarefa definida no agendador de tarefas pela autorun.    </p>
+    <p>
+    O comando shell para iniciar uma tal tarefa é por exemplo <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. O "Task-ID" (14 no exemplo) pode ser obtido por <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    Em determinadas circunstâncias também faz sentido executar directamente o comando especificado como "Comando" e contornar o programador de tarefas.    </p>
+    <p>
+    O comando de início do agendador é feito em pouco tempo e a tarefa é executada como um processo independente. 
+    Se quiser usar o controlo LED para exibir a tarefa em execução ou para ejectar o disco após a tarefa estar concluída, tem de esperar no seu script após o início da tarefa com um loop como este para o fim desse processo:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">dormir 60<br>enquanto ["$(/bin/pidof <i>&lt;processName&gt;)</i> </span>" <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">]; fazer<br>dormir 60<br>feito </span>   </p>
+  </body>
+</html>

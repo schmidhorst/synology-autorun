@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="tr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Otomatik Çalıştırma</title>
+  </head>
+  <body>
+    <h1>Görev Zamanlayıcı</h1>
+    <p>
+    Belirli koşullar altında, görev zamanlayıcıda tanımlanan bir görevi otomatik çalıştırma ile başlatmak mantıklıdır.    </p>
+    <p>
+    Böyle bir görevi başlatmak için kabuk komutu örneğin <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>'dır. "Task-ID" (örnekte 14) <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span> ile elde edilebilir. 
+    Belirli koşullar altında "Command" olarak belirtilen komutu doğrudan çalıştırmak ve görev zamanlayıcısını atlamak da mantıklıdır.    </p>
+    <p>
+    Zamanlayıcı başlatma komutu hiçbir zaman yapılmaz ve görev bağımsız bir süreç olarak çalışır. 
+    Çalışan görevi görüntülemek veya görev bittikten sonra diski çıkarmak için LED kontrolünü kullanmak istiyorsanız, görev başladıktan sonra bu işlemin bitmesi için aşağıdaki gibi bir döngü ile kodunuzda beklemeniz gerekir:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;processName&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+  </body>
+</html>

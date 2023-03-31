@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="it">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    Il pacchetto "Autorun" può attivare un'azione quando un disco esterno viene collegato a una stazione Synology. Questo è spesso molto utile per la copia automatica dei dati. 
+    Almeno nella versione 7.1 di DSM, tale opzione di evento non è presente nel task scheduler. 
+    Ci sono solo "Avvio" e "Spegnimento" come eventi nelle "Attività attivate", ma non "Archiviazione USB esterna inserita" o simili.    </p>
+    <p>
+    Con "azione" si intende innanzitutto l'esecuzione di uno script BASH. 
+    Lo script può quindi copiare i file tra la stazione disco e il disco utilizzando comandi come <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Oppure lo script può, ad esempio, avviare un'attività definita nel task scheduler.     </p>
+    <p>
+    Come azione aggiuntiva, il disco può anche essere espulso al termine dell'azione. 
+    Poiché ciò significa che i dati sul supporto dati esterno non sono più direttamente accessibili, si ottiene un certo grado di protezione dei dati sul supporto dati esterno contro la distruzione, ad esempio da parte di un ransomware. 
+     Tuttavia, poiché il supporto dati può anche essere reintegrato nel sistema tramite software, non si tratta di una protezione completa.    </p>
+    <p>
+    Una protezione ransomware ancora migliore può essere ottenuta nel modo seguente: Utilizzare un supporto dati esterno con alimentazione propria, come avviene di solito con i dischi rigidi USB da 3,5 pollici. L'alimentatore viene gestito tramite una presa intelligente. Questa presa intelligente viene poi spenta dopo l'espulsione del supporto dati. Finché il ransomware non supera questa implementazione, il supporto dati esterno che viene scollegato dal sistema in questo modo è protetto. 
+   <b>
+    Attenzione: </b>
+    
+    Mentre il disco esterno è montato per un aggiornamento, non c'è praticamente alcuna protezione contro il ransomware che potrebbe essere entrato nel sistema prima! 
+    Pertanto, utilizzare sempre almeno due dischi in alternanza per i backup!    </p>
+    <p><a href="autorun_security.html">Nota sulla sicurezza</a></p> 
+    <p><a href="autorun_scripts.html">Suggerimenti per gli script</a></p>
+    <p><a href="autorun_taskscheduler.html">Suggerimenti per la pianificazione delle attività</a></p>
+
+  </body>
+</html>

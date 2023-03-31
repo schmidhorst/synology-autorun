@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>自动运行</title>
+  </head>
+  <body>
+    <h1>脚本说明：</h1>
+    <p>在插入外部存储设备后执行所需动作的主脚本，以及在弹出存储设备后可选择的附加副脚本，都需要一些特殊的考虑：</p>
+    <ul>
+      <li>这两个脚本都是由udev守护程序启动的。它们是以root权限运行的。</li>
+      <li>脚本的环境几乎是空的。特别是，命令的路径，例如从/bin/目录，<b>没有</b>像往常一样被设置！也就是说，路径必须是在/bin/目录下！也就是说，路径必须在每个命令中指定，或者在脚本的开头设置环境变量PATH。</li>
+      <li>环境变量SHELL指向/bin/ash。在DSM 7.x中，这是与/bin/bash的链接。然而，BASH可能在某种模式下运行，例如，"进程替换 "是不可用的。可能会发生这样的情况：一个在交互式启动时运行良好的脚本，在通过udev daemon启动时，由于语法错误而突然不能运行了。我推荐<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#！/bin/bash</span>作为shebang。</li>
+      <li>对于调试来说，在插入外部存储设备时，在shell窗口中观察<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span>的输出可能会有帮助。而查看/var/log/bash_err.log文件也会有帮助。</li>
+    </ul> 
+     
+  </body>
+</html>

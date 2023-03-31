@@ -1,0 +1,35 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Exécution automatique</title>
+  </head>
+  <body>
+    <h1>Sécurité</h1>
+    <h2>Emplacement du script :</h2>
+    <p>Il existe deux endroits fondamentalement différents où le script lancé par le paquet d'exécution automatique peut être placé :</p>
+   <ul>
+     <li>Sur les périphériques de stockage externes : 
+       <ul>
+         <li>
+            Seuls les périphériques de stockage préparés de cette manière avec le script lanceront l'action. </li> </ul> </li> <li> <ul> <li>Si l'option de sécurité disponible <b>n'</b> est <b>pas</b> utilisée, toute personne ayant accès à la station de disque peut faire des choses arbitraires en branchant une clé USB préparée, par exemple supprimer toute la station de disque et avoir un accès libre à l'ensemble du réseau.</li></ul></li> <li>Interne dans le DSM : <ul> <li>chaque fois qu'un périphérique de stockage est branché, le script est lancé </li> </ul>. </ul>Le <ul> <ul> <li>script lui-même peut avoir à vérifier s'il doit effectuer ses actions sur le périphérique de stockage actuel. </li> </ul> </ul>L <ul> <ul> <li>'option de sécurité disponible ne sera pas nécessaire la plupart du </li> </ul> </ul>temps.      <p>Outre le script principal mentionné ci-dessus, un script secondaire, qui est exécuté après l'éjection du périphérique de stockage, est également possible en option. 
+        Ce second script ne peut naturellement être situé qu'en interne sur le DSM. L'accès à la mémoire éjectée n'est plus possible au moment où elle doit être démarrée.</p>
+    <p>Tous les scripts sont exécutés avec l'autorisation de l'administrateur. Les scripts placés en interne peuvent donc se trouver presque n'importe où dans le système de fichiers du DSM. 
+      Les utilisateurs sans droits d'administrateur ne devraient pas y avoir accès, du moins pas en écriture !</p>       
+    
+    <h2>Option de sécurité :</h2>        
+    <p>L'exécution des scripts peut être limitée aux scripts précédemment enregistrés à l'aide de leur somme de contrôle (hachage SHA256). Les autres scripts ne seront pas exécutés.<br>
+      Il existe deux approches différentes :</p>
+      <ol type="A">
+        <li>
+          Lors de l'installation du paquet autorun, le paramètre "1 premier script autorisé" est sélectionné, et la somme de contrôle du premier script après l'installation est déterminée et enregistrée. Seul ce script et ses copies inchangées sont exécutés. La sécurité s'arme automatiquement avec le premier script après l'installation initiale et, si nécessaire, après une réinstallation. 
+          Si le script doit être modifié, il faut ensuite procéder à une réinstallation automatique du paquet avec le paramètre "1 premier script autorisé". L'ancien enregistrement est supprimé et la nouvelle somme de contrôle du script est enregistrée par la suite comme étant la seule autorisée.        </li>
+        <li>
+          Lors de l'installation du paquet, le premier paramètre "2 Add any hash" (Ajouter n'importe quel hachage) est sélectionné. Maintenant, toutes les unités de stockage externes qui ont des scripts différents doivent être branchées l'une après l'autre. Ainsi, les sommes de contrôle nécessaires peuvent être enregistrées et ajoutées. Ensuite, l'installation doit être exécutée à <b>nouveau</b> et la valeur doit être changée en "3 Only previously registered". Dès lors, la sécurité est activée.</li>
+      </ol>
+      La procédure B peut également être utilisée si la procédure A a été utilisée précédemment et qu'une somme de contrôle supplémentaire, par exemple pour une nouvelle variante de script, doit être ajoutée parallèlement à la variante de script précédemment enregistrée.  </body>
+</html>

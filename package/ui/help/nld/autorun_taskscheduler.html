@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="nl">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Taakplanner</h1>
+    <p>
+    Onder bepaalde omstandigheden is het zinvol om een in de taakplanner gedefinieerde taak via autorun te starten.    </p>
+    <p>
+    Het shell-commando om zo'n taak te starten is bijvoorbeeld <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. De "Task-ID" (14 in het voorbeeld) kan worden verkregen door <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    Onder bepaalde omstandigheden is het ook zinvol het als "Opdracht" opgegeven commando rechtstreeks uit te voeren en de taakplanner te omzeilen.    </p>
+    <p>
+    De startopdracht van de scheduler wordt in een mum van tijd uitgevoerd en de taak loopt als een onafhankelijk proces. 
+    Als u de LED-besturing wilt gebruiken om de lopende taak weer te geven of om de schijf uit te werpen nadat de taak is voltooid, moet u in uw script na de taakstart met een lus als deze wachten op het einde van dat proces:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">slaap 60<br>while [ "$(/bin/pidof <i>&lt;procesnaam&gt;)</i>" ]; do<br>slaap 60<br>done </span>   </p>
+  </body>
+</html>

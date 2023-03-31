@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="hu">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    Az "Autorun" csomag kiválthat egy műveletet, amikor egy külső lemezt csatlakoztatnak egy Synology állomáshoz. Ez gyakran nagyon hasznos az adatok automatikus másolásánál. 
+    Legalábbis a DSM 7.1-es verziójában a feladatütemezőből hiányzik egy ilyen esemény opció. 
+    A "Kiváltott feladatok" között csak az "Indítás" és a "Leállítás" van eseményként, de nincs "Külső USB-tároló behelyezése" vagy hasonló.    </p>
+    <p>
+    A "művelet" alatt elsősorban egy BASH shell script végrehajtását értjük. 
+    A szkript aztán az <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync-hez</span> hasonló parancsokkal tud fájlokat oda-vissza másolni a lemezállomás és a lemez között. 
+     Vagy a szkript pl. elindíthat egy, a feladatütemezőben meghatározott feladatot is.   </p>
+    <p>
+    Kiegészítő műveletként a művelet befejezése után a lemez ki is dobható. 
+    Mivel ez azt jelenti, hogy a külső adathordozón lévő adatokhoz már nem lehet közvetlenül hozzáférni, ez bizonyos fokú védelmet nyújt a külső adathordozón lévő adatoknak a megsemmisüléssel, például a zsarolóprogramok által okozott megsemmisüléssel szemben. 
+     Mivel azonban az adathordozó szoftverrel újra integrálható a rendszerbe, ez nem jelent teljes védelmet.    </p>
+    <p>
+    Még jobb zsarolóvírus elleni védelem érhető el a következő módon: Használjon saját tápegységgel rendelkező külső adathordozót, ahogyan az a 3,5 hüvelykes USB-merevlemezeknél elterjedt. A tápegységet egy intelligens aljzaton keresztül működtetjük. Ez az intelligens aljzat az adathordozó kihúzása után kikapcsol. Amíg a zsarolóprogramok nem írják felül ezt a megvalósítást, az így a rendszerről leválasztott külső adathordozó védett. 
+   <b>
+    Figyelmeztetés: </b>
+    
+    Amíg a külső adathordozó frissítésre van csatlakoztatva, gyakorlatilag nincs védelem a rendszerbe korábban behatoló zsarolóprogramok ellen! 
+    Ezért mindig legalább két lemezt használjon felváltva a biztonsági mentésekhez!    </p>
+    <p><a href="autorun_security.html">Biztonsági megjegyzés</a></p> 
+    <p><a href="autorun_scripts.html">Szkript tippek</a></p>
+    <p><a href="autorun_taskscheduler.html">Feladatütemezési tanácsok</a></p>
+
+  </body>
+</html>

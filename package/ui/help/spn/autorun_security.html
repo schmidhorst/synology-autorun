@@ -1,0 +1,35 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Seguridad</h1>
+    <h2>Ubicación del script:</h2>
+    <p>Hay dos lugares fundamentalmente diferentes donde se puede colocar el script iniciado por el paquete de ejecución automática:</p>
+   <ul>
+     <li>En los dispositivos de almacenamiento externos: 
+       <ul>
+         <li>
+            Sólo los dispositivos de almacenamiento preparados con el script de esta forma iniciarán la acción. </li> </ul> </li> <li> <ul> <li>Todos los demás almacenamientos que puedan enchufarse serán ignorados. </li> <li>Si <b>no</b> se utiliza la opción de seguridad disponible, entonces cualquiera que tenga acceso a la estación de disco puede hacer cosas arbitrarias enchufando un dispositivo USB preparado. Por ejemplo, borrar toda la estación de disco y tener acceso libre a toda la red.</li></ul></li> <li>Interno en DSM: <ul> <li>Cada vez que se enchufa un dispositivo de almacenamiento, se inicia el script. </li> </ul> </ul>Es <ul> <ul> <li>posible que el propio script tenga que comprobar si debe realizar sus acciones en el </li> </ul> </ul>dispositivo de almacenamiento <ul> <ul>actual. <li>La opción de seguridad disponible no será necesaria la mayoría de las veces. </li> </ul> </ul>     <p>Además del script primario mencionado anteriormente, también es posible opcionalmente un script secundario, que se ejecuta después de que el dispositivo de almacenamiento haya sido expulsado. 
+        Naturalmente, este segundo script sólo puede ubicarse internamente en el DSM. El acceso a la memoria expulsada ya no es posible en el momento en que debe iniciarse.</p>
+    <p>Todos los scripts se ejecutan con permiso de root. Por lo tanto, los scripts ubicados internamente pueden localizarse en casi cualquier parte del sistema de archivos DSM. 
+      Los usuarios sin derechos de administrador no deberían tener acceso, ¡al menos no de escritura!</p>       
+    
+    <h2>Opción de seguridad:</h2>        
+    <p>La ejecución de scripts puede restringirse a los scripts previamente registrados utilizando su suma de comprobación (hash SHA256). Los demás scripts no se ejecutarán.<br>
+      Existen dos enfoques diferentes:</p>
+      <ol type="A">
+        <li>
+          En la configuración durante la instalación del paquete de ejecución automática, se selecciona la opción "1 primer script permitido", y se determina y registra la suma de comprobación del primer script tras la instalación. Sólo se ejecuta este script y las copias no modificadas del mismo. La seguridad se arma automáticamente con el primer script después de la inicial, y si es necesario también después de una reinstalación. 
+          Si el script alguna vez necesita un cambio, entonces después haga de nuevo una reinstalación del paquete de ejecución automática con este ajuste "1 primer script permitido". El antiguo registro es borrado y el nuevo script checksum es registrado después como el único permitido.        </li>
+        <li>
+          Durante la instalación del paquete primero se selecciona "2 Añadir cualquier hash". Ahora todos los almacenamientos externos que tienen diferentes scripts necesitan ser conectados uno tras otro. Para que las sumas de comprobación necesarias puedan ser registradas y añadidas. Despues de eso la instalacion necesita ser ejecutada de <b>nuevo</b> y el valor tiene que ser cambiado a "3 Solo previamente registrado". A partir de ese momento la seguridad está activada.</li>
+      </ol>
+      El procedimiento B también se puede utilizar si A estaba previamente en uso y una suma de comprobación adicional, por ejemplo, para una nueva variante de script, necesita ser añadida en paralelo a la variante de script previamente registrada.  </body>
+</html>

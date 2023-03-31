@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="sv">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    Paketet "Autorun" kan utlösa en åtgärd när en extern disk ansluts till en Synology-station. Detta är ofta mycket användbart för automatiserad kopiering av data. 
+    Åtminstone i DSM version 7.1 saknas ett sådant händelsealternativ i aktivitetsschemaläggaren. 
+    Det finns bara "Start" och "Avstängning" som händelser i "Utlösta uppgifter", men ingen "Extern USB-lagring insatt" eller liknande.    </p>
+    <p>
+    Med "åtgärd" menas först och främst utförandet av ett BASH-skalskript. 
+    Skriptet kan sedan kopiera filer fram och tillbaka mellan diskstationen och disken med hjälp av kommandon som <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Eller så kan skriptet t.ex. också starta en uppgift som definierats i uppgiftsschemaläggaren.     </p>
+    <p>
+    Som en ytterligare åtgärd kan disken också kastas ut när åtgärden är slutförd. 
+    Eftersom detta innebär att uppgifterna på det externa datamediet inte längre är direkt tillgängliga ger detta ett visst skydd för uppgifterna på det externa datamediet mot förstörelse, t.ex. genom utpressningstrojaner. 
+     Eftersom datamediet också kan återintegreras i systemet via programvara är det dock inte ett fullständigt skydd.    </p>
+    <p>
+    Ett ännu bättre skydd mot utpressningstrojaner kan uppnås på följande sätt: Använd ett externt datamedium med egen strömförsörjning, vilket är vanligt med 3,5-tums USB-hårddiskar. Strömförsörjningen drivs via ett smart uttag. Detta smarta uttag stängs sedan av när datamediet har kastats ut. Så länge utpressningstrojaner inte åsidosätter detta genomförande är det externa datamedium som kopplas bort från systemet på detta sätt skyddat. 
+   <b>
+    Varning: </b>
+    
+    Medan den externa disken är monterad för en uppdatering finns det praktiskt taget inget skydd mot utpressningstrojaner som kan ha kommit in i systemet tidigare! 
+    Använd därför alltid minst två diskar växelvis för säkerhetskopiering!    </p>
+    <p><a href="autorun_security.html">Säkerhetsanmärkning</a></p> 
+    <p><a href="autorun_scripts.html">Tips för skript</a></p>
+    <p><a href="autorun_taskscheduler.html">Tips för schemaläggning av uppgifter</a></p>
+
+  </body>
+</html>

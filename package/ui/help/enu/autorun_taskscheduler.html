@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="EN">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Task Scheduler</h1>
+    <p>
+    Under certain circumstances it makes sense to start a task defined in the task scheduler by autorun.
+    </p>
+    <p>
+    The shell command to start such a task is e.g. 
+    <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. The "Task-ID" (14 in the example) can be obtained by <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    Under certain circumstances it also makes sense to execute the command specified as "Command" directly and to bypass the task scheduler.
+    </p>
+    <p>
+    The scheduler start command is done in no time and the task runs as an independent process. 
+    If you want to use the LED control to display the running task or to eject the disk after the task is finished, 
+    you have to wait in your script after the task start with a loop like this for the end of that process:
+    </p><p>
+    <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">
+      sleep 60<br>
+      while [ "$(/bin/pidof <i>&lt;processName&gt;)</i>" ]; do<br>
+      sleep 60<br>
+      done
+    </span>
+    </p>
+  </body>
+</html>

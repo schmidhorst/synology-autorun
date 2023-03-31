@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="pt-BR">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Agendador de tarefas</h1>
+    <p>
+    Sob certas circunstâncias, faz sentido iniciar uma tarefa definida no agendador de tarefas pela autorun.    </p>
+    <p>
+    O comando shell para iniciar tal tarefa é, por exemplo, <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. O "Task-ID" (14 no exemplo) pode ser obtido por <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    Sob certas circunstâncias, também faz sentido executar o comando especificado como "Comando" diretamente e contornar o agendador de tarefas.    </p>
+    <p>
+    O comando de início do agendador é feito em pouco tempo e a tarefa é executada como um processo independente. 
+    Se você quiser usar o controle LED para exibir a tarefa em execução ou para ejetar o disco após a tarefa ser concluída, você tem que esperar em seu script após o início da tarefa com um loop como este para o final desse processo:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>enquanto ["$(/bin/pidof <i>&lt;processName&gt;)</i> </span>" <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">]; do<br>sleep 60<br>feito </span>   </p>
+  </body>
+</html>

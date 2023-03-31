@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="pt-PT">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    O pacote "Autorun" pode desencadear uma acção quando um disco externo é ligado a uma estação Synology. Isto é muitas vezes muito útil para a cópia automatizada de dados. 
+    Pelo menos na versão 7.1 do DSM, tal opção de evento está em falta no programador de tarefas. 
+    Existem apenas "Startup" e "Shutdown" como eventos nas "Tarefas desencadeadas", mas nenhum "Armazenamento externo USB inserido" ou semelhante.    </p>
+    <p>
+    Com "acção" significa, em primeiro lugar, a execução de um script de shell BASH. 
+    O script pode então copiar ficheiros entre a estação de disco e o disco usando comandos como o <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Ou o script pode, por exemplo, também iniciar uma tarefa definida no agendador de tarefas.     </p>
+    <p>
+    Como acção adicional, o disco também pode ser ejectado após a acção estar concluída. 
+    Uma vez que isto significa que os dados no suporte de dados externo já não são directamente acessíveis, isto proporciona um certo grau de protecção dos dados no suporte de dados externo contra a destruição, por exemplo, por meio de ransomware. 
+     Contudo, uma vez que o suporte de dados também pode ser reintegrado no sistema através de software, não é uma protecção completa.    </p>
+    <p>
+    Uma protecção ainda melhor contra o software de resgate pode ser conseguida da seguinte forma: Utilizar um suporte de dados externo com alimentação própria, como é comum em discos rígidos USB de 3,5 polegadas. A fonte de alimentação é operada através de uma tomada inteligente. Esta tomada inteligente é então desligada depois de o suporte de dados ter sido ejectado. Desde que o software de resgate não se sobreponha a esta implementação, o suporte de dados externo que é desligado do sistema desta forma é protegido. 
+   <b>
+    Advertência: </b>
+    
+    Enquanto o disco externo é montado para uma actualização, não há praticamente nenhuma protecção contra o ransomware que possa ter entrado no seu sistema antes! 
+    Portanto, utilize sempre pelo menos dois discos alternadamente para backups!    </p>
+    <p><a href="autorun_security.html">Nota de segurança</a></p> 
+    <p><a href="autorun_scripts.html">Dicas do guião</a></p>
+    <p><a href="autorun_taskscheduler.html">Dicas de agendamento de tarefas</a></p>
+
+  </body>
+</html>

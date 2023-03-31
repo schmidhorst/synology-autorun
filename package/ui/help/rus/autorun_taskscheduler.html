@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="ru">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Автозапуск</title>
+  </head>
+  <body>
+    <h1>Планировщик задач</h1>
+    <p>
+    При определенных обстоятельствах имеет смысл запустить задачу, определенную в планировщике задач, с помощью автозапуска.    </p>
+    <p>
+    Команда оболочки для запуска такой задачи, например, <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. "Task-ID" (14 в примере) может быть получен командой <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    При определенных обстоятельствах также имеет смысл выполнить команду, указанную как "Command", напрямую, минуя планировщик задач.    </p>
+    <p>
+    Команда запуска планировщика выполняется мгновенно, и задача запускается как независимый процесс. 
+    Если вы хотите использовать управление светодиодом для отображения запущенной задачи или извлечения диска после завершения задачи, то в вашем скрипте после запуска задачи необходимо дождаться окончания этого процесса с помощью цикла, как показано ниже:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;processName&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="da">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Opgaveplanlægger</h1>
+    <p>
+    Under visse omstændigheder er det fornuftigt at starte en opgave, der er defineret i opgaveplanlæggeren, ved hjælp af autorun.    </p>
+    <p>
+    Shell-kommandoen til at starte en sådan opgave er f.eks. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. "Task-ID" (14 i eksemplet) kan fås ved at bruge <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    Under visse omstændigheder giver det også mening at udføre den kommando, der er angivet som "Command", direkte og omgå task scheduler'en.    </p>
+    <p>
+    Kommandoen til start af scheduleren er udført på ingen tid, og opgaven kører som en selvstændig proces. 
+    Hvis du vil bruge LED-styringen til at vise den kørende opgave eller til at skubbe disken ud, når opgaven er færdig, skal du i dit script efter opgavestart med en sløjfe som denne vente på afslutningen af denne proces:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;processName&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Segurança</h1>
+    <h2>Localização do roteiro:</h2>
+    <p>Há dois lugares fundamentalmente diferentes onde o roteiro iniciado pelo pacote autorun pode ser colocado:</p>
+   <ul>
+     <li>Nos dispositivos de armazenamento externo: 
+       <ul>
+         <li>
+            Somente os dispositivos de armazenamento preparados com o script desta forma iniciarão a ação. </li> </ul> </li> <li> <ul> <li>Todos os outros dispositivos de armazenamento que podem ser conectados serão ignorados. </li> <li>Se a opção de segurança disponível <b>não</b> for utilizada, então qualquer um que tenha acesso à estação de disco pode fazer coisas arbitrárias conectando um dispositivo USB preparado. </li> </ul> </li>Por exemplo, <li> <ul> <li>apagar toda a estação de disco e ter acesso livre a toda a rede.</li></ul></li> <li>Interno no DSM: <ul> <li>Toda vez que um dispositivo de armazenamento é conectado, o script é iniciado </li> </ul>. <ul> <li>O script em si pode ter que verificar se ele deve executar suas ações no dispositivo de armazenamento atual. </li> <li>A opção de segurança disponível não será necessária na maior parte </li> </ul> </ul>do tempo.      <p>Além do script primário mencionado acima, um script secundário, que é executado após o dispositivo de armazenamento ter sido ejetado, também é opcionalmente possível. 
+        Este segundo script, naturalmente, só pode ser localizado internamente no DSM. O acesso à memória ejetada não é mais possível no momento em que ela deve ser iniciada.</p>
+    <p>Todos os scripts são executados com permissão da raiz. Portanto, os scripts colocados internamente podem ser localizados em quase qualquer lugar no sistema de arquivos DSM. 
+      Usuários sem direitos de administrador não devem ter acesso, pelo menos não devem ter acesso de escrita!</p>       
+    
+    <h2>Opção de segurança:</h2>        
+    <p>A execução de scripts pode ser restrita a scripts previamente registrados usando seu checksum (SHA256 hash). Outros roteiros não serão executados.<br>
+      Há duas abordagens diferentes:</p>
+      <ol type="A">
+        <li>
+          Nas configurações durante a instalação do pacote autorun, a configuração "1 primeiro script permitido" é selecionada, e o checksum do primeiro script após a instalação é determinado e registrado. Somente este script e cópias inalteradas do mesmo são executados. A segurança arma automaticamente com o primeiro script após a instalação inicial, e se necessário também após uma reinstalação. 
+          Se o script precisar de uma mudança, então, depois, faça novamente uma reinstalação do pacote autorun com esta configuração "1 primeiro script permitido". O antigo registro é excluído e o novo checksum do script é registrado posteriormente como o único permitido.        </li>
+        <li>
+          Durante a instalação do pacote primeiro "2 Adicionar qualquer hash" é selecionado. Agora todos os armazéns externos que têm diferentes scripts precisam ser conectados um após o outro. Para que os checksums necessários possam ser registrados e adicionados. Depois disso, a instalação precisa ser executada <b>novamente</b> e o valor tem que ser alterado para "3 Somente previamente registrado". A partir de então, a segurança está armada.</li>
+      </ol>
+      O procedimento B também pode ser usado se A estava em uso anteriormente e um checksum adicional, por exemplo, para uma nova variante de script, precisa ser adicionado em paralelo com a variante de script previamente registrada.  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="it">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Pianificazione attività</h1>
+    <p>
+    In alcune circostanze è opportuno avviare un task definito nel task scheduler tramite autorun.    </p>
+    <p>
+    Il comando di shell per avviare un task di questo tipo è, ad esempio, <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. Il "Task-ID" (14 nell'esempio) può essere ottenuto con <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    In alcune circostanze ha senso anche eseguire direttamente il comando specificato come "Command" e bypassare il task scheduler.    </p>
+    <p>
+    Il comando di avvio dello schedulatore viene eseguito in un attimo e il task viene eseguito come processo indipendente. 
+    Se si desidera utilizzare il controllo LED per visualizzare l'attività in corso o per espellere il disco al termine dell'attività, è necessario attendere la fine del processo nel proprio script dopo l'avvio dell'attività con un ciclo come questo:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;nomeprocesso&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Biztonság</h1>
+    <h2>A szkript helye:</h2>
+    <p>Az autorun csomag által indított szkript két alapvetően különböző helyre kerülhet:</p>
+   <ul>
+     <li>A külső tárolóeszközökön: 
+       <ul>
+         <li>
+            Csak a szkripttel ily módon előkészített tárolóeszközökön fog elindulni a művelet. </li> </ul> </li> <li> <ul> <li>Minden más, esetleg csatlakoztatott tárolóeszköz figyelmen kívül marad. </li>Ha </ul> </li>a <li> <ul> <li>rendelkezésre álló biztonsági opciót <b>nem</b> használja, akkor bárki, akinek hozzáférése van a lemezállomáshoz, tetszőleges dolgokat tehet egy előkészített USB-stick csatlakoztatásával. Pl. törölheti az egész lemezállomást, és szabadon hozzáférhet az egész hálózathoz.</li></ul></li> <li>Belső DSM-ben: <ul> <li>Minden alkalommal, amikor egy tárolóeszköz csatlakoztatásra kerül, a szkript elindul. A szkriptnek magának kell esetleg ellenőriznie, hogy az aktuális tárolóeszközön végre kell-e hajtania a műveleteit </li>. <li>A rendelkezésre álló biztonsági opcióra legtöbbször nem lesz szükség. </li> </ul> </ul>     <p>A fent említett elsődleges szkript mellett opcionálisan egy másodlagos szkript is lehetséges, amely a tárolóeszköz kihúzása után kerül végrehajtásra. 
+        Ez a második szkript természetesen csak a DSM-en belül található. A kidobott memóriához való hozzáférés az indítás időpontjában már nem lehetséges.</p>
+    <p>Minden szkript root jogosultsággal fut. A belsőleg elhelyezett szkriptek ezért szinte bárhol elhelyezhetők a DSM fájlrendszerében. 
+      A rendszergazdai jogokkal nem rendelkező felhasználóknak nem szabad hozzáférniük, legalábbis írási hozzáféréssel nem!</p>       
+    
+    <h2>Biztonsági opció:</h2>        
+    <p>A szkriptek végrehajtása korlátozható a korábban regisztrált szkriptekre azok ellenőrző összegének (SHA256 hash) segítségével. Más szkriptek nem kerülnek végrehajtásra.<br>
+      Kétféle megközelítés létezik:</p>
+      <ol type="A">
+        <li>
+          Az automatikus csomagtelepítés során a beállításoknál az "1 első szkript engedélyezett" beállítás van kiválasztva, és a telepítés utáni első szkript ellenőrző összege kerül meghatározásra és regisztrálásra. Csak ez a szkript és annak változatlan másolatai kerülnek végrehajtásra. A biztonság automatikusan élesedik az első szkripttel az első, és szükség esetén az újratelepítés után is. 
+          Ha a szkriptet valaha is meg kell változtatni, akkor utána ismét készítsen egy automatikus csomag újratelepítést ezzel a beállítással "1 első szkript engedélyezett". A régi regisztráció törlésre kerül, és az új szkript ellenőrző összege kerül regisztrálásra, mint az egyetlen megengedett.        </li>
+        <li>
+          A csomag telepítése során először a "2 Add any hash" van kiválasztva. Most az összes külső tárolót, amely különböző szkriptekkel rendelkezik, egymás után kell csatlakoztatni alkalommal. Így a szükséges ellenőrző összegek regisztrálhatók és hozzáadhatók. Ezt követően a telepítést <b>újra</b> el kell indítani, és az értéket "3 Csak korábban regisztrált" értékre kell módosítani. Ettől kezdve a biztonság élesítve van.</li>
+      </ol>
+      A B eljárás akkor is használható, ha korábban az A eljárás volt használatban, és a korábban regisztrált szkriptváltozathoz párhuzamosan egy további ellenőrző összeget kell hozzáadni, például egy új szkriptváltozathoz.  </body>
+</html>

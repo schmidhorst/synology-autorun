@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>オートラン</title>
+  </head>
+  <body>
+    <h1>スクリプトの注意事項</h1>
+    <p>外部ストレージデバイスが接続された後に目的のアクションを実行するプライマリスクリプトと、ストレージデバイスが排出された後にオプションで追加されるセカンダリスクリプトは、どちらもいくつかの特別な配慮が必要です：</p>
+    <ul>
+      <li>どちらのスクリプトも、udevデーモンによって起動されます。両スクリプトはudevデーモンによって起動され、root権限で実行されます。</li>
+      <li>スクリプトの環境は、ほぼ空です。特に、コマンドへのパス（例：/bin/ディレクトリからのパス）は、通常通り設定されて<b>いません</b>！つまり、パスは各コマンドで指定するか、スクリプトの冒頭で環境変数PATHを設定する必要があります。</li>
+      <li>環境変数SHELLは/bin/ashを指しています。これはDSM 7.xでは/bin/bashへのリンクになっています。しかし、BASHは、例えば「プロセス代替」が利用できないモードで実行されている場合があります。インタラクティブに起動したときは問題なく動作していたスクリプトが、udevデーモン上で起動すると、シンタックスエラーのために突然動作しなくなるということが起こりえます。shebangとして<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bashを</span>お勧めします。</li>
+      <li>デバッグには、外部記憶装置を接続したときに、シェルウィンドウで<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span>の出力を見るのが役に立つかもしれません。また、/var/log/bash_err.logというファイルを覗くのも有効です。</li>
+    </ul> 
+     
+  </body>
+</html>

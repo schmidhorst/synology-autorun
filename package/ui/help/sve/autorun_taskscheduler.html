@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="sv">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Aktivitetsschemaläggare</h1>
+    <p>
+    Under vissa omständigheter är det vettigt att starta en aktivitet som definierats i schemaläggaren genom autostyrning.    </p>
+    <p>
+    Skalkommandot för att starta en sådan uppgift är t.ex. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. "Task-ID" (14 i exemplet) kan erhållas genom <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
+    Under vissa omständigheter är det också vettigt att utföra det kommando som anges som "Command" direkt och att kringgå uppgiftsförtecknaren.    </p>
+    <p>
+    Startkommandot för schemaläggaren utförs på nolltid och uppgiften körs som en oberoende process. 
+    Om du vill använda LED-kontrollen för att visa den pågående uppgiften eller för att mata ut disken när uppgiften är klar, måste du vänta i ditt skript efter uppgiftsstarten med en slinga som denna på slutet av den processen:    </p><p>
+    
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;processName&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>オートラン</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>オートラン</h1>
+    <p>
+    Autorun」パッケージは、外部ディスクがSynology Stationに接続されたときにアクションをトリガーすることができます。これは、データの自動コピーに非常に便利です。 
+    少なくとも DSM バージョン 7.1 では、タスク スケジューラーにこのようなイベント オプションがありません。 
+    トリガータスク」にはイベントとして「スタートアップ」と「シャットダウン」があるだけで、「外部USBストレージを挿入しました」などはありません。    </p>
+    <p>
+    アクション」とは、まず、BASHシェルスクリプトの実行を意味します。 
+    このスクリプトは、<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsyncなどの</span>コマンドを使用して、ディスクステーションとディスクの間でファイルを往復コピーすることができます。 
+     また、スクリプトは、タスクスケジューラーで定義されたタスクを開始することもできます。     </p>
+    <p>
+    追加アクションとして、アクションの完了後にディスクをイジェクトすることも可能です。 
+    これにより、外部データ媒体のデータに直接アクセスできなくなるため、外部データ媒体のデータをランサムウェアなどによる破壊からある程度保護することができる。 
+     ただし、データ媒体はソフトウェアでシステムに再統合することも可能であるため、完全な保護とは言えません。    </p>
+    <p>
+    ランサムウェア対策としては、次のような方法でさらに高い効果を得ることができます：3.5インチUSBハードディスクのように、独自の電源を持つ外部データ媒体を使用する。この電源は、スマートソケットを介して操作されます。このスマートソケットは、データ媒体が取り出された後、スイッチが切られます。ランサムウェアがこの実装を無効にしない限り、この方法でシステムから切り離された外部データ媒体は保護されます。 
+   <b>
+    警告 </b>
+    
+    外付けディスクがアップデートのためにマウントされている間は、それ以前にシステムに侵入した可能性のあるランサムウェアに対する保護は実質的にありません！ 
+    したがって、バックアップには、少なくとも2つのディスクを交互に使用してください！    </p>
+    <p><a href="autorun_security.html">セキュリティについて</a></p> 
+    <p><a href="autorun_scripts.html">スクリプトのヒント</a></p>
+    <p><a href="autorun_taskscheduler.html">タスクスケジューリングヒント</a></p>
+
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Sicherheit</h1>
+    <h2>Speicherort des Skripts:</h2>
+    <p>Es gibt zwei grundsätzlich verschiedene Orte, an denen das vom Autorun-Paket gestartete Skript abgelegt werden kann:</p>
+   <ul>
+     <li>Auf den externen Speichergeräten: 
+       <ul>
+         <li>
+            Nur die Speichergeräte, die mit dem Skript auf diese Weise vorbereitet wurden, starten die Aktion. </li> </ul> </li> <li> <ul> <li>Alle anderen Speichermedien, die eingesteckt werden können, werden ignoriert. </li> <li>Wenn die vorhandene Sicherheitsoption <b>nicht</b> genutzt wird, kann jeder, der Zugriff auf die Diskstation hat, durch Einstecken eines vorbereiteten USB-Sticks beliebige Dinge tun, z.B. die gesamte Diskstation löschen und freien Zugriff auf das gesamte Netzwerk haben.</li></ul></li> <li>Intern im DSM: <ul> <li>Jedes Mal, wenn ein Speichermedium eingesteckt wird, wird das Skript gestartet. Das Skript selbst muss unter Umständen prüfen, ob es seine Aktionen auf dem aktuellen Speichergerät durchführen soll. </li> <li>Die verfügbare Sicherheitsoption wird in den meisten Fällen nicht erforderlich sein. </li> </ul> </ul>    <p>Zusätzlich zu dem oben erwähnten primären Skript ist optional auch ein sekundäres Skript möglich, das nach dem Auswerfen des Speichermediums ausgeführt wird. 
+        Dieses zweite Skript kann sich natürlich nur intern auf dem DSM befinden. Der Zugriff auf den ausgeworfenen Speicher ist zu dem Zeitpunkt, zu dem es gestartet werden soll, nicht mehr möglich.</p>
+    <p>Alle Skripte laufen mit Root-Rechten. Intern platzierte Skripte können sich daher fast überall im Dateisystem der DSM befinden. 
+      Benutzer ohne Administratorrechte sollten keinen Zugriff haben, zumindest keinen Schreibzugriff!</p>       
+    
+    <h2>Sicherheitsoption:</h2>        
+    <p>Die Ausführung von Skripten kann auf zuvor registrierte Skripte anhand ihrer Prüfsumme (SHA256-Hash) beschränkt werden. Andere Skripte werden dann nicht ausgeführt.<br>
+      Es gibt zwei verschiedene Ansätze:</p>
+      <ol type="A">
+        <li>
+          In den Einstellungen bei der Installation des Autorun-Pakets wird die Einstellung "1 erstes Skript erlaubt" gewählt, und die Prüfsumme des ersten Skripts nach der Installation wird ermittelt und registriert. Nur dieses Skript und unveränderte Kopien davon werden ausgeführt. Die Sicherheit wappnet sich automatisch mit dem ersten Skript nach der Erst-, und ggf. auch nach einer Neuinstallation. 
+          Sollte das Skript jemals eine Änderung benötigen, so führen Sie anschließend erneut eine Autorun-Paket-Neuinstallation mit dieser Einstellung "1 erstes Skript erlaubt" durch. Die alte Registrierung wird gelöscht und die neue Skriptprüfsumme wird anschließend als die einzig zulässige registriert.        </li>
+        <li>
+          Bei der Paketinstallation wird zunächst "2 Add any hash" ausgewählt. Nun müssen alle externen Speicher, die unterschiedliche Skripte haben, nacheinander mal eingesteckt werden. Damit die benötigten Prüfsummen registriert und hinzugefügt werden können. Danach muss die Installation <b>erneut</b> ausgeführt werden und der Wert auf "3 Only previously registered" geändert werden. Von da an ist die Sicherheit aktiviert.</li>
+      </ol>
+      Verfahren B kann auch verwendet werden, wenn zuvor A verwendet wurde und eine zusätzliche Prüfsumme, z.B. für eine neue Skriptvariante, parallel zu der bereits registrierten Skriptvariante hinzugefügt werden muss.  </body>
+</html>

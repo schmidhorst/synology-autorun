@@ -1,0 +1,35 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Zabezpečení</h1>
+    <h2>Umístění skriptu:</h2>
+    <p>Existují dvě zásadně odlišná místa, kam lze umístit skript spouštěný balíčkem autorun:</p>
+   <ul>
+     <li>Na externích paměťových zařízeních: 
+       <ul>
+         <li>
+            Pouze na takto připravených úložných zařízeních se skriptem se akce spustí. </li> </ul> </li> <li> <ul> <li>Všechna ostatní úložná zařízení, která mohou být připojena, budou ignorována. </li> <li>Pokud <b>není použita</b> dostupná možnost zabezpečení, může kdokoli, kdo má přístup k diskové stanici, provádět libovolné věci připojením připraveného USB flash disku. Např. smazat celou diskovou stanici a mít volný přístup k celé síti.</li></ul></li> <li>Interní v DSM: Při <ul> <li>každém připojení úložného zařízení se spustí skript </li> </ul>. <ul> <li>Skript může sám zkontrolovat, zda má provádět své akce na aktuálním úložném zařízení. </li> <li>Dostupná možnost zabezpečení nebude většinou nutná. </li> </ul> </ul>     <p>Kromě výše uvedeného primárního skriptu je volitelně možný i sekundární skript, který se spustí po vysunutí úložného zařízení. 
+        Tento druhý skript může být přirozeně umístěn pouze interně v systému DSM. Přístup k vysunuté paměti již není v okamžiku, kdy má být spuštěn, možný.</p>
+    <p>Všechny skripty se spouštějí s oprávněním roota. Interně umístěné skripty proto mohou být umístěny téměř kdekoli v souborovém systému DSM. 
+      Uživatelé bez administrátorských práv by k nim neměli mít přístup, alespoň ne právo zápisu!</p>       
+    
+    <h2>Možnost zabezpečení:</h2>        
+    <p>Spuštění skriptů lze omezit na skripty dříve registrované pomocí jejich kontrolního součtu (hash SHA256). Ostatní skripty nebudou spuštěny.<br>
+      Existují dva různé přístupy:</p>
+      <ol type="A">
+        <li>
+          V nastavení při instalaci balíčku autorun je vybráno nastavení "1 první povolený skript" a je určen a zaregistrován kontrolní součet prvního skriptu po instalaci. Spustí se pouze tento skript a jeho nezměněné kopie. Zabezpečení se automaticky vyzbrojí prvním skriptem po první, a v případě potřeby i po opakované instalaci. 
+          Pokud by někdy mělo dojít ke změně skriptu, proveďte poté znovu přeinstalaci autorun balíčku s tímto nastavením "1 první skript povolen". Stará registrace se smaže a nový kontrolní součet skriptu se poté zaregistruje jako jediný přípustný.        </li>
+        <li>
+          Při instalaci balíčku se nejprve zvolí "2 Přidat libovolný hash". Nyní je třeba postupně připojit všechna externí úložiště, která mají různé skripty. Aby mohly být potřebné kontrolní součty zaregistrovány a přidány. Poté je třeba instalaci spustit <b>znovu</b> a změnit hodnotu na "3 Pouze dříve registrované". Od té chvíle je zabezpečení odjištěno.</li>
+      </ol>
+      Postup B lze použít také v případě, že byl dříve používán postup A a je třeba přidat další kontrolní součet, např. pro novou variantu skriptu, souběžně s dříve registrovanou variantou skriptu.  </body>
+</html>

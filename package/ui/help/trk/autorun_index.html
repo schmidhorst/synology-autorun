@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="tr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Otomatik Çalıştırma</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Otomatik Çalıştırma</h1>
+    <p>
+    "Otomatik Çalıştır" paketi, harici bir disk Synology istasyonuna takıldığında bir eylemi tetikleyebilir. Bu genellikle verilerin otomatik kopyalanması için çok kullanışlıdır. 
+    En azından DSM sürüm 7.1'de, görev zamanlayıcıda böyle bir olay seçeneği eksiktir. 
+    "Tetiklenen Görevler "de olay olarak yalnızca "Başlatma" ve "Kapatma" vardır, ancak "Harici USB depolama birimi takıldı" veya benzeri bir olay yoktur.    </p>
+    <p>
+    "Eylem" ile her şeyden önce bir BASH kabuk betiğinin yürütülmesi kastedilmektedir. 
+    Komut dosyası daha sonra <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span> gibi komutları kullanarak dosyaları disk istasyonu ve disk arasında ileri geri kopyalayabilir. 
+     Ya da komut dosyası örneğin görev zamanlayıcısında tanımlanmış bir görevi başlatabilir.     </p>
+    <p>
+    Ek bir eylem olarak, eylem tamamlandıktan sonra disk de çıkarılabilir. 
+    Bu, harici veri ortamındaki verilere artık doğrudan erişilemeyeceği anlamına geldiğinden, harici veri ortamındaki veriler için örneğin fidye yazılımı tarafından yok edilmeye karşı belirli bir koruma sağlar. 
+     Bununla birlikte, veri ortamı yazılım aracılığıyla sisteme yeniden entegre edilebildiğinden, bu tam bir koruma değildir.    </p>
+    <p>
+    Aşağıdaki şekilde daha iyi bir fidye yazılımı koruması elde edilebilir: 3,5 inç USB sabit disklerde olduğu gibi kendi güç kaynağına sahip harici bir veri ortamı kullanın. Güç kaynağı bir akıllı soket üzerinden çalıştırılır. Bu akıllı soket, veri ortamı çıkarıldıktan sonra kapatılır. Fidye yazılımı bu uygulamayı geçersiz kılmadığı sürece, bu şekilde sistemle bağlantısı kesilen harici veri ortamı korunur. 
+   <b>
+    Uyarı: </b>
+    
+    Harici disk bir güncelleme için takılıyken, sisteminize daha önce girmiş olabilecek fidye yazılımlarına karşı neredeyse hiçbir koruma yoktur! 
+    Bu nedenle, yedeklemeler için her zaman dönüşümlü olarak en az iki disk kullanın!    </p>
+    <p><a href="autorun_security.html">Güvenlik notu</a></p> 
+    <p><a href="autorun_scripts.html">Senaryo ipuçları</a></p>
+    <p><a href="autorun_taskscheduler.html">Görev zamanlama ipuçları</a></p>
+
+  </body>
+</html>

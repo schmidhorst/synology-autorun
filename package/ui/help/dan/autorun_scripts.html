@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Script Notes:</h1>
+    <p>Både det primære script, som udfører den ønskede handling, når en ekstern lagerenhed er tilsluttet, og det valgfrie sekundære script, når lagerenheden er skubbet ud, kræver nogle særlige overvejelser:</p>
+    <ul>
+      <li>Begge scripts startes af udev-dæmonen. De kører med root-privilegier.</li>
+      <li>Skripternes miljø er næsten tomt. Især er en sti til kommandoerne, f.eks. fra mappen /bin/, <b>ikke</b> indstillet som normalt! Dvs. at stien skal angives enten ved hver enkelt kommando, eller også indstiller du miljøvariablen PATH i begyndelsen af scriptet.</li>
+      <li>Miljøvariablen SHELL peger på /bin/ash. Dette er med DSM 7.x et link til /bin/bash. BASH kan imidlertid køre i en tilstand, hvor f.eks. "process substitution" ikke er tilgængelig. Det kan ske, at et script, der kører fint, når det startes interaktivt, pludselig ikke længere kører, når det startes over udev daemon på grund af en syntaksfejl. Jeg anbefaler <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> som shebang.</li>
+      <li>Til debugging kan det være nyttigt at se output af <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> i et shell-vindue, når der tilsluttes en ekstern lagerenhed. Og et kig i filen /var/log/bash_err.log kan være nyttigt.</li>
+    </ul> 
+     
+  </body>
+</html>

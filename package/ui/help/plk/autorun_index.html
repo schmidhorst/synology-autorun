@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="pl">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    Pakiet "Autorun" może wywołać akcję, gdy dysk zewnętrzny zostanie podłączony do stacji Synology. Jest to często bardzo przydatne w przypadku automatycznego kopiowania danych. 
+    Przynajmniej w DSM w wersji 7.1 brakuje opcji takiego zdarzenia w harmonogramie zadań. 
+    W "Triggered Tasks" są tylko "Startup" i "Shutdown" jako zdarzenia, ale nie ma "External USB storage inserted" lub podobnych.    </p>
+    <p>
+    Przez "akcję" rozumie się przede wszystkim wykonanie skryptu powłoki BASH. 
+    Skrypt ten może następnie kopiować pliki tam i z powrotem pomiędzy stacją dysków a dyskiem za pomocą poleceń takich jak <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Skrypt może też np. uruchomić zadanie zdefiniowane w harmonogramie zadań.     </p>
+    <p>
+    Jako dodatkowe działanie, dysk może być również wysunięty po zakończeniu akcji. 
+    Ponieważ oznacza to, że dane na zewnętrznym nośniku danych nie są już bezpośrednio dostępne, zapewnia to pewien stopień ochrony danych na zewnętrznym nośniku danych przed zniszczeniem, na przykład przez oprogramowanie ransomware. 
+     Ponieważ jednak nośnik danych może być również ponownie włączony do systemu za pośrednictwem oprogramowania, nie jest to pełna ochrona.    </p>
+    <p>
+    Jeszcze lepszą ochronę przed ransomware można osiągnąć w następujący sposób: Użyj zewnętrznego nośnika danych z własnym zasilaniem, jak to jest powszechne w przypadku 3,5-calowych dysków twardych USB. Zasilacz jest obsługiwany przez inteligentne gniazdo. To inteligentne gniazdo jest wyłączane po wysunięciu nośnika danych. Tak długo, jak oprogramowanie ransomware nie nadpisuje tej implementacji, zewnętrzny nośnik danych, który jest odłączony od systemu w ten sposób, jest chroniony. 
+   <b>
+    Ostrzeżenie: </b>
+    
+    Podczas gdy dysk zewnętrzny jest zamontowany w celu aktualizacji, nie ma praktycznie żadnej ochrony przed ransomware, które mogło przedostać się do twojego systemu wcześniej! 
+    Dlatego do tworzenia kopii zapasowych należy zawsze używać co najmniej dwóch dysków na przemian!    </p>
+    <p><a href="autorun_security.html">Uwaga dotycząca bezpieczeństwa</a></p> 
+    <p><a href="autorun_scripts.html">Wskazówki dotyczące skryptów</a></p>
+    <p><a href="autorun_taskscheduler.html">Wskazówki dotyczące planowania zadań</a></p>
+
+  </body>
+</html>

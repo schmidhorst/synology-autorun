@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+  </head>
+  <body>
+    <h1>Notas sobre el script:</h1>
+    <p>Tanto el script primario, que ejecuta la acción deseada después de conectar un dispositivo de almacenamiento externo, como el script secundario adicional opcional después de expulsar el dispositivo de almacenamiento, requieren algunas consideraciones especiales:</p>
+    <ul>
+      <li>Ambos scripts son iniciados por el demonio udev. Se ejecutan con privilegios de root.</li>
+      <li>El entorno de los scripts está casi vacío. En particular, <b>no</b> se establece una ruta a los comandos, por ejemplo, desde el directorio /bin/, como es habitual. Es decir, la ruta debe especificarse con cada comando o bien se establece la variable de entorno PATH al principio del script.</li>
+      <li>La variable de entorno SHELL apunta a /bin/ash. Esto es con DSM 7.x un enlace a /bin/bash. Sin embargo, BASH puede estar ejecutándose en un modo en el que, por ejemplo, la "sustitución de procesos" no esté disponible. Puede ocurrir que un script que se ejecuta bien cuando se inicia interactivamente, de repente no se ejecute más cuando se inicia sobre udev daemon debido a un error de sintaxis. Recomiendo <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> como shebang.</li>
+      <li>Para la depuración puede ser útil observar la salida de <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> en una ventana de shell cuando se conecta un dispositivo de almacenamiento externo. Y un vistazo al archivo /var/log/bash_err.log puede ser útil.</li>
+    </ul> 
+     
+  </body>
+</html>

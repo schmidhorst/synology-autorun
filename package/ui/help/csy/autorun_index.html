@@ -1,0 +1,37 @@
+<!DOCTYPE html><html class="img-no-display" lang="cs">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Autorun</title>
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+  </head>
+  <body>
+    <h1>Autorun</h1>
+    <p>
+    Balíček "Autorun" může spustit akci, když je ke stanici Synology připojen externí disk. To je často velmi užitečné pro automatické kopírování dat. 
+    Přinejmenším ve verzi 7.1 systému DSM taková možnost akce v plánovači úloh chybí. 
+    V nabídce "Spuštěné úlohy" jsou jako události pouze "Spuštění" a "Vypnutí", ale žádná "Vložené externí úložiště USB" nebo podobná událost.    </p>
+    <p>
+    "Akcí" je myšleno především spuštění shellového skriptu BASH. 
+    Tento skript pak může kopírovat soubory tam a zpět mezi diskovou stanicí a diskem pomocí příkazů jako <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Nebo může skript např. také spustit úlohu definovanou v plánovači úloh.     </p>
+    <p>
+    Jako další akci lze disk po dokončení akce také vysunout. 
+    Protože to znamená, že data na externím datovém médiu již nejsou přímo přístupná, poskytuje to určitý stupeň ochrany dat na externím datovém médiu před zničením, např. ransomwarem. 
+     Protože však datové médium může být také znovu začleněno do systému prostřednictvím softwaru, nejedná se o úplnou ochranu.    </p>
+    <p>
+    Ještě lepší ochrany proti ransomwaru lze dosáhnout následujícím způsobem: Použijte externí datové médium s vlastním napájením, jak je běžné u 3,5palcových pevných disků USB. Napájení se ovládá prostřednictvím inteligentní zásuvky. Tato inteligentní zásuvka se po vysunutí datového média vypne. Pokud ransomware tuto implementaci nepřekoná, je takto odpojené externí datové médium od systému chráněno. 
+   <b>
+    Upozornění: </b>
+    
+    Dokud je externí disk připojen pro aktualizaci, neexistuje prakticky žádná ochrana proti ransomwaru, který se mohl do systému dostat dříve! 
+    Pro zálohování proto používejte vždy střídavě alespoň dva disky!    </p>
+    <p><a href="autorun_security.html">Bezpečnostní poznámka</a></p> 
+    <p><a href="autorun_scripts.html">Tipy pro skripty</a></p>
+    <p><a href="autorun_taskscheduler.html">Tipy pro plánování úloh</a></p>
+
+  </body>
+</html>

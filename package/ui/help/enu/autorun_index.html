@@ -1,17 +1,47 @@
-<!DOCTYPE html>
-<html class="img-no-display">
+"<!DOCTYPE html>
+<html class="img-no-display" lang="EN">
   <head>
-    <meta http-equiv="Content-Type" content="text/html"; charset=UTF-8>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Autorun</title>
     <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
     <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="../../../../help/scrollbar/flexcroll.js"></script>
-    <script type="text/javascript" src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
   </head>
   <body>
     <h1>Autorun</h1>
-    <p>xxxx</p>
-  </body>
-</html>
+    <p>
+    The "Autorun" package can trigger an action when an external disk is plugged into a Synology station. This is often very useful for automated copying of data. 
+    At least in DSM version 7.1, such an event option is missing in the task scheduler. 
+    There are only "Startup" and "Shutdown" as events in the "Triggered Tasks", but no "External USB storage inserted" or similar.
+    </p>
+    <p>
+    With "action" is meant first of all the execution of a BASH shell script. 
+    The script can then copy files back and forth between the disk station and the disk using commands like
+     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
+     Or the script can e.g. also start a task defined in the task scheduler.
+     </p>
+    <p>
+    As an additional action, the disk can also be ejected after the action is completed. 
+    Since this means that the data on the external data medium is no longer directly accessible, this provides a certain degree of protection
+     for the data on the external data medium against destruction, for example by ransomware. 
+     However, since the data medium can also be re-integrated into the system via software, it is not complete protection.
+    </p>
+    <p>
+    Even better ransomware protection can be achieved in the following way: Use an external data medium with its own power supply, 
+    as is common with 3.5-inch USB hard disks. The power supply is operated via a smart socket. This smart socket is then switched off after 
+    the data medium has been ejected. As long as ransomware doesn't override this implementation, the external data medium that is 
+    disconnected from the system in this way is protected. 
+    <b>
+    Warning: 
+    </b>
+    While the external disk is mounted for an update, there is practically no protection against ransomware that could heve entered your system before! 
+    Therefore, use always at least two disks alternately for backups!
+    </p>
+    <p><a href="autorun_security.html">Security note</a></p> 
+    <p><a href="autorun_scripts.html">Script hints</a></p>
+    <p><a href="autorun_taskscheduler.html">Task scheduling hints</a></p>
 
+  </body>
+</html>"

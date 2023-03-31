@@ -1,0 +1,22 @@
+<!DOCTYPE html><html class="img-no-display" lang="DE">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Otomatik Çalıştırma</title>
+  </head>
+  <body>
+    <h1>Komut Dosyası Notları:</h1>
+    <p>Hem harici depolama aygıtı takıldıktan sonra istenen eylemi gerçekleştiren birincil komut dosyası hem de depolama aygıtı çıkarıldıktan sonra isteğe bağlı ek ikincil komut dosyası bazı özel hususlar gerektirir:</p>
+    <ul>
+      <li>Her iki komut dosyası da udev daemon tarafından başlatılır. Kök ayrıcalıklarıyla çalışırlar.</li>
+      <li>Komut dosyalarının ortamı neredeyse boştur. Özellikle, komutlara giden yol, örneğin /bin/ dizininden, her zamanki gibi <b>ayarlanmamıştır</b>! Yani, yol ya her komutla birlikte belirtilmelidir ya da betiğin başında PATH ortam değişkenini ayarlarsınız.</li>
+      <li>SHELL ortam değişkeni /bin/ash dizinini işaret eder. Bu DSM 7.x ile /bin/bash'e bir bağlantıdır. Ancak BASH, örneğin "süreç ikamesinin" kullanılamadığı bir modda çalışıyor olabilir. Etkileşimli olarak başlatıldığında sorunsuz çalışan bir betik, udev daemon üzerinden başlatıldığında bir sözdizimi hatası nedeniyle aniden artık çalışmayabilir. Shebang olarak <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> kullanmanızı öneririm.</li>
+      <li>Hata ayıklama için, harici bir depolama aygıtı takarken bir kabuk penceresinde <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> çıktısını izlemek yararlı olabilir. Ve /var/log/bash_err.log dosyasına bakmak yararlı olabilir.</li>
+    </ul> 
+     
+  </body>
+</html>

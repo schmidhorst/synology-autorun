@@ -1,10 +1,10 @@
 #!/bin/bash
-
+#shellcheck disable=2034,1091 # no warning for unused variables, not found external scripts like pkg_util.sh
 if [[ "$1" == "" ]]; then # Generation with toolkit scripts
   source /pkgscripts-ng/include/pkg_util.sh
 fi
 package="autorun"
-version="1.10.0-0010"
+version="1.10.0-0011"
 # beta="yes"
 arch="noarch"
 os_min_ver="7.0-40000"
@@ -26,16 +26,16 @@ helpurl="https://www.synology-forum.de/showthread.html?18360-Autorun-fuer-ext.-D
 support_url="https://github.com/schmidhorst/synology-${package}/issues"
 dsmappname="SYNO.SDS._ThirdParty.App.$package"
 
-SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )"
+SCRIPTPATHinfo="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
 
 # index.cgi uses https://raw.githubusercontent.com/schmidhorst/synology-autorun/main/INFO.sh to check for an new version
 # change that entry automatically if the maintainer_url is changed:
 if [[ -n "$maintainer_url" ]]; then
   githubRawInfoUrl=$(echo "${maintainer_url}/main/INFO.sh" | sed 's/github.com/raw.githubusercontent.com/')
   # patch githubRawInfoUrl directly to the index.cgi file if necessary:
-  lineInfoUrl=$(grep "githubRawInfoUrl=" "$SCRIPTPATHTHIS/package/ui/index.cgi")
+  lineInfoUrl=$(grep "githubRawInfoUrl=" "$SCRIPTPATHinfo/package/ui/index.cgi")
   if [[ "$lineInfoUrl" != "githubRawInfoUrl=\"${githubRawInfoUrl}\"" ]]; then
-    sed -i "s|^githubRawInfoUrl=.*\$|githubRawInfoUrl=\"${githubRawInfoUrl}\" #patched to distributor_url from INFO.sh|" "$SCRIPTPATHTHIS/package/ui/index.cgi"
+    sed -i "s|^githubRawInfoUrl=.*\$|githubRawInfoUrl=\"${githubRawInfoUrl}\" #patched to distributor_url from INFO.sh|" "$SCRIPTPATHinfo/package/ui/index.cgi"
   fi
 fi
 if [[ "$1" != "" ]]; then  # Generation without toolkit scripts
@@ -79,9 +79,9 @@ fi
 # displayname=""  # if not set then $package will be used as displayname, fetched from lang.txt file
 # displayname_enu="" #  fetched from lang.txt file
 # displayname_ger=""
-# description="Execute a script on external drive (USB / eSATA) when it's connected to the disk station." #  fetched from lang.txt file
-# description_enu="Execute a script on external drive (USB / eSATA) when it's connected to the disk station." #  fetched from lang.txt file
-# description_ger="Führt ein Skript auf einem externen Laufwerk (USB / eSATA) aus wenn dieses an die Diskstation angeschlossen wird." #  fetched from lang.txt file
+# description="Execute a script on (or for) external drive (USB / eSATA) when it's connected to the disk station." #  fetched from lang.txt file
+# description_enu="Execute a script on (or for) external drive (USB / eSATA) when it's connected to the disk station." #  fetched from lang.txt file
+# description_ger="Führt ein Skript auf einem (oder für ein) externen Laufwerk (USB / eSATA) aus wenn dieses an die Diskstation angeschlossen wird." #  fetched from lang.txt file
 
 if [[ "$1" != "" ]]; then # Generation without toolkit scripts
 # copy of 'pkg_dump_info' from '/pkgscripts-ng/include/pkg_util.sh' ('local' removed):
@@ -101,31 +101,34 @@ if [[ "$1" != "" ]]; then # Generation without toolkit scripts
       echo "$f=\"${!f}\"" >> INFO
     fi
   done
+fi
 
-  lngFolder="$SCRIPTPATHTHIS/package/ui/texts"
-  for lang in $langs; do
-    descriptionINFO=""
-    displaynameINFO=""
-    if [[ -f "$lngFolder/$lang/lang.txt" ]]; then
+lngFolder="$SCRIPTPATHinfo/package/ui/texts"
+for lang in $langs; do
+  descriptionINFO=""
+  displaynameINFO=""
+  if [[ -f "$lngFolder/$lang/lang.txt" ]]; then
 
-      eval "$(grep "descriptionINFO=" "$lngFolder/$lang/lang.txt")"
-      description="description_${lang}"
-      if [ -n "${descriptionINFO}" ]; then
-        echo "${description}=\"${descriptionINFO}\"" >> INFO
-        if [[ "$lang" == "enu" ]]; then
-          echo "description=\"${descriptionINFO}\"" >> INFO
-        fi
-      fi
-      eval "$(grep "displaynameINFO=" "$lngFolder/$lang/lang.txt")"
-      displayname="displayname_${lang}"
-      if [ -n "${displaynameINFO}" ]; then
-        echo "${displayname}=\"${displaynameINFO}\"" >> INFO
-        if [[ "$lang" == "enu" ]]; then
-          echo "displayname=\"${displaynameINFO}\"" >> INFO
-        fi
+    eval "$(grep "descriptionINFO=" "$lngFolder/$lang/lang.txt")"
+    description="description_${lang}"
+    if [ -n "${descriptionINFO}" ]; then
+      echo "${description}=\"${descriptionINFO}\"" >> INFO
+      if [[ "$lang" == "enu" ]]; then
+        echo "description=\"${descriptionINFO}\"" >> INFO
       fi
     fi
-  done
+    eval "$(grep "displaynameINFO=" "$lngFolder/$lang/lang.txt")"
+    displayname="displayname_${lang}"
+    if [ -n "${displaynameINFO}" ]; then
+      echo "${displayname}=\"${displaynameINFO}\"" >> INFO
+      if [[ "$lang" == "enu" ]]; then
+        echo "displayname=\"${displaynameINFO}\"" >> INFO
+      fi
+    fi
+  fi
+done
+
+if [[ "$1" != "" ]]; then # Generation without toolkit scripts
   # checksum  MD5 string to verify the package.tgz.
   return 0
 fi
@@ -137,7 +140,7 @@ if [[ "$1" == "" ]]; then
   pkg_dump_info
 else
   echo "INFO.sh Error: pkg_dump_info not executed!"
-  echo "pwd=$(pwd)"
+  echo "pwd=$(/bin/pwd)"
   echo "ls -l: '$(ls -l)'"
 fi
 

@@ -30,10 +30,10 @@ checkCoding() {
 
 ######################### start ###########################
 
-SCRIPTPATHTHIS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-PKG_DIR="$SCRIPTPATHTHIS"
+SCRIPTPATHbuild="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
+PKG_DIR="$SCRIPTPATHbuild"
 cd "$PKG_DIR"
-echo "'$0' started ..."
+echo "'${BASH_SOURCE[0]}' started ..."
 
 
 # non-UTF-8 files with international characters and Windows-CR-LF may cause problems.
@@ -42,7 +42,7 @@ echo "File coding check ..."
 # checkCoding needs the 'file' command, which is e.g. in "SynoCli File Tools":
 res=$(which "file")
 if [[ -n "$res" ]]; then
-  checkCoding "$SCRIPTPATHTHIS/"
+  checkCoding "$SCRIPTPATHbuild/"
 else
   echo "=================================================================================================================="
   echo "Linux command 'file' is not available. Checking source files for correct line terminator and UTF-8-coding skipped!"
@@ -50,10 +50,10 @@ else
   echo "=================================================================================================================="
 fi
 echo "... finished file coding check"
-
+ret=0
 # "$(./translate.sh)" # Update tranlations via DeepL if necessary
 # /bin/bash ./translate.sh
-ret=$?
+# ret=$?
 if [[ "$ret" -gt 0 ]]; then
   exit $ret
 fi
@@ -76,7 +76,7 @@ eval "$line"
 line="$(grep -i "package=" "$infoFile")"
 line="${line#*package=\"}"
 pck="${line%%\"*}"
-# pck=$(grep -i "package=" "$infoFile" | /bin/sed 's/package=//i' | /bin/sed 's/"//g')
+# pck=$(grep -i "package=" "$infoFile" | /bin/sed -e 's/package=//i' -e 's/"//g')
 echo "pck='$pck'"
 dsmuidir=""
 line="$(grep "dsmuidir=" "$infoFile")" # most often dsmuidir="ui"
@@ -85,10 +85,10 @@ echo "dsmuidir='$dsmuidir'"
 
 # Check for well formed JSON:
 errCnt=0
-for f1 in "package/$dsmuidir/config" "package/$dsmuidir/index.conf" "package/$dsmuidir/helptoc.conf" conf/*
+for f1 in "package/$dsmuidir/config" "package/$dsmuidir/index.conf" "package/$dsmuidir/helptoc.conf" conf/* WIZARD_UIFILES/*.json WIZARD_UIFILES/uninstall_uifile_*
 # for f1 in package/$dsmuidir/config package/$dsmuidir/index.conf conf/* WIZARD_UIFILES/uninstall_uifile* WIZARD_UIFILES/wizard_*.json
 do
-  f2="$SCRIPTPATHTHIS/$1$f1"
+  f2="$SCRIPTPATHbuild/$1$f1"
   if [[ -f "$f2" ]]; then
     # res=$(cat "$f2" | python3 -mjson.tool)
     res=$(python3 -mjson.tool < "$f2")
@@ -109,7 +109,7 @@ if [[ "$errCnt" -gt "0" ]]; then
   exit 2
 fi
 
-
+# shellcheck disable=2153
 echo "building V$VERSION of $pck ..."
 # echo "Actual working directory is $PKG_DIR"
 rm -f "package.tgz"
@@ -117,13 +117,15 @@ rm -f "${pck}-$VERSION.spk"
 
 chmod -R 777 package
 echo "building package.tgz ..."
-tar --exclude="*/@eaDir" --owner=0 --group=0 -czvvf package.tgz -C package/ "$pck" bin "$dsmuidir" common rules udev
+# tar --exclude="*/@eaDir" --owner=0 --group=0 -czvvf package.tgz -C package/ auto.sh bin "$dsmuidir" common log_hlp.sh rules udev
+tar --exclude="*/@eaDir" --owner=0 --group=0 -czvvf package.tgz -C package/ auto.sh bin "$dsmuidir" common rules udev
 path="package/$dsmuidir/images"
 cp -av "$path/icon_64.png" "PACKAGE_ICON.PNG"
 p256=""
 if [[ -f "$path/icon_256.png" ]]; then
   p256="PACKAGE_ICON_256.PNG"
   cp -av "$path/icon_256.png" "PACKAGE_ICON_256.PNG"
+  # during package installation the icons will be inserted to the INFO file
 fi
 chmod 755 INFO.sh
 if [[ -f INFO.sh ]]; then
@@ -143,12 +145,13 @@ license=""
 if [[ -f "LICENSE*" ]]; then
   license="LICENSE*"
 fi
-tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO CHANGELOG $license PACKAGE_ICON.PNG "$p256" WIZARD_UIFILES conf scripts package.tgz
-
+# tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO CHANGELOG $license PACKAGE_ICON.PNG "$p256" WIZARD_UIFILES conf scripts package.tgz
+# shellcheck disable=2086
+tar --exclude="*/@eaDir" --owner=0 --group=0 -cvvf "${pck}-$VERSION.spk" INFO $license PACKAGE_ICON.PNG "$p256" WIZARD_UIFILES conf scripts package.tgz
 rm "package.tgz"
 rm "INFO"
 rm "PACKAGE_ICON.PNG"
 rm "PACKAGE_ICON_256.PNG"
 # chmod 777 ${pck}-$VERSION.spk
-echo "... $0 done, file $SCRIPTPATHTHIS/${pck}-$VERSION.spk generated!"
+echo "... ${BASH_SOURCE[0]} done, file $SCRIPTPATHbuild/${pck}-$VERSION.spk generated!"
 

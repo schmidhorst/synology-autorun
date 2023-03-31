@@ -21,54 +21,70 @@
 # Initiate system
 # --------------------------------------------------------------
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
-bDebug=0
+bDebug=0 # 0= do cgiLogin, evaluateCgiLogin; 1= skip cgiLogin, evaluateCgiLogin
 if [[ -z "$SCRIPT_NAME" ]]; then  # direct start in debug run
   SCRIPT_NAME="/webman/3rdparty/autorun/index.cgi"
   bDebug=1
   echo "###### index.cgi executed in debug mode!!  ######"
 fi
-  # $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
+# ${BASH_SOURCE[0]}=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
 app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
 app_name=${app_link##*/} # "<appName>"
-  # DOCUMENT_URI=/webman/3rdparty/<appName>/index.cgi
-  # PWD=/volume1/@appstore/<appName>/ui
+# DOCUMENT_URI=/webman/3rdparty/<appName>/index.cgi
+# PWD=/volume1/@appstore/<appName>/ui
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
-  # REQUEST_URI=/webman/3rdparty/<appName>/index.cgi
-  # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
-LOG="/var/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
+# REQUEST_URI=/webman/3rdparty/<appName>/index.cgi
+# SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
+
+if [[ -w "/var/log/packages/${app_name}.log" ]]; then
+  LOG="/var/log/packages/${app_name}.log"
+elif [[ -w "/var/tmp/${app_name}.log" ]]; then
+  LOG="/var/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
+fi
+#line="$(grep -i "DEBUGLOG=" "/var/packages/$app_name/var/config")"
+#if [[ -n "$line" ]]; then # entry available
+#  LOG="$(echo "$line" | sed -e 's/^DEBUGLOG="//' -e 's/"$//')"
+#fi
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
 # $SHELL' is here "/sbin/nologin"
-echo -e "\n$(date "$DTFMT"): App '$app_name' file '$(basename "$0")' started as user '$user' with parameters '$QUERY_STRING' ..." >> "$LOG"
-# $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
+msg1="App '$app_name' file '$(basename "${BASH_SOURCE[0]}")' started as user '$user' with parameters '$QUERY_STRING' ..."
 ah="/volume*/@appstore/$app_name/ui"
 app_home=$(find $ah -maxdepth 0 -type d) # Attention: find is not working with quoted path!!
-
 # env >> LOG"
-
 # Load urlencode and urldecode, logInfoNoEcho, ... function from ../modules/parse_hlp.sh:
 if [ -f "${app_home}/modules/parse_hlp.sh" ]; then
-  source "${app_home}/modules/parse_hlp.sh"
+  source "${app_home}/modules/parse_hlp.sh" # includes reading of LOGLEVEL from config file
   res=$?
-  # echo "$(date "$DTFMT"): Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
+  # echo "$(date "$DTFMT"): $msg1<br>Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
   if [[ "$res" -gt 1 ]]; then
     echo "### Loading ${app_home}/modules/parse_hlp.sh failed!! res='$res' ###" >> "$LOG"
     exit
   fi
 else
-  echo "$(date "$DTFMT"): Failed to find ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() skipped" >> "$LOG"
-  echo "Failed to find ${app_home}/modules/parse_hlp.sh"
+  echo "$(date "$DTFMT"): $msg1<br>Failed to find ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() skipped" >> "$LOG"
+  echo -e "$msg1\nFailed to find ${app_home}/modules/parse_hlp.sh"
   exit
 fi
-
+logInfoNoEcho 8 "$msg1"
+if [[ "$app_name" == "ui" ]]; then
+  logInfoNoEcho 1 "wrong app_name='$app_name'"
+fi
+if [[ -f "/var/packages/$app_name/var/config" ]]; then
+  # should the execution of *.cgi write debug log entries? If looking for other bugs that is confusing and therefore can be disabled
+  CGIDEBUG="$(grep "CGIDEBUG=" "/var/packages/$app_name/var/config" | sed -e 's/^CGIDEBUG="//' -e 's/"$//')"
+  logInfoNoEcho 8 "CGIDEBUG='$CGIDEBUG' from '/var/packages/$app_name/var/config' fetched!"
+else
+  logInfoNoEcho 8 "File '/var/packages/$app_name/var/config' is not available!"
+fi
 # Evaluate app authentication
 # To evaluate the SynoToken, change REQUEST_METHOD to GET
 # Read out and check the login authorization  ( login.cgi )
 if [[ "$bDebug" -eq 0 ]]; then
   cgiLogin # see parse_hlp.sh, sets $syno_login, $syno_token, $syno_user, $is_admin
-  # this may fail with persission denied and result 3
+  # this may fail with permission denied and result 3
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
-    echo "$(date "$DTFMT"): $(basename "$0"), calling cgiLogin failed, ret='$ret' " >> "$LOG"
+    echo "$(date "$DTFMT"): $(basename "${BASH_SOURCE[0]}"), calling cgiLogin failed, ret='$ret' " >> "$LOG"
     # exit
   fi
 else
@@ -81,7 +97,7 @@ local_version=$(cat "/var/packages/${app_name}/INFO" | grep ^version | cut -d '"
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
   source "${app_home}/modules/parse_language.sh" "${syno_user}"
   res=$?
-  logInfoNoEcho 7 "$(basename "$0"), Loading ${app_home}/modules/parse_language.sh done with result $res"
+  logInfoNoEcho 8 "Loading ${app_home}/modules/parse_language.sh done with result $res"
   # || exit
 else
   logInfoNoEcho 1 "Loading ${app_home}/modules/parse_language.sh failed"
@@ -98,7 +114,7 @@ if [[ "$bDebug" -eq 0 ]]; then
   evaluateCgiLogin # in parse_hlp.sh
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
-    logInfoNoEcho 1 "$(basename "$0"), execution of evaluateCgiLogin failed, ret='$ret'"
+    logInfoNoEcho 1 "$(basename "${BASH_SOURCE[0]}"), execution of evaluateCgiLogin failed, ret='$ret'"
     exit
   fi
 else
@@ -131,7 +147,7 @@ fi
 #appCfgDataPath=$(find /volume*/@appdata/${app_name} -maxdepth 0 -type d)
 appCfgDataPath="/var/packages/${app_name}/var"
 if [ ! -d "${appCfgDataPath}" ]; then
-  logInfoNoEcho 1 "... terminating $(basename "$0") as app home folder '$appCfgDataPath' not found!"
+  logInfoNoEcho 1 "... terminating $(basename "${BASH_SOURCE[0]}") as app home folder '$appCfgDataPath' not found!"
   echo "$(date "$DTFMT"): ls -l /:" >> "$LOG"
   ls -l / >> "$LOG"
   exit
@@ -174,7 +190,7 @@ githubRawInfoUrl="https://raw.githubusercontent.com/schmidhorst/synology-autorun
  # above line will be patched from INFO.sh and is used to check for a newer version
 if [[ -n "$githubRawInfoUrl" ]]; then
   git_version=$(wget --timeout=30 --tries=1 -q -O- "$githubRawInfoUrl" | grep ^version | cut -d '"' -f2)
-  logInfoNoEcho 6 "index.cgi, local_version='$local_version', git_version='$git_version'"
+  logInfoNoEcho 6 "local_version='$local_version', git_version='$git_version'"
   if [ -n "${git_version}" ] && [ -n "${local_version}" ]; then
     if dpkg --compare-versions "${git_version}" gt "${local_version}"; then
     # if dpkg --compare-versions ${git_version} lt ${local_version}; then # for debugging
@@ -184,13 +200,18 @@ if [[ -n "$githubRawInfoUrl" ]]; then
   fi
 fi
 
+if [[ "$bDebug" -eq 1 ]]; then
+  logfile="/var/tmp/$app_name"  # optionally to debug behaviour for the debug log instead of action log
+fi
+
 myScript="<script>
  function setBoxHeight() { var h0=window.innerHeight; var o1=document.getElementById('mybox'); var h1=o1.style.height; var t1=o1.getBoundingClientRect().top; h2=h0 - t1- 65; o1.style.height = h2+'px'; }"
 if [[ -n "${get[action]}" ]]; then
   val="${get[action]}"
-  if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]] || [[ "$val" == "chgDetailLogLevel" ]] || [[ "$val" == "SupportEMail" ]]; then
+  if [[ "$val" == "showDetailLog" ]] || [[ "$val" == "delDetailLog" ]] || [[ "$val" == "reloadDetailLog" ]] || [[ "$val" == "downloadDetailLog" ]] || [[ "$val" == "chgDetailLogLevel" ]] || [[ "$val" == "SupportEMail" ]] || [[ "$bDebug" -eq 1 ]]; then
+    # logfile="/var/tmp/$app_name" # this is not working ! But LOG="/var/tmp/${app_name}.log" works !????
     logfile="$appCfgDataPath/detailLog"  # Link to /var/tmp/autorun.log
-    pageTitle=$(echo "$logTitleDetail") # with actual LOGLEVEL
+    pageTitle=$(echo "$logTitleDetail") # with actual LOGLEVEL, which was feteched in parse_hlp.sh
   fi
   if [[ "$val" == "delSimpleLog" ]] || [[ "$val" == "delDetailLog" ]]; then
     echo "" > "$logfile"
@@ -244,22 +265,37 @@ if [[ -n "${get[action]}" ]]; then
       cat "$SCRIPT_EXEC_LOG"
     fi
     exit
-  fi
+  fi # if [[ "$val" == "downloadSimpleLog" ]] || [[ "$val" == "downloadDetailLog" ]]
 
-  if [[ "$val" == "chgDetailLogLevel" ]]; then
+  if [[ "$val" == "chgDetailLogLevel" ]]; then # also CGIDEBUG on/off
     newlevel=$(echo "${get[logNewlevel]}" | grep "[1-8]")
     if [[ -n "$newlevel" ]]; then
       if [[ -f "$appCfgDataPath/config" ]]; then
         res="$(sed -i "s|^LOGLEVEL=.*$|LOGLEVEL=\"$newlevel\"|" "$appCfgDataPath/config")"
         result=$?
-        logInfoNoEcho 4 "index.cgi LogLevel change to '$newlevel' in file '$appCfgDataPath/config': result='$result', res='$res'"
+        logInfoNoEcho 4 "index.cgi LogLevel set to '$newlevel' in file '$appCfgDataPath/config': result='$result', res='$res'"
         LOGLEVEL="$newlevel"
         # $logTitleDetail and pageTitle has still old loglevel:
      	  eval "$(grep "logTitleDetail=" "$lngFile")" # lngfile was set in parse_language.sh to texts/${used_lang}/lang.txt
         pageTitle="$logTitleDetail"
       fi
     fi
-  fi
+    newCgi=$(echo "${get[cgiDebug]}")
+    if [[ -z "$newCgi" ]]; then
+      newCgi=""
+    else
+      newCgi="checked"
+    fi
+    line="$(grep -i "CGIDEBUG=" "$appCfgDataPath/config")"
+    if [[ -z "$line" ]]; then # generate a new entry:
+      echo "CGIDEBUG=\"$newCgi\"" >> "$appCfgDataPath/config"
+    else # change the existing line:
+      res="$(sed -i "s|^CGIDEBUG=.*$|CGIDEBUG=\"$newCgi\"|" "$appCfgDataPath/config")"
+      result=$?      
+    fi
+    logInfoNoEcho 4 "CGIDEBUG set to '$newCgi' in file '$appCfgDataPath/config'"
+    CGIDEBUG="$newCgi"
+  fi # if [[ "$val" == "chgDetailLogLevel" ]]
   if [[ "$val" == "reloadSimpleLog" ]] || [[ "$val" == "reloadDetailLog" ]]; then
     logInfoNoEcho 7 "Page reload"
     #myScript="${myScript} window.onload=function(){ window.scrollTo(0, document.body.scrollHeight);}"  # scroll to bottom
@@ -302,16 +338,13 @@ else
   filesize_Bytes=$(stat -c%s "$logfile")  # if it's a link this returns size of the link, not of linked file!
   lineCount=$(wc -l < "$logfile")
 fi
-logInfoNoEcho 8 "index.cgi, Size of $logfile is $lineCount lines, $filesize_Bytes Bytes"
-if [[ "$bDebug" -ne 0 ]]; then
-  echo "starting to generate html document ..."
-fi
 myScript="$myScript </script>"
+logInfoNoEcho 8 "Size of $logfile is $lineCount lines, $filesize_Bytes Bytes"
 # Layout output
 # --------------------------------------------------------------
 if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
   echo "Content-type: text/html; charset=utf-8"
-  echo
+  echo ""
   echo "
   <!doctype html>
   <html lang=\"${SYNO2ISO[${used_lang}]}\">
@@ -330,15 +363,6 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
         # Load page content
         # --------------------------------------------------------------
         if [[ "$is_admin" == "yes" ]]; then
-          # Infotext: Enable application level authentication
-          # [ -n "${txtActivatePrivileg}" ] && echo ''${txtActivatePrivileg}''
-          # Dynamic page output:
-          #if [ -f "${get[page]}.sh" ]; then
-          #  . ./"${get[page]}.sh"
-          #else
-          #  echo 'Page '${get[page]}'.sh not found!'
-          #fi
-
           # HTTP GET and POST requests
           if [[ "$logfile" == "$SCRIPT_EXEC_LOG" ]]; then
             echo "<button onclick=\"location.href='index.cgi?action=showDetailLog'\" type=\"button\">${btnShowDetailLog}</button> "
@@ -350,37 +374,57 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
 # https://stackoverflow.com/questions/21168521/table-fixed-header-and-scrollable-body
 # https://www.quackit.com/html/codes/html_scroll_box.cfm
 # https://www.w3schools.com/jsref/prop_win_innerheight.asp
-          echo "<p><strong>$pageTitle</strong></p></header><div id='mybox' style='height:360px;width:100%;overflow:auto;'><table>"
+          echo "<p><strong>$pageTitle</strong></p>"
+          echo "</header>"
+          echo "<div id='mybox' style='height:360px;width:100%;overflow:auto;'><table>"
 
           if [[ -f "$logfile" ]]; then
             if [[ filesize_Bytes -lt 10 ]]; then
               msg=$(echo "$execLogNA")
               echo "<tr><td>$msg</td></tr>"
             else
-              while read line; do # read all items from logfile
-                timestamp=${line%%: *}
-                msg=${line#*: }
-                if [[ "$msg" == "$timestamp" ]]; then # no ": "
-                  timestamp="" # put all to 2nd column
+              while IFS=$'\n' read -r line; do # read all items from logfile
+                # split the line now at an tab character (default) or at ": " (if no tab char found, old/obsolete)
+                rest1="${line#*: }"
+                # rest2="${line#*\t}" not working
+                rest2=$(sed 's/[^\t]*\t//' <<<"$line")
+                p1=$((${#line} - ${#rest1} - 2 ))
+                p2=$((${#line} - ${#rest2} - 1 ))
+                if [[ "$p1" -lt 0 ]]; then p1="9999"; fi
+                if [[ "$p2" -lt 0 ]]; then p2="9999"; fi
+                if [[ "$p1" -eq 9999 ]] && [[ "$p2" -eq 9999 ]]; then
+                  timestamp=""  # neither tab char nor ': ' found ==> put all to 2nd column
+                  msg="$line"
+                else
+                  # split line to two columns:
+                  if [[ "$p1" -gt "$p2" ]]; then # use TAB
+                    p1="$p2"
+                    p2=$((p1+1))
+                  else
+                    p2=$((p1+2))
+                  fi
+                  timestamp="${line:0:p1}"
+                  msg="${line:p2}"
                 fi
+                #if [[ "$msg" == "$timestamp" ]]; then # no ": "
+                #  timestamp="" # put all to 2nd column
+                #fi
                 echo "<tr><td>$timestamp</td><td>$msg</td></tr>"
               done < "$logfile" # Works well even if last line has no \n!
-            fi
+            fi # if [[ filesize_Bytes -lt 10 ]]; else
           else
             logInfoNoEcho 3 "'$logfile' not found!"
             logInfoNoEcho 8 "execLogNA='$execLogNA'"
             msg=$(echo "$execLogNA")
             echo "<tr><td>$msg</td></tr>"
-          fi
-
+          fi # if [[ -f "$logfile" ]] else
         else
           # Infotext: Access allowed only for users from the Administrators group
           echo '<p>'${txtAlertOnlyAdmin}'</p>'
-        fi
-        echo '
-      </table></div>
-      <p style="margin-left:22px; line-height: 16px;">'
-
+        fi # if [[ "$is_admin" == "yes" ]] else
+        echo '</table></div>'
+      logInfoNoEcho 8 "Table with log entries done, generating footer ..."
+      echo '<p style="margin-left:22px; line-height: 16px;">'
       if [[ "$logfile" == "$SCRIPT_EXEC_LOG" ]]; then
         echo "<button onclick=\"location.href='index.cgi?action=reloadSimpleLog'\" type=\"button\">${btnRefresh}</button> "
         if [[ filesize_Bytes -gt 10 ]]; then
@@ -399,6 +443,10 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
           fi
         done
         echo "</select>"
+        echo "<label for='cgiDebug'>  CGI debug:</label>"
+        # Hint: unchecked checkbox is not included in the response!! 
+        logInfoNoEcho 7 "using CGIDEBUG='$CGIDEBUG' for the form"
+        echo "<input type='checkbox' id='cgiDebug' name='cgiDebug' value='CGIDEBUG' $CGIDEBUG>" # checked checkbox overwrites value
         echo "<input type='submit' value='Submit'>&nbsp;&nbsp;&nbsp;"
         # also inside the <form ...> to have it in the same row:
         echo "<button onclick=\"location.href='index.cgi?action=reloadDetailLog'\" type=\"button\">${btnRefresh}</button>&nbsp;  "
@@ -414,6 +462,6 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
         </body>
       </html>"
 fi # if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]
-logInfoNoEcho 4 "... $(basename "$0") done"
+logInfoNoEcho 4 "... $(basename "${BASH_SOURCE[0]}") done"
 exit
 

@@ -1,0 +1,1 @@
+disable=2164 # don't ask for "|| exit" for the cd ... command

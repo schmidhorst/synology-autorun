@@ -22,7 +22,7 @@
 "step_title":"Configuration",
 "items": [
 {"type": "textfield",
-"desc":"Il existe deux posibilités pour l'emplacement du script, qui doit être exécuté après la connexion du périphérique :<br>a) Le script est situé dans le répertoire racine du périphérique de stockage externe. Aucune action pour les périphériques sans un tel script. Pour cela, entrez le nom de votre script sans chemin, sans '/'.<br>b) Le script est sur votre DSM. Et sera lancé à toute connexion de périphérique de stockage. Entrez le nom complet avec le chemin, par exemple '/volume1/mysyn/auto.sh'.<br>Le script doit être exécutable pour l'utilisateur 'root'. Le script obtiendra le point de montage du périphérique (par exemple, /volumeUSB1/usbshare/) comme premier paramètre (\\$1) et la partition du périphérique (par exemple, usb1p1) comme second (\\$2). Conseils : Le script est lancé avec un <b>environnement vide</b>, vous devez spécifier toutes les commandes utilisées avec path ! Le nom du script est sensible à la casse !",
+"desc":"Il existe deux posibilités pour l'emplacement du script, qui doit être exécuté après la connexion du périphérique :<br>a) Le script est situé dans le répertoire racine du périphérique de stockage externe. Aucune action pour les périphériques sans un tel script. Pour cela, entrez le nom de votre script sans chemin, sans '/'.<br>b) Le script est sur votre DSM. Et sera lancé à toute connexion de périphérique de stockage. Entrez le nom complet avec le chemin, par exemple '/volume1/mysyn/auto.sh'.<br>Le script doit être exécutable pour l'utilisateur 'root'. Le script obtiendra le point de montage du périphérique (par exemple, /volumeUSB1/usbshare/) comme premier paramètre (\\$1) et la partition du périphérique (par exemple, usb1p1) comme deuxième paramètre (\\$2). Conseils : Le script est lancé avec un <b>environnement vide</b>, vous devez spécifier toutes les commandes utilisées avec le chemin ! Le nom du script est sensible à la casse !",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Script à exécuter"
@@ -99,7 +99,7 @@
 }
 ,{
 "type": "textfield"
-,"desc":"Le paquetage génère des messages de bureau DSM, qui sont affichés sur le bureau à un groupe d'utilisateurs configurable ou à un utilisateur. Ajoutez un @ aux noms de groupes, par exemple @users pour tous les utilisateurs."
+,"desc":"Le paquetage génère des messages de bureau DSM, qui sont affichés sur le bureau à un groupe d'utilisateurs configurable ou à un utilisateur. Ajoutez un @ aux noms de groupe, par exemple @users pour tous les utilisateurs."
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Affichage du message sur"
@@ -117,12 +117,12 @@
 ,"desc":"Codes de retour sans message"
 ,"width": "360"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
-,"emptyText":"par exemple 0;97;98;99"
+,"emptyText":"par exemple : 0;97;98;99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
-"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
-,"errorText":"Entrez un ou plusieurs numéros de 1 à 3 chiffres, séparés par un point-virgule."
+"expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:;[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])*$/"
+,"errorText":"Entrez un ou plusieurs nombres 0..255, séparés par un point-virgule ou laissez-le vide."
 }
 }
 }]
@@ -206,6 +206,26 @@
 }
 }]
 }
+,{
+"type": "combobox",
+"desc":"La sortie de vos scripts vers stdout, par exemple avec la commande echo, peut être capturée et écrite dans un fichier journal.",
+"subitems": [{
+"key": "config_CAPTURE",
+"autoSelect": true,
+"editable": false,
+"desc":"capture stdout",
+"width": "360",
+"mode": "local",
+"valueField": "myId2",
+"displayField": "displayText",
+"defaultValue": "@CAPTURE@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId2", "displayText"],
+"data": [[0, "0 Not captured"], [1, "1 inserted to autorun main log"], [2, "2 inserted to autorun debug log"]]
+}
+}]
+}
 ]
 }
 ,{
@@ -231,22 +251,9 @@
 ,"validator": {
 "regex": {
 "expr": "/^[@SECURITY_RANGE@].*/"
-,"errorText":"En l'absence de hachages précédemment enregistrés, la sélection '3' n'a aucun sens."
+,"errorText":"En l'absence de hachages précédemment enregistrés, la sélection \"3\" n'a aucun sens."
 }
 }
-}]
-}]
-}
-,{
-"step_title":"IMPORTANT : Action manuelle requise !",
-"items": [{
-"type": "textfield",
-"desc":"Les paquets tiers sont restreints par Synology dans DSM 7.x ! Puisque autorun nécessite l'autorisation de root pour effectuer son travail, une étape manuelle supplémentaire est nécessaire après l'installation.<br/><br/>Ouvrir une fenêtre de commande SSH sur votre NAS (en tant qu'utilisateur admin) et exécuter la commande suivante <b>après</b> l'installation est terminée.<br>Au lieu de passer par une fenêtre de commande SSH, vous pouvez exécuter cette commande via un script défini par l'utilisateur (en tant qu'utilisateur 'root'), généré via le panneau de configuration, tâche planifiée. Et exécuter cela après l'installation terminée.<br>Vous pouvez copier la commande maintenant !",
-"subitems": [{
-"key": "ignore_value",
-"desc":"Commande",
-"width": "440",
-"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
 }]
 }]
 }

@@ -22,7 +22,7 @@
 "step_title":"Konfiguráció",
 "items": [
 {"type": "textfield",
-"desc":"Két lehetőség van a szkript helyére, amelyet az eszköz csatlakoztatása után kell végrehajtani:<br>a) A szkript a külső tárolóeszköz gyökérkönyvtárában található. Ilyen szkript nélküli eszközök esetében nincs művelet. Ehhez adja meg a szkript nevét elérési útvonal nélkül, '/' nélkül.<br>b) A szkript a DSM-en van. És minden tárolóeszköz csatlakoztatásakor elindul. Adja meg a teljes nevet az elérési úttal együtt, pl. '/volume1/mysyn/auto.sh'.<br>A szkriptnek futtathatónak kell lennie a 'root' felhasználó számára. A szkript az első paraméterként (\\$1) az eszköz csatolási pontját (pl. /volumeUSB1/usbshare/), a második paraméterként (\\$2) pedig az eszköz partícióját (pl. usb1p1) kapja meg. Tippek: A szkript <b>üres környezettel</b> indul, minden használt parancsot meg kell adnunk a path-val! A szkript neve nagy- és kisbetűkre érzékeny!",
+"desc":"Két lehetőség van a szkript helyére, amelyet az eszköz csatlakoztatása után kell végrehajtani:<br>a) A szkript a külső tárolóeszköz gyökérkönyvtárában található. Ilyen szkript nélküli eszközök esetében nincs művelet. Ehhez adja meg a szkript nevét elérési útvonal nélkül, '/' nélkül.<br>b) A szkript a DSM-en van. És minden tárolóeszköz csatlakoztatásakor elindul. Adja meg a teljes nevet az elérési úttal együtt, pl. '/volume1/mysyn/auto.sh'.<br>A szkriptnek futtathatónak kell lennie a 'root' felhasználó számára. A szkript első paraméterként (\\$1) megkapja az eszköz csatlakozási pontját (pl. /volumeUSB1/usbshare/), második paraméterként (\\$2) pedig az eszköz partícióját (pl. usb1p1). Tippek: A szkript <b>üres környezettel</b> indul, minden használt parancsot meg kell adnia a path! A szkript neve a nagy- és kisbetűkre érzékeny!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Végrehajtandó szkript"
@@ -111,7 +111,7 @@
 
 ,{
 "type": "textfield"
-,"desc":"A szkript befejezése után általában egy DSM asztali üzenet jelenik meg. Az üzenet tartalmazza a szkript visszatérési kódját és a tárolóeszközön fennmaradó szabad helyet. Itt megadhatja azoknak a visszatérési kódoknak a listáját, amelyek nem generálnak ilyen üzenetet."
+,"desc":"A szkript befejezése után általában egy DSM asztali üzenet jelenik meg. Az üzenet tartalmazza a szkript visszatérési kódját és a tárolóeszközön fennmaradó szabad helyet. Itt megadhat egy listát a visszatérési kódokról, amelyek nem generálnak ilyen üzenetet."
 ,"subitems": [{
 "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
 ,"desc":"Visszatérési kódok üzenet nélkül"
@@ -121,8 +121,8 @@
 ,"validator": {
 "allowBlank": true
 ,"regex": {
-"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
-,"errorText":"Adjon meg egy vagy több 1..3 számjegyű számot, pontosvesszővel elválasztva."
+"expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:;[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])*$/"
+,"errorText":"Adjon meg egy vagy több számot 0..255, pontosvesszővel elválasztva, vagy hagyja üresen."
 }
 }
 }]
@@ -206,13 +206,33 @@
 }
 }]
 }
+,{
+"type": "combobox",
+"desc":"A szkriptek stdout-ra történő kimenete, például az echo paranccsal, rögzíthető és kiírható egy naplófájlba.",
+"subitems": [{
+"key": "config_CAPTURE",
+"autoSelect": true,
+"editable": false,
+"desc":"stdout rögzítés",
+"width": "360",
+"mode": "local",
+"valueField": "myId2",
+"displayField": "displayText",
+"defaultValue": "@CAPTURE@",
+"store": {
+"xtype": "arraystore",
+"fields": ["myId2", "displayText"],
+"data": [[0, "0 Not captured"], [1, "1 inserted to autorun main log"], [2, "2 inserted to autorun debug log"]]
+}
+}]
+}
 ]
 }
 ,{
 "step_title":"Biztonsági konfiguráció",
 "items": [{
 "type": "combobox",
-"desc":"A megfelelő nevű szkriptet root jogosultságokkal hajtja végre a DSM-en! Ez biztonsági kockázatot jelenthet, különösen, ha a külső eszközön található! A nagyobb biztonság érdekében lehetőség van az előre regisztrált sha256 hash-értékekkel (ujjlenyomatok) rendelkező szkriptek korlátozására.<br/><b>Currently there are @ENTRY_COUNT@ script hashes registd.</b><br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ek nem változnak.<br/>1: @HASH_DELETION@A telepítés/konfigurálás utáni 1. szkript regisztrálva lesz, majd újra és újra engedélyezett a végrehajtása.<br/>2: Minden azonos nevű szkript hash-értéke regisztrálva lesz és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
+"desc":"A megfelelő nevű szkriptet root jogosultságokkal hajtja végre a DSM-en! Ez biztonsági kockázatot jelenthet, különösen, ha a külső eszközön található! A nagyobb biztonság érdekében lehetőség van az előre regisztrált sha256 hash-értékekkel (ujjlenyomatok) rendelkező szkriptekre való korlátozásra.<br/><b>Currently there are @ENTRY_COUNT@ script hashes registd.</b><br/>0: A biztonsági funkciót nem használja. Minden azonos nevű szkript engedélyezett. A regisztrált hash-ek nem változnak.<br/>1: @HASH_DELETION@A telepítés/konfigurálás utáni 1. szkript regisztrálva lesz, majd újra és újra engedélyezett a végrehajtása.<br/>2: Minden azonos nevű szkript hash-értéke regisztrálva lesz és végrehajtásra kerül! (Add hash-ek)<br/>3: Csak a korábban regisztrált szkriptek engedélyezettek. (A regisztráció befagyasztva)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true
@@ -234,19 +254,6 @@
 ,"errorText":"Korábban regisztrált hash-ok nélkül a \"3\" kiválasztásának nincs értelme."
 }
 }
-}]
-}]
-}
-,{
-"step_title":"FONTOS: Kézi művelet szükséges!",
-"items": [{
-"type": "textfield",
-"desc":"A DSM 7.x-ben a Synology korlátozza a harmadik féltől származó csomagokat! Mivel az autorun-nak root jogosultságra van szüksége a feladat elvégzéséhez, a telepítés után további manuális lépésre van szükség.<br/><br/>Nyisson egy SSH parancsablakot a NAS-hoz (admin felhasználóként), és hajtsa végre a következő parancsot <b>a telepítés befejezése után</b>.<br>Az SSH parancsablakon keresztül történő végrehajtás helyett ezt a parancsot egy felhasználó által definiált szkript segítségével is végre lehet hajtani (root felhasználóként), amelyet a vezérlőpulton keresztül, az ütemezett feladaton keresztül generál. És futtassa ezt a befejezett telepítés után.<br>A parancsot most már másolhatja!",
-"subitems": [{
-"key": "ignore_value",
-"desc":"Parancs",
-"width": "440",
-"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
 }]
 }]
 }

@@ -2,12 +2,16 @@
 	"step_title": "Remove log files and settings",
 	"items": 
 		[{
-		"type": "multiselect",
-		"desc": "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>Or you can delete all settings and logfiles of the package</p>",
-		"subitems": 
+		"type": "multiselect"
+    ,"desc": "<p>During the uninstallation of the package it's possible to preserve the settings for a later new installation<br>And also the logfiles may be preserved!</p>"
+    ,"subitems":
 			[{
-				"key": "pkgwizard_remove_settings",
-				"desc": "Remove"
+				"key": "config_remove_settings"
+        ,"desc": "Remove Settings"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 			}]
 		}]
 }]

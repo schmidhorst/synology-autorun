@@ -1,13 +1,17 @@
 [{
-"step_title":"Protokolldateien und Einstellungen entfernen",
-"items":
-[{
-"type": "multiselect",
-"desc":"<p>Bei der Deinstallation des Pakets ist es möglich, die Einstellungen für eine spätere Neuinstallation zu erhalten<br>Oder Sie können alle Einstellungen und Logdateien des Pakets löschen</p>",
-"subitems":
-[{
-"key": "pkgwizard_remove_settings",
-"desc":"entfernen"
-}]
-}]
+  "step_title":"Protokolldateien und Einstellungen entfernen",
+  "items":
+  [{
+    "type": "multiselect"
+    ,"desc":"<p>Bei der Deinstallation des Pakets ist es möglich, die Einstellungen für eine spätere Neuinstallation zu erhalten<br>Und auch die Log-Dateien können erhalten werden.</p>"
+    ,"subitems":
+    [{
+      "key": "config_remove_settings"
+      ,"desc":"Einstellungen entfernen"
+		}
+		,{
+		  "key": "config_remove_log"
+      ,"desc": "Logdateien entfernen"
+    }]
+  }]
 }]

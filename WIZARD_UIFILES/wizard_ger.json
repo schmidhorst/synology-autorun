@@ -4,14 +4,14 @@
 "invalid_next_disabled": true,
 "items": [{
 "type": "multiselect",
-"desc":"BSD 3-Klausel-Lizenz<br><br>Copyright (c) 2011-2023, Jan Reidemeister und Horst Schmid<br>Alle Rechte vorbehalten.<br><br>Die Weitergabe und Verwendung in Quell- und Binärform, mit oder ohne Änderungen, ist erlaubt, sofern die folgenden Bedingungen erfüllt sind:<br>1. Bei der Weitergabe des Quellcodes müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss beibehalten werden.<br>2. Bei der Weitergabe in binärer Form müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss in der Dokumentation und/oder anderen Materialien, die mit der Weitergabe bereitgestellt werden, wiedergegeben werden.<br>3. Weder der Name des Copyright-Inhabers noch die Namen der Mitwirkenden dürfen ohne ausdrückliche vorherige schriftliche Genehmigung verwendet werden, um von dieser Software abgeleitete Produkte zu unterstützen oder zu bewerben.<br><br> DIESE SOFTWARE WIRD VON DEN URHEBERN UND MITWIRKERN \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT UND JEGLICHE AUSDRÜCKLICHEN ODER STILLSCHWEIGENDEN GARANTIEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE STILLSCHWEIGENDEN GARANTIEN DER HANDELSÜBLICHKEIT UND DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK, WERDEN AUSGESCHLOSSEN. IN KEINEM FALL HAFTEN DER URHEBERRECHTSINHABER ODER DIE MITWIRKENDEN FÜR DIREKTE, INDIREKTE, ZUFÄLLIGE, BESONDERE, BEISPIELHAFTE SCHÄDEN ODER FOLGESCHÄDEN (EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE BESCHAFFUNG VON ERSATZGÜTERN ODER -DIENSTLEISTUNGEN, NUTZUNGS-, DATEN- ODER GEWINNVERLUSTE ODER GESCHÄFTSUNTERBRECHUNGEN), WIE AUCH IMMER DIESE VERURSACHT WURDEN UND AUF WELCHER HAFTUNGSTHEORIE SIE BERUHEN, OB DURCH VERTRAG, VERSCHULDENSUNABHÄNGIGE HAFTUNG ODER UNERLAUBTE HANDLUNG (EINSCHLIESSLICH FAHRLÄSSIGKEIT ODER ANDERWEITIG), DIE SICH IN IRGENDEINER WEISE AUS DER NUTZUNG DIESER SOFTWARE ERGEBEN, SELBST WENN AUF DIE MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WURDE.",
+"desc":"BSD 3-Klausel-Lizenz<br><br>Copyright (c) 2011-2023, Jan Reidemeister und Horst Schmid<br>Alle Rechte vorbehalten.<br><br>Weitergabe und Verwendung in Quell- und Binärform, mit oder ohne Änderungen, sind unter folgenden Bedingungen erlaubt:<br>1. Bei der Weitergabe des Quellcodes müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss beibehalten werden.<br>2. Bei der Weitergabe in binärer Form müssen der obige Urheberrechtsvermerk, diese Liste der Bedingungen und der folgende Haftungsausschluss in der Dokumentation und/oder anderen Materialien, die mit der Weitergabe bereitgestellt werden, wiedergegeben werden.<br>3. Weder der Name des Copyright-Inhabers noch die Namen der Mitwirkenden dürfen ohne ausdrückliche vorherige schriftliche Genehmigung verwendet werden, um von dieser Software abgeleitete Produkte zu unterstützen oder zu bewerben.<br><br> DIESE SOFTWARE WIRD VON DEN URHEBERN UND MITWIRKERN \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT UND JEGLICHE AUSDRÜCKLICHEN ODER STILLSCHWEIGENDEN GARANTIEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE STILLSCHWEIGENDEN GARANTIEN DER HANDELSÜBLICHKEIT UND DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK, WERDEN AUSGESCHLOSSEN. IN KEINEM FALL HAFTEN DER URHEBERRECHTSINHABER ODER DIE MITWIRKENDEN FÜR DIREKTE, INDIREKTE, ZUFÄLLIGE, BESONDERE, BEISPIELHAFTE SCHÄDEN ODER FOLGESCHÄDEN (EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE BESCHAFFUNG VON ERSATZGÜTERN ODER -DIENSTLEISTUNGEN, NUTZUNGS-, DATEN- ODER GEWINNVERLUSTE ODER GESCHÄFTSUNTERBRECHUNGEN), WIE AUCH IMMER DIESE VERURSACHT WURDEN UND AUF WELCHER HAFTUNGSTHEORIE SIE BERUHEN, OB DURCH VERTRAG, VERSCHULDENSUNABHÄNGIGE HAFTUNG ODER UNERLAUBTE HANDLUNG (EINSCHLIESSLICH FAHRLÄSSIGKEIT ODER ANDERWEITIG), DIE SICH IN IRGENDEINER WEISE AUS DER NUTZUNG DIESER SOFTWARE ERGEBEN, SELBST WENN AUF DIE MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WURDE.",
 "subitems": [
 {
 "key": "id1",
 "desc":"Angenommen",
 "defaultValue": false,
 "validator": {
-"fn": "{return arguments[0];}"
+  "fn": "{var v=arguments[0]; if (!v) return 'Noch nicht akzeptiert!'; return true;}"
 }
 }
 ]
@@ -22,10 +22,11 @@
 "step_title":"Konfiguration",
 "items": [
 {"type": "textfield",
-"desc":"Es gibt zwei Möglichkeiten für den Speicherort des Skripts, das nach dem Verbinden des Geräts ausgeführt werden soll:<br>a) Das Skript befindet sich im Stammverzeichnis des externen Speichergeräts. Keine Aktion für Geräte ohne ein solches Skript. Geben Sie dazu den Namen Ihres Skripts ohne Pfad, ohne '/' ein.<br>b) Das Skript befindet sich auf Ihrem DSM. Und wird bei jeder Verbindung mit einem Speichergerät gestartet. Geben Sie den vollständigen Namen mit Pfad ein, z.B. '/volume1/mysyn/auto.sh'.<br>Das Skript muss für den Benutzer 'root' ausführbar sein. Das Skript erhält den Einhängepunkt des Geräts (z.B. /volumeUSB1/usbshare/) als ersten Parameter (\\$1) und die Gerätepartition (z.B. usb1p1) als zweiten (\\$2). Hinweise: Das Skript wird mit einer <b>leeren Umgebung</b> gestartet, man muss alle verwendeten Befehle mit Pfad angeben! Beim Skriptnamen wird zwischen Groß- und Kleinschreibung unterschieden!",
+"desc":"<strong>Bitte nach unten scrollen und alle Einträge vor dem 'Weiter' prüfen!</strong><br><br><strong>Skript: </strong><br>Es gibt zwei Möglichkeiten für den Speicherort des Skripts, das nach dem Verbinden des Geräts ausgeführt werden soll:<br>a) Das Skript befindet sich im Stammverzeichnis des externen Speichergeräts. Keine Aktion für Geräte ohne ein solches Skript. Geben Sie dazu den Namen Ihres Skripts ohne Pfad, ohne '/' ein.<br>b) Das Skript befindet sich auf Ihrem DSM. Und wird bei jeder Verbindung mit einem Speichergerät gestartet. Geben Sie den vollständigen Namen mit Pfad ein, z.B. '/volume1/mysyn/auto.sh'.<br>Das Skript muss für den Benutzer 'root' ausführbar sein. Das Skript erhält den Einhängepunkt des Geräts (z.B. /volumeUSB1/usbshare/) als ersten Parameter (\\$1) und die Gerätepartition (z.B. usb1p1) als zweiten (\\$2).<br>Hinweise: Das Skript wird mit einer <b>leeren Umgebung</b> gestartet, man muss alle verwendeten Befehle mit Pfad angeben! Beim Skriptnamen wird zwischen Groß- und Kleinschreibung unterschieden!",
 "subitems": [{
 "key": "config_SCRIPT"
 ,"desc":"Auszuführendes Skript"
+      ,"width": "350"
 ,"defaultValue": "@SCRIPT@"
 ,"emptyText":"Skriptname"
 ,"validator": { "allowBlank": false }
@@ -33,17 +34,18 @@
 }
 ,{
 "type": "textfield",
-"desc":"Ein Exit-Wert von 100 aus dem Skript wird das Gerät aushängen und auswerfen, wenn das Skript beendet ist, alle anderen Exit-Werte lassen es eingehängt.<br/><br/>Die Suchzeit ist die Zeit nach dem Auslösen durch 'udev', um den Einhängepunkt zu finden, wenn ein Gerät angeschlossen wurde. Die zusätzliche Wartezeit gibt dem DSM etwas Spielraum, um das Laufwerk vor dem Start des Skripts ordnungsgemäß einzubinden.<br/>Abhängig von Ihrer Hardware müssen Sie diese Zeiten möglicherweise erhöhen.",
+    "desc": "<strong>Timing: </strong><br>The search time is the time after the 'external storage connected' event for finding the mount point. The additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may need to increase those times depending on your hardware. ",
 "subitems": [
 {
 "key": "config_TRIES"
 ,"desc":"Suchzeit (sec)"
 ,"defaultValue": "@TRIES@"
+,"emptyText": "Zeit um den Mount-Pfad zu finden"
 ,"validator": {
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-9]+$/"
-,"errorText":"Eingabe einer positiven Zahl"
+,"errorText":"Geben Sie eine positive Zahl ein"
 }
 }
 }
@@ -51,11 +53,12 @@
 "key": "config_WAIT"
 ,"desc":"Wartezeit (sec)"
 ,"defaultValue": "@WAIT@"
+,"emptyText": "Verzögerung nachdem der Mount-Pfad gefunden wurde"
 ,"validator": {
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-9]+$/"
-,"errorText":"Eingabe einer positiven Zahl"
+,"errorText":"Geben Sie eine positive Zahl ein"
 }
 }
 }
@@ -63,7 +66,7 @@
 }
 ,{
 "type": "textfield",
-"desc":"Die Größe der Protokolldateien wird automatisch begrenzt. Wenn die angegebene Zeilenzahl erreicht ist, wird die ältere Hälfte entfernt.",
+"desc":"<strong>Logging: </strong><br>Die Größe der Protokolldateien wird automatisch begrenzt. Wenn die angegebene Zeilenzahl erreicht ist, wird die ältere Hälfte entfernt.",
 "subitems": [
 {
 "key": "config_LOG_MAX_LINES"
@@ -73,7 +76,7 @@
 "allowBlank": false
 ,"regex": {
 "expr": "/^[0-9]+$/"
-,"errorText":"Geben Sie eine positive Zahl ein"
+,"errorText":"Eingabe einer positiven Zahl"
 }
 }
 }
@@ -97,46 +100,83 @@
 }
 ]
 }
+    ,{
+      "type": "combobox",
+      "desc": "The output of your scripts to stdout, e.g. with the echo command, can be captured and written also to a logfile",
+      "subitems": [{
+        "key": "config_CAPTURE",
+        "autoSelect": true,
+        "editable": false,
+        "desc": "stdout capture",
+        "width": "350",
+        "mode": "local",
+        "valueField": "myId2",
+        "displayField": "displayText",
+        "defaultValue": "@CAPTURE@",
+        "store": {
+          "xtype": "arraystore",
+          "fields": ["myId2", "displayText"],
+          "data": [[0, "0 Not captured"], [1, "1 inserted to autorun main log"], [2, "2 inserted to autorun debug log"]]
+          }
+        }]
+      }
 ,{
 "type": "textfield"
-,"desc":"Das Paket erzeugt DSM-Desktop-Nachrichten, die auf dem Desktop einer konfigurierbaren Benutzergruppe oder einem Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer"
+,"desc":"<strong>Desktop Meldungen: </strong><br>Das Paket erzeugt DSM-Desktop-Nachrichten, die auf dem Desktop einer konfigurierbaren Benutzergruppe oder einem Benutzer angezeigt werden. Stellen Sie den Gruppennamen ein @ voran, z.B. @users für alle Benutzer"
 ,"subitems": [{
 "key": "config_NOTIFY_USERS"
 ,"desc":"Anzeige der Nachricht an"
-,"width": "360"
+,"width": "350"
 ,"defaultValue": "@NOTIFY_USERS@"
 ,"validator": { "allowBlank": true }
 }]
 }
-
 ,{
 "type": "textfield"
 ,"desc":"Normalerweise wird nach Beendigung Ihres Skripts eine DSM-Desktop-Meldung erzeugt. Die Meldung enthält den Rückgabecode Ihres Skripts und den verbleibenden freien Speicherplatz auf dem Speichermedium. Sie können hier eine Liste von Rückgabecodes angeben, die keine solche Meldung erzeugen."
 ,"subitems": [{
 "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
 ,"desc":"Rückgabecodes ohne Meldung"
-,"width": "360"
+,"width": "350"
 ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
-,"emptyText":"z.B. 0;97;98;99"
+,"emptyText": "e.g. 90;95-99"
 ,"validator": {
 "allowBlank": true
 ,"regex": {
-"expr": "/^[0-9]{1,3}(?:;[0-9]{1,3})*$/"
-,"errorText":"Geben Sie eine oder mehrere 1..3-stellige Zahlen ein, getrennt durch Semikolon"
+"expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:[-;]([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))*$/"
+,"errorText":"Geben Sie eine oder mehrere Zahlen 0..255, getrennt durch Semikolon oder Bindestrich ein. Oder lassen Sie das Feld leer."
 }
 }
 }]
 }
+  ,{
+    "type": "textfield"
+    ,"desc": "<strong>LEDs and Piepser:</strong><br/>You may want to use the Copy-LED, Status-LED and the beeper to indicate a running script. And also whether it had success or it was failing. Or whether the later configured optional device ejection was successfully.<br/>Which of your script exit codes should be considered as a failure?"
+    ,"subitems": [{
+      "key": "config_FAILURE_CODES"
+      ,"desc": "Fehler-Rückgabecodes"
+      ,"width": "350"
+      ,"defaultValue": "@FAILURE_CODES@"
+      ,"emptyText": "e.g. 1-80;120-255"
+      ,"validator": {
+        "allowBlank": true
+        ,"regex": {
+          "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:[-;]([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))*$/"
+          ,"errorText": "Enter one or more numbers 0..255, seperated by semicolon or hyphen. Or leave it empty"
+          }
+        }
+      }]
+    }
 ,{
 "type": "combobox",
-"desc":"Verwendung der 'Kopier-LED':<br/>0: LED wird überhaupt nicht verwendet.<br/>1: EIN während des Laufs oder Auswurfs, danach AUS<br/>2: Blinken während des Laufs oder Auswurfs, danach AUS<br/>3: EIN während des Laufs oder Auswurfs, danach AUS (0/100) oder Blinken (andere Codes)<br/>4: Blinken während des Laufs oder Auswurfs, danach AUS oder Blinken (andere Codes oder Auswurf fehlgeschlagen)<br/>5: Blinken während des Laufs oder Auswurfs, danach AUS (0/100) oder EIN (andere Codes oder AuswurfFehlschlag)",
+"desc":"Verwendung der 'Kopier-LED':<br/>0: LED wird überhaupt nicht verwendet.<br/>1: EIN während des Laufs oder Auswurfs, danach AUS<br/>2: Blinken während des Laufs oder Auswurfs, danach AUS<br/>3: EIN während des Laufs oder Auswurfs, danach AUS (Erfolg) oder Blinken (Fehler)<br/>4: Blinken während des Laufs oder Auswurfs, danach AUS (Erfolg) oder Blinken (Fehler)<br/>5: Blinken während des Laufs oder Auswurfs, danach AUS (Erfolg) oder EIN (Fehler)",
 "subitems": [{
 "key": "config_LED_COPY",
 "autoSelect": true,
 "editable": false,
-"desc":"LED kopieren",
+"desc":"Copy-LED",
 "defaultValue": "@LED_COPY@",
-"width": "360",
+"width": "350",
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
@@ -149,13 +189,13 @@
 }
 ,{
 "type": "combobox",
-"desc":"Verwendung der Status-LED:<br/>0: Gar nicht verwendet<br/>1: Grün während des Skripts, grün blinkend während des Auswerfens, AUS wenn mit 0 oder 100 beendet, orange blinkend für andere Ergebnisse oder fehlgeschlagenes Auswerfen<br/>2: Grün blinkend während des Skripts oder des Auswerfens, grün wenn mit 0 oder 100 beendet, orange blinkend für andere Ergebnisse oder fehlgeschlagenes Auswerfen<br/>3: Grün während des Skripts und während des Auswerfens, AUS wenn beendet, orange blinkend für fehlgeschlagenes Auswerfen",
+"desc":"Verwendung der Status-LED:<br/>0: Gar nicht verwendet<br/>1: Grün während des Skripts, grün blinkend während des Auswerfens, AUS nach erfolgreichem Ende, orange blinkend bei Fehler oder fehlgeschlagenem Auswerfen<br/>2: Grün blinkend während des Skripts oder des Auswerfens, grün bei Erfolg, orange blinkend bei Fehler oder fehlgeschlagenem Auswerfen<br/>3: Grün während des Skripts und während des Auswerfens, AUS wenn erfolgreich beendet, orange blinkend bei Fehler",
 "subitems": [{
 "key": "config_LED",
 "autoSelect": true,
 "editable": false,
 "desc":"Status-LED",
-"width": "360",
+"width": "350",
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
@@ -176,12 +216,30 @@
 "defaultValue": "@BEEP@"
 }]
 }
-,{
-"type": "textfield"
-,"desc":"Wenn das Skript mit dem Exit-Code 100 endet, wird versucht, das Gerät auszuwerfen. Sie können den Timeout (in Sekunden) für das Auswerfen des Geräts angeben"
+    ,{
+      "type": "textfield"
+      ,"desc": "<strong>Eject: </strong><br>For the here specified return codes of your script the external storage device will be ejected after the script is finished. E.g. '100;111-119;255'."
+    ,"subitems": [{
+      "key": "config_EJECT_RETURN_CODES"
+      ,"desc": "Rückgabecodes für EJECT"
+      ,"width": "350"
+      ,"defaultValue": "@EJECT_RETURN_CODES@"
+      ,"emptyText": "e.g. 100;110-119"
+      ,"validator": {
+        "allowBlank": true
+        ,"regex": {
+          "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:[-;]([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))*$/"
+          ,"errorText":"Geben Sie eine oder mehrere Zahlen 0..255, getrennt durch Semikolon oder Bindestrich ein. Oder lassen Sie das Feld leer."
+          }
+        }
+      }]
+      }
+    ,{
+    "type": "textfield"
+    ,"desc": "The above specified exit codes from the script will unmount and eject the device when the script is finished. All other exit values will leave it mounted.<br/><br/>When trying to eject the device, the drive may still be in use. You can specify the timeout (in seconds) for ejecting the device"
 ,"subitems": [{
 "key": "config_EJECT_TIMEOUT"
-,"desc":"Zeitüberschreitung beim Auswerfen [s]"
+,"desc":"Zeitlimit beim Auswerfen [s]"
 ,"defaultValue": "@EJECT_TIMEOUT@"
 ,"validator": {
 "allowBlank": false
@@ -194,10 +252,10 @@
 }
 ,{
 "type": "textfield",
-"desc":"Sie können optional ein weiteres Skript (mit vollständigem Pfad!) angeben, das im Falle eines angeforderten Auswurfs (mit Exit-Code 100 aus Ihrem 1. Skript) nach dem Auswurf ausgeführt wird. Dies kann z.B. zum Ausschalten des USB-Gerätes verwendet werden. Wenn der Auswurf fehlgeschlagen ist, lautet das Argument 'Ejection failed', bei Erfolg kein Argument!",
+"desc":"Sie können optional ein weiteres Skript (intern in DSM mit vollständigem Pfad!) angeben, das im Falle eines angeforderten Auswurfs nach dem Auswurf ausgeführt wird. Dies kann z.B. zum Ausschalten des USB-Gerätes verwendet werden. Wenn der Auswurf fehlgeschlagen ist, lautet das Argument 'Ejection failed', bei Erfolg kein Argument!",
 "subitems": [{
 "key": "config_SCRIPT_AFTER_EJECT"
-,"desc":"Skript nach dem Auswerfen (auf DSM)"
+,"desc":"Skript nach dem Auswerfen"
 ,"width": "350"
 ,"defaultValue": "@SCRIPT_AFTER_EJECT@"
 ,"emptyText":"Skriptname (optional)"
@@ -212,13 +270,13 @@
 "step_title":"Sicherheitskonfiguration",
 "items": [{
 "type": "combobox",
-"desc":"Das Skript mit dem passenden Namen wird mit Root-Rechten auf Ihrem DSM ausgeführt! Das kann ein Sicherheitsrisiko darstellen, insbesondere wenn es sich auf dem externen Gerät befindet! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücke) möglich.<br/><b>Zur Zeit sind @ENTRY_COUNT@ Skript-Hashes registriert.</b><br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit gleichem Namen sind erlaubt. Keine Änderung der registrierten Hashes.<br/>1: @HASH_DELETION@Das erste Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert jedes Skripts mit passendem Namen wird registriert und ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
+"desc":"Das Skript mit dem passenden Namen wird mit Root-Rechten auf Ihrem DSM ausgeführt! Das kann ein Sicherheitsrisiko sein, besonders wenn es sich auf dem externen Gerät befindet! Zur besseren Sicherheit ist eine Beschränkung auf Skripte mit vorregistrierten sha256 Hashwerten (Fingerabdrücken) möglich.<br/><b>Zur Zeit sind @ENTRY_COUNT@ Skript-Hashes registriert.</b><br/>0: Die Sicherheitsfunktion wird nicht verwendet. Alle Skripte mit dem angegebenen Namen sind erlaubt und werden ausgeführt. Keine Änderung der registrierten Hashes.<br/>1: @HASH_DELETION@Das erste Skript nach der Installation/Konfiguration wird registriert und darf dann immer wieder ausgeführt werden.<br/>2: Der Hashwert jedes Skripts mit passendem Namen wird registriert und das Skript ausgeführt! (Hashes hinzufügen)<br/>3: Nur zuvor registrierte Skripte sind erlaubt. (Registrierung eingefroren)",
 "subitems": [{
 "key": "config_ADD_NEW_FINGERPRINTS"
 ,"autoSelect": true
 ,"editable": false
 ,"desc":"Skript Hash-Registrierung"
-,"width": "360"
+,"width": "350"
 ,"mode": "local"
 ,"valueField": "myId"
 ,"displayField": "displayText"
@@ -226,7 +284,7 @@
 ,"store": {
 "xtype": "arraystore"
 ,"fields": ["myId", "displayText"]
-,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+,"data": [[0, "0 Feature unbenutzt (unbeschränkt)"], [1, "1 Erstes Skript erlaubt"], [2, "2 Jeden Hash hinzufügen"], [3, "3 Nur zuvor registrierte"]]
 }
 ,"validator": {
 "regex": {
@@ -234,19 +292,6 @@
 ,"errorText":"Ohne zuvor registrierte Hashes macht die Auswahl '3' keinen Sinn"
 }
 }
-}]
-}]
-}
-,{
-"step_title":"WICHTIG: Manueller Eingriff erforderlich!",
-"items": [{
-"type": "textfield",
-"desc":"Pakete von Drittanbietern werden von Synology in DSM 7.x eingeschränkt! Da Autorun zur Ausführung seiner Aufgabe Root-Rechte benötigt, ist nach der Installation ein zusätzlicher manueller Schritt erforderlich.<br/><br/>Öffnen Sie eine SSH-Befehlsshell auf Ihrem NAS (als Admin-Benutzer) und führen Sie den folgenden Befehl <b>nach</b> Beendigung der Installation aus.<br>Anstatt über ein SSH-Befehlsfenster können Sie diesen Befehl auch über ein benutzerdefiniertes Skript (als Benutzer 'root') ausführen, das über die Systemsteuerung, geplante Aufgabe, erstellt wurde. Und dieses nach der fertigen Installation ausführen.<br>Sie können den Befehl jetzt kopieren!",
-"subitems": [{
-"key": "ignore_value",
-"desc":"Befehl",
-"width": "440",
-"defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
 }]
 }]
 }

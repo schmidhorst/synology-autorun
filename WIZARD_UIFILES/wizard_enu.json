@@ -11,7 +11,7 @@
       "desc": "Accepted",
       "defaultValue": false,
       "validator": {
-        "fn": "{return arguments[0];}"
+        "fn": "{var v=arguments[0]; if (!v) return '@notAccepted@'; return true;}"
         }
       }
      ]
@@ -22,10 +22,11 @@
   "step_title": "Configuration",
    "items": [
     {"type": "textfield",
-    "desc": "There are two posibilities for the location of the script, which should be executed after device connect:<br>a) The script is located in the root directory of the external storage device. No action for devices without such a script. For this enter the name of your script without path, wothout '/'.<br>b) The script is on your DSM. And will be started at any storage device connect. Enter the full name with path, e.g. '/volume1/mysyn/auto.sh'.<br>The script must be executable for the user 'root'. The script will get the mount point of the device (e.g. /volumeUSB1/usbshare/) as the first parameter (\\$1) and the device partition (e.g. usb1p1) as the second (\\$2). Hints: The script is started with an <b>empty environment</b>, you have to specify all the used commands with path! The script name is case sensitive!",
+    "desc": "<strong>Please scroll through all items before clicking to 'Next'</strong><br><br><strong>Script: </strong><br>There are two posibilities for the location of the script, which should be executed after device connect:<br>a) The script is located in the root directory of the external storage device. No action for devices without such a script. For this enter the name of your script without path, without '/'.<br>b) The script is on your DSM. And will be started at any storage device connect. Enter the full name with path, e.g. '/volume1/mysyn/auto.sh'.<br>The script must be executable for the user 'root'. The script will get the mount point of the device (e.g. /volumeUSB1/usbshare/) as the first parameter (\\$1) and the device partition (e.g. usb1p1) as the second (\\$2). Hints: The script is started with an <b>empty environment</b>, you have to specify all the used commands with path! The script name is case sensitive!",
     "subitems": [{
       "key": "config_SCRIPT"
       ,"desc": "Script to execute"
+      ,"width": "350"
       ,"defaultValue": "@SCRIPT@"
       ,"emptyText": "Script name"
       ,"validator": { "allowBlank": false }
@@ -33,12 +34,13 @@
     }
   ,{
     "type": "textfield",
-    "desc": "An exit value of 100 from the script will unmount and eject the device when the script is finished, all other exit values will leave it mounted.<br/><br/>The search time is the time after the trigger by 'udev' for finding the mount point when a device has been attached. The additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may have to increase those times depending on your hardware.",
+    "desc": "<strong>Timing: </strong><br>The search time is the time after the 'external storage connected' event for finding the mount point. The additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may need to increase those times depending on your hardware. ",
     "subitems": [
      {
       "key": "config_TRIES"
-      ,"desc": "Search time (sec)"
+      ,"desc": "Search timeout (sec)"
       ,"defaultValue": "@TRIES@"
+      ,"emptyText": "time to get the mount path"
       ,"validator": { 
         "allowBlank": false
         ,"regex": {
@@ -49,8 +51,9 @@
       }
     ,{
       "key": "config_WAIT"
-      ,"desc": "Wait time (sec)"
+      ,"desc": "Delay time (sec)"
       ,"defaultValue": "@WAIT@"
+      ,"emptyText": "delay for script start after mount path was found"
       ,"validator": { 
         "allowBlank": false
         ,"regex": {
@@ -63,7 +66,7 @@
     }
   ,{
     "type": "textfield",
-    "desc": "The size of the log files is automatically limitted. If the given line count is reached, the elder half is removed.",
+    "desc": "<strong>Logging: </strong><br>The size of the log files is automatically limitted. If the given line count is reached, the elder half is removed.",
     "subitems": [
       {
         "key": "config_LOG_MAX_LINES"
@@ -97,46 +100,83 @@
         }
       ]
     }
-  ,{
+    ,{
+      "type": "combobox",
+      "desc": "The output of your scripts to stdout, e.g. with the echo command, can be captured and written also to a logfile",
+      "subitems": [{
+        "key": "config_CAPTURE",
+        "autoSelect": true,
+        "editable": false,
+        "desc": "stdout capture",
+        "width": "350",
+        "mode": "local",
+        "valueField": "myId2",
+        "displayField": "displayText",
+        "defaultValue": "@CAPTURE@",
+        "store": {
+          "xtype": "arraystore",
+          "fields": ["myId2", "displayText"],
+          "data": [[0, "0 Not captured"], [1, "1 inserted to autorun main log"], [2, "2 inserted to autorun debug log"]]
+          }
+        }]
+      }
+    ,{
     "type": "textfield"
-    ,"desc": "The package generates DSM desktop messages, which are shown on the desktop to a configurable user group or to a user. Prepend an @ to group names, e.g. @users for all users"
+    ,"desc": "<strong>Desktop Messages: </strong><br>The package generates DSM desktop messages, which are shown on the desktop to a configurable user group or to a user. Prepend an @ to group names, e.g. @users for all users"
     ,"subitems": [{
       "key": "config_NOTIFY_USERS"
       ,"desc": "Message display to"
-      ,"width": "360"
+      ,"width": "350"
       ,"defaultValue": "@NOTIFY_USERS@"
       ,"validator": { "allowBlank": true }
       }]
     }
-
   ,{
     "type": "textfield"
-    ,"desc": "Normally there is a DSM desktop message generated after your script is finished. The message contains the return code of your script and the remaining free space on the storage device. You may specifiy here a list of return codes, which don't generate such a message."
+    ,"desc": "Normally there is a DSM desktop message generated after your script is finished with the exit code and the free space. You may specifiy here an exit code, which does not generate such a message. Typical usage for this: You are using a script on your DSM, not on the external device. And your script has some type of 'device filter' and exits with the here specified code, with no further actions and no message for some of your external devices."
     ,"subitems": [{
       "key": "config_NO_DSM_MESSAGE_RETURN_CODES"
       ,"desc": "Return codes w/o message"
-      ,"width": "360"
+      ,"width": "350"
       ,"defaultValue": "@NO_DSM_MESSAGE_RETURN_CODES@"
-      ,"emptyText": "e.g. 0;97;98;99"
-      ,"validator": { 
+      ,"emptyText": "e.g. 90;95-99"
+      ,"validator": {
         "allowBlank": true
         ,"regex": {
-          "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:;[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])*$/"
-          ,"errorText": "Enter one or more numbers 0..255, seperated by semicolon or leave it empty"
+          "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:[-;]([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))*$/"
+          ,"errorText": "Enter one or more numbers 0..255, seperated by semicolon or hyphen. Or leave it empty"
+          }
+        }
+      }]
+    }
+  ,{
+    "type": "textfield"
+    ,"desc": "<strong>LEDs and BEEP:</strong><br/>You may want to use the Copy-LED, Status-LED and the beeper to indicate a running script. And also whether it had success or it was failing. Or whether the later configured optional device ejection was successfully.<br/>Which of your script exit codes should be considered as a failure?"
+    ,"subitems": [{
+      "key": "config_FAILURE_CODES"
+      ,"desc": "Failure return codes"
+      ,"width": "350"
+      ,"defaultValue": "@FAILURE_CODES@"
+      ,"emptyText": "e.g. 1-80;120-255"
+      ,"validator": {
+        "allowBlank": true
+        ,"regex": {
+          "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:[-;]([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))*$/"
+          ,"errorText": "Enter one or more numbers 0..255, seperated by semicolon or hyphen. Or leave it empty"
           }
         }
       }]
     }
   ,{
     "type": "combobox",
-    "desc": "Use of 'Copy LED':<br/>0: LED are not used at all.<br/>1: ON while running or ejecting, OFF afterwards<br/>2: flashing while running or ejecting, OFF afterwards<br/>3: ON while running or ejecting, afterwards OFF (0/100) or flashing (other codes)<br/>4: flashing while running or ejecting, afterwards OFF or flashing (other codes or ejection failing)<br/>5: flashing while running or ejection, afterwards OFF (0/100) or ON (other codes or ejectionFail)",
-    "subitems": [{ 
+    "desc": "Use of 'Copy LED':<br/>0: This LED is not used at all by this package.<br/>1: ON while running or ejecting, OFF afterwards<br/>2: flashing while running or ejecting, OFF afterwards<br/>3: ON while running or ejecting, afterwards OFF or flashing to indicate a failure<br/>4: flashing while running or ejecting, afterwards OFF (success) or flashing (failure)<br/>5: flashing while running or ejection, afterwards OFF (success) or ON (failure)",
+    "subitems": [{
       "key": "config_LED_COPY",
       "autoSelect": true,
       "editable": false,
       "desc": "Copy LED",
       "defaultValue": "@LED_COPY@",
-      "width": "360",
+      "width": "350",
       "mode": "local",
       "valueField": "myId",
       "displayField": "displayText",
@@ -149,13 +189,13 @@
     }  
   ,{
     "type": "combobox",
-    "desc": "Use of status LED:<br/>0: Not used at all<br/>1: Green while running, green flashing during eject, OFF if finished with 0 or 100, orange flashing for other results or failed eject<br/>2: Green flashing while script is running or ejecting, green if finished with 0 or 100, orange flashing for other results or failed eject<br/>3: Green while script is running and during eject, OFF when finished, orange flashing if ejection failed",
+    "desc": "Use of status LED:<br/>0: Not used at all<br/>1: Green while running, green flashing during eject, OFF (success), orange flashing (failure)<br/>2: Green flashing while script is running or ejecting, green if finished (success) or orange flashing (failure)<br/>3: Green while script is running and during eject, OFF (success), orange flashing (failure)",
     "subitems": [{
       "key": "config_LED",
       "autoSelect": true,
       "editable": false,
       "desc": "Status LED",
-      "width": "360",
+      "width": "350",
       "mode": "local",
       "valueField": "myId",
       "displayField": "displayText",
@@ -169,16 +209,34 @@
     }
   ,{
     "type": "multiselect",
-    "desc": "<br/>Beeper use by the script: Short beep at begin and end, tripple long beep for an error",
+    "desc": "<br/>Beeper use by the script: Short beep at begin and end, tripple long beep for an failure",
     "subitems": [{
       "key": "config_BEEP",
       "desc": "Beep at start and end",
       "defaultValue": "@BEEP@"
       }]
     }
-  ,{
+    ,{
+      "type": "textfield"
+      ,"desc": "<strong>Eject: </strong><br>For the here specified return codes of your script the external storage device will be ejected after the script is finished. E.g. '100;111-119;255'."
+      ,"subitems": [{
+        "key": "config_EJECT_RETURN_CODES"
+        ,"desc": "Return codes for EJECT"
+        ,"width": "350"
+        ,"defaultValue": "@EJECT_RETURN_CODES@"
+        ,"emptyText": "e.g. 100;110-119"
+        ,"validator": {
+          "allowBlank": true
+          ,"regex": {
+            "expr": "/^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:[-;]([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))*$/"
+            ,"errorText": "Enter one or more numbers 0..255, seperated by semicolon or hyphen. Or leave it empty"
+            }
+          }
+        }]
+      }
+    ,{
     "type": "textfield"
-    ,"desc": "If the script ends with the exit code 100, it will be tried to eject the device. You can specify the timeout (in seconds) for ejecting the device"
+    ,"desc": "The above specified exit codes from the script will unmount and eject the device when the script is finished. All other exit values will leave it mounted.<br/><br/>When trying to eject the device, the drive may still be in use. You can specify the timeout (in seconds) for ejecting the device"
     ,"subitems": [{ 
       "key": "config_EJECT_TIMEOUT"
       ,"desc": "Eject Timeout [s]"
@@ -194,8 +252,8 @@
     }  
   ,{
     "type": "textfield",
-    "desc": "You can optionally specify a further script (with full path!), which is in case of requested eject (with exit code 100 from your 1st script) executed after the ejection. This may be used e.g. to power down your USB device. If ejection failed, the argument will be 'Ejection failed', at success no argument!",
-    "subitems": [{ 
+    "desc": "Hint: In some cases the ejection may seem to be successfully but not really well done. And the device will probably not be well mounted at the next connect. This was observed for devices with the BTRFS file system, which have been used in a during eject still running docker container using that mount path.<br><br>You can optionally specify a further script (with full path!), which is executed after the ejection. This may be used e.g. to power down your USB device. If ejection failed, the argument will be 'Ejection failed', at success no argument!",
+    "subitems": [{
       "key": "config_SCRIPT_AFTER_EJECT"
       ,"desc": "Script after eject (on DSM)"
       ,"width": "350"
@@ -206,19 +264,19 @@
         }
       }]
     }
-    ] 
+    ]
   }
 ,{
   "step_title": "Security Configuration",
   "items": [{
     "type": "combobox",
-    "desc": "The script with the matching name is exectuted with root priviledges on your DSM! That could be a security risk, especially it its located on the external device! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/><b>Currently there are @ENTRY_COUNT@ script hashes registerd.</b><br/>0: The security feature is not used. All scripts with matching name are allowed. No change of registered hashes.<br/>1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again.<br/>2: The hash value of any script with matching name will be registered and executed! (Add hashes)<br/>3: Only previously registered scripts are allowed. (Registration frozen)",
+    "desc": "The script with the matching name is exectuted with root priviledges on your DSM! That could be a security risk, especially it its located on the external device! For better security a restriction to scripts with pre-registered sha256 hash values (finger prints) is possible.<br/><b>Currently there are @ENTRY_COUNT@ script hashes registerd.</b><br/>0: This security feature is not used. All scripts with matching name are allowed. No change of possibly previously registered hashes.<br/>1: @HASH_DELETION@The 1st script after installation/configuration will be registered and is allowed to execute then again and again. Other scripts are denied.<br/>2: The hash value of any script with matching name will be added to the registered scripts and executed! If you use this now, you should change that configuration later to value 3!<br/>3: Only previously registered scripts are allowed to execute. The registration is frozen.",
     "subitems": [{
       "key": "config_ADD_NEW_FINGERPRINTS"
       ,"autoSelect": true
       ,"editable": false
       ,"desc": "Script Hash registration"
-      ,"width": "360"
+      ,"width": "350"
       ,"mode": "local"
       ,"valueField": "myId"
       ,"displayField": "displayText"
@@ -226,7 +284,7 @@
       ,"store": {
         "xtype": "arraystore"
         ,"fields": ["myId", "displayText"]
-        ,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any hash value"], [3, "3 Only previously registered"]]
+        ,"data": [[0, "0 Feature not used (unrestricted)"], [1, "1 1st script allowed"], [2, "2 Add any new hash value"], [3, "3 Only previously registered"]]
         }
       ,"validator": { 
         "regex": {
@@ -237,18 +295,5 @@
       }]
     }]
   } 
-,{
-  "step_title": "IMPORTANT: Manual Action Required!",
-  "items": [{
-    "type": "textfield",
-    "desc": "Third party packages are restricted by Synology in DSM 7.x! Since autorun does require root permission to perform its job an additional manual step is required after the installation.<br/><br/>Open a SSH command shell to your NAS (as an admin user) and execute the following command <b>after</b> the installation is finished.<br>Instead of via a SSH command window you can execute this command via a userdefined script (as user 'root'), generated via control panel, scheduled task. And run that after the finished installation.<br>You may copy the command now!",
-    "subitems": [{
-      "key": "ignore_value",
-      "desc": "Command",
-      "width": "440",
-      "defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
-      }]
-    }]
-  }
 ]
 

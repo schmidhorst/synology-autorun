@@ -21,44 +21,54 @@
 # Initiate system
 # --------------------------------------------------------------
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/syno/bin:/usr/syno/sbin
-bDebug="0" # no Buttons for the LED control at bottom as permission is not sufficient to to it!
-  # SCRIPT_NAME=/webman/3rdparty/<appName>/settings.cgi
+bDebug="0" # 0= do cgiLogin, evaluateCgiLogin; 1= skip cgiLogin, evaluateCgiLogin
+# SCRIPT_NAME=/webman/3rdparty/<appName>/settings.cgi
 if [[ -z "$SCRIPT_NAME" ]]; then  # direct start in debug run
   SCRIPT_NAME="/webman/3rdparty/autorun/index.cgi"
   bDebug=1
   echo "###### index.cgi executed in debug mode!!  ######"
 fi
-  # $0=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
+# $0=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
 app_link=${SCRIPT_NAME%/*} # "/webman/3rdparty/<appName>"
 app_name=${app_link##*/} # "<appName>"
-  # DOCUMENT_URI=/webman/3rdparty/<appName>/settings.cgi
-  # PWD=/volume1/@appstore/<appName>/ui
+# DOCUMENT_URI=/webman/3rdparty/<appName>/settings.cgi
+# PWD=/volume1/@appstore/<appName>/ui
 user=$(whoami) # EnvVar $USER may be not well set, user is '<appName>'
-  # REQUEST_URI=/webman/3rdparty/<appName>/settings.cgi
-  # SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
+# REQUEST_URI=/webman/3rdparty/<appName>/settings.cgi
+# SCRIPT_FILENAME=/usr/syno/synoman/webman/3rdparty/<appName>/settings.cgi
 display_name="Tool for script execution at storage (USB or eSATA) connect to DSM 7" # used as title of Page
-LOG="/var/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
+if [[ -w "/var/log/packages/${app_name}.log" ]]; then
+  LOG="/var/log/packages/${app_name}.log"
+elif [[ -w "/var/tmp/${app_name}.log" ]]; then
+  LOG="/var/tmp/${app_name}.log"  # no permission if default -rw-r--r-- root:root was not changed
+fi
+#line="$(grep -i "DEBUGLOG=" "/var/packages/$app_name/var/config")"
+#if [[ -n "$line" ]]; then # entry available
+#  LOG="$(echo "$line" | sed -e 's/^DEBUGLOG="//' -e 's/"$//')"
+#fi
 DTFMT="+%Y-%m-%d %H:%M:%S" # may be overwritten by parse_hlp
-echo -e "\n$(date "$DTFMT"): App '$app_name' file '$0' started as user '$user' ..." >> "$LOG"
-echo -e "$(date "$DTFMT"): with parameters '$QUERY_STRING'" >> "$LOG" # e.g. "action=copyLedOff"
-# $0=/usr/syno/synoman/webman/3rdparty/<appName>/index.cgi
+msg1="App '$app_name' file '$(basename "${BASH_SOURCE[0]}")' started as user '$user' with parameters '$QUERY_STRING' ..."
 # ah="/volume*/@appstore/$app_name/ui"
 # app_home=$(find $ah -maxdepth 0 -type d) # Attention: find is not working with the wildcard in the quotet part of path!!
 app_home=$(find /volume*/@appstore/"$app_name/ui" -maxdepth 0 -type d)
 
-# Load urlencode and urldecode function from ../modules/parse_hlp.sh:
+# Load urlencode and urldecode, logInfoNoEcho, ... function from ../modules/parse_hlp.sh:
 if [ -f "${app_home}/modules/parse_hlp.sh" ]; then
-  source "${app_home}/modules/parse_hlp.sh"
+  source "${app_home}/modules/parse_hlp.sh" # includes reading of LOGLEVEL from config file
   res=$?
-  echo "$(date "$DTFMT"): Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
+  # echo "$(date "$DTFMT"): $msg1<br>Loading ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() done with result $res" >> "$LOG"
   if [[ "$res" -gt 1 ]]; then
-    echo "### Loading ${app_home}/modules/parse_hlp.sh failed!! ###"
+    echo "### Loading ${app_home}/modules/parse_hlp.sh failed!! res='$res' ###" >> "$LOG"
     exit
   fi
 else
-  echo "$(date "$DTFMT"): Failed to find ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() skipped" >> "$LOG"
-  echo "Failed to find ${app_home}/modules/parse_hlp.sh"
+  echo "$(date "$DTFMT"): $msg1<br>Failed to find ${app_home}/modules/parse_hlp.sh with functions urlencode() and urldecode() skipped" >> "$LOG"
+  echo -e "$msg1\nFailed to find ${app_home}/modules/parse_hlp.sh"
   exit
+fi
+logInfoNoEcho 8 "$msg1"
+if [[ "$app_name" == "ui" ]]; then
+  logInfoNoEcho 1 "wrong app_name='$app_name'"
 fi
 
 # Evaluate app authentication
@@ -66,8 +76,10 @@ fi
 # Read out and check the login authorization  ( login.cgi )
 if [[ "$bDebug" -eq 0 ]]; then
   cgiLogin # see parse_hlp.sh, sets $syno_login, $syno_token, $syno_user, $is_admin
+  # this may fail with permission denied and result 3
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
+    echo "$(date "$DTFMT"): $(basename "${BASH_SOURCE[0]}"), calling cgiLogin failed, ret='$ret' " >> "$LOG"
     exit
   fi
 else
@@ -77,10 +89,10 @@ fi
 if [ -x "${app_home}/modules/parse_language.sh" ]; then
   source "${app_home}/modules/parse_language.sh" "${syno_user}"
   res=$?
-  logInfoNoEcho 7 "Loading ${app_home}/modules/parse_language.sh done with result $res"
+  logInfoNoEcho 8 "Loading ${app_home}/modules/parse_language.sh done with result $res"
   # || exit
 else
-  logInfo 1 "Loading ${app_home}/modules/parse_language.sh failed"
+  logInfoNoEcho 1 "Loading ${app_home}/modules/parse_language.sh failed"
   exit
 fi
 
@@ -90,9 +102,10 @@ declare -A get # associative array for parameters (POST, GET)
 
 # Evaluate app authentication
 if [[ "$bDebug" -eq 0 ]]; then
-  evaluateCgiLogin #
+  evaluateCgiLogin # in parse_hlp.sh
   ret=$?
   if [[ "$ret" -ne "0" ]]; then
+    logInfoNoEcho 1 "Execution of evaluateCgiLogin failed, ret='$ret'"
     exit
   fi
 else
@@ -104,11 +117,18 @@ fi
 unset syno_login rar_data syno_privilege
 readonly syno_token syno_user user_exist is_admin # is_authenticated
 
+licenceFile="licence_${used_lang}.html"
+if [[ ! -f "licence_${used_lang}.html" ]]; then
+  licenceFile="licence_enu.html"
+fi
+
 if [ "$is_admin" != "yes" ]; then
   echo "Content-type: text/html"
   echo
   echo "<!doctype html><html lang=\"${SYNO2ISO[${used_lang}]}\">"
   echo "<HEAD><TITLE>$app_name: ${LoginRequired}</TITLE></HEAD><BODY>${PleaseLogin}<br/>"
+  echo "<button onclick=\"location.href='$licenceFile'\" type=\"button\">${btnShowLicence}</button> "
+
   echo "<br/></BODY></HTML>"
   logInfoNoEcho 1 "Admin Login required!"
   echo "Admin Login required!"
@@ -118,7 +138,7 @@ fi
 #appCfgDataPath=$(find /volume*/@appdata/${app_name} -maxdepth 0 -type d)
 appCfgDataPath="/var/packages/${app_name}/var"
 if [ ! -d "${appCfgDataPath}" ]; then
-  logInfo 1 "... terminating as app home folder '$appCfgDataPath' not found!"
+  logInfoNoEcho 1 "... terminating $(basename "${BASH_SOURCE[0]}") as app home folder '$appCfgDataPath' not found!"
   echo "$(date "$DTFMT"): ls -l /:" >> "$LOG"
   ls -l / >> "$LOG"
   exit
@@ -126,12 +146,13 @@ fi
 
 # Generate the text with the actual settings values and the language specific descriptions:
 st=$(echo "$settingsTitle")  # = eval the $app_name in the $settingsTitle
-ledResetHintRequired=0
+ledResetPossiblyRequired=0
 securityWarningDone=0
 while read line; do # read all settings from config file
   itemName=${line%%=*}
-  if [[ "$itemName" != "VERSION" ]]; then # skip the VERSION entry as this is not a real setting and only used for re-installation
-    eval "$line"
+  if [[ "$itemName" != "DEBUGLOG" ]]; then # skip the VERSION entry as this is not a real setting
+    # eval "$line" # not secure, code injection may be possible
+    declare "${line%%=*}"="$(echo "${line#*=}" | sed -e 's/^"//' -e 's/"$//')" # more secure
     settings="${settings}$itemName='${!itemName}'<br/>"
     if [[ "$itemName" == "ADD_NEW_FINGERPRINTS" ]]; then
       settings="${settings}<p style=\"margin-left:30px;\">"
@@ -151,12 +172,12 @@ while read line; do # read all settings from config file
     elif [[ "$itemName" == "LED" ]]; then
       settings="${settings}<p style=\"margin-left:30px;\">${settingLedStatus}<br/></p>"
       if [[ "${!itemName}" -ne "0" ]]; then
-        ledResetHintRequired=1
+        ledResetPossiblyRequired=1
       fi
     elif [[ "$itemName" == "LED_COPY" ]]; then
       settings="${settings}<p style=\"margin-left:30px;\">${settingLedCopy}<br/></p>"
-      if [[ "${!itemName}" -ne "0" ]]; then
-        ledResetHintRequired=1
+      if [[ "${!itemName}" -ge "3" ]]; then
+        ledResetPossiblyRequired=1
       fi
     elif [[ "$itemName" == "EJECT_TIMEOUT" ]]; then
       settings="${settings}<p style=\"margin-left:30px;\">${settingEjectTimeout}<br/></p>"
@@ -168,9 +189,17 @@ while read line; do # read all settings from config file
       settings="${settings}<p style=\"margin-left:30px;\">${settingNoDsmMessageReturnCodes}<br/></p>"
     elif [[ "$itemName" == "LOGLEVEL" ]]; then
       settings="${settings}<p style=\"margin-left:30px;\">${settingLogVerbose}<br/></p>"
+    elif [[ "$itemName" == "CAPTURE" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingCapture}<br/></p>"
+      elif [[ "$itemName" == "FAILURE_CODES" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingFailureCodes}<br/></p>"
+    elif [[ "$itemName" == "CGIDEBUG" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingCGIDEBUG}<br/></p>"
+    elif [[ "$itemName" == "EJECT_RETURN_CODES" ]]; then
+      settings="${settings}<p style=\"margin-left:30px;\">${settingsEjectReturnCodes}<br/></p>"
     fi
     if [[ "$ADD_NEW_FINGERPRINTS" == "0" ]] || [[ "$ADD_NEW_FINGERPRINTS" == "2" ]]; then
-      if [[ "$SCRIPT" != *"/"* ]] && [[ "$securityWarningDone" -eq "0" ]]; then
+      if [[ -n "$SCRIPT" ]] && [[ "$SCRIPT" != *"/"* ]] && [[ "$securityWarningDone" -eq "0" ]]; then
         settings="${settings}<p>${settingSecurityWarning}<br/></p>"
         securityWarningDone="1"
       fi
@@ -178,16 +207,13 @@ while read line; do # read all settings from config file
   fi
   # echo "  line='$line', itemName='$itemName', value='${!itemName}'" >> "$LOG"
 done < "$appCfgDataPath/config" # Works well even if last line has no \n!
-if [[ "$ledResetHintRequired" -ne "0" ]]; then
-  settings="${settings}<p><br>${ledResetHint}</p>"
-fi
 ENTRY_COUNT=0
 if [[ -f "$appCfgDataPath/FINGERPRINTS" ]]; then
   ENTRY_COUNT=$(wc -l < "$appCfgDataPath/FINGERPRINTS")
 fi
 if [[ "$ENTRY_COUNT" -gt "0" ]]; then
   settings="${settings}${settingHeadlineFingerprints}<br/><p style=\"margin-left:30px;\">"
-  while read line; do # read all settings from logfile
+  while read -r line; do
     settings="${settings}${line}<br>"
   done < "$appCfgDataPath/FINGERPRINTS" # Works well even if last line has no \n!
   settings="${settings}<br></p>"
@@ -211,7 +237,7 @@ fi
 
 # If no page set, then show home page
 #if [ -z "${get[page]}" ]; then
-#  logInfoNoEcho 6 "generating $get_request ..." # /volume1/@appstore/autorun/ui/temp/get_request.txt
+#  logInfoNoEcho 6 "generating file $get_request ..." # /volume1/@appstore/autorun/ui/temp/get_request.txt
 #  /usr/syno/bin/synosetkeyvalue "${get_request}" "get[page]" "main"  # write and read an .ini style file with lines of key=value pairs
 #  /usr/syno/bin/synosetkeyvalue "${get_request}" "get[section]" "start"
 #  /usr/syno/bin/synosetkeyvalue "${get_request}" "get[SynoToken]" "$syno_token"
@@ -227,28 +253,20 @@ fi
 
 
 # Analyze incoming POST requests and process them to ${get[key]}="$value" variables
-cgiDataEval 
+cgiDataEval # parse_hlp.sh, setup associative array get[] from the request (POST and GET)
 
 if [[ -n "${get[action]}" ]]; then
   val="${get[action]}"
-  if [[ "$val" == "copyLedOn" ]]; then # not working!!! Would require root permission!
-    res=$(/bin/echo "@" > /dev/ttyS1) # @   0x40  Copy LED on
+  # action=LedChange&led=7
+  if [[ "$val" == "LedChange" ]]; then 
+    val2="${get[led]}" # "%40"="@", "B", "8", or "7" # @ = 0x40  Copy LED on
+    # res=$(/bin/echo "@" > /dev/ttyS1)  # not working!!! Would require root permission!
+    # setup a job file and do it in the start-stop-status script at the periodically done status check:
+    /bin/printf "%s\n" "$val2" >> "$appCfgDataPath/ledChange"
     ret=$?
-    logInfoNoEcho 8 "CopyLED ON done with $ret: '$res'"
-  elif [[ "$val" == "copyLedOff" ]]; then # not working!!! Would require root permission!
-    res=$(/bin/echo "B" > /dev/ttyS1) # B   0x42  Copy LED off
-    ret=$?
-    logInfoNoEcho 8 "CopyLED OFF done with $ret: '$res'"
-  elif [[ "$val" == "statusLedGreen" ]]; then  # not working!!! Would require root permission!
-    /bin/echo "8" > /dev/ttyS1 # 8  0x38  Status LED green (default)
-    logInfoNoEcho 8 "StatusLED green done"
-  elif [[ "$val" == "statusLedOff" ]]; then  # not working!!! Would require root permission!
-    /bin/echo "7" > /dev/ttyS1 # 7  0x37  Status LED off
-    logInfoNoEcho 8 "StatusLED green done"
+    logInfoNoEcho 8 "'$val2' written to file '$appCfgDataPath/ledChange'"
   fi
 fi
-
-
 
 # Layout output
 # --------------------------------------------------------------
@@ -283,8 +301,21 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
 
           # HTTP GET and POST requests
           echo "<button onclick=\"location.href='index.cgi'\" type=\"button\">${btnShowSimpleLog}</button>"
+          # echo "$ledCtrlHint<br/>" # "If the LEDs indication still an error, you can reset it here:"
+          if [[ "$ledResetPossiblyRequired" -ne "0" ]] && [[ "$bDebug" -ne 0 ]]; then
+            echo "${labelCopyLed}:"
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=%40'\" type=\"button\">${btnLedOn}</button> "
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=A'\" type=\"button\">${btnLedFlash}</button> "
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=B'\" type=\"button\">${btnLedOff}</button> "
+            echo "${labelStatusLed}:"
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=8'\" type=\"button\">${btnStatusLedGreen}</button> "
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=9'\" type=\"button\">${btnLedGreenFlash}</button> "
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=%3A'\" type=\"button\">${btnLedOrange}</button> "
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=%3B'\" type=\"button\">${btnLedOrangeFlash}</button> "
+            echo "<button onclick=\"location.href='settings.cgi?action=LedChange&led=7'\" type=\"button\">${btnLedOff}</button><br/>"
+          fi
           #echo '<br \>'
-          echo "<p><strong>$st</strong></p>"
+          echo "<p><strong>$st</strong></p>" # "Actual settings:"
           echo "${settings}"
         else
           # Infotext: Access allowed only for users from the Administrators group
@@ -295,18 +326,11 @@ if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]; then
         else
           echo "<p>Could not find a supported language in your webbrowser regional preferences '${HTTP_ACCEPT_LANGUAGE}'. Therefore English is used.</p>"
         fi
-        if [[ "$bDebug" -eq "1" ]]; then # LED control is not working, permission denied!
-          echo "$ledCtrlHint<br/>"
-          echo "<button onclick=\"location.href='index.cgi?action=copyLedOn'\" type=\"button\">CopyLED ON</button> "
-          echo "<button onclick=\"location.href='index.cgi?action=copyLedOff'\" type=\"button\">${btnCopyLedOff}</button> "
-          echo "<button onclick=\"location.href='index.cgi?action=statusLedGreen'\" type=\"button\">${btnStatusLedGreen}</button> "
-          echo "<button onclick=\"location.href='index.cgi?action=statusLedOff'\" type=\"button\">${btnStatusLedOff}</button><br/>"
-        fi
         echo '
       </article>
     </body>
   </html>'
 fi # if [ $(synogetkeyvalue /etc.defaults/VERSION majorversion) -ge 7 ]
-logInfoNoEcho 4 "$(basename "$0") done"
+logInfoNoEcho 4 "... $(basename "${BASH_SOURCE[0]}") done"
 exit
 

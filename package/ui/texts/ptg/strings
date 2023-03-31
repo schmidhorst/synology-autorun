@@ -1,9 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0=""
-msg1=""
-msg2=""
+title02="Roteiro Autorun"
+msg0="{0}"
 msg3="A impressão digital do guião '{0}' ({1}) foi registada agora como guião permitido."
 msg4="No dispositivo inserido há um script '{1}' ({2}). O nome do guião corresponde à configuração do pacote {0}. Mas não é permitido executar a impressão digital do guião."
 msg5="No dispositivo inserido há um guião '{1}'. O nome do script corresponde à configuração do pacote '{0}. Mas esse script não é permitido para {3}."
@@ -11,7 +10,14 @@ msg6="No dispositivo inserido há um guião '{1}'. O nome do script corresponde 
 msg7="O script {0} no dispositivo {1} foi terminado com o resultado {2}. !!! Atenção: A ejecção do dispositivo falhou!!!!{3}"
 msg8="O guião {0} no dispositivo {1} foi terminado com o resultado {2}.{3}O dispositivo foi ejectado. No dispositivo há {4}Bytes livres."
 msg9="O script {0} no dispositivo {1} foi terminado com o resultado {2}.{3}No dispositivo há {4}Bytes livres."
-msg10="Erro: No caso do resultado 100 do script {1} no dispositivo USB/eSATA, o pacote {0} deve ejectar o dispositivo e depois executar o script {2} na estação de disco. Esse script {2} não está disponível ou não pode ser executado!{3}"
+msg10="Erro: No caso do resultado real do script {1}, o dispositivo externo USB/eSATA deve ejectar o dispositivo e depois o script {2} ser executado na estação de disco. Esse script {2} não está disponível ou não é executável!{3}"
 msg14="Erro: O Skript '{0}', que deve ser executado, utiliza a quebra de linha errada CR/LF (Windows). Por favor, use um Editor siutable (Linux ou Windows Notepad++, PSPad, ...) para o alterar para LF (UNIX)!"
 msg15="Erro: O Skript '{0}', que deve ser executado, utiliza a codificação errada (Windows ISO-8859). Por favor, use um Editor siutable (Linux ou Windows Notepad++, PSPad, ...) para o alterar para UTF-8!"
 msg16="Erro: O Skript '{0}', que deve ser executado, utiliza a quebra de linha errada CR (MAC). Por favor, use um Editor siutable (por exemplo BBEdit/TextWrangler) para o alterar para LF (UNIX)!"
+
+[app_help]
+main="Autorun"
+node01="Segurança"
+node02="Roteiro"
+node03="Agendador de Tarefas"
+

@@ -1,9 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0=""
-msg1=""
-msg2=""
+title02="Autorun skript"
+msg0="{0}"
 msg3="Otisk skriptu '{0}' ({1}) byl nyní zaregistrován jako povolený skript."
 msg4="Na vloženém zařízení je skript \"{1}\" ({2}). Název skriptu odpovídá nastavení balíčku {0}. Ale otisk skriptu není povolen ke spuštění."
 msg5="Na vloženém zařízení je skript '{1}'. Název skriptu odpovídá nastavení balíčku {0}. Tento skript však není povolen pro {3}."
@@ -11,7 +10,14 @@ msg6="Na vloženém zařízení je skript '{1}'. Název skriptu odpovídá nasta
 msg7="Skript {0} na zařízení {1} byl dokončen s výsledkem {2}. !!! Pozor: Vysunutí zařízení se nezdařilo!!!!.{3}"
 msg8="Skript {0} na zařízení {1} byl dokončen s výsledkem {2}.{3}Zařízení bylo vysunuto. Na zařízení jsou volné {4}Bajty."
 msg9="Skript {0} na zařízení {1} byl dokončen s výsledkem {2}.{3}Na zařízení je volných {4}Bajtů."
-msg10="Chyba: V případě výsledku 100 ze skriptu {1} na zařízení USB/eSATA by měla Schránka {0} vysunout zařízení a poté spustit skript {2} na diskové stanici. Tento skript {2} není k dispozici nebo není spustitelný!{3}"
+msg10="Chyba: V případě skutečného výsledku skriptu {1} by mělo být externí zařízení USB/eSATA vysunuto a poté by měl být na diskové stanici proveden skript {2}. Tento skript {2} není k dispozici nebo není spustitelný!{3}"
 msg14="Chyba: Skript '{0}', který by měl být proveden, používá nesprávný zlom řádku CR/LF (Windows). Použijte siutabilní editor (Linux oder Windows Notepad++, PSPad, ...) a změňte jej na LF (UNIX)!"
 msg15="Chyba: Skript '{0}', který by měl být proveden, používá nesprávné kódování (Windows ISO-8859). Použijte prosím siutabilní editor (Linux oder Windows Notepad++, PSPad, ...) pro změnu na UTF-8!"
 msg16="Chyba: Skript '{0}', který by měl být proveden, používá špatné zalomení řádku CR (MAC). Použijte siutabilní editor (např. BBEdit/TextWrangler), abyste jej změnili na LF (UNIX)!"
+
+[app_help]
+main="Autorun"
+node01="Zabezpečení"
+node02="Skript"
+node03="Plánovač úloh"
+

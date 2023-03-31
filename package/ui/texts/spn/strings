@@ -1,9 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0=""
-msg1=""
-msg2=""
+title02="Script de ejecución automática"
+msg0="{0}"
 msg3="La huella digital del script '{0}' ({1}) se ha registrado ahora como script permitido."
 msg4="En el dispositivo insertado hay un script '{1}' ({2}). El nombre del script coincide con la configuración del paquete {0}. Pero la huella digital del script no se puede ejecutar."
 msg5="En el dispositivo insertado hay un script '{1}'. El nombre del script coincide con la configuración del paquete {0}. Pero ese script no está permitido para {3}."
@@ -11,7 +10,14 @@ msg6="En el dispositivo insertado hay un script '{1}'. El nombre del script coin
 msg7="La secuencia de comandos {0} en el dispositivo {1} ha terminado con el resultado {2}. ¡¡¡!!! Atención: ¡¡¡¡La expulsión del dispositivo falló!!!!{3}"
 msg8="La secuencia de comandos {0} en el dispositivo {1} ha finalizado con el resultado {2}.{3}El dispositivo fue expulsado. En el dispositivo hay {4}Bytes libres."
 msg9="La secuencia de comandos {0} en el dispositivo {1} ha finalizado con el resultado {2}.{3}En el dispositivo hay {4}Bytes libres."
-msg10="Error: En el caso del resultado 100 del script {1} en el dispositivo USB/eSATA el Paquete {0} debe expulsar el dispositivo y luego ejecutar el script {2} en la estación de disco. Ese script {2} no está disponible o no es ejecutable.{3}"
+msg10="Error: En caso del resultado real del script {1} el dispositivo externo USB/eSATA debe expulsar el dispositivo y entonces el script {2} ser ejecutado en la estación de disco. Ese script {2} no está disponible o no es ejecutable!{3}"
 msg14="Error: El Skript '{0}', que debería ser ejecutado, utiliza un salto de línea CR/LF incorrecto (Windows). ¡Por favor, utilice un editor siutable (Linux oder Windows Notepad++, PSPad, ...) para cambiarlo a LF (UNIX)!"
 msg15="Error: El Skript '{0}', que debería ser ejecutado, utiliza una codificación incorrecta (Windows ISO-8859). ¡Por favor, utilice un editor siutable (Linux oder Windows Notepad++, PSPad, ...) para cambiarlo a UTF-8!"
 msg16="Error: El Skript '{0}', que debería ser ejecutado, utiliza el salto de línea CR (MAC) incorrecto. ¡Por favor, utilice un editor siutable (por ejemplo, BBEdit/TextWrangler) para cambiarlo a LF (UNIX)!"
+
+[app_help]
+main="Autorun"
+node01="Seguridad"
+node02="Guión"
+node03="Programador de tareas"
+

@@ -1,8 +1,7 @@
 [app1]
 title01="Autorun"
-msg0=""
-msg1=""
-msg2=""
+title02="Autorun Script"
+msg0="{0}"
 msg3="The fingerprint of the script '{0}' ({1}) has been registered now as allowed script."
 msg4="On the inserted device there is a script '{1}' ({2}). The script name is matching the setup of the {0} package. But the fingerprint of the script is not allowed to execute."
 msg5="On the inserted device there is a script '{1}'. The script name is matching the setup of the {0} package. But that script is not allowed for {3}."
@@ -10,14 +9,14 @@ msg6="On the inserted device there is a script '{1}'. The script name is matchin
 msg7="The script {0} on the device {1} was finished with the result {2}. !!! Attention: The ejection of the device failed!!!!{3}"
 msg8="The script {0} on the device {1} was finished with the result {2}.{3}The device was ejected. On the device there are {4}Bytes free."
 msg9="The script {0} on the device {1} was finished with the result {2}.{3}On the device there are {4}Bytes free."
-msg10="Error: In case of the result 100 from the script {1} on the USB/eSATA device the Package {0} should eject the device and then execute the script {2} on the disk station. That script {2} is not available or not executable!{3}"
+msg10="Error: In case of the actual result from the script {1} the external USB/eSATA device should eject the device and then the script {2} be executed on the disk station. That script {2} is not available or not executable!{3}"
 msg14="Error: The Script '{0}', which should be executed, uses the wrong line break CR/LF (Windows). Please use a suitable Editor (Linux or Windows Notepad++, PSPad, ...) to change it to LF (UNIX)!"
 msg15="Error: The Script '{0}', which should be executed, uses the wrong coding (Windows ISO-8859). Please use a suitable Editor (Linux or Windows Notepad++, PSPad, ...) to change it to UTF-8!"
 msg16="Error: The Script '{0}', which should be executed, uses the wrong line break CR (MAC). Please use a suitable Editor (e.g. BBEdit/TextWrangler) to change it to LF (UNIX)!"
 
 [app_help]
-index="Autorun Index (ENU)"
-node01="Autorun 01 (ENU)"
-node01_child="Autorun 01 Child (ENU)"
-node02="Autorun 02 (ENU)"
+main="Autorun"
+node01="Security"
+node02="Script"
+node03="Task Scheduler"
 

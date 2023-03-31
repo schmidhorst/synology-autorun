@@ -1,9 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0=""
-msg1=""
-msg2=""
+title02="Autorun Script"
+msg0="{0}"
 msg3="De vingerafdruk van het script '{0}' ({1}) is nu geregistreerd als toegestaan script."
 msg4="Op het geplaatste apparaat staat een script '{1}' ({2}). De scriptnaam komt overeen met de instelling van het {0} pakket. Maar de vingerafdruk van het script mag niet worden uitgevoerd."
 msg5="Op het geplaatste apparaat staat een script '{1}'. De scriptnaam komt overeen met de instelling van het {0} pakket. Maar dat script is niet toegestaan voor {3}."
@@ -11,7 +10,14 @@ msg6="Op het geplaatste apparaat staat een script '{1}'. De scriptnaam komt over
 msg7="Het script {0} op het apparaat {1} werd beëindigd met het resultaat {2}. !!! Attentie: Het uitwerpen van het apparaat is mislukt!!!!{3}"
 msg8="Het script {0} op het apparaat {1} werd beëindigd met het resultaat {2}.{3}Het apparaat is uitgeworpen. Op het apparaat zijn {4}Bytes vrij."
 msg9="Het script {0} op het apparaat {1} werd beëindigd met het resultaat {2}.{3}Op het apparaat zijn {4}Bytes vrij."
-msg10="Fout: In het geval van het resultaat 100 van het script {1} op het USB/eSATA-apparaat moet het pakket {0} het apparaat uitwerpen en vervolgens het script {2} op het schijfstation uitvoeren. Dat script {2} is niet beschikbaar of niet uitvoerbaar!{3}"
+msg10="Fout: In het geval van het werkelijke resultaat van het script {1} moet het externe USB/eSATA-apparaat worden uitgeworpen en vervolgens het script {2} worden uitgevoerd op het schijfstation. Dat script {2} is niet beschikbaar of niet uitvoerbaar! {3}"
 msg14="Fout: Het Skript '{0}', dat moet worden uitgevoerd, gebruikt de verkeerde regeleinde CR/LF (Windows). Gebruik a.u.b. een siutable Editor (Linux oder Windows Notepad++, PSPad, ...) om het te veranderen in LF (UNIX)!"
 msg15="Fout: Het Skript '{0}', dat uitgevoerd zou moeten worden, gebruikt de verkeerde codering (Windows ISO-8859). Gebruik a.u.b. een siutable Editor (Linux oder Windows Notepad++, PSPad, ...) om het te veranderen in UTF-8!"
 msg16="Fout: Het Skript '{0}', dat uitgevoerd zou moeten worden, gebruikt de verkeerde regeleinde CR (MAC). Gebruik a.u.b. een siutable Editor (bijv. BBEdit/TextWrangler) om het te veranderen in LF (UNIX)!"
+
+[app_help]
+main="Autorun"
+node01="Beveiliging"
+node02="Script"
+node03="Taakplanner"
+

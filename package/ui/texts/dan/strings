@@ -1,9 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0=""
-msg1=""
-msg2=""
+title02="Script til autorun"
+msg0="{0}"
 msg3="Fingeraftrykket af scriptet \"{0}\" ({1}) er nu registreret som tilladt script."
 msg4="På den indsatte enhed findes der et script \"{1}\" ({2}). Scriptnavnet svarer til opsætningen af {0}-pakken. Men scriptets fingeraftryk må ikke udføres."
 msg5="På den indsatte enhed findes der et script \"{1}\". Scriptnavnet svarer til opsætningen af {0}-pakken. Men dette script er ikke tilladt for {3}."
@@ -11,7 +10,14 @@ msg6="På den indsatte enhed findes der et script \"{1}\". Navnet på scriptet s
 msg7="Scriptet {0} på enheden {1} blev afsluttet med resultatet {2}. !!! Opmærksomhed: Udkastningen af enheden mislykkedes!!!!{3}"
 msg8="Scriptet {0} på enheden {1} blev afsluttet med resultatet {2}.{3}Enheden blev skubbet ud. På enheden er der {4}Bytes fri på enheden."
 msg9="Scriptet {0} på enheden {1} blev afsluttet med resultatet {2}.{3}På enheden er der {4}Bytes fri på enheden."
-msg10="Fejl: I tilfælde af resultat 100 fra script {1} på USB/eSATA-enheden skal pakke {0} skubbe enheden ud og derefter udføre script {2} på diskstationen. Dette script {2} er ikke tilgængeligt eller kan ikke udføres!{3}"
+msg10="Fejl: I tilfælde af det faktiske resultat fra script {1} skal den eksterne USB/eSATA-enhed skubbe enheden ud, og derefter skal script {2} udføres på diskstationen. Dette script {2} er ikke tilgængeligt eller kan ikke udføres!{3}"
 msg14="Fejl: Skriptet \"{0}\", som skal udføres, bruger det forkerte linjeskift CR/LF (Windows). Brug venligst en siutable Editor (Linux oder Windows Notepad++, PSPad, ...) til at ændre det til LF (UNIX)!"
 msg15="Fejl: Skriptet '{0}', som skal udføres, bruger den forkerte kodning (Windows ISO-8859). Brug venligst en siutable Editor (Linux oder Windows Notepad++, PSPad, ...) til at ændre den til UTF-8!"
 msg16="Fejl: Skriptet \"{0}\", som skal udføres, bruger den forkerte linjeskift CR (MAC). Brug venligst en siutable editor (f.eks. BBEdit/TextWrangler) til at ændre det til LF (UNIX)!"
+
+[app_help]
+main="Autorun"
+node01="Sikkerhed"
+node02="Script"
+node03="Opgaveplanlægger"
+

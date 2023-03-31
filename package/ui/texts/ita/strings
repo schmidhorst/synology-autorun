@@ -1,9 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Autorun"
-msg0=""
-msg1=""
-msg2=""
+title02="Script Autorun"
+msg0="{0}"
 msg3="L'impronta digitale dello script '{0}' ({1}) è stata registrata come script consentito."
 msg4="Sul dispositivo inserito è presente uno script \"{1}\" ({2}). Il nome dello script corrisponde alla configurazione del pacchetto {0}. Ma l'impronta digitale dello script non può essere eseguita."
 msg5="Sul dispositivo inserito è presente uno script \"{1}\". Il nome dello script corrisponde alla configurazione del pacchetto {0}. Ma questo script non è consentito per {3}."
@@ -11,7 +10,14 @@ msg6="Sul dispositivo inserito è presente uno script \"{1}\". Il nome dello scr
 msg7="Lo script {0} sul dispositivo {1} è stato completato con il risultato {2}. !!! Attenzione: L'espulsione del dispositivo non è riuscita!!!!{3}"
 msg8="Lo script {0} sul dispositivo {1} è stato completato con il risultato {2}.{3}Il dispositivo è stato espulso. Sul dispositivo ci sono {4}Byte liberi."
 msg9="Lo script {0} sul dispositivo {1} è stato completato con il risultato {2}.{3}Sul dispositivo ci sono {4}Byte liberi."
-msg10="Errore: In caso di risultato 100 dallo script {1} sul dispositivo USB/eSATA, il Pacchetto {0} deve espellere il dispositivo e quindi eseguire lo script {2} sulla stazione disco. Lo script {2} non è disponibile o non è eseguibile!{3}"
+msg10="Errore: In caso di risultato effettivo dello script {1}, il dispositivo USB/eSATA esterno deve essere espulso e lo script {2} deve essere eseguito sulla stazione disco. Lo script {2} non è disponibile o non è eseguibile!{3}"
 msg14="Errore: Lo Skript '{0}', che dovrebbe essere eseguito, utilizza l'interruzione di riga errata CR/LF (Windows). Si prega di utilizzare un editor di tipo siutable (Linux o Windows Notepad++, PSPad, ...) per cambiarlo in LF (UNIX)!"
 msg15="Errore: Lo Skript '{0}', che dovrebbe essere eseguito, utilizza una codifica errata (Windows ISO-8859). Si prega di utilizzare un editor di siutable (Linux o Windows Notepad++, PSPad, ...) per cambiarlo in UTF-8!"
 msg16="Errore: Lo Skript '{0}', che dovrebbe essere eseguito, utilizza l'interruzione di riga CR (MAC) errata. Si prega di utilizzare un editor siutable (ad esempio BBEdit/TextWrangler) per cambiarlo in LF (UNIX)!"
+
+[app_help]
+main="Autorun"
+node01="Sicurezza"
+node02="Scrittura"
+node03="Programmatore di attività"
+

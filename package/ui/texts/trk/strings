@@ -1,9 +1,8 @@
 [app1]
 # This file was generated via DeepL machine translation from en
 title01="Otomatik Çalıştırma"
-msg0=""
-msg1=""
-msg2=""
+title02="Otomatik Çalıştırma Komut Dosyası"
+msg0="{0}"
 msg3="'{0}' ({1}) betiğinin parmak izi şimdi izin verilen betik olarak kaydedildi."
 msg4="Takılan cihazda '{1}' ({2}) komut dosyası vardır. Komut dosyası adı {0} paketinin kurulumuyla eşleşiyor. Ancak betiğin parmak izinin yürütülmesine izin verilmiyor."
 msg5="Yerleştirilen cihazda '{1}' komut dosyası var. Komut dosyası adı {0} paketinin kurulumuyla eşleşiyor. Ancak bu betiğe {3} için izin verilmiyor."
@@ -11,7 +10,14 @@ msg6="Yerleştirilen cihazda '{1}' komut dosyası var. Komut dosyası adı {0} p
 msg7="1} cihazındaki {0} komut dosyası {2} sonucuyla tamamlandı. !!! Dikkat: Cihazın çıkarılması başarısız oldu!!!!{3}"
 msg8="1} aygıtındaki {0} komut dosyası {2} sonucuyla tamamlandı.{3}Aygıt çıkarıldı. Aygıtta {4}Byte boş yer var."
 msg9="1} cihazındaki {0} komut dosyası {2} sonucuyla tamamlandı.{3}Cihazda {4}Byte boş var."
-msg10="Hata: USB/eSATA aygıtındaki {1} komut dosyasından 100 sonucunun alınması durumunda Paket {0} aygıtı çıkarmalı ve ardından disk istasyonundaki {2} komut dosyasını çalıştırmalıdır. Bu komut dosyası {2} mevcut değil veya çalıştırılabilir değil!{3}"
+msg10="Hata: Komut dosyası {1}'den gerçek sonuç alınması durumunda harici USB/eSATA aygıtı çıkarılmalı ve ardından komut dosyası {2} disk istasyonunda yürütülmelidir. Bu komut dosyası {2} mevcut değil veya çalıştırılamaz!{3}"
 msg14="Hata: Çalıştırılması gereken Skript '{0}' yanlış satır sonu CR/LF (Windows) kullanıyor. Lütfen bunu LF (UNIX) olarak değiştirmek için bir siutable Editor (Linux oder Windows Notepad++, PSPad, ...) kullanın!"
 msg15="Hata: Çalıştırılması gereken Skript '{0}' yanlış kodlama kullanıyor (Windows ISO-8859). Lütfen UTF-8'e değiştirmek için bir siutable Editor (Linux oder Windows Notepad++, PSPad, ...) kullanın!"
 msg16="Hata: Çalıştırılması gereken Skript '{0}' yanlış satır sonu CR (MAC) kullanıyor. Lütfen bunu LF (UNIX) olarak değiştirmek için bir siutable Editor (örn. BBEdit/TextWrangler) kullanın!"
+
+[app_help]
+main="Otomatik Çalıştırma"
+node01="Güvenlik"
+node02="Senaryo"
+node03="Görev Zamanlayıcı"
+

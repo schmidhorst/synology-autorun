@@ -14,7 +14,7 @@
 [![zh](https://flagcdn.com/w20/cn.png)](https://github.com/schmidhorst/synology-autorun/blob/main/README.zh.md)
 
 # autorun package V1.10 for Synology NAS
-Executes a script when connecting external storages (USB / eSATA) on a Synology NAS with DSM 7.x. Typical use is to copy or backup some files.
+Executes a script when connecting external storages (USB / eSATA) to a Synology NAS with DSM 7.x. Typical use is to copy or backup some files.
 In Synologies Task Scheduler there is the possibility to create triggered tasks. But for the trigger event there are only Boot-up and Shutdown available. There are no USB events like 'external storage mounted' available. This deficit is compensated by this tool.
 
 During the package installation to your NAS you have to enter the name of the shell script, which should be executed at the trigger event 'external storage device mounted'. The script can be located either in the root folder of the external device or internal on your NAS. Optionally you can exject that external device after your script is finished. A security option is to register the SHA256 checksum of the executed script and to restrict further executions to scripts matching the previously registered checksums.
@@ -54,5 +54,6 @@ Under https://www.cphub.net/ in the Package Center there are [elder versions](ht
 - Thanks to [Jan Reidemeister](https://github.com/reidemei) for his [Version 1.8](https://github.com/reidemei/synology-autorun) and his [License](https://github.com/reidemei/synology-autorun/blob/main/LICENSE)
 - Thanks to the [Synology Forum Thread about that autorun package](https://www.synology-forum.de/threads/autorun-fuer-ext-datentraeger.18360/)
 - Thanks to [toafez Tommes](https://github.com/toafez) and his [Demo Package](https://github.com/toafez/DSM7DemoSPK)
-- Thanks to  [geimist Stephan Geisler](https://github.com/geimist) and hit tip to use the [DeepL API](https://www.deepl.com/docs-api) for translations to other languages.
+- Thanks to  [geimist Stephan Geisler](https://github.com/geimist) and his tip to use the [DeepL API](https://www.deepl.com/docs-api) for translations to other languages.
+- Thanks to QTip and his explanation about the help integration [Integration einer Hilfe in DSM 5.1-](https://www.synology-wiki.de/index.php/Integration_einer_Hilfe_in_DSM_5.1-)
 

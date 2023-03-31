@@ -1,5 +1,11 @@
-1.10.0 Horst Schmid
  !!! A MANUAL STEP IS REQUIRED AFTER THE INSTALLATION !!!  See V1.8 below!
+1.10.0011
+ - Eject can be triggered by a list of exit codes, no more only at exit code 100
+ - Help added, integrated to the Synology Help
+ - Several improvements (Installation Wizzard, Logging, ...)
+ - Several Bugs fixed
+
+1.10.0 Horst Schmid
 
  - Eject USB Drive (at exit code 100) reworked, so that it works also on DSM 7.x
  - UDEV daemon is no more blocked if a long running scripts is strarted by this tool

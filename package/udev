@@ -1,34 +1,39 @@
-#!/bin/ash
+#!/bin/bash
 # Shell for root is ash. But /bin/ash is on DS220+ a link to bash!
 
-SCRIPTPATHTHIS="$( cd -- "$(/bin/dirname "$0")" >/dev/null 2>&1 ; /bin/pwd -P )" # /volumeX/@appstore/<app>
-APPNAME=${SCRIPTPATHTHIS##*/} # APPNAME="autorun"
-source "$SCRIPTPATHTHIS/common" udev # e.g. $APPDATA = "/var/packages/$APPNAME/var" is setup there
+SCRIPTPATHudev="$( cd -- "$(/bin/dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )" # /volumeX/@appstore/<app>
+app_name=${SCRIPTPATHudev##*/} # app_name="autorun"
+source "$SCRIPTPATHudev/common" udev # e.g. $APPDATA = "/var/packages/$app_name/var" is setup there
+# shellcheck source="../WIZARD_UIFILES/log_hlp.sh"
+source "/var/packages/$app_name/WIZARD_UIFILES/log_hlp.sh" udev # logInfo, logError
 
 # https://unix.stackexchange.com/questions/56243/how-to-run-long-time-process-on-udev-event
 # How to run long time process on Udev event?
 set -m # turn on "JOB CONTROL", so that Background processes are running in a separate process group and not blocking udev
 # set -o monitor
+if [[ ! -f "$LOG" ]]; then
+  LOG="/var/tmp/autorun_udev.log"
+fi
 cmd="$(cat /proc/$PPID/comm)"
-echo "$(date "$DTFMT"): $(basename "$0"), P1='$1', P2='$2', P3='$3', Parent is $PPID: $cmd" >> "$LOG"
+logInfo 3 "$(basename "${BASH_SOURCE[0]}"), P1='$1', P2='$2', P3='$3', Parent is $PPID: $cmd, BASHPID='$BASHPID'"
 if [ "$1" != "fo_real" ]; then
-  echo "$(date "$DTFMT"): udev 1st start direct from udev deamon, re-start now again via setsid ..." >> "$LOG"
+  logInfo 7 "udev 1st start direct from udev deamon, re-start now again via setsid ..."
   # https://stackoverflow.com/questions/10932592/why-fork-twice
-  /usr/bin/setsid --fork "$(/usr/bin/dirname "$0")/$(/usr/bin/basename "$0")" "fo_real" "$@" &
+  # /usr/bin/setsid --fork "$(/usr/bin/dirname "${BASH_SOURCE[0]}")/$(/usr/bin/basename "${BASH_SOURCE[0]}")" "fo_real" "$@" &
+  /usr/bin/setsid --fork "${BASH_SOURCE[0]}" "fo_real" "$@" &
   exit
 else
   shift
 fi
 # $1 is now e.g. usb1p1, $2: N.A. if started from rules, $2="xxx" may by used if started from start-stop-status script
 
-echo "$(date "$DTFMT"): udev after setsid --fork ..." >> "$LOG"
-# LOG="/var/tmp/$APPNAME.log"
+logInfo 3 "udev after setsid --fork ..."
 
-TMPPATH="/tmp/net.$APPNAME.$1"  # Marker-File for time stamp to filter events
-/bin/echo "$(date "$DTFMT"): $0: device '$1' - event received from udev" >> "$LOG"
-# /bin/echo "$(date "$DTFMT"): Dump of actual environment:" >> /var/packages/$APPNAME/var/log
-# env >> /var/packages/$APPNAME/var/log
-# /bin/echo "$(date "$DTFMT"): ... environment done" >> /var/packages/$APPNAME/var/log
+TMPPATH="/tmp/net.$app_name.$1"  # Marker-File for time stamp to filter events
+/bin/echo "$(date "$DTFMT"): ${BASH_SOURCE[0]}: device '$1' - event received from udev" >> "$LOG"
+# /bin/echo "$(date "$DTFMT"): Dump of actual environment:" >> /var/packages/$app_name/var/log
+# env >> /var/packages/$app_name/var/log
+# /bin/echo "$(date "$DTFMT"): ... environment done" >> /var/packages/$app_name/var/log
 
 # filter duplicate events for 2 minutes
 if [ "$(/bin/find "$TMPPATH" -mmin -0.5)" != "" ] ; then
@@ -36,10 +41,12 @@ if [ "$(/bin/find "$TMPPATH" -mmin -0.5)" != "" ] ; then
 	exit
 fi
 /bin/touch "$TMPPATH" # to filter subsequent events
-# run autorun
-logInfo 7 "starting now $SCRIPTPATHTHIS/autorun ..."
+# run auto.sh
+logInfo 7 "starting now $SCRIPTPATHudev/auto.sh ..."
 
-"$SCRIPTPATHTHIS/autorun" "$@" &  # this ignores the shebang and runs it in ash!
-logInfo 7 "... udev finished"
+"$SCRIPTPATHudev/auto.sh" "$@" &  # this partly ignores the shebang and starts it as ash! But that is linked to bash!
+# If shebang is not #!/bin/bash, then bash may run in restricted/POSIX mode and process substitution is a syntax error!
+# pidof "auto.sh" is equal to pgrep '^auto.sh$'
+logInfo 7 "'pidof auto.sh': $(pidof "auto.sh") ... udev finished"
 exit
 

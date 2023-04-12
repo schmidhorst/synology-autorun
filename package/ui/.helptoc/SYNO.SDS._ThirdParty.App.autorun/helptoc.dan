@@ -1,32 +1,41 @@
 {
-"base":"help"
-,"id":"SYNO.SDS._ThirdParty.App.autorun"
-,"text":"Autorun"
-,"desc":"","topic":"autorun_index.html"
-,"children":[
-{
-"id":"SYNO.SDS._ThirdParty.App.autorun:autorun_security.html"
-,"base":"help"
-,"topic":"autorun_security.html"
-,"text":"Sikkerhed"
-,"desc":""
-,"leaf":true
-}
-,{
-"id":"SYNO.SDS._ThirdParty.App.autorun:autorun_scripts.html"
-,"base":"help"
-,"topic":"autorun_scripts.html"
-,"text":"Script"
-,"desc":""
-,"leaf":true
-}
-,{
-"id":"SYNO.SDS._ThirdParty.App.autorun:autorun_taskscheduler.html"
-,"base":"help"
-,"topic":"autorun_taskscheduler.html"
-,"text":"Opgaveplanlægger"
-,"desc":""
-,"leaf":true
-}
-]
-}
+  "base":"help"
+  ,"id":"SYNO.SDS._ThirdParty.App.autorun"
+  ,"text":"Autorun"
+  ,"desc":""
+  ,"topic":"autorun_index.html"
+  ,"children":[
+    {
+      "id":"SYNO.SDS._ThirdParty.App.autorun:autorun_security.html"
+      ,"base":"help"
+      ,"topic":"autorun_security.html"
+      ,"text":"Sikkerhed"
+      ,"desc":""
+      ,"leaf":true
+      }
+    ,{
+      "id":"SYNO.SDS._ThirdParty.App.autorun:autorun_scripts.html"
+      ,"base":"help"
+      ,"topic":"autorun_scripts.html"
+      ,"text":"Script"
+      ,"desc":""
+      ,"leaf":true
+      }
+    ,{
+      "id":"SYNO.SDS._ThirdParty.App.autorun:autorun_taskscheduler.html"
+      ,"base":"help"
+      ,"topic":"autorun_taskscheduler.html"
+      ,"text":"Opgaveplanlægger"
+      ,"desc":""
+      ,"leaf":true
+      }
+    ,{
+      "id":"SYNO.SDS._ThirdParty.App.autorun:autorun_leds.html"
+      ,"base":"help"
+      ,"topic":"autorun_leds.html"
+      ,"text":"LED-skærm"
+      ,"desc":""
+      ,"leaf":true
+      }
+    ]
+  }

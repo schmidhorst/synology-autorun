@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="cs">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,12 +10,12 @@
   </head>
   <body>
     <h1>Poznámky ke skriptu:</h1>
-    <p>Jak primární skript, který spustí požadovanou akci po připojení externího úložného zařízení, tak volitelný doplňkový sekundární skript po vysunutí úložného zařízení vyžadují zvláštní pozornost:</p>
+    <p>Jak primární skript, který provede požadovanou akci po připojení externího paměťového zařízení, tak volitelný doplňkový sekundární skript po vysunutí paměťového zařízení vyžadují zvláštní pozornost:</p>
     <ul>
       <li>Oba skripty jsou spouštěny démonem udev. Jsou spouštěny s právy roota.</li>
-      <li>Prostředí skriptů je téměř prázdné. Zejména cesta k příkazům, např. z adresáře /bin/, <b>není nastavena</b> jako obvykle! Tj. cesta musí být zadána buď u každého příkazu, nebo se na začátku skriptu nastavuje proměnná prostředí PATH.</li>
-      <li>Proměnná prostředí SHELL ukazuje na /bin/ash. To je u DSM 7.x odkaz na /bin/bash. BASH však může být spuštěn v režimu, kdy například není k dispozici "nahrazování procesů". Může se stát, že skript, který při interaktivním spuštění běží v pořádku, při spuštění přes démona udev najednou kvůli syntaktické chybě přestane fungovat. Doporučuji <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> jako shebang.</li>
-      <li>Pro ladění může být užitečné sledovat výstup <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> v okně shellu při připojování externího úložného zařízení. A užitečný může být i pohled do souboru /var/log/bash_err.log.</li>
+      <li>Prostředí skriptů je téměř prázdné. Zejména cesta k příkazům, např. z adresáře /bin/, <b>není nastavena</b> jako obvykle! Tj. cesta musí být zadána buď u každého příkazu, nebo na začátku skriptu nastavíte proměnnou prostředí PATH.</li>
+      <li>Proměnná prostředí SHELL ukazuje na /bin/ash. Jedná se o odkaz na /bin/bash v DSM 7.x. BASH však může běžet v režimu, kdy například "nahrazování procesů" není k dispozici. Může se stát, že skript, který při interaktivním spuštění běží bez problémů, při spuštění přes démona udev najednou kvůli chybě syntaxe přestane fungovat. Doporučuji <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> jako shebang.</li>
+      <li>Pro řešení problémů může být užitečné sledovat výstup <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> v okně shellu, když je připojeno externí úložné zařízení. Užitečný může být také pohled do souboru /var/log/bash_err.log.</li>
     </ul> 
      
   </body>

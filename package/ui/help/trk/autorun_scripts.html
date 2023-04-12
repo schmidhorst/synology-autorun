@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="tr">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12,10 +12,10 @@
     <h1>Komut Dosyası Notları:</h1>
     <p>Hem harici depolama aygıtı takıldıktan sonra istenen eylemi gerçekleştiren birincil komut dosyası hem de depolama aygıtı çıkarıldıktan sonra isteğe bağlı ek ikincil komut dosyası bazı özel hususlar gerektirir:</p>
     <ul>
-      <li>Her iki komut dosyası da udev daemon tarafından başlatılır. Kök ayrıcalıklarıyla çalışırlar.</li>
-      <li>Komut dosyalarının ortamı neredeyse boştur. Özellikle, komutlara giden yol, örneğin /bin/ dizininden, her zamanki gibi <b>ayarlanmamıştır</b>! Yani, yol ya her komutla birlikte belirtilmelidir ya da betiğin başında PATH ortam değişkenini ayarlarsınız.</li>
-      <li>SHELL ortam değişkeni /bin/ash dizinini işaret eder. Bu DSM 7.x ile /bin/bash'e bir bağlantıdır. Ancak BASH, örneğin "süreç ikamesinin" kullanılamadığı bir modda çalışıyor olabilir. Etkileşimli olarak başlatıldığında sorunsuz çalışan bir betik, udev daemon üzerinden başlatıldığında bir sözdizimi hatası nedeniyle aniden artık çalışmayabilir. Shebang olarak <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> kullanmanızı öneririm.</li>
-      <li>Hata ayıklama için, harici bir depolama aygıtı takarken bir kabuk penceresinde <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> çıktısını izlemek yararlı olabilir. Ve /var/log/bash_err.log dosyasına bakmak yararlı olabilir.</li>
+      <li>Her iki komut dosyası da udev daemon tarafından başlatılır. Kök ayrıcalıkları ile çalıştırılırlar.</li>
+      <li>Komut dosyalarının ortamı neredeyse boştur. Özellikle, komutlara giden yol, örneğin /bin/ dizininden, her zamanki gibi <b>ayarlanmamıştır</b>! Yani, yol ya her komutla birlikte belirtilmelidir ya da betiğin başında PATH ortam değişkenini ayarlamalısınız.</li>
+      <li>SHELL ortam değişkeni /bin/ash dizinini işaret eder. Bu, DSM 7.x'teki /bin/bash'e bir bağlantıdır. Ancak BASH, örneğin "süreç ikamesi "nin kullanılamadığı bir modda çalışabilir. Etkileşimli olarak başlatıldığında sorunsuz çalışan bir betik, bir sözdizimi hatası nedeniyle udev daemon aracılığıyla başlatıldığında aniden artık çalışmayabilir. Shebang olarak <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> kullanmanızı öneririm.</li>
+      <li>Sorun giderme için, harici bir depolama aygıtı takıldığında <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> çıktısını bir kabuk penceresinde izlemek yararlı olabilir. Ayrıca /var/log/bash_err.log dosyasına bakmak da yardımcı olabilir.</li>
     </ul> 
      
   </body>

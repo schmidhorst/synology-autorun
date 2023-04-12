@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="pl">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,12 +10,12 @@
   </head>
   <body>
     <h1>Uwagi do skryptu:</h1>
-    <p>Zarówno skrypt główny, który wykonuje żądane działanie po podłączeniu zewnętrznego urządzenia pamięci masowej, jak i opcjonalny dodatkowy skrypt wtórny po wysunięciu urządzenia pamięci masowej, wymagają pewnych specjalnych uwag:</p>
+    <p>Zarówno podstawowy skrypt, który wykonuje pożądane działanie po podłączeniu zewnętrznego urządzenia pamięci masowej, jak i opcjonalny dodatkowy skrypt wtórny po wysunięciu urządzenia pamięci masowej wymagają pewnych specjalnych uwag:</p>
     <ul>
-      <li>Oba skrypty są uruchamiane przez demona udev. Są one uruchamiane z uprawnieniami roota.</li>
-      <li>Środowisko skryptów jest prawie puste. W szczególności, ścieżka do poleceń, np. z katalogu /bin/, <b>nie</b> jest ustawiona jak zwykle! Tzn. ścieżka musi być określona albo przy każdym poleceniu, albo ustawiasz zmienną środowiskową PATH na początku skryptu.</li>
-      <li>Zmienna środowiskowa SHELL wskazuje na /bin/ash. W przypadku DSM 7.x jest to odnośnik do /bin/bash. BASH może być jednak uruchomiony w trybie, w którym np. nie jest dostępne "zastępowanie procesów". Może się zdarzyć, że skrypt, który działa dobrze, gdy jest uruchamiany interaktywnie, nagle nie działa już, gdy jest uruchamiany przez demona udev, z powodu błędu składni. Polecam <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> jako shebang.</li>
-      <li>Do debugowania pomocne może być obserwowanie wyjścia <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> w oknie powłoki podczas podłączania zewnętrznego urządzenia magazynującego. Pomocne może być też zaglądanie do pliku /var/log/bash_err.log.</li>
+      <li>Oba skrypty są uruchamiane przez demona udev. Są one wykonywane z uprawnieniami roota.</li>
+      <li>Środowisko skryptów jest prawie puste. W szczególności, ścieżka do poleceń, np. z katalogu /bin/, <b>nie</b> jest ustawiona jak zwykle! Tzn. ścieżka musi być określona albo z każdym poleceniem, albo ustawiasz zmienną środowiskową PATH na początku skryptu.</li>
+      <li>Zmienna środowiskowa SHELL wskazuje na /bin/ash. Jest to odnośnik do /bin/bash w DSM 7.x. BASH może jednak działać w trybie, w którym np. nie jest dostępne "zastępowanie procesów". Może się zdarzyć, że skrypt, który działa bez problemów, gdy jest uruchamiany interaktywnie, nagle przestaje działać, gdy jest uruchamiany przez demona udev, z powodu błędu składni. Polecam <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> jako shebang.</li>
+      <li>W rozwiązywaniu problemów pomocne może być obserwowanie wyjścia <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> w oknie powłoki, gdy podłączone jest zewnętrzne urządzenie magazynujące. Pomocne może być również zajrzenie do pliku /var/log/bash_err.log.</li>
     </ul> 
      
   </body>

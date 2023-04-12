@@ -10,16 +10,14 @@
     <title>Autorun</title>
   </head>
   <body>
-    <h1>Agendador de Tarefas</h1>
+    <h1>Agendador de tarefas</h1>
     <p>
-    Em determinadas circunstâncias, faz sentido iniciar uma tarefa definida no agendador de tarefas pela autorun.    </p>
+    Em determinadas circunstâncias, é útil iniciar uma tarefa definida no programador de tarefas através da auto-execução.    </p>
     <p>
-    O comando shell para iniciar uma tal tarefa é por exemplo <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. O "Task-ID" (14 no exemplo) pode ser obtido por <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
-    Em determinadas circunstâncias também faz sentido executar directamente o comando especificado como "Comando" e contornar o programador de tarefas.    </p>
+    O comando shell para iniciar tal tarefa é por exemplo <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. O "ID da tarefa" (14 no exemplo) pode ser determinado com <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. Em determinadas circunstâncias é também útil executar o comando especificado como "comando" directamente e contornar o agendador de tarefas.    </p>
     <p>
-    O comando de início do agendador é feito em pouco tempo e a tarefa é executada como um processo independente. 
-    Se quiser usar o controlo LED para exibir a tarefa em execução ou para ejectar o disco após a tarefa estar concluída, tem de esperar no seu script após o início da tarefa com um loop como este para o fim desse processo:    </p><p>
+    O comando de arranque do programador é então feito em pouco tempo e a tarefa corre como um processo independente. Se quiser utilizar o controlo LED para indicar a tarefa em curso ou para ejectar o disco rígido após a tarefa ter terminado, deve esperar no seu script pelo fim do processo após o início da tarefa com um loop como este:    </p><p>
     
-     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">dormir 60<br>enquanto ["$(/bin/pidof <i>&lt;processName&gt;)</i> </span>" <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">]; fazer<br>dormir 60<br>feito </span>   </p>
+   <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>enquanto ["$(/bin/pidof <i>&lt;process name&gt;)</i> </span> " <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">]; do<br>sleep 60<br>feito </span>   </p>
   </body>
 </html>

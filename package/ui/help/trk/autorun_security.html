@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="tr">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,26 +10,20 @@
   </head>
   <body>
     <h1>Güvenlik</h1>
-    <h2>Senaryo yeri:</h2>
-    <p>Otomatik çalıştırma paketi tarafından başlatılan komut dosyasının yerleştirilebileceği temelde iki farklı yer vardır:</p>
-   <ul>
-     <li>Harici depolama aygıtlarında: 
-       <ul>
-         <li>
-            Yalnızca bu şekilde komut dosyası ile hazırlanan depolama aygıtları eylemi başlatacaktır. </li> </ul> </li> <li> <ul> <li>Takılabilecek diğer tüm depolama aygıtları göz ar </li> </ul> </li>dı <li> <ul>edilecektir. <li>Mevcut güvenlik seçeneği <b>kullanılmazsa</b>, disk istasyonuna erişimi olan herkes hazırlanmış bir USB belleği takarak keyfi şeyler yapabilir. Örneğin, tüm disk istasyonunu silebilir ve tüm ağa serbestçe erişebilir.</li></ul></li> <li>DSM'de dahili: <ul> <li>Bir depolama aygıtı her tak </li> </ul>ıldığında, komut dosyası başlatılır. </ul>Komut dosyasının <ul> <ul> <li>kendisi, eylemlerini </li> <li>mevcut </li>depolama </ul> </ul>aygıtı <ul> <ul> <li>üzerinde gerçekleştirip gerçekleştirmeyeceğini kontrol etmek zorunda kalabilir. </li> <li>Mevcut güvenlik seçeneği çoğu zaman gerekli olmayacaktır </li>. </ul> </ul>     <p>Yukarıda belirtilen birincil komut dosyasına ek olarak, depolama aygıtı çıkarıldıktan sonra çalıştırılan ikincil bir komut dosyası da isteğe bağlı olarak mümkündür. 
-        Bu ikinci komut dosyası doğal olarak sadece DSM üzerinde dahili olarak bulunabilir. Çıkarılan belleğe erişim, başlatılacağı zaman artık mümkün değildir.</p>
-    <p>Tüm komut dosyaları root izniyle çalışır. Bu nedenle dahili olarak yerleştirilen komut dosyaları DSM dosya sisteminde neredeyse her yere yerleştirilebilir. 
-      Yönetici hakları olmayan kullanıcıların erişimi olmamalıdır, en azından yazma erişimi olmamalıdır!</p>       
+    <h2>Senaryonun yeri:</h2>
+    <p>Otomatik çalıştırma paketi tarafından başlatılan komut dosyasının saklanabileceği temelde iki farklı konum vardır:</p>
+ <ul>
+   <li>Harici depolama aygıtlarında: <ul> <li>yalnızca bu şekilde komut dosyası ile hazırlanan depolama aygıtları eylemi başlatacaktır </li> </ul>. </li>   <li> <ul> <li>Takılabilen diğer tüm depolama aygıtları göz ardı edilir. </li> <li>Mevcut güvenlik seçeneği <b>kullanılmazsa</b>, disk istasyonuna erişimi olan herhangi biri hazırlanmış bir USB çubuğu takarak keyfi şeyler yapabilir, örneğin tüm disk istasyonunu silebilir ve tüm ağa serbestçe erişebilir.</li></ul></li> <li>Dahili olarak DSM'de: <ul> <li>Bir depolama ortamı her takıldığında, komut dosyası başlatılır . </li> </ul> <ul> <li>Komut dosyasının, eylemlerini mevcut depolama aygıtı üzerinde gerçekleştirip gerçekleştirmeyeceğini kontrol etmesi gerekebilir. </li> <li>Mevcut güvenlik seçeneği çoğu durumda gerekli olmayacaktır. </li> </ul> </ul>        <p>Yukarıda bahsedilen birincil komut dosyasına ek olarak, depolama aygıtı çıkarıldıktan sonra çalıştırılan isteğe bağlı bir ikincil komut dosyasına sahip olmak da mümkündür. Bu ikinci senaryo elbette yalnızca DSM'de dahili olarak bulunabilir. Çıkarılan belleğe erişim, başlatılacağı zaman artık mümkün değildir.</p>
+    <p>Tüm komut dosyaları root ayrıcalıklarıyla çalışır. Bu nedenle dahili olarak yerleştirilen komut dosyaları DSM'nin dosya sisteminde neredeyse her yere yerleştirilebilir. Yönetici haklarına sahip olmayan kullanıcıların erişimi olmamalıdır, en azından yazma erişimi olmamalıdır!</p>       
     
     <h2>Güvenlik seçeneği:</h2>        
-    <p>Komut dosyası yürütme, sağlama toplamları (SHA256 hash) kullanılarak önceden kaydedilmiş komut dosyalarıyla sınırlandırılabilir. Diğer komut dosyaları yürütülmeyecektir.<br>
+    <p>Komut dosyalarının yürütülmesi, sağlama toplamlarına (SHA256 karması) dayalı olarak önceden kaydedilmiş komut dosyalarıyla sınırlandırılabilir. Bu durumda diğer komut dosyaları çalıştırılmayacaktır.<br>
       İki farklı yaklaşım vardır:</p>
       <ol type="A">
         <li>
-          Otomatik çalıştırma paketi kurulumu sırasındaki ayarlarda "1 ilk komut dosyasına izin verilir" ayarı seçilir ve kurulumdan sonraki ilk komut dosyasının sağlama toplamı belirlenir ve kaydedilir. Yalnızca bu komut dosyası ve bunun değiştirilmemiş kopyaları yürütülür. Güvenlik, ilk kurulumdan sonra ve gerekirse yeniden kurulumdan sonra da otomatik olarak ilk komut dosyasıyla birlikte devreye girer. 
-          Komut dosyasında bir değişiklik yapılması gerekirse, daha sonra bu "1 ilk komut dosyasına izin verildi" ayarıyla yeniden bir otomatik çalıştırma paketi kurulumu yapın. Eski kayıt silinir ve yeni komut dosyası sağlama toplamı daha sonra izin verilen tek kayıt olarak kaydedilir.        </li>
+          Otomatik çalıştırma paketini kurarken ayarlarda "1 ilk komut dosyasına izin verilir" ayarı seçilir ve kurulumdan sonraki ilk komut dosyasının sağlama toplamı belirlenir ve kaydedilir. Yalnızca bu komut dosyası ve değiştirilmemiş kopyaları yürütülür. Security, ilk ve gerekirse yeniden kurulumdan sonra ilk komut dosyasıyla otomatik olarak kendini silahlandırır. Komut dosyasının değiştirilmesi gerekirse, bu "1 ilk komut dosyasına izin verilir" ayarıyla başka bir otomatik çalıştırma paketi yeniden yüklemesi gerçekleştirin. Eski kayıt silinir ve yeni komut dosyası sağlama toplamı daha sonra izin verilen tek komut dosyası olarak kaydedilir.        </li>
         <li>
-          Paket kurulumu sırasında ilk olarak "2 Herhangi bir karma ekle" seçilir. Şimdi farklı komut dosyalarına sahip tüm harici depolama birimlerinin birbiri ardına takılması gerekir. Böylece gerekli sağlama toplamları kaydedilebilir ve eklenebilir. Bundan sonra kurulumun <b>tekrar</b> çalıştırılması ve değerin "3 Sadece önceden kaydedilmiş" olarak değiştirilmesi gerekir. O andan itibaren güvenlik devreye girer.</li>
+          Paket kurulumu sırasında ilk olarak "2 Add any hash" seçilir. Şimdi farklı komut dosyalarına sahip tüm harici bellekler birbiri ardına takılmalıdır. Böylece gerekli sağlama toplamları kaydedilebilir ve eklenebilir. Bundan sonra kurulum <b>tekrar</b> yürütülmeli ve değer "3 Sadece önceden kaydedilmiş" olarak değiştirilmelidir. O andan itibaren güvenlik etkinleştirilir.</li>
       </ol>
-      Prosedür B, A daha önce kullanılıyorsa ve örneğin yeni bir komut dosyası varyantı için ek bir sağlama toplamının önceden kaydedilmiş komut dosyası varyantına paralel olarak eklenmesi gerekiyorsa da kullanılabilir.  </body>
+      Prosedür B, daha önce A kullanılmışsa ve örneğin yeni bir kod varyantı için ek bir sağlama toplamı zaten kayıtlı olan kod varyantına paralel olarak eklenmesi gerekiyorsa da kullanılabilir.  </body>
 </html>

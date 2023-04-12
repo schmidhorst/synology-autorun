@@ -11,27 +11,16 @@
   <body>
     <h1>Autorun</h1>
     <p>
-    Pakiet "Autorun" może wywołać akcję, gdy dysk zewnętrzny zostanie podłączony do stacji Synology. Jest to często bardzo przydatne w przypadku automatycznego kopiowania danych. 
-    Przynajmniej w DSM w wersji 7.1 brakuje opcji takiego zdarzenia w harmonogramie zadań. 
-    W "Triggered Tasks" są tylko "Startup" i "Shutdown" jako zdarzenia, ale nie ma "External USB storage inserted" lub podobnych.    </p>
+    Pakiet "Autorun" może wywołać akcję, gdy zewnętrzny dysk twardy zostanie podłączony do stacji Synology. Jest to często bardzo przydatne w przypadku automatycznego kopiowania danych. Przynajmniej w wersji 7.1 DSM brakuje opcji takiego zdarzenia w harmonogramie zadań. W "Wyzwalanych zadaniach" są tylko "Uruchomienie" i "Zamknięcie" jako zdarzenia, ale nie ma "Zewnętrzna pamięć USB włożona" lub podobnego.    </p>
     <p>
-    Przez "akcję" rozumie się przede wszystkim wykonanie skryptu powłoki BASH. 
-    Skrypt ten może następnie kopiować pliki tam i z powrotem pomiędzy stacją dysków a dyskiem za pomocą poleceń takich jak <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
-     Skrypt może też np. uruchomić zadanie zdefiniowane w harmonogramie zadań.     </p>
+    Przez "Działanie" rozumie się przede wszystkim wykonanie skryptu powłoki BASH. Skrypt ten może następnie kopiować pliki tam i z powrotem pomiędzy stacją dysków a dyskiem za pomocą poleceń takich jak <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. Albo skrypt może np. uruchomić zadanie zdefiniowane w harmonogramie zadań.     </p>
     <p>
-    Jako dodatkowe działanie, dysk może być również wysunięty po zakończeniu akcji. 
-    Ponieważ oznacza to, że dane na zewnętrznym nośniku danych nie są już bezpośrednio dostępne, zapewnia to pewien stopień ochrony danych na zewnętrznym nośniku danych przed zniszczeniem, na przykład przez oprogramowanie ransomware. 
-     Ponieważ jednak nośnik danych może być również ponownie włączony do systemu za pośrednictwem oprogramowania, nie jest to pełna ochrona.    </p>
+    Jako dodatkowe działanie, dysk może być również wysunięty po zakończeniu akcji. Ponieważ oznacza to, że dane na dysku zewnętrznym nie są już bezpośrednio dostępne, zapewnia to pewną ochronę danych na dysku zewnętrznym przed zniszczeniem, np. przez oprogramowanie ransomware. Ponieważ jednak dysk można również ponownie zintegrować z systemem za pośrednictwem oprogramowania, nie jest to pełna ochrona.    </p>
     <p>
-    Jeszcze lepszą ochronę przed ransomware można osiągnąć w następujący sposób: Użyj zewnętrznego nośnika danych z własnym zasilaniem, jak to jest powszechne w przypadku 3,5-calowych dysków twardych USB. Zasilacz jest obsługiwany przez inteligentne gniazdo. To inteligentne gniazdo jest wyłączane po wysunięciu nośnika danych. Tak długo, jak oprogramowanie ransomware nie nadpisuje tej implementacji, zewnętrzny nośnik danych, który jest odłączony od systemu w ten sposób, jest chroniony. 
-   <b>
-    Ostrzeżenie: </b>
-    
-    Podczas gdy dysk zewnętrzny jest zamontowany w celu aktualizacji, nie ma praktycznie żadnej ochrony przed ransomware, które mogło przedostać się do twojego systemu wcześniej! 
-    Dlatego do tworzenia kopii zapasowych należy zawsze używać co najmniej dwóch dysków na przemian!    </p>
+    Jeszcze lepszą ochronę przed ransomware można osiągnąć w następujący sposób: Używaj zewnętrznego nośnika danych z własnym zasilaniem, co jest powszechne w przypadku 3,5-calowych dysków twardych USB. Zasilacz jest obsługiwany przez inteligentne gniazdo. To inteligentne gniazdo jest następnie wyłączane po wysunięciu dysku. Dopóki oprogramowanie ransomware nie nadpisuje tej implementacji, dysk zewnętrzny odłączony od systemu w ten sposób jest chroniony. <b>Ostrzeżenie: </b>Podczas gdy dysk zewnętrzny jest zamontowany w celu aktualizacji, nie ma praktycznie żadnej ochrony przed oprogramowaniem ransomware, które mogło wcześniej przeniknąć do systemu! Dlatego zawsze używaj co najmniej dwóch dysków w rotacji do tworzenia kopii zapasowych!    </p>
     <p><a href="autorun_security.html">Uwaga dotycząca bezpieczeństwa</a></p> 
     <p><a href="autorun_scripts.html">Wskazówki dotyczące skryptów</a></p>
     <p><a href="autorun_taskscheduler.html">Wskazówki dotyczące planowania zadań</a></p>
-
+    <p><a href="autorun_leds.html">Wskaźnik LED stanu i kopiowania</a></p>
   </body>
 </html>

@@ -12,14 +12,12 @@
   <body>
     <h1>Taakplanner</h1>
     <p>
-    Onder bepaalde omstandigheden is het zinvol om een in de taakplanner gedefinieerde taak via autorun te starten.    </p>
+    Onder bepaalde omstandigheden is het nuttig om een in de taakplanner gedefinieerde taak te starten via autorun.    </p>
     <p>
-    Het shell-commando om zo'n taak te starten is bijvoorbeeld <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. De "Task-ID" (14 in het voorbeeld) kan worden verkregen door <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
-    Onder bepaalde omstandigheden is het ook zinvol het als "Opdracht" opgegeven commando rechtstreeks uit te voeren en de taakplanner te omzeilen.    </p>
+    Het shell-commando om zo'n taak te starten is bijvoorbeeld <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. De "taak-ID" (14 in het voorbeeld) kan worden bepaald met <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. Onder bepaalde omstandigheden is het ook nuttig om de als "commando" opgegeven opdracht direct uit te voeren en de taakplanner te omzeilen.    </p>
     <p>
-    De startopdracht van de scheduler wordt in een mum van tijd uitgevoerd en de taak loopt als een onafhankelijk proces. 
-    Als u de LED-besturing wilt gebruiken om de lopende taak weer te geven of om de schijf uit te werpen nadat de taak is voltooid, moet u in uw script na de taakstart met een lus als deze wachten op het einde van dat proces:    </p><p>
+    De startopdracht van de scheduler wordt dan in een mum van tijd uitgevoerd en de taak loopt als een onafhankelijk proces. Als u de LED-besturing wilt gebruiken om de lopende taak aan te geven of om de harde schijf uit te werpen nadat de taak is beëindigd, moet u in uw script wachten op het einde van het proces na de taakstart met een lus als deze:    </p><p>
     
-     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">slaap 60<br>while [ "$(/bin/pidof <i>&lt;procesnaam&gt;)</i>" ]; do<br>slaap 60<br>done </span>   </p>
+   <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;procesnaam&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
   </body>
 </html>

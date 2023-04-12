@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="hu">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+    <style>
+      .t1 { border-collapse: collapse; } .t1, .t1 th, .t1 td { border: solid 1px } .tc td { text-align: center; } </style>
+  </head>
+  <body>
+    <h1>Állapot és másolás LED kijelző</h1>
+    <p>
+    Az Autorun vezérelheti az állapot- vagy a másolás LED-et. Ez a folyamatban lévő tevékenység, illetve szükség esetén hiba jelzésére használható.    </p>
+    <h2>Megjegyzések:</h2>
+    <ul>
+    <li>Nincs egyszerű módja az aktuális LED-állapot leolvasásának vagy az előző állapotba való visszatérésnek. Ha a LED-vezérlés engedélyezve van az Autorun beállításaiban, akkor az aktuális LED-állapotot (pl. hiba miatt narancssárgán villogó állapot) az Autorun esetleg felülírja. És fordítva is előfordulhat, hogy más események felülírják az Autorun által beállított kijelzőt.</li>
+    <li>Vannak olyan Autorun konfigurációs beállítások, ahol a hibát (vagy az indított szkript választható visszatérési kódjait) a befejezés után egy LED jelzi. A hibakijelzés törlése ekkor csak <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">root-ként</span> végrehajtott szkriptparanccsal lehetséges (pl. feladatütemezéssel).</li>
+    </ul>
+    <p>
+    A LED vezérlésére szolgáló szkriptparancs pl. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    A példában szereplő 7 helyett (az állapotjelző LED kikapcsolásához) a következő karaktereket kell használni:<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>Kód:</th>
+        <th >Parancs</th>
+        <th style="text-align: left;">Művelet</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>Állapot LED kikapcsolva</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>Állapot LED zöld</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>Status LED zöld villogás</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo ":" &gt; /dev/ttyS1</td>
+        <td>Állapot LED narancssárga</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">echo ";" &gt; /dev/ttyS1</td>
+        <td>Status LED narancssárgán villog</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>Másolás LED bekapcsolva</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>LED másolása villog</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>LED kikapcsolva másolása</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -11,27 +11,16 @@
   <body>
     <h1>Autorun</h1>
     <p>
-    Pakken "Autorun" kan udløse en handling, når en ekstern disk er tilsluttet en Synology-station. Dette er ofte meget nyttigt til automatiseret kopiering af data. 
-    I det mindste i DSM version 7.1 mangler en sådan mulighed for en begivenhed i opgaveplanlæggeren. 
-    Der er kun "Startup" og "Shutdown" som begivenheder i "Triggered Tasks", men ikke "External USB storage inserted" eller lignende.    </p>
+    Pakken "Autorun" kan udløse en handling, når en ekstern harddisk er tilsluttet til en Synology Station. Dette er ofte meget nyttigt til automatisk kopiering af data. I det mindste i DSM version 7.1 mangler en sådan mulighed for en begivenhed i opgaveplanlæggeren. Der er kun "Startup" og "Shutdown" som hændelser i "Triggered Tasks", men ikke "External USB storage inserted" eller lignende.    </p>
     <p>
-    Med "handling" menes først og fremmest afvikling af et BASH-shell-script. 
-    Scriptet kan så kopiere filer frem og tilbage mellem diskstationen og disken ved hjælp af kommandoer som <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
-     Eller scriptet kan f.eks. også starte en opgave, der er defineret i opgaveplanlæggeren.     </p>
+    Med "Handling" menes primært udførelse af et BASH-shell-script. Scriptet kan så kopiere filer frem og tilbage mellem diskstationen og disken ved hjælp af kommandoer som <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. Eller scriptet kan f.eks. også starte en opgave defineret i opgaveplanlæggeren.     </p>
     <p>
-    Som en yderligere handling kan disken også skubbes ud, når handlingen er afsluttet. 
-    Da dette betyder, at dataene på det eksterne datamedie ikke længere er direkte tilgængelige, giver dette en vis grad af beskyttelse af dataene på det eksterne datamedie mod ødelæggelse, f.eks. ved ransomware. 
-     Da datamediet imidlertid også kan genintegreres i systemet via software, er der ikke tale om en fuldstændig beskyttelse.    </p>
+    Som en yderligere handling kan disken også skubbes ud, når handlingen er afsluttet. Da dette betyder, at dataene på den eksterne disk ikke længere er direkte tilgængelige, giver dette en vis beskyttelse af dataene på den eksterne disk mod ødelæggelse, f.eks. ved ransomware. Da disken imidlertid også kan genintegreres i systemet via software, er dette ikke en fuldstændig beskyttelse.    </p>
     <p>
-    En endnu bedre beskyttelse mod ransomware kan opnås på følgende måde: Brug et eksternt datamedie med egen strømforsyning, som det er almindeligt med 3,5-tommers USB-harddiske. Strømforsyningen betjenes via en smart socket. Denne smart-stikdåse slukkes, når datamediet er blevet skubbet ud. Så længe ransomware ikke tilsidesætter denne implementering, er det eksterne datamedie, der er afbrudt fra systemet på denne måde, beskyttet. 
-   <b>
-    Advarsel: </b>
-    
-    Mens den eksterne disk er monteret til en opdatering, er der praktisk talt ingen beskyttelse mod ransomware, som kunne være kommet ind i dit system før! 
-    Brug derfor altid mindst to diske skiftevis til sikkerhedskopiering!    </p>
+    En endnu bedre beskyttelse mod ransomware kan opnås på følgende måde: Brug et eksternt datamedie med egen strømforsyning, som det er almindeligt med 3,5-tommers USB-harddiske. Strømforsyningen betjenes via en smart socket. Denne smart-stikdåse slukkes, når disken skubbes ud. Så længe ransomware ikke tilsidesætter denne implementering, er den eksterne disk, der frakobles systemet på denne måde, beskyttet. <b>Advarsel: </b>Mens den eksterne disk er monteret til en opdatering, er der stort set ingen beskyttelse mod ransomware, som tidligere kan have infiltreret systemet! Brug derfor altid mindst to diske i rotation til sikkerhedskopiering!    </p>
     <p><a href="autorun_security.html">Sikkerhedsbemærkning</a></p> 
     <p><a href="autorun_scripts.html">Script-hints</a></p>
     <p><a href="autorun_taskscheduler.html">Tips til planlægning af opgaver</a></p>
-
+    <p><a href="autorun_leds.html">LED-indikator for status og kopiering</a></p>
   </body>
 </html>

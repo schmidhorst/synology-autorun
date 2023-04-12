@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="it">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,12 +10,12 @@
   </head>
   <body>
     <h1>Note sugli script:</h1>
-    <p>Sia lo script principale, che esegue l'azione desiderata dopo l'inserimento di un dispositivo di archiviazione esterno, sia lo script secondario opzionale dopo l'espulsione del dispositivo di archiviazione, richiedono alcune considerazioni speciali:</p>
+    <p>Sia lo script principale che esegue l'azione desiderata dopo l'inserimento di un dispositivo di archiviazione esterno, sia lo script secondario opzionale dopo l'espulsione del dispositivo di archiviazione, richiedono alcune considerazioni speciali:</p>
     <ul>
-      <li>Entrambi gli script sono avviati dal demone udev. Vengono eseguiti con i privilegi di root.</li>
+      <li>Entrambi gli script vengono avviati dal demone udev. Vengono eseguiti con i privilegi di root.</li>
       <li>L'ambiente degli script è quasi vuoto. In particolare, il percorso dei comandi, ad esempio dalla directory /bin/, <b>non è</b> impostato come di consueto! Cioè, il percorso deve essere specificato con ogni comando oppure si imposta la variabile d'ambiente PATH all'inizio dello script.</li>
-      <li>La variabile d'ambiente SHELL punta a /bin/ash. Con DSM 7.x si tratta di un collegamento a /bin/bash. Tuttavia, BASH potrebbe essere in esecuzione in una modalità in cui, ad esempio, la "sostituzione di processo" non è disponibile. Può accadere che uno script che funziona bene quando viene avviato in modo interattivo, improvvisamente non venga più eseguito quando viene avviato tramite il demone udev a causa di un errore di sintassi. Raccomando <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> come shebang.</li>
-      <li>Per il debug può essere utile osservare l'output di <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> in una finestra di shell quando si collega un dispositivo di archiviazione esterno. Può essere utile anche dare un'occhiata al file /var/log/bash_err.log.</li>
+      <li>La variabile d'ambiente SHELL punta a /bin/ash. Si tratta di un collegamento a /bin/bash in DSM 7.x. Tuttavia, BASH può essere eseguito in una modalità in cui, ad esempio, la "sostituzione di processo" non è disponibile. Può accadere che uno script che viene eseguito senza problemi quando viene avviato in modo interattivo, improvvisamente non venga più eseguito quando viene avviato tramite il demone udev a causa di un errore di sintassi. Si consiglia di utilizzare <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> come shebang.</li>
+      <li>Per la risoluzione dei problemi, può essere utile osservare l'output di <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> in una finestra di shell quando viene collegato un dispositivo di archiviazione esterno. Può essere utile anche dare un'occhiata al file /var/log/bash_err.log.</li>
     </ul> 
      
   </body>

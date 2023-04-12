@@ -12,14 +12,12 @@
   <body>
     <h1>Feladatütemező</h1>
     <p>
-    Bizonyos körülmények között érdemes a feladatütemezőben definiált feladatot automatikus indítással elindítani.    </p>
+    Bizonyos körülmények között hasznos lehet a feladatütemezőben meghatározott feladatot az automatikus indításon keresztül elindítani.    </p>
     <p>
-    Egy ilyen feladat indításához a shell parancs pl. a következő: <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. A "Task-ID" (a példában 14) a <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span> paranccsal szerezhető meg. 
-    Bizonyos körülmények között annak is van értelme, hogy a "Command"-ként megadott parancsot közvetlenül futtassuk, és megkerüljük a feladatütemezőt.    </p>
+    Egy ilyen feladat indításához a shell parancs pl. a következő: <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. A "feladat azonosítója" (a példában 14) a <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span> paranccsal határozható meg. Bizonyos körülmények között az is hasznos lehet, ha a "command"-ként megadott parancsot közvetlenül végrehajtjuk, és megkerüljük a feladatütemezőt.    </p>
     <p>
-    Az ütemező indítóparancsa pillanatok alatt végrehajtódik, és a feladat önálló folyamatként fut. 
-    Ha a LED-vezérlést a futó feladat megjelenítésére vagy a lemez kiürítésére szeretnénk használni a feladat befejezése után, akkor a szkriptben a feladat indítása után egy ilyen ciklus segítségével meg kell várnunk a folyamat végét:    </p><p>
+    Ilyenkor az ütemező indítási parancsa pillanatok alatt elvégezhető, és a feladat önálló folyamatként fut. Ha a LED-vezérlést a futó feladat jelzésére vagy a feladat befejezése után a merevlemez kidobására akarjuk használni, akkor a szkriptben a feladat indítása után egy ilyen hurokkal kell megvárni a folyamat végét:    </p><p>
     
-      <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;"><br> while [ "$(/bin/pidof <i>&lt;folyamatnév&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+    <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;"><br> while [ "$(/bin/pidof <i>&lt;folyamat neve&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
   </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="nl">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,25 +11,19 @@
   <body>
     <h1>Beveiliging</h1>
     <h2>Locatie van het script:</h2>
-    <p>Er zijn twee fundamenteel verschillende plaatsen waar het door het autorunpakket gestarte script kan worden geplaatst:</p>
-   <ul>
-     <li>Op de externe opslagapparaten: 
-       <ul>
-         <li>
-            Alleen de opslagapparaten die op deze manier met het script zijn voorbereid, zullen de actie starten. </li> </ul> </li> <li> <ul> <li>Alle andere opslagapparaten die kunnen worden ingeplugd, worden genegeerd </li> </ul> </li>. <li> <ul> <li>Als de beschikbare beveiligingsoptie <b>niet</b> wordt gebruikt, dan kan iedereen die toegang heeft tot het schijfstation willekeurige dingen doen door een geprepareerde USB-stick in te pluggen. </li> </ul> </li>Bijvoorbeeld <li> <ul> <li>het hele schijfstation wissen en vrije toegang hebben tot het hele netwerk.</li></ul></li> <li>Intern in DSM: <ul> <li>Telkens wanneer een opslagapparaat wordt ingeplugd, wordt het script gestart. Het is mogelijk dat het script zelf moet controleren of het zijn acties moet uitvoeren op het huidige opslagapparaat. </li> <li>De beschikbare beveiligingsoptie zal meestal niet nodig zijn. </li> </ul> </ul>    <p>Naast het bovengenoemde primaire script is optioneel ook een secundair script mogelijk, dat wordt uitgevoerd nadat het opslagapparaat is uitgeworpen. 
-        Dit tweede script kan zich uiteraard alleen intern op de DSM bevinden. Toegang tot het uitgeworpen geheugen is niet meer mogelijk op het moment dat het moet worden gestart.</p>
-    <p>Alle scripts draaien met root-toestemming. Intern geplaatste scripts kunnen dus bijna overal in het DSM-bestandssysteem staan. 
-      Gebruikers zonder beheerdersrechten mogen geen toegang hebben, althans geen schrijftoegang!</p>       
+    <p>Er zijn twee fundamenteel verschillende locaties waar het door het autorunpakket gestarte script kan worden opgeslagen:</p>
+ <ul>
+   <li>Op de externe opslagapparaten: <ul> <li>alleen de opslagapparaten die op deze manier met het script zijn voorbereid, zullen de actie starten . </li> </ul> </li>   <li> <ul> <li>Alle andere opslagapparaten die kunnen worden aangesloten, worden genegeerd. </li> <li>Als de beschikbare beveiligingsoptie <b>niet</b> wordt gebruikt, kan iedereen die toegang heeft tot het schijfstation willekeurige dingen doen door een voorbereide USB-stick in te steken, bijv. het hele schijfstation wissen en vrije toegang hebben tot het hele netwerk.</li></ul></li> <li>Intern in DSM: <ul> <li>Telkens wanneer een opslagmedium wordt geplaatst, wordt het script gestart . </li> </ul> <ul> <li>Het is mogelijk dat het script zelf moet controleren of het zijn acties op het huidige opslagmedium moet uitvoeren. </li> <li>De beschikbare beveiligingsoptie zal in de meeste gevallen niet nodig zijn. </li> </ul> </ul>        <p>Naast het bovengenoemde primaire script is het ook mogelijk een optioneel secundair script te hebben dat wordt uitgevoerd nadat het opslagmedium is uitgeworpen. Dit tweede script kan zich uiteraard alleen intern op de DSM bevinden. Toegang tot het uitgeworpen geheugen is niet meer mogelijk op het moment dat het moet worden gestart.</p>
+    <p>Alle scripts draaien met root-rechten. Intern geplaatste scripts kunnen zich dus bijna overal in het bestandssysteem van de DSM bevinden. Gebruikers zonder beheerdersrechten mogen geen toegang hebben, althans geen schrijftoegang!</p>       
     
     <h2>Beveiligingsoptie:</h2>        
-    <p>Scriptuitvoering kan worden beperkt tot eerder geregistreerde scripts aan de hand van hun checksum (SHA256 hash). Andere scripts worden niet uitgevoerd.<br>
+    <p>De uitvoering van scripts kan worden beperkt tot eerder geregistreerde scripts op basis van hun checksum (SHA256 hash). Andere scripts worden dan niet uitgevoerd.<br>
       Er zijn twee verschillende benaderingen:</p>
       <ol type="A">
         <li>
-          In de instellingen tijdens de installatie van het autorunpakket wordt de instelling "1 eerste script toegestaan" geselecteerd, en de controlesom van het eerste script na de installatie wordt bepaald en geregistreerd. Alleen dit script en ongewijzigde kopieën ervan worden uitgevoerd. De beveiliging wordt automatisch gewapend met het eerste script na de eerste, en indien nodig ook na een herinstallatie. 
-          Mocht het script ooit gewijzigd moeten worden, maak dan achteraf opnieuw een autorunpakket herinstallatie met deze instelling "1 eerste script toegestaan". De oude registratie wordt gewist en de nieuwe scriptcontrolesom wordt daarna geregistreerd als de enige toegestane.        </li>
+          In de instellingen bij de installatie van het autorunpakket wordt de instelling "1 eerste script toegestaan" geselecteerd, en de controlesom van het eerste script na de installatie wordt bepaald en geregistreerd. Alleen dit script en ongewijzigde kopieën ervan worden uitgevoerd. De beveiliging wapent zich automatisch met het eerste script na de eerste, en indien nodig herinstallatie. Als het script ooit gewijzigd moet worden, voert u een nieuwe herinstallatie van het autorunpakket uit met deze instelling "1 eerste script toegestaan". De oude registratie wordt verwijderd en het nieuwe script wordt vervolgens geregistreerd als het enige toegestane script.        </li>
         <li>
-          Tijdens de pakketinstallatie wordt eerst "2 Add any hash" geselecteerd. Nu moeten alle externe opslagplaatsen met verschillende scripts achter elkaar worden aangesloten. Zodat de benodigde checksums kunnen worden geregistreerd en toegevoegd. Daarna moet de installatie <b>opnieuw</b> worden uitgevoerd en moet de waarde worden veranderd in "3 Alleen eerder geregistreerde". Vanaf dat moment staat de beveiliging op scherp.</li>
+          Tijdens de pakketinstallatie wordt eerst "2 Elke hash toevoegen" geselecteerd. Nu moeten alle externe geheugens, die verschillende scripts hebben, na elkaar worden aangesloten. Zodat de vereiste checksums kunnen worden geregistreerd en toegevoegd. Daarna moet de installatie <b>opnieuw</b> worden uitgevoerd en de waarde worden veranderd in "3 Alleen eerder geregistreerde". Vanaf dat moment is de beveiliging ingeschakeld.</li>
       </ol>
-      Procedure B kan ook worden gebruikt als A eerder in gebruik was en een extra controlesom, bijvoorbeeld voor een nieuwe scriptvariant, parallel aan de eerder geregistreerde scriptvariant moet worden toegevoegd.  </body>
+      Procedure B kan ook worden gebruikt als A eerder is gebruikt en een extra controlesom, bijvoorbeeld voor een nieuwe scriptvariant, parallel aan de reeds geregistreerde scriptvariant moet worden toegevoegd.  </body>
 </html>

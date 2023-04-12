@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Exécution automatique</title>
+    <style>
+      .t1 { border-collapse : collapse ; } .t1, .t1 th, .t1 td { border : solid 1px } .tc td { text-align : center ; } </style>
+  </head>
+  <body>
+    <h1>Indicateur LED d'état et de copie</h1>
+    <p>
+    L'Autorun peut contrôler le voyant d'état ou de copie. Celui-ci peut être utilisé pour indiquer une activité en cours et, le cas échéant, une erreur.    </p>
+    <h2>Notes : L'autorun peut contrôler le voyant d'état ou de copie :</h2>
+    <ul>
+    <li>Il n'existe pas de moyen simple de lire l'état actuel de la LED ou de revenir à l'état précédent. Si le contrôle des DEL est activé dans les paramètres de l'Autorun, l'état actuel des DEL (par exemple, l'état clignotant en orange en raison d'une erreur) sera éventuellement écrasé par l'Autorun. Et vice versa, d'autres événements peuvent écraser l'affichage défini par l'Autorun.</li>
+    <li>Dans certains paramètres de configuration de l'Autorun, une erreur (ou des codes de retour sélectionnables du script lancé) est indiquée par une DEL après la fin. L'effacement de l'affichage de l'erreur n'est alors possible qu'avec une commande de script exécutée en tant que <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">super-utilisateur</span> (par exemple via la planification des tâches).</li>
+    </ul>
+    <p>
+    La commande de script pour le contrôle des DEL est par exemple <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    À la place du 7 dans l'exemple (pour la LED d'état éteinte), les caractères suivants doivent être utilisés :<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>Code</th>
+        <th >Commande</th>
+        <th style="text-align: left;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>LED d'état éteinte</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>LED d'état verte</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>LED d'état verte clignotante</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo " :" &gt; /dev/ttyS1</td>
+        <td>LED d'état orange</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">echo " ;" &gt; /dev/ttyS1</td>
+        <td>LED d'état orange clignotante</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>LED de copie allumée</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>La LED de copie clignote</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>LED de copie éteinte</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

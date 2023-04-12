@@ -1,5 +1,4 @@
-"<!DOCTYPE html>
-<html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,46 +10,20 @@
   </head>
   <body>
     <h1>Security</h1>
-    <h2>Script location:</h2>
-    <p>There are two fundamentally different places where the script started by the autorun package can be placed:</p>
-    <ul>
-      <li>On the external storage devices: 
-        <ul>
-          <li>
-            Only the storage devices prepared with the script in this way will start the action. All other storages that may be plugged in will be ignored.
-          </li>
-          <li>If the available security option is <b>not</b> used, then anyone who has access to the disk station can do arbitrary things by plugging in a prepared USB stick.
-            E.g. delete the whole disk station and have free access to the whole network.
-          </li>
-        </ul>
-      </li>
-      <li>Internal in DSM:
-        <ul>
-          <li>
-            Every time a storage device is plugged in, the script is started. The script itself may have to check whether it should perform its actions on the current storage device.
-          </li>
-          <li>
-            The available security option will not be necessary most of the time.
-          </li>
-        </ul>
-      </ul>
-      <p>In addition to the primary script mentioned above, a secondary script, which is executed after the storage device has been ejected, is also optionally possible. 
-        This second script can naturally only be located internally on the DSM. Access to the ejected memory is no longer possible at the time when it is to be started.</p>
-    <p>All scripts run with root permission. Internally placed scripts can therefore be located almost anywhere in the DSM file system. 
-      Users without administrator rights should not have access, at least not write access!</p>       
+    <h2>Location of the script:</h2>
+    <p>There are two fundamentally different locations where the script started by the autorun package can be stored:</p>
+  <ul>
+    <li>On the external storage devices: <ul> <li>only the storage devices prepared with the script in this way will start the action </li> </ul>. </li>   <li> <ul> <li>All other storage devices that can be plugged in are ignored. </li> <li>If the available security option is <b>not</b> used, anyone who has access to the disk station can do arbitrary things by inserting a prepared USB stick, e.g. wipe the entire disk station and have free access to the entire network.</li></ul></li> <li>Internally in DSM: <ul> <li>Every time a storage medium is inserted, the script is started </li> </ul>. <ul> <li>The script itself may need to check whether it should perform its actions on the current storage device. </li> <li>The available security option will not be required in most cases. </li> </ul> </ul>      <p>In addition to the primary script mentioned above, it is also possible to have an optional secondary script that is executed after the storage device has been ejected. This second script can, of course, only be located internally on the DSM. Access to the ejected memory is no longer possible at the time it is to be started.</p>
+    <p>All scripts run with root privileges. Internally placed scripts can therefore be located almost anywhere in the DSM's file system. Users without administrator rights should not have access, at least not write access!</p>       
     
     <h2>Security option:</h2>        
-    <p>Script execution can be restricted to scripts previously registered using their checksum (SHA256 hash). Other scripts will not be executed.<br>
+    <p>The execution of scripts can be restricted to previously registered scripts based on their checksum (SHA256 hash). Other scripts will then not be executed.<br>
       There are two different approaches:</p>
       <ol type="A">
         <li>
-          In the settings during autorun package installation, the "1 first script allowed" setting is selected, and the checksum of the first script after installation is determined and registered.
-          Only this script and unchanged copies of it are executed. The security automatically arms with the first script after the initial, and if necessary also after a re-installation. 
-          If the script should ever need a change, then afterwards make again an autorun package re-installation with this setting "1 first script allowed". The old registration is deleted and the new script checksum is registered afterwards as the only permissible one.
-        </li>
+          In the settings when installing the autorun package, the setting "1 first script allowed" is selected, and the checksum of the first script after installation is determined and registered. Only this script and unmodified copies of it are executed. Security automatically arms itself with the first script after the initial, and if necessary, reinstallation. If the script ever needs modification, then perform another autorun package reinstallation with this "1 first script allowed" setting. The old registration is deleted and the new script checksum is subsequently registered as the only one allowed.        </li>
         <li>
-          During the package installation first "2 Add any hash" is selected. Now all the external storages which have different scripts need to be plugged in one after the other times. So that the needed checksums can be registered and added. After that the installation need to be run <b>again</b> and the value have to be changed to "3 Only previously registered". From then on the security is armed.</li>
+          During the package installation, "2 Add any hash" is selected first. Now all external memories, which have different scripts, must be plugged in one after the other. So that the required checksums can be registered and added. After that the installation has to be executed <b>again</b> and the value has to be changed to "3 Only previously registered". From then on, security is enabled.</li>
       </ol>
-      Procedure B can also be used if A was previously in use and an additional checksum, e.g. for a new script variant, needs to be added in parallel to the previously registered script variant.
-  </body>
-</html>"
+      Procedure B can also be used if A was used before and an additional checksum, e.g. for a new script variant, must be added in parallel to the already registered script variant.  </body>
+</html>

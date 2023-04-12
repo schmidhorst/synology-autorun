@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="pt-PT">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,25 +11,19 @@
   <body>
     <h1>Segurança</h1>
     <h2>Localização do guião:</h2>
-    <p>Existem dois lugares fundamentalmente diferentes onde o guião iniciado pelo pacote autorun pode ser colocado:</p>
-   <ul>
-     <li>Nos dispositivos de armazenamento externo: 
-       <ul>
-         <li>
-            Só os dispositivos de armazenamento preparados com o guião desta forma é que iniciarão a acção. </li> </ul> </li> <li> <ul> <li>Todos os outros dispositivos de armazenamento que possam ser ligados serão ignorados. </li> <li>Se a opção de segurança disponível <b>não</b> for utilizada, então qualquer pessoa que tenha acesso à estação de disco pode fazer coisas arbitrárias ligando uma pen USB preparada. </li> </ul> </li>Por exemplo, <li> <ul> <li>apagar toda a estação de disco e ter acesso livre a toda a rede.</li></ul></li> <li>Interno no DSM: <ul> <li>Sempre que um dispositivo de armazenamento é ligado, o script é iniciado </li> </ul>. <ul> <li>O script em si pode ter de verificar se deve executar as suas acções no dispositivo de armazenamento actual. </li> <li>A opção de segurança disponível não será necessária a maior parte </li> </ul> </ul>do tempo.      <p>Para além do script primário acima mencionado, um script secundário, que é executado após o dispositivo de armazenamento ter sido ejectado, é também opcionalmente possível. 
-        Este segundo script, naturalmente, só pode ser localizado internamente no DSM. O acesso à memória ejectada já não é possível no momento em que esta deve ser iniciada.</p>
-    <p>Todos os guiões são executados com permissão da raiz. Os scripts colocados internamente podem, portanto, ser localizados em quase qualquer parte do sistema de ficheiros do DSM. 
-      Os utilizadores sem direitos de administrador não devem ter acesso, pelo menos não devem ter acesso de escrita!</p>       
+    <p>Existem dois locais fundamentalmente diferentes onde o guião iniciado pelo pacote autorun pode ser armazenado:</p>
+ <ul>
+   <li>Nos dispositivos de armazenamento externo: <ul> <li>apenas os dispositivos de armazenamento preparados com o guião desta forma iniciarão a acção . </li> </ul> </li>   <li> <ul> <li>Todos os outros dispositivos de armazenamento que podem ser ligados à corrente são ignorados. </li> <li>Se a opção de segurança disponível <b>não</b> for utilizada, qualquer pessoa que tenha acesso à estação de disco pode fazer coisas arbitrárias inserindo uma pen USB preparada, por exemplo, limpar toda a estação de disco e ter acesso livre a toda a rede.</li></ul></li> <li>Internamente em DSM: <ul> <li>Cada vez que um suporte de armazenamento é inserido, o script é iniciado . </li> </ul> <ul> <li>O próprio script pode precisar de verificar se deve executar as suas acções no dispositivo de armazenamento actual. </li> <li>A opção de segurança disponível não será necessária na maioria dos casos. </li> </ul> </ul>        <p>Para além do script primário acima mencionado, é também possível ter um script secundário opcional que é executado após o dispositivo de armazenamento ter sido ejectado. Este segundo guião só pode, evidentemente, ser localizado internamente no DSM. O acesso à memória ejectada já não é possível no momento em que esta deve ser iniciada.</p>
+    <p>Todos os guiões são executados com privilégios de raiz. Os scripts colocados internamente podem, portanto, ser localizados em quase qualquer parte do sistema de ficheiros do DSM. Os utilizadores sem direitos de administrador não devem ter acesso, pelo menos não devem ter acesso de escrita!</p>       
     
     <h2>Opção de segurança:</h2>        
-    <p>A execução de scripts pode ser restringida a scripts previamente registados usando o seu checksum (SHA256 hash). Outros roteiros não serão executados.<br>
+    <p>A execução de scripts pode ser restrita a scripts previamente registados com base no seu checksum (SHA256 hash). Outros roteiros não serão então executados.<br>
       Há duas abordagens diferentes:</p>
       <ol type="A">
         <li>
-          Nas configurações durante a instalação do pacote autorun, a configuração "1 primeiro script permitido" é seleccionada, e o checksum do primeiro script após a instalação é determinado e registado. Apenas este script e cópias inalteradas do mesmo são executados. A segurança arma automaticamente com o primeiro script após a inicial, e se necessário também após uma reinstalação. 
-          Se o script alguma vez precisar de uma alteração, então, depois, fazer de novo uma reinstalação do pacote autorun com esta definição "1 primeiro script permitido". O antigo registo é apagado e o novo checksum do script é registado posteriormente como o único registo admissível.        </li>
+          Nas definições ao instalar o pacote autorun, a definição "1 primeiro script permitido" é seleccionada, e o checksum do primeiro script após a instalação é determinado e registado. Apenas este script e cópias não modificadas do mesmo são executadas. A segurança arma-se automaticamente com o primeiro script após a instalação inicial, e se necessário, reinstalação. Se o script necessitar de modificação, então executar outra reinstalação do pacote autorun com esta configuração "1 primeiro script permitido". O antigo registo é apagado e o novo checksum do script é subsequentemente registado como o único permitido.        </li>
         <li>
-          Durante a instalação do pacote primeiro "2 Adicionar qualquer hash" é seleccionado. Agora todos os armazéns externos que têm diferentes scripts precisam de ser ligados um após o outro. Para que os checksums necessários possam ser registados e adicionados. Depois disso, a instalação precisa de ser executada <b>novamente</b> e o valor tem de ser alterado para "3 Apenas previamente registado". A partir daí, a segurança está armada.</li>
+          Durante a instalação do pacote, "2 Adicionar qualquer hash" é seleccionado primeiro. Agora todas as memórias externas, que têm diferentes scripts, devem ser ligadas uma após a outra. Para que os checksums necessários possam ser registados e adicionados. Depois disso, a instalação tem de ser executada <b>novamente</b> e o valor tem de ser alterado para "3 Apenas previamente registado". A partir daí, a segurança é activada.</li>
       </ol>
-      O procedimento B também pode ser utilizado se A estava anteriormente em uso e um checksum adicional, por exemplo, para uma nova variante de script, precisa de ser adicionado em paralelo com a variante de script previamente registada.  </body>
+      O procedimento B também pode ser utilizado se A foi utilizado antes e um checksum adicional, por exemplo, para uma nova variante de script, deve ser adicionado em paralelo com a variante de script já registada.  </body>
 </html>

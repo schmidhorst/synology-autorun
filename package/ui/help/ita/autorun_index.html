@@ -11,27 +11,16 @@
   <body>
     <h1>Autorun</h1>
     <p>
-    Il pacchetto "Autorun" può attivare un'azione quando un disco esterno viene collegato a una stazione Synology. Questo è spesso molto utile per la copia automatica dei dati. 
-    Almeno nella versione 7.1 di DSM, tale opzione di evento non è presente nel task scheduler. 
-    Ci sono solo "Avvio" e "Spegnimento" come eventi nelle "Attività attivate", ma non "Archiviazione USB esterna inserita" o simili.    </p>
+    Il pacchetto "Autorun" può attivare un'azione quando un disco rigido esterno è collegato a una Synology Station. Questo è spesso molto utile per la copia automatica dei dati. Almeno nella versione 7.1 di DSM, questa opzione di evento non è presente nel task scheduler. Ci sono solo "Avvio" e "Spegnimento" come eventi in "Attività attivate", ma non "Archiviazione USB esterna inserita" o simili.    </p>
     <p>
-    Con "azione" si intende innanzitutto l'esecuzione di uno script BASH. 
-    Lo script può quindi copiare i file tra la stazione disco e il disco utilizzando comandi come <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
-     Oppure lo script può, ad esempio, avviare un'attività definita nel task scheduler.     </p>
+    Per "Azione" si intende principalmente l'esecuzione di uno script di shell BASH. Lo script può quindi copiare i file tra la stazione disco e il disco utilizzando comandi come <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. Oppure lo script può, ad esempio, avviare un'attività definita nel task scheduler.     </p>
     <p>
-    Come azione aggiuntiva, il disco può anche essere espulso al termine dell'azione. 
-    Poiché ciò significa che i dati sul supporto dati esterno non sono più direttamente accessibili, si ottiene un certo grado di protezione dei dati sul supporto dati esterno contro la distruzione, ad esempio da parte di un ransomware. 
-     Tuttavia, poiché il supporto dati può anche essere reintegrato nel sistema tramite software, non si tratta di una protezione completa.    </p>
+    Come azione aggiuntiva, il disco può anche essere espulso al termine dell'azione. Poiché ciò significa che i dati sul disco esterno non sono più direttamente accessibili, ciò fornisce una certa protezione dei dati sul disco esterno dalla distruzione, ad esempio da parte di un ransomware. Tuttavia, poiché il disco può anche essere reintegrato nel sistema tramite software, non si tratta di una protezione completa.    </p>
     <p>
-    Una protezione ransomware ancora migliore può essere ottenuta nel modo seguente: Utilizzare un supporto dati esterno con alimentazione propria, come avviene di solito con i dischi rigidi USB da 3,5 pollici. L'alimentatore viene gestito tramite una presa intelligente. Questa presa intelligente viene poi spenta dopo l'espulsione del supporto dati. Finché il ransomware non supera questa implementazione, il supporto dati esterno che viene scollegato dal sistema in questo modo è protetto. 
-   <b>
-    Attenzione: </b>
-    
-    Mentre il disco esterno è montato per un aggiornamento, non c'è praticamente alcuna protezione contro il ransomware che potrebbe essere entrato nel sistema prima! 
-    Pertanto, utilizzare sempre almeno due dischi in alternanza per i backup!    </p>
+    Una protezione ancora migliore contro il ransomware può essere ottenuta nel modo seguente: Utilizzare un supporto dati esterno con alimentazione propria, come avviene di solito con i dischi rigidi USB da 3,5 pollici. L'alimentatore viene gestito tramite una presa intelligente. Questa presa intelligente viene poi spenta dopo l'espulsione del disco. Finché il ransomware non supera questa implementazione, il disco esterno che viene scollegato dal sistema in questo modo è protetto. <b>Attenzione: </b>Mentre il disco esterno è montato per un aggiornamento, non c'è praticamente alcuna protezione contro il ransomware che potrebbe essersi precedentemente infiltrato nel sistema! Pertanto, utilizzate sempre almeno due dischi a rotazione per i backup!    </p>
     <p><a href="autorun_security.html">Nota sulla sicurezza</a></p> 
     <p><a href="autorun_scripts.html">Suggerimenti per gli script</a></p>
     <p><a href="autorun_taskscheduler.html">Suggerimenti per la pianificazione delle attività</a></p>
-
+    <p><a href="autorun_leds.html">Indicatore LED di stato e di copia</a></p>
   </body>
 </html>

@@ -1,5 +1,4 @@
-"<!DOCTYPE html>
-<html class="img-no-display" lang="EN">
+<!DOCTYPE html><html class="img-no-display" lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12,36 +11,16 @@
   <body>
     <h1>Autorun</h1>
     <p>
-    The "Autorun" package can trigger an action when an external disk is plugged into a Synology station. This is often very useful for automated copying of data. 
-    At least in DSM version 7.1, such an event option is missing in the task scheduler. 
-    There are only "Startup" and "Shutdown" as events in the "Triggered Tasks", but no "External USB storage inserted" or similar.
-    </p>
+    The "Autorun" package can trigger an action when an external hard drive is connected to a Synology Station. This is often very useful for automatic copying of data. At least in DSM version 7.1, such an event option is missing in the task scheduler. There are only "Startup" and "Shutdown" as events in the "Triggered Tasks", but no "External USB storage inserted" or similar.    </p>
     <p>
-    With "action" is meant first of all the execution of a BASH shell script. 
-    The script can then copy files back and forth between the disk station and the disk using commands like
-     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
-     Or the script can e.g. also start a task defined in the task scheduler.
-     </p>
+    By "Action" is primarily meant the execution of a BASH shell script. The script can then copy files back and forth between the disk station and the disk using commands like <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. Or the script can e.g. also start a task defined in the task scheduler.     </p>
     <p>
-    As an additional action, the disk can also be ejected after the action is completed. 
-    Since this means that the data on the external data medium is no longer directly accessible, this provides a certain degree of protection
-     for the data on the external data medium against destruction, for example by ransomware. 
-     However, since the data medium can also be re-integrated into the system via software, it is not complete protection.
-    </p>
+    As an additional action, the disk can also be ejected after the action is completed. Since this means that the data on the external disk is no longer directly accessible, this provides some protection of the data on the external disk from destruction, e.g. by ransomware. However, since the disk can also be reintegrated into the system via software, this is not complete protection.    </p>
     <p>
-    Even better ransomware protection can be achieved in the following way: Use an external data medium with its own power supply, 
-    as is common with 3.5-inch USB hard disks. The power supply is operated via a smart socket. This smart socket is then switched off after 
-    the data medium has been ejected. As long as ransomware doesn't override this implementation, the external data medium that is 
-    disconnected from the system in this way is protected. 
-    <b>
-    Warning: 
-    </b>
-    While the external disk is mounted for an update, there is practically no protection against ransomware that could heve entered your system before! 
-    Therefore, use always at least two disks alternately for backups!
-    </p>
+    Even better protection against ransomware can be achieved in the following way: Use an external data medium with its own power supply, as is common with 3.5-inch USB hard drives. The power supply is operated via a smart socket. This smart socket is then turned off after the disk is ejected. As long as ransomware does not override this implementation, the external disk that is disconnected from the system in this way is protected. <b>Warning: </b>While the external disk is mounted for an update, there is virtually no protection against ransomware that may have previously infiltrated your system! Therefore, always use at least two disks in rotation for backups!    </p>
     <p><a href="autorun_security.html">Security note</a></p> 
     <p><a href="autorun_scripts.html">Script hints</a></p>
     <p><a href="autorun_taskscheduler.html">Task scheduling hints</a></p>
-
+    <p><a href="autorun_leds.html">Status and Copy LED indicator</a></p>
   </body>
-</html>"
+</html>

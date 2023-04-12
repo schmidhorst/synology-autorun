@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="sv">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,12 +10,12 @@
   </head>
   <body>
     <h1>Skriptanteckningar:</h1>
-    <p>Både det primära skriptet, som utför den önskade åtgärden efter att en extern lagringsenhet har satts in, och det valfria sekundära skriptet efter att lagringsenheten har tagits ut, kräver vissa särskilda överväganden:</p>
+    <p>Både det primära skriptet som utför den önskade åtgärden efter att en extern lagringsenhet har satts in och det extra sekundära skriptet efter att lagringsenheten har tagits bort kräver vissa särskilda överväganden:</p>
     <ul>
       <li>Båda skripten startas av daemon udev. De körs med root-privilegier.</li>
       <li>Miljön för skripten är nästan tom. I synnerhet är en sökväg till kommandona, t.ex. från katalogen /bin/, <b>inte</b> inställd som vanligt! D.v.s. sökvägen måste anges antingen med varje kommando eller så ställer du in miljövariabeln PATH i början av skriptet.</li>
-      <li>Miljövariabeln SHELL pekar på /bin/ash. Detta är med DSM 7.x en länk till /bin/bash. BASH kan dock köras i ett läge där till exempel "process substitution" inte är tillgänglig. Det kan hända att ett skript som går bra när det startas interaktivt plötsligt inte längre går att köra när det startas via udev daemon på grund av ett syntaxfel. Jag rekommenderar <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> som shebang.</li>
-      <li>För felsökning kan det vara till hjälp att titta på utdata från <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> i ett skalfönster när man ansluter en extern lagringsenhet. Och en titt i filen /var/log/bash_err.log kan vara till hjälp.</li>
+      <li>Miljövariabeln SHELL pekar på /bin/ash. Detta är en länk till /bin/bash i DSM 7.x. BASH kan dock köras i ett läge där till exempel "process substitution" inte är tillgänglig. Det kan hända att ett skript som körs utan problem när det startas interaktivt plötsligt inte längre går att köra när det startas via udev-demonen på grund av ett syntaxfel. Jag rekommenderar <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> som shebang.</li>
+      <li>För felsökning kan det vara till hjälp att titta på utdata från <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> i ett skalfönster när en extern lagringsenhet är ansluten. Även en titt i filen /var/log/bash_err.log kan vara till hjälp.</li>
     </ul> 
      
   </body>

@@ -11,27 +11,16 @@
   <body>
     <h1>Autorun</h1>
     <p>
-    El paquete "Autorun" puede desencadenar una acción cuando se conecta un disco externo a una estación Synology. Esto suele ser muy útil para la copia automática de datos. 
-    Al menos en la versión 7.1 de DSM, falta esta opción de evento en el programador de tareas. 
-    Sólo hay "Inicio" y "Apagado" como eventos en las "Tareas activadas", pero no "Almacenamiento USB externo insertado" o similar.    </p>
+    El paquete "Autorun" puede desencadenar una acción cuando se conecta un disco duro externo a un Synology Station. Esto suele ser muy útil para la copia automática de datos. Al menos en la versión 7.1 de DSM, falta esta opción de evento en el programador de tareas. Sólo hay "Inicio" y "Apagado" como eventos en las "Tareas activadas", pero no "Almacenamiento USB externo insertado" o similar.    </p>
     <p>
-    Con "acción" se entiende en primer lugar la ejecución de un script BASH shell. 
-    El script puede entonces copiar archivos de ida y vuelta entre la estación de disco y el disco usando comandos como <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
-     O el script también puede, por ejemplo, iniciar una tarea definida en el programador de tareas.     </p>
+    Por "Acción" se entiende principalmente la ejecución de un script BASH. El script puede entonces copiar archivos de ida y vuelta entre la estación de disco y el disco usando comandos como <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. O el script también puede, por ejemplo, iniciar una tarea definida en el programador de tareas.     </p>
     <p>
-    Como acción adicional, también se puede expulsar el disco una vez finalizada la acción. 
-    Dado que los datos del soporte de datos externo ya no son directamente accesibles, esto proporciona un cierto grado de protección para los datos del soporte de datos externo contra la destrucción, por ejemplo, por ransomware. 
-     Sin embargo, dado que el soporte de datos también puede volver a integrarse en el sistema mediante software, no se trata de una protección completa.    </p>
+    Como acción adicional, también se puede expulsar el disco una vez finalizada la acción. Como esto significa que los datos del disco externo ya no son directamente accesibles, esto proporciona cierta protección de los datos del disco externo contra la destrucción, por ejemplo, por ransomware. Sin embargo, dado que el disco también puede reintegrarse en el sistema mediante software, no se trata de una protección completa.    </p>
     <p>
-    Se puede conseguir una protección aún mejor contra el ransomware de la siguiente manera: Utilice un soporte de datos externo con su propia fuente de alimentación, como es habitual en los discos duros USB de 3,5 pulgadas. La fuente de alimentación funciona a través de un enchufe inteligente. Este enchufe inteligente se desconecta después de expulsar el soporte de datos. Mientras el ransomware no anule esta implementación, el soporte de datos externo que se desconecte del sistema de esta forma estará protegido. 
-   <b>
-    Advertencia: </b>
-    
-    Mientras el disco externo está montado para una actualización, ¡prácticamente no hay protección contra el ransomware que podría haber entrado en su sistema antes! 
-    Por lo tanto, ¡utiliza siempre al menos dos discos alternativamente para las copias de seguridad!    </p>
+    Se puede conseguir una protección aún mejor contra el ransomware de la siguiente manera: Utilizar un soporte de datos externo con su propia fuente de alimentación, como es habitual con los discos duros USB de 3,5 pulgadas. La fuente de alimentación funciona a través de un enchufe inteligente. Esta toma inteligente se apaga después de expulsar el disco. Mientras el ransomware no anule esta implementación, el disco externo que se desconecte del sistema de esta forma estará protegido. <b>Advertencia: </b>Mientras el disco externo está montado para una actualización, ¡prácticamente no hay protección contra el ransomware que pueda haberse infiltrado previamente en su sistema! Por lo tanto, ¡utiliza siempre al menos dos discos en rotación para las copias de seguridad!    </p>
     <p><a href="autorun_security.html">Nota de seguridad</a></p> 
     <p><a href="autorun_scripts.html">Consejos sobre scripts</a></p>
     <p><a href="autorun_taskscheduler.html">Programación de tareas</a></p>
-
+    <p><a href="autorun_leds.html">Indicador LED de estado y copia</a></p>
   </body>
 </html>

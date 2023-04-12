@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="pt-PT">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,12 +10,12 @@
   </head>
   <body>
     <h1>Notas de Roteiro:</h1>
-    <p>Tanto o script primário, que executa a acção desejada após a ligação de um dispositivo de armazenamento externo, como o script secundário adicional opcional após o dispositivo de armazenamento ser ejectado, requerem algumas considerações especiais:</p>
+    <p>Tanto o script primário que executa a acção desejada depois de um dispositivo de armazenamento externo ser ligado e o script secundário adicional opcional depois de o dispositivo de armazenamento ser ejectado requerem algumas considerações especiais:</p>
     <ul>
-      <li>Ambos os scripts são iniciados pelo daemon udev. Estão a funcionar com privilégios de raiz.</li>
-      <li>O ambiente dos scripts está quase vazio. Em particular, um caminho para os comandos, por exemplo a partir do directório /bin/, <b>não</b> é definido como habitualmente! Ou seja, o caminho deve ser especificado ou com cada comando ou está a definir a variável de ambiente PATH no início do script.</li>
-      <li>A variável de ambiente SHELL aponta para /bin/ash. Isto é com DSM 7.x uma ligação a /bin/bash. Contudo, a BASH pode estar a funcionar num modo em que, por exemplo, a "substituição do processo" não está disponível. Pode acontecer que um script que corre bem quando iniciado interactivamente, de repente não corra mais quando iniciado sobre o daemon udev devido a um erro de sintaxe. Eu recomendo <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> como shebang.</li>
-      <li>Para depuração, pode ser útil observar a saída do <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> numa janela de shell ao ligar um dispositivo de armazenamento externo. E um olhar para o ficheiro /var/log/bash_err.log pode ser útil.</li>
+      <li>Ambos os scripts são iniciados pelo daemon udev. São executados com privilégios de raiz.</li>
+      <li>O ambiente dos scripts está quase vazio. Em particular, um caminho para os comandos, por exemplo a partir do directório /bin/, <b>não</b> é definido como habitualmente! Isto é, o caminho deve ser especificado ou com cada comando ou define-se a variável de ambiente PATH no início do script.</li>
+      <li>A variável de ambiente SHELL aponta para /bin/ash. Esta é uma ligação a /bin/bash no DSM 7.x. Contudo, a BASH pode funcionar num modo onde, por exemplo, a "substituição do processo" não está disponível. Pode acontecer que um script que corre sem problemas quando iniciado interactivamente, de repente não corre mais quando iniciado através do daemon udev devido a um erro de sintaxe. Recomendo <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> como shebang.</li>
+      <li>Para a resolução de problemas, pode ser útil observar a saída do <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> numa janela de shell quando um dispositivo de armazenamento externo é anexado. Também um olhar para o ficheiro /var/log/bash_err.log pode ser útil.</li>
     </ul> 
      
   </body>

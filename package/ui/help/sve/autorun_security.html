@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="sv">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,25 +11,19 @@
   <body>
     <h1>Säkerhet</h1>
     <h2>Skriptets plats:</h2>
-    <p>Det finns två principiellt olika platser där skriptet som startas av autorun-paketet kan placeras:</p>
-   <ul>
-     <li>På de externa lagringsenheterna: 
-       <ul>
-         <li>
-            Endast de lagringsenheter som förberetts med skriptet på detta sätt startar åtgärden. </li> </ul> </li> <li> <ul> <li>Alla andra lagringsenheter som kan anslutas ignoreras. </li> <li>Om det tillgängliga säkerhetsalternativet <b>inte</b> används kan alla som har tillgång till diskstationen göra godtyckliga saker genom att ansluta ett förberett USB-minne. </li> </ul> </li>T.ex. <li> <ul> <li>radera hela diskstationen och få fri tillgång till hela nätverket.</li></ul></li> <li>Internt i DSM: <ul> <li>Varje gång en lagringsenhet ansluts startas skriptet. Själva skriptet kan behöva kontrollera om det ska utföra sina åtgärder på den aktuella lagringsenheten </li>. <li>Det tillgängliga säkerhetsalternativet kommer för det mesta inte att vara nödvändigt. </li> </ul> </ul>     <p>Utöver det primära skriptet som nämns ovan är ett sekundärt skript, som utförs efter att lagringsenheten har tagits ut, också möjligt som alternativ. 
-        Detta andra skript kan naturligtvis bara finnas internt på DSM. Tillgång till det utkastade minnet är inte längre möjlig vid den tidpunkt då det ska startas.</p>
-    <p>Alla skript körs med root-behörighet. Internt placerade skript kan därför placeras nästan var som helst i DSM:s filsystem. 
-      Användare utan administratörsrättigheter bör inte ha tillgång, åtminstone inte skrivbehörighet!</p>       
+    <p>Det finns två principiellt olika platser där skriptet som startas av autorun-paketet kan lagras:</p>
+ <ul>
+   <li>På externa lagringsenheter: <ul> <li>Endast lagringsenheter som förberetts med skriptet på detta sätt startar åtgärden . </li> </ul> </li>   <li> <ul> <li>Alla andra lagringsenheter som kan anslutas ignoreras. </li> <li>Om det tillgängliga säkerhetsalternativet <b>inte</b> används kan vem som helst som har tillgång till diskstationen göra godtyckliga saker genom att sätta in ett förberett USB-minne, t.ex. radera hela diskstationen och få fri tillgång till hela nätverket.</li></ul></li> <li>Internt i DSM: <ul> <li>Varje gång ett lagringsmedium sätts in startas skriptet . </li> </ul> <ul> <li>Själva skriptet kan behöva kontrollera om det ska utföra sina åtgärder på det aktuella lagringsmediet. </li> <li>Det tillgängliga säkerhetsalternativet kommer inte att behövas i de flesta fall. </li> </ul> </ul>        <p>Förutom det primära skriptet som nämns ovan är det också möjligt att ha ett valfritt sekundärt skript som körs efter att lagringsmediet har kastats ut. Detta andra skript kan naturligtvis endast finnas internt på DSM. Tillgång till det utkastade minnet är inte längre möjlig vid den tidpunkt då det ska startas.</p>
+    <p>Alla skript körs med rooträttigheter. Internt placerade skript kan därför placeras nästan var som helst i DSM:s filsystem. Användare utan administratörsrättigheter bör inte ha åtkomst, åtminstone inte skrivåtkomst!</p>       
     
     <h2>Säkerhetsalternativ:</h2>        
-    <p>Det är möjligt att begränsa utförandet av skript till tidigare registrerade skript med hjälp av deras kontrollsumma (SHA256-hash). Andra skript kommer inte att exekveras.<br>
+    <p>Exekvering av skript kan begränsas till tidigare registrerade skript baserat på deras kontrollsumma (SHA256-hash). Andra skript kommer då inte att exekveras.<br>
       Det finns två olika tillvägagångssätt:</p>
       <ol type="A">
         <li>
-          I inställningarna under installationen av autorun-paketet väljs inställningen "1 första skript tillåten", och kontrollsumman för det första skriptet efter installationen bestäms och registreras. Endast detta skript och oförändrade kopior av det exekveras. Säkerheten armeras automatiskt med det första skriptet efter den första, och vid behov även efter en ominstallation. 
-          Om skriptet någon gång skulle behöva ändras, gör då i efterhand en ny installation av ett autorun-paket med inställningen "1 first script allowed" (1 första skript tillåtet). Den gamla registreringen raderas och det nya skriptets kontrollsumma registreras efteråt som den enda tillåtna.        </li>
+          I inställningarna vid installation av autorun-paketet väljs inställningen "1 first script allowed", och kontrollsumman för det första skriptet efter installationen bestäms och registreras. Endast detta skript och oförändrade kopior av det exekveras. Säkerheten rustar sig automatiskt med det första skriptet efter den första, och vid behov, ominstallationen. Om skriptet någonsin behöver ändras, utför då en ny ominstallation av autorun-paketet med denna inställning "1 första skript tillåtet". Den gamla registreringen raderas och det nya skriptets kontrollsumma registreras därefter som den enda tillåtna.        </li>
         <li>
-          Under paketinstallationen väljs först "2 Add any hash". Nu måste alla externa lagringsenheter som har olika skript kopplas in en efter en gång. Så att de nödvändiga kontrollsummorna kan registreras och läggas till. Därefter måste installationen köras <b>igen</b> och värdet ändras till "3 Only previously registered". Från och med då är säkerheten aktiverad.</li>
+          Under paketinstallationen väljs först "2 Add any hash". Nu måste alla externa minnen, som har olika skript, anslutas efter varandra. Så att de nödvändiga kontrollsummorna kan registreras och läggas till. Därefter måste installationen utföras <b>igen</b> och värdet måste ändras till "3 Endast tidigare registrerade". Från och med då är säkerheten aktiverad.</li>
       </ol>
-      Förfarande B kan också användas om A tidigare användes och en ytterligare kontrollsumma, t.ex. för en ny skriptvariant, måste läggas till parallellt med den tidigare registrerade skriptvarianten.  </body>
+      Förfarande B kan också användas om A använts tidigare och en ytterligare kontrollsumma, t.ex. för en ny skriptvariant, måste läggas till parallellt med den redan registrerade skriptvarianten.  </body>
 </html>

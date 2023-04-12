@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="nl">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9,13 +9,13 @@
     <title>Autorun</title>
   </head>
   <body>
-    <h1>Script opmerkingen:</h1>
-    <p>Zowel het primaire script, dat de gewenste actie uitvoert nadat een extern opslagapparaat is aangesloten, als het optionele aanvullende secundaire script nadat het opslagapparaat is uitgeworpen, vereisen enkele speciale overwegingen:</p>
+    <h1>Opmerkingen over het script:</h1>
+    <p>Zowel het primaire script dat de gewenste actie uitvoert nadat een extern opslagapparaat is aangesloten als het optionele aanvullende secundaire script nadat het opslagapparaat is uitgeworpen, vereisen enkele speciale overwegingen:</p>
     <ul>
-      <li>Beide scripts worden gestart door de udev daemon. Ze draaien met root-privileges.</li>
-      <li>De omgeving van de scripts is bijna leeg. Met name een pad naar de commando's, bijvoorbeeld uit de map /bin/, is <b>niet</b> zoals gebruikelijk ingesteld! Dat wil zeggen dat het pad ofwel bij elk commando moet worden opgegeven, ofwel dat de omgevingsvariabele PATH aan het begin van het script moet worden ingesteld.</li>
-      <li>De omgevingsvariabele SHELL wijst naar /bin/ash. Dit is met DSM 7.x een link naar /bin/bash. BASH kan echter draaien in een modus waarin bijvoorbeeld "processubstitutie" niet beschikbaar is. Het kan gebeuren dat een script dat prima draait als het interactief wordt gestart, plotseling niet meer draait als het via udev daemon wordt gestart vanwege een syntaxfout. Ik raad <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> aan als shebang.</li>
-      <li>Om te debuggen kan het nuttig zijn om de uitvoer van <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> in een shell venster te bekijken bij het aansluiten van een extern opslagapparaat. En een blik in het bestand /var/log/bash_err.log kan nuttig zijn.</li>
+      <li>Beide scripts worden gestart door de udev daemon. Ze worden uitgevoerd met rootrechten.</li>
+      <li>De omgeving van de scripts is bijna leeg. In het bijzonder wordt een pad naar de commando's, bijvoorbeeld vanuit de /bin/ directory, <b>niet</b> zoals gebruikelijk ingesteld! D.w.z. het pad moet ofwel bij elk commando worden opgegeven, ofwel moet aan het begin van het script de omgevingsvariabele PATH worden ingesteld.</li>
+      <li>De omgevingsvariabele SHELL wijst naar /bin/ash. Dit is een link naar /bin/bash in DSM 7.x. BASH kan echter draaien in een modus waarin bijvoorbeeld "procesvervanging" niet beschikbaar is. Het kan gebeuren dat een script dat zonder problemen draait als het interactief wordt gestart, plotseling niet meer draait als het wordt gestart via de udev daemon, vanwege een syntaxisfout. Ik raad <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash</span> aan als shebang.</li>
+      <li>Voor het oplossen van problemen kan het nuttig zijn om de uitvoer van <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> in een shell venster te bekijken wanneer een extern opslagapparaat is aangesloten. Ook een blik in het bestand /var/log/bash_err.log kan nuttig zijn.</li>
     </ul> 
      
   </body>

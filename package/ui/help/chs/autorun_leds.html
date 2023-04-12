@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="zh">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>自动运行</title>
+    <style>
+      .t1 { border-collapse: collapse; } .t1, .t1 th, .t1 td { border: solid 1px }.tc td { text-align: center; } </style>
+  </head>
+  <body>
+    <h1>状态和复制的LED指示灯</h1>
+    <p>
+    Autorun可以控制状态或复制LED。这可以用来指示正在进行的活动，必要时还可以指示错误。    </p>
+    <h2>注意事项：</h2>
+    <ul>
+    <li>没有简单的方法来读取当前的LED状态或返回到以前的状态。如果在Autorun的设置中启用了LED控制，那么当前的LED状态（例如，由于出错而闪烁橙色的状态）将可能被Autorun覆盖。反之亦然，其他事件也可能覆盖Autorun设置的显示。</li>
+    <li>在一些Autorun配置设置中，错误（或启动脚本的可选择的返回代码）会在结束后用LED显示出来。在这种情况下，只有通过以<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">root</span>身份执行的脚本命令（例如通过任务调度）才能清除错误显示。</li>
+    </ul>
+    <p>
+    控制LED的脚本命令是，例如，<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    例子中的 "7"（用于关闭LED状态）应使用以下字符来代替：<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>代码</th>
+        <th >命令</th>
+        <th style="text-align: left;">动作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>状态指示灯关闭</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>状态指示灯绿色</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>状态指示灯绿色闪烁</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo ":" &gt; /dev/ttyS1</td>
+        <td>状态指示灯橙色</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">echo "；" &gt; /dev/ttyS1</td>
+        <td>状态指示灯橙色闪烁</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>复制LED指示灯亮起</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>复制的LED灯在闪烁</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>复制的LED灯关闭</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

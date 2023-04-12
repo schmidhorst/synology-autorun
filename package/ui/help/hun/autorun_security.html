@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="hu">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,25 +11,19 @@
   <body>
     <h1>Biztonság</h1>
     <h2>A szkript helye:</h2>
-    <p>Az autorun csomag által indított szkript két alapvetően különböző helyre kerülhet:</p>
-   <ul>
-     <li>A külső tárolóeszközökön: 
-       <ul>
-         <li>
-            Csak a szkripttel ily módon előkészített tárolóeszközökön fog elindulni a művelet. </li> </ul> </li> <li> <ul> <li>Minden más, esetleg csatlakoztatott tárolóeszköz figyelmen kívül marad. </li>Ha </ul> </li>a <li> <ul> <li>rendelkezésre álló biztonsági opciót <b>nem</b> használja, akkor bárki, akinek hozzáférése van a lemezállomáshoz, tetszőleges dolgokat tehet egy előkészített USB-stick csatlakoztatásával. Pl. törölheti az egész lemezállomást, és szabadon hozzáférhet az egész hálózathoz.</li></ul></li> <li>Belső DSM-ben: <ul> <li>Minden alkalommal, amikor egy tárolóeszköz csatlakoztatásra kerül, a szkript elindul. A szkriptnek magának kell esetleg ellenőriznie, hogy az aktuális tárolóeszközön végre kell-e hajtania a műveleteit </li>. <li>A rendelkezésre álló biztonsági opcióra legtöbbször nem lesz szükség. </li> </ul> </ul>     <p>A fent említett elsődleges szkript mellett opcionálisan egy másodlagos szkript is lehetséges, amely a tárolóeszköz kihúzása után kerül végrehajtásra. 
-        Ez a második szkript természetesen csak a DSM-en belül található. A kidobott memóriához való hozzáférés az indítás időpontjában már nem lehetséges.</p>
-    <p>Minden szkript root jogosultsággal fut. A belsőleg elhelyezett szkriptek ezért szinte bárhol elhelyezhetők a DSM fájlrendszerében. 
-      A rendszergazdai jogokkal nem rendelkező felhasználóknak nem szabad hozzáférniük, legalábbis írási hozzáféréssel nem!</p>       
+    <p>Az autorun csomag által indított szkript két alapvetően különböző helyen tárolható:</p>
+ <ul>
+   <li>A külső tárolóeszközökön: <ul> <li>csak a szkriptet ily módon előkészített tárolóeszközökön indul el a művelet . </li> </ul> </li>   <li> <ul> <li>Minden más csatlakoztatható tárolóeszköz figyelmen kívül marad. </li> <li>Ha a rendelkezésre álló biztonsági opciót <b>nem</b> használja, akkor bárki, aki hozzáfér a lemezállomáshoz, egy előkészített USB-stick behelyezésével tetszőleges dolgokat tehet, pl. törölheti a teljes lemezállomást, és szabadon hozzáférhet a teljes hálózathoz.</li></ul></li> <li>Belsőleg a DSM-ben: <ul> <li>Minden alkalommal, amikor egy adathordozót behelyez, a szkript elindul . </li> </ul> <ul> <li>Magának a szkriptnek esetleg ellenőriznie kell, hogy az aktuális tárolóeszközön kell-e végrehajtania a műveleteket. </li> <li>A rendelkezésre álló biztonsági opcióra a legtöbb esetben nem lesz szükség. </li> </ul> </ul>        <p>A fent említett elsődleges szkript mellett lehetőség van egy opcionális másodlagos szkriptre is, amely a tárolóeszköz kidobása után kerül végrehajtásra. Ez a második szkript természetesen csak a DSM-en belül található. A kidobott memóriához való hozzáférés az indítás időpontjában már nem lehetséges.</p>
+    <p>Minden szkript root jogosultságokkal fut. A belsőleg elhelyezett szkriptek ezért szinte bárhol elhelyezhetők a DSM fájlrendszerében. A rendszergazdai jogokkal nem rendelkező felhasználóknak nem szabad hozzáférniük, legalábbis írási hozzáféréssel nem!</p>       
     
     <h2>Biztonsági opció:</h2>        
-    <p>A szkriptek végrehajtása korlátozható a korábban regisztrált szkriptekre azok ellenőrző összegének (SHA256 hash) segítségével. Más szkriptek nem kerülnek végrehajtásra.<br>
+    <p>A szkriptek végrehajtása korlátozható a korábban regisztrált szkriptekre azok ellenőrző összege (SHA256 hash) alapján. Más szkriptek ekkor nem kerülnek végrehajtásra.<br>
       Kétféle megközelítés létezik:</p>
       <ol type="A">
         <li>
-          Az automatikus csomagtelepítés során a beállításoknál az "1 első szkript engedélyezett" beállítás van kiválasztva, és a telepítés utáni első szkript ellenőrző összege kerül meghatározásra és regisztrálásra. Csak ez a szkript és annak változatlan másolatai kerülnek végrehajtásra. A biztonság automatikusan élesedik az első szkripttel az első, és szükség esetén az újratelepítés után is. 
-          Ha a szkriptet valaha is meg kell változtatni, akkor utána ismét készítsen egy automatikus csomag újratelepítést ezzel a beállítással "1 első szkript engedélyezett". A régi regisztráció törlésre kerül, és az új szkript ellenőrző összege kerül regisztrálásra, mint az egyetlen megengedett.        </li>
+          Az autorun csomag telepítésekor a beállításokban az "1 első engedélyezett szkript" beállítás van kiválasztva, és a telepítés utáni első szkript ellenőrző összege kerül meghatározásra és regisztrálásra. Csak ez a szkript és annak nem módosított másolatai kerülnek végrehajtásra. A biztonság automatikusan élesíti magát az első szkriptet az első, és szükség esetén az újratelepítés után. Ha a szkript valaha is módosításra szorul, akkor végezzen egy újabb automatikus csomag újratelepítést ezzel az "1 első szkript engedélyezett" beállítással. A régi regisztráció törlődik, és az új szkript ellenőrző összege ezt követően az egyetlen engedélyezettként kerül regisztrálásra.        </li>
         <li>
-          A csomag telepítése során először a "2 Add any hash" van kiválasztva. Most az összes külső tárolót, amely különböző szkriptekkel rendelkezik, egymás után kell csatlakoztatni alkalommal. Így a szükséges ellenőrző összegek regisztrálhatók és hozzáadhatók. Ezt követően a telepítést <b>újra</b> el kell indítani, és az értéket "3 Csak korábban regisztrált" értékre kell módosítani. Ettől kezdve a biztonság élesítve van.</li>
+          A csomag telepítése során először a "2 Add any hash" beállítás kerül kiválasztásra. Most az összes külső memóriát, amely különböző szkriptekkel rendelkezik, egymás után kell csatlakoztatni. Így a szükséges ellenőrző összegek regisztrálhatók és hozzáadhatók. Ezt követően a telepítést <b>újra</b> el kell végezni, és az értéket "3 Csak korábban regisztrált" értékre kell módosítani. Ettől kezdve a biztonság engedélyezve van.</li>
       </ol>
-      A B eljárás akkor is használható, ha korábban az A eljárás volt használatban, és a korábban regisztrált szkriptváltozathoz párhuzamosan egy további ellenőrző összeget kell hozzáadni, például egy új szkriptváltozathoz.  </body>
+      A B eljárás akkor is használható, ha korábban az A eljárást használták, és egy további ellenőrző összeget, pl. egy új szkriptváltozathoz, a már regisztrált szkriptváltozathoz párhuzamosan kell hozzáadni.  </body>
 </html>

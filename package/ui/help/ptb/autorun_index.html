@@ -11,27 +11,16 @@
   <body>
     <h1>Autorun</h1>
     <p>
-    O pacote "Autorun" pode acionar uma ação quando um disco externo é conectado a uma estação Synology. Isto é freqüentemente muito útil para a cópia automatizada de dados. 
-    Pelo menos na versão 7.1 do DSM, tal opção de evento está faltando no agendador de tarefas. 
-    Há apenas "Startup" e "Shutdown" como eventos nas "Tarefas acionadas", mas nenhum "Armazenamento externo USB inserido" ou similar.    </p>
+    O pacote "Autorun" pode acionar uma ação quando um disco rígido externo é conectado a uma Estação Synology. Isto é muitas vezes muito útil para a cópia automática de dados. Pelo menos na versão 7.1 do DSM, tal opção de evento está faltando no agendador de tarefas. Há apenas "Startup" e "Shutdown" como eventos nas "Tarefas acionadas", mas nenhum "Armazenamento externo USB inserido" ou similar.    </p>
     <p>
-    Com "ação" significa antes de tudo a execução de um script de shell BASH. 
-    O script pode então copiar arquivos entre a estação de disco e o disco usando comandos como <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
-     Ou o script também pode, por exemplo, iniciar uma tarefa definida no agendador de tarefas.     </p>
+    Por "Ação" entende-se principalmente a execução de um roteiro de shell BASH. O script pode então copiar arquivos entre a estação de disco e o disco usando comandos como <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. Ou o script também pode, por exemplo, iniciar uma tarefa definida no agendador de tarefas.     </p>
     <p>
-    Como uma ação adicional, o disco também pode ser ejetado após a conclusão da ação. 
-    Como isto significa que os dados no meio de dados externo não são mais diretamente acessíveis, isto proporciona um certo grau de proteção dos dados no meio de dados externo contra destruição, por exemplo, por meio de ransomware. 
-     No entanto, como o suporte de dados também pode ser reintegrado ao sistema através de software, ele não é uma proteção completa.    </p>
+    Como uma ação adicional, o disco também pode ser ejetado após a conclusão da ação. Como isto significa que os dados no disco externo não são mais diretamente acessíveis, isto proporciona alguma proteção dos dados no disco externo contra a destruição, por exemplo, por meio de um resgate. Entretanto, como o disco também pode ser reintegrado ao sistema via software, esta não é uma proteção completa.    </p>
     <p>
-    Uma proteção ainda melhor contra resgate pode ser obtida da seguinte maneira: Usar um suporte de dados externo com sua própria fonte de alimentação, como é comum em discos rígidos USB de 3,5 polegadas. A fonte de alimentação é operada através de uma tomada inteligente. Esta tomada inteligente é então desligada após o meio de dados ter sido ejetado. Contanto que o software de resgate não sobreponha esta implementação, o suporte de dados externo que é desconectado do sistema desta forma é protegido. 
-   <b>
-    Advertência: </b>
-    
-    Enquanto o disco externo é montado para uma atualização, não há praticamente nenhuma proteção contra o ransomware que poderia ter entrado em seu sistema antes! 
-    Portanto, use sempre pelo menos dois discos alternadamente para backups!    </p>
+    Uma proteção ainda melhor contra os resgates pode ser obtida da seguinte maneira: Usar um meio de dados externo com sua própria fonte de alimentação, como é comum em discos rígidos USB de 3,5 polegadas. A fonte de alimentação é operada através de uma tomada inteligente. Esta tomada inteligente é desligada depois que o disco é ejetado. Contanto que o software de resgate não sobreponha esta implementação, o disco externo que é desconectado do sistema desta forma é protegido. <b>Advertência: </b>Enquanto o disco externo é montado para uma atualização, não há praticamente nenhuma proteção contra o ransomware que possa ter se infiltrado previamente em seu sistema! Portanto, use sempre pelo menos dois discos em rotação para backups!    </p>
     <p><a href="autorun_security.html">Nota de segurança</a></p> 
     <p><a href="autorun_scripts.html">Dicas de roteiro</a></p>
     <p><a href="autorun_taskscheduler.html">Dicas de programação de tarefas</a></p>
-
+    <p><a href="autorun_leds.html">Indicador LED de status e cópia</a></p>
   </body>
 </html>

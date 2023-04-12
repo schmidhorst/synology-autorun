@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="es">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+    <style>
+      .t1 { border-collapse: collapse; } .t1, .t1 th, .t1 td { border: solid 1px } .tc td { text-align: center; } </style>
+  </head>
+  <body>
+    <h1>Indicador LED de estado y copia</h1>
+    <p>
+    Autorun puede controlar el LED de estado o de copia. Puede utilizarse para indicar una actividad en curso y, en su caso, un error.    </p>
+    <h2>Notas:</h2>
+    <ul>
+    <li>No existe una forma sencilla de leer el estado actual del LED o de volver al estado anterior. Si el control LED está activado en los ajustes de Autorun, entonces el estado actual del LED (por ejemplo, el estado parpadeando en naranja debido a un error) será posiblemente sobrescrito por Autorun. Y también viceversa, otros eventos pueden sobrescribir la pantalla configurada por Autorun.</li>
+    <li>Hay ajustes de configuración de Autorun donde un error (o códigos de retorno seleccionables del script iniciado) es indicado por un LED después del final. Borrar la pantalla de error sólo es posible con un comando de script ejecutado como <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">root</span> (por ejemplo, a través de la programación de tareas).</li>
+    </ul>
+    <p>
+    El comando de script para el control del LED es, por ejemplo, <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    En lugar del 7 del ejemplo (para apagar el LED de estado) deben utilizarse los siguientes caracteres:<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>Código</th>
+        <th >Comando</th>
+        <th style="text-align: left;">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>LED de estado apagado</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>LED de estado verde</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>LED de estado verde parpadeando</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo ":" &gt; /dev/ttyS1</td>
+        <td>LED de estado naranja</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">echo ";" &gt; /dev/ttyS1</td>
+        <td>LED de estado naranja parpadeante</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>LED de copia encendido</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>LED de copia parpadeando</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>Copia LED apagado</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

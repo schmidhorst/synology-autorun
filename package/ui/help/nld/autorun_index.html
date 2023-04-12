@@ -11,27 +11,16 @@
   <body>
     <h1>Autorun</h1>
     <p>
-    Het pakket "Autorun" kan een actie activeren wanneer een externe schijf wordt aangesloten op een Synology-station. Dit is vaak zeer nuttig voor het automatisch kopiëren van gegevens. 
-    Tenminste in DSM-versie 7.1 ontbreekt een dergelijke gebeurtenisoptie in de taakplanner. 
-    Er zijn alleen "Startup" en "Shutdown" als gebeurtenissen in de "Triggered Tasks", maar geen "External USB storage inserted" of iets dergelijks.    </p>
+    Het pakket "Autorun" kan een actie activeren wanneer een externe harde schijf wordt aangesloten op een Synology Station. Dit is vaak zeer nuttig voor het automatisch kopiëren van gegevens. Tenminste in DSM-versie 7.1 ontbreekt een dergelijke gebeurtenisoptie in de taakplanner. Er zijn alleen "Opstarten" en "Afsluiten" als gebeurtenissen in de "Geactiveerde taken", maar geen "Externe USB-opslag geplaatst" of iets dergelijks.    </p>
     <p>
-    Met "actie" wordt allereerst het uitvoeren van een BASH-shell-script bedoeld. 
-    Het script kan dan bestanden heen en weer kopiëren tussen het schijfstation en de schijf met behulp van commando's als <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. 
-     Of het script kan bijvoorbeeld ook een in de taakplanner gedefinieerde taak starten.     </p>
+    Met "Actie" wordt vooral het uitvoeren van een BASH-shell-script bedoeld. Het script kan dan bestanden heen en weer kopiëren tussen het schijfstation en de schijf met behulp van commando's als <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rsync</span>. Of het script kan bijvoorbeeld ook een in de taakplanner gedefinieerde taak starten.     </p>
     <p>
-    Als extra actie kan de schijf ook worden uitgeworpen nadat de actie is voltooid. 
-    Aangezien de gegevens op de externe gegevensdrager daardoor niet meer rechtstreeks toegankelijk zijn, biedt dit een zekere bescherming van de gegevens op de externe gegevensdrager tegen vernietiging, bijvoorbeeld door ransomware. 
-     Aangezien de gegevensdrager echter ook via software opnieuw in het systeem kan worden geïntegreerd, is dit geen volledige bescherming.    </p>
+    Als extra actie kan de schijf ook worden uitgeworpen nadat de actie is voltooid. Aangezien dit betekent dat de gegevens op de externe schijf niet langer rechtstreeks toegankelijk zijn, biedt dit enige bescherming van de gegevens op de externe schijf tegen vernietiging, bijvoorbeeld door ransomware. Aangezien de schijf echter ook via software opnieuw in het systeem kan worden geïntegreerd, is dit geen volledige bescherming.    </p>
     <p>
-    Een nog betere bescherming tegen ransomware kan op de volgende manier worden bereikt: Gebruik een extern datamedium met een eigen voeding, zoals gebruikelijk bij 3,5 inch USB-harde schijven. De voeding wordt bediend via een slim stopcontact. Deze smart socket wordt dan uitgeschakeld nadat het datamedium is uitgeworpen. Zolang ransomware deze implementatie niet omzeilt, is het externe gegevensmedium dat op deze manier van het systeem wordt losgekoppeld, beschermd. 
-   <b>
-    Waarschuwing: </b>
-    
-    Terwijl de externe schijf voor een update is gemount, is er praktisch geen bescherming tegen ransomware die eerder uw systeem zou kunnen zijn binnengedrongen! 
-    Gebruik daarom altijd minstens twee schijven afwisselend voor back-ups!    </p>
+    Een nog betere bescherming tegen ransomware kan op de volgende manier worden bereikt: Gebruik een extern gegevensmedium met een eigen voeding, zoals gebruikelijk bij 3,5 inch USB harde schijven. De voeding wordt bediend via een slim stopcontact. Dit slimme stopcontact wordt dan uitgeschakeld nadat de schijf is uitgeworpen. Zolang ransomware deze implementatie niet overruled, is de externe schijf die op deze manier van het systeem wordt losgekoppeld beschermd. <b>Waarschuwing: </b>Terwijl de externe schijf is aangekoppeld voor een update, is er vrijwel geen bescherming tegen ransomware die mogelijk eerder uw systeem heeft geïnfiltreerd! Gebruik daarom altijd minstens twee schijven bij toerbeurt voor back-ups!    </p>
     <p><a href="autorun_security.html">Beveiligings opmerking</a></p> 
     <p><a href="autorun_scripts.html">Script hints</a></p>
     <p><a href="autorun_taskscheduler.html">Taakplanning hints</a></p>
-
+    <p><a href="autorun_leds.html">LED-indicator voor status en kopiëren</a></p>
   </body>
 </html>

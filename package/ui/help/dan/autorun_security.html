@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="da">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,26 +10,20 @@
   </head>
   <body>
     <h1>Sikkerhed</h1>
-    <h2>Script placering:</h2>
-    <p>Der er to fundamentalt forskellige steder, hvor scriptet, der startes af autorun-pakken, kan placeres:</p>
-   <ul>
-     <li>På de eksterne lagerenheder: 
-       <ul>
-         <li>
-            Kun de lagerenheder, der er forberedt med scriptet på denne måde, vil starte handlingen. </li> </ul> </li> <li> <ul> <li>Alle andre lagringsenheder, der kan være tilsluttet, vil blive ignoreret. </li> <li>Hvis den tilgængelige sikkerhedsindstilling <b>ikke</b> anvendes, kan enhver, der har adgang til diskstationen, gøre vilkårlige ting ved at tilslutte en forberedt USB-stick. F.eks. slette hele diskstationen og få fri adgang til hele netværket.</li></ul></li> <li>Internt i DSM: <ul> <li>Hver gang en lagringsenhed tilsluttes, startes scriptet. Scriptet skal muligvis selv kontrollere, om det skal udføre sine handlinger på den aktuelle lagerenhed </li>. <li>Den tilgængelige sikkerhedsindstilling vil for det meste ikke være nødvendig. </li> </ul> </ul>     <p>Ud over det ovennævnte primære script er der også mulighed for et sekundært script, som udføres, når lagerenheden er blevet skubbet ud, som en valgmulighed. 
-        Dette sekundære script kan naturligvis kun være placeret internt på DSM'en. Adgang til den udskudte hukommelse er ikke længere mulig på det tidspunkt, hvor det skal startes.</p>
-    <p>Alle scripts kører med root-tilladelse. Internt placerede scripts kan derfor ligge næsten hvor som helst i DSM's filsystem. 
-      Brugere uden administratorrettigheder bør ikke have adgang, i hvert fald ikke skriveadgang!</p>       
+    <h2>Placering af scriptet:</h2>
+    <p>Der er to fundamentalt forskellige steder, hvor scriptet, der startes af autorun-pakken, kan gemmes:</p>
+ <ul>
+   <li>På de eksterne lagerenheder: <ul> <li>Kun de lagerenheder, der er forberedt med scriptet på denne måde, vil starte handlingen . </li> </ul> </li>   <li> <ul> <li>Alle andre lagerenheder, der kan tilsluttes, ignoreres. </li> <li>Hvis den tilgængelige sikkerhedsindstilling <b>ikke</b> anvendes, kan enhver, der har adgang til diskstationen, gøre vilkårlige ting ved at indsætte et forberedt USB-stik, f.eks. slette hele diskstationen og få fri adgang til hele netværket.</li></ul></li> <li>Internt i DSM: <ul> <li>Hver gang der indsættes et lagringsmedie, startes scriptet . </li> </ul> <ul> <li>Scriptet skal muligvis selv kontrollere, om det skal udføre sine handlinger på det aktuelle lagringsmedie. </li> <li>Den tilgængelige sikkerhedsindstilling vil i de fleste tilfælde ikke være nødvendig. </li> </ul> </ul>        <p>Ud over det ovennævnte primære script er det også muligt at have et valgfrit sekundært script, som udføres efter at lagringsenheden er blevet skubbet ud. Dette sekundære script kan naturligvis kun være placeret internt på DSM'en. Adgang til den udskudte hukommelse er ikke længere mulig på det tidspunkt, hvor det skal startes.</p>
+    <p>Alle scripts køres med root-privilegier. Internt placerede scripts kan derfor ligge næsten hvor som helst i DSM'ens filsystem. Brugere uden administratorrettigheder bør ikke have adgang, i hvert fald ikke skriveadgang!</p>       
     
     <h2>Sikkerhedsindstilling:</h2>        
-    <p>Script-eksekvering kan begrænses til scripts, der tidligere er registreret ved hjælp af deres checksum (SHA256-hash). Andre scripts vil ikke blive eksekveret.<br>
+    <p>Udførelsen af scripts kan begrænses til tidligere registrerede scripts på grundlag af deres checksum (SHA256-hash). Andre scripts vil i så fald ikke blive eksekveret.<br>
       Der er to forskellige fremgangsmåder:</p>
       <ol type="A">
         <li>
-          I indstillingerne under installationen af autorun-pakken vælges indstillingen "1 første script tilladt", og kontrolsummen for det første script efter installationen bestemmes og registreres. Kun dette script og uændrede kopier af det udføres. Sikkerheden armeres automatisk med det første script efter den første, og om nødvendigt også efter en geninstallation. 
-          Hvis scriptet nogensinde skulle have brug for en ændring, skal du bagefter igen foretage en autorun-pakke-geninstallation med denne indstilling "1 første script tilladt". Den gamle registrering slettes, og den nye scriptkontrolsum registreres bagefter som den eneste tilladte.        </li>
+          I indstillingerne ved installation af autorun-pakken vælges indstillingen "1 første script tilladt", og kontrolsummen for det første script efter installationen bestemmes og registreres. Kun dette script og ikke-modificerede kopier af det udføres. Sikkerheden opruster automatisk med det første script efter den første, og om nødvendigt geninstallation. Hvis scriptet nogensinde skal ændres, skal du udføre en ny geninstallation af autorun-pakken med denne indstilling "1 første script tilladt". Den gamle registrering slettes, og den nye scriptkontrolsum bliver efterfølgende registreret som den eneste tilladte.        </li>
         <li>
-          Under pakkeinstallationen vælges først "2 Add any hash". Nu skal alle de eksterne lagre, som har forskellige scripts, tilsluttes den ene gang efter den anden. Så de nødvendige kontrolsummer kan registreres og tilføjes. Derefter skal installationen køres <b>igen</b>, og værdien skal ændres til "3 Only previously registered". Fra da af er sikkerheden slået til.</li>
+          Under pakkeinstallationen vælges først "2 Tilføj enhver hash". Nu skal alle eksterne hukommelser, som har forskellige scripts, tilsluttes efter hinanden. For at de nødvendige checksummene kan registreres og tilføjes. Derefter skal installationen udføres <b>igen</b>, og værdien skal ændres til "3 Only previously registered". Fra da af er sikkerheden aktiveret.</li>
       </ol>
-      Procedure B kan også anvendes, hvis A tidligere var i brug, og der skal tilføjes en ekstra checksum, f.eks. for en ny scriptvariant, parallelt med den tidligere registrerede scriptvariant.  </body>
+      Procedure B kan også anvendes, hvis A tidligere er blevet anvendt, og der skal tilføjes en ekstra checksum, f.eks. for en ny scriptvariant, parallelt med den allerede registrerede scriptvariant.  </body>
 </html>

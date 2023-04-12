@@ -10,16 +10,14 @@
     <title>Autorun</title>
   </head>
   <body>
-    <h1>Aktivitetsschemaläggare</h1>
+    <h1>Uppgiftsplanerare</h1>
     <p>
-    Under vissa omständigheter är det vettigt att starta en aktivitet som definierats i schemaläggaren genom autostyrning.    </p>
+    Under vissa omständigheter är det lämpligt att starta en uppgift som definierats i schemaläggaren via autorun.    </p>
     <p>
-    Skalkommandot för att starta en sådan uppgift är t.ex. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. "Task-ID" (14 i exemplet) kan erhållas genom <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
-    Under vissa omständigheter är det också vettigt att utföra det kommando som anges som "Command" direkt och att kringgå uppgiftsförtecknaren.    </p>
+    Skalkommandot för att starta en sådan uppgift är t.ex. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. "Uppgifts-ID" (14 i exemplet) kan fastställas med <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. Under vissa omständigheter är det också användbart att utföra det kommando som anges som "command" direkt och kringgå uppgiftsschemaläggaren.    </p>
     <p>
-    Startkommandot för schemaläggaren utförs på nolltid och uppgiften körs som en oberoende process. 
-    Om du vill använda LED-kontrollen för att visa den pågående uppgiften eller för att mata ut disken när uppgiften är klar, måste du vänta i ditt skript efter uppgiftsstarten med en slinga som denna på slutet av den processen:    </p><p>
+    Schemaläggarens startkommando utförs då på nolltid och uppgiften körs som en oberoende process. Om du vill använda LED-kontrollen för att indikera den pågående uppgiften eller för att mata ut hårddisken när uppgiften är klar, måste du i ditt skript vänta på slutet av processen efter uppgiftsstarten med en slinga som denna:    </p><p>
     
-     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;processName&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+   <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;processnamn&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
   </body>
 </html>

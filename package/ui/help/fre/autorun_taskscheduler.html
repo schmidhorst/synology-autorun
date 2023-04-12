@@ -7,19 +7,17 @@
     <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
     <script src="../../../../help/scrollbar/flexcroll.js"></script>
     <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
-    <title>Autorun</title>
+    <title>Exécution automatique</title>
   </head>
   <body>
     <h1>Planificateur de tâches</h1>
     <p>
-    Dans certaines circonstances, il est judicieux de lancer une tâche définie dans le planificateur de tâches par exécution automatique.    </p>
+    Dans certaines circonstances, il est utile de lancer une tâche définie dans le planificateur de tâches via l'exécution automatique.    </p>
     <p>
-    La commande shell pour lancer une telle tâche est par exemple <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. Le "Task-ID" (14 dans l'exemple) peut être obtenu par <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
-    Dans certaines circonstances, il est également judicieux d'exécuter directement la commande spécifiée en tant que "Commande" et de contourner le planificateur de tâches.    </p>
+    La commande shell pour lancer une telle tâche est par exemple <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. L'"ID de la tâche" (14 dans l'exemple) peut être déterminé avec <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. Dans certaines circonstances, il est également utile d'exécuter directement la commande spécifiée comme "command" et de contourner le planificateur de tâches.    </p>
     <p>
-    La commande de démarrage du planificateur est exécutée en un rien de temps et la tâche s'exécute comme un processus indépendant. 
-    Si vous souhaitez utiliser la commande LED pour afficher la tâche en cours ou pour éjecter le disque une fois la tâche terminée, vous devez attendre la fin du processus dans votre script après le démarrage de la tâche, au moyen d'une boucle de ce type : </p><p>
+    La commande de démarrage du planificateur est alors exécutée en un rien de temps et la tâche s'exécute comme un processus indépendant. Si vous voulez utiliser la commande LED pour indiquer la tâche en cours ou pour éjecter le disque dur une fois la tâche terminée, vous devez attendre dans votre script la fin du processus après le démarrage de la tâche avec une boucle comme celle-ci :    </p><p>
     
-     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;nomduprocessus&gt;)</i>] ; do<br>sleep 60<br>done </span>   </p>
+   <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof <i>&lt;nom du processus&gt;)</i>] ; do<br>sleep 60<br>done </span>   </p>
   </body>
 </html>

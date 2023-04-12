@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="pt-PT">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+    <style>
+      .t1 { fronteira - colapso: colapso; } .t1, .t1 th, .t1 td { fronteira: sólido 1px } .tc td { text-align: centro; } </style>
+  </head>
+  <body>
+    <h1>Indicador de estado e cópia LED</h1>
+    <p>
+    A Autorun pode controlar o estado ou copiar o LED. Isto pode ser utilizado para indicar uma actividade em progresso e, se necessário, um erro.    </p>
+    <h2>Notas:</h2>
+    <ul>
+    <li>Não há uma maneira fácil de ler o estado actual do LED ou regressar ao estado anterior. Se o controlo LED estiver activado nas definições do Autorun, então o estado actual do LED (por exemplo, estado a piscar a laranja devido a um erro) será possivelmente substituído pelo Autorun. E também vice-versa, outros eventos podem sobrescrever a visualização definida pela Autorun.</li>
+    <li>Existem definições de configuração Autorun em que um erro (ou códigos de retorno seleccionáveis do script iniciado) é indicado por um LED após o fim. A eliminação da visualização do erro só é então possível com um comando de script executado como <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">raiz</span> (por exemplo, através do agendamento de tarefas).</li>
+    </ul>
+    <p>
+    O comando de script para o controlo LED é, por exemplo, <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    Em vez dos 7 do exemplo (para status LED desligado), devem ser utilizados os seguintes caracteres:<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>Código</th>
+        <th >Comando</th>
+        <th style="text-align: left;">Acção</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>LED de estado apagado</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>Estado LED verde</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>Estado LED verde piscando</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo ":" &gt; /dev/ttyS1</td>
+        <td>Estado LED laranja</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">echo ";" &gt; /dev/ttyS1</td>
+        <td>Estado LED laranja a piscar</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>Copiar LED em</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>Cópia LED a piscar</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>Copiar LED desligado</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

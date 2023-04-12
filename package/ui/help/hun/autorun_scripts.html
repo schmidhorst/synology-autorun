@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="hu">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9,13 +9,13 @@
     <title>Autorun</title>
   </head>
   <body>
-    <h1>Script Notes:</h1>
-    <p>Mind az elsődleges szkript, amely a külső tárolóeszköz csatlakoztatása után hajtja végre a kívánt műveletet, mind az opcionális kiegészítő másodlagos szkript, amely a tárolóeszköz kivetítése után hajtja végre a kívánt műveletet, néhány különleges megfontolást igényel:</p>
+    <h1>Szkript megjegyzések:</h1>
+    <p>Mind az elsődleges szkript, amely a külső tárolóeszköz csatlakoztatása után hajtja végre a kívánt műveletet, mind az opcionális kiegészítő másodlagos szkript, amely a tárolóeszköz kidobása után következik be, különleges megfontolásokat igényel:</p>
     <ul>
-      <li>Mindkét szkriptet az udev démon indítja el. Root jogosultságokkal futnak.</li>
-      <li>A szkriptek környezete szinte üres. Különösen a parancsok elérési útvonala, pl. a /bin/ könyvtárból, <b>nincs</b> beállítva a szokásos módon! Vagyis az elérési utat vagy minden egyes parancsnál meg kell adni, vagy a szkript elején a PATH környezeti változót állítjuk be.</li>
-      <li>A SHELL környezeti változó a /bin/ash könyvtárra mutat. Ez a DSM 7.x esetén a /bin/bash-re való hivatkozás. Előfordulhat azonban, hogy a BASH olyan üzemmódban fut, ahol például a "process substitution" nem elérhető. Előfordulhat, hogy egy szkript, amely interaktív indításkor jól fut, az udev démonon keresztül indítva hirtelen nem fut tovább egy szintaktikai hiba miatt. Javaslom a <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash-t</span> shebangként.</li>
-      <li>A hibakereséshez hasznos lehet, ha egy külső tárolóeszköz csatlakoztatásakor a <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> kimenetét nézzük egy shell ablakban. És hasznos lehet egy pillantás a /var/log/bash_err.log fájlba.</li>
+      <li>Mindkét szkriptet az udev démon indítja. Root jogosultságokkal kerülnek végrehajtásra.</li>
+      <li>A szkriptek környezete szinte üres. Különösen a parancsok elérési útvonala, pl. a /bin/ könyvtárból, <b>nincs</b> beállítva, mint általában! Vagyis az elérési utat vagy minden egyes parancsnál meg kell adni, vagy a szkript elején a PATH környezeti változót kell beállítani.</li>
+      <li>A SHELL környezeti változó a /bin/ash könyvtárra mutat. Ez a DSM 7.x-ben a /bin/bash-re való hivatkozás. A BASH azonban olyan üzemmódban is futhat, ahol például a "process substitution" nem elérhető. Előfordulhat, hogy egy szkript, amely interaktív indításkor gond nélkül fut, az udev démonon keresztül indítva hirtelen nem fut tovább egy szintaktikai hiba miatt. Shebangként a <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">#!/bin/bash-t</span> ajánlom.</li>
+      <li>A hibaelhárításhoz hasznos lehet a <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">journalctl -f</span> parancs kimenetét figyelni egy shell ablakban, amikor egy külső tárolóeszköz van csatlakoztatva. Szintén hasznos lehet egy pillantás a /var/log/bash_err.log fájlba.</li>
     </ul> 
      
   </body>

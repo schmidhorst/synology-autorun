@@ -12,14 +12,12 @@
   <body>
     <h1>Plánovač úloh</h1>
     <p>
-    Za určitých okolností má smysl spustit úlohu definovanou v plánovači úloh pomocí autorun.    </p>
+    Za určitých okolností je užitečné spustit úlohu definovanou v plánovači úloh prostřednictvím autorun.    </p>
     <p>
-    Příkaz shellu pro spuštění takové úlohy je např. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. "Task-ID" (v příkladu 14) lze získat pomocí <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. 
-    Za určitých okolností má také smysl provést příkaz zadaný jako "Command" přímo a plánovač úloh obejít.    </p>
+    Příkaz shellu pro spuštění takové úlohy je např. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0</span>. "ID úlohy" (v příkladu 14) lze zjistit pomocí <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>. Za určitých okolností je také užitečné provést příkaz zadaný jako "command" přímo a obejít plánovač úloh.    </p>
     <p>
-    Příkaz pro spuštění plánovače se provede v mžiku a úloha běží jako samostatný proces. 
-    Pokud chcete použít ovládací LED diodu pro zobrazení běžící úlohy nebo vysunutí disku po dokončení úlohy, musíte ve svém skriptu po spuštění úlohy počkat pomocí takovéto smyčky na konec tohoto procesu:    </p><p>
+    Spouštěcí příkaz plánovače se pak provede bezprostředně a úloha běží jako samostatný proces. Pokud chcete použít ovládací diodu LED k indikaci běžící úlohy nebo k vysunutí pevného disku po dokončení úlohy, musíte ve skriptu po spuštění úlohy počkat na konec procesu pomocí smyčky, jako je tato:    </p><p>
     
-     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while ["$(/bin/pidof <i>&lt;jméno_procesu&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+   <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while ["$(/bin/pidof <i>&lt;název procesu&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
   </body>
 </html>

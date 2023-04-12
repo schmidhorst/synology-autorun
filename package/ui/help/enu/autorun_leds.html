@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+    <style>
+      .t1 { border-collapse: collapse; } .t1, .t1 th, .t1 td { border: solid 1px } .tc td { text-align: center; } </style>
+  </head>
+  <body>
+    <h1>Status and Copy LED indicator</h1>
+    <p>
+    Autorun can control the status or copy LED. This can be used to indicate an activity in progress and, if necessary, an error.    </p>
+    <h2>Notes:</h2>
+    <ul>
+    <li>There is no easy way to read the current LED state or return to the previous state. If LED control is enabled in Autorun's settings, then the current LED state (e.g. status flashing orange because of an error) will be possibly overwritten by Autorun. And also vice versa other events may overwrite the display set by Autorun.</li>
+    <li>There are Autorun configuration settings where an error (or selectable return codes of the started script) is indicated by an LED after the end. Clearing the error display is then only possible with a script command executed as <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">root</span> (e.g. via task scheduling).</li>
+    </ul>
+    <p>
+    The script command for the LED control is e.g. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    Instead of the 7 in the example (for status LED off) the following characters are to be used:<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>Code</th>
+        <th >Command</th>
+        <th style="text-align: left;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>Status LED off</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>Status LED green</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>Status LED green blinking</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo ":" &gt; /dev/ttyS1</td>
+        <td>Status LED orange</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">echo ";" &gt; /dev/ttyS1</td>
+        <td>Status LED orange blinking</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>Copy LED on</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>Copy LED blinking</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>Copy LED off</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

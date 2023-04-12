@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>オートラン</title>
+    <style>
+      .t1 { border-collapse: collapse; } .t1, .t1 th, .t1 td { border: solid 1px }..tc td { text-align: center; }. </style>
+  </head>
+  <body>
+    <h1>ステータスおよびコピーLEDインジケーター</h1>
+    <p>
+    Autorunは、ステータスまたはコピーLEDを制御することができます。これは、進行中の活動や、必要に応じてエラーを示すために使用することができます。    </p>
+    <h2>ノートです：</h2>
+    <ul>
+    <li>現在のLEDの状態を読み取ったり、前の状態に戻ったりする簡単な方法はありません。オートランの設定でLED制御が有効になっている場合、現在のLEDの状態（例えば、エラーでオレンジ色に点滅している状態）は、オートランによって上書きされる可能性があります。また、その逆もしかりで、他のイベントがAutorunで設定した表示を上書きする可能性があります。</li>
+    <li>エラー（または起動したスクリプトの選択可能なリターンコード）が終了後にLEDで表示されるAutorunの設定項目があります。この場合、エラー表示を消すには、スクリプトコマンドを<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">rootで</span>実行する必要があります（例：タスクスケジューリング）。</li>
+    </ul>
+    <p>
+    LED制御のスクリプトコマンドは、例：<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    例の7（ステータスLED消灯）の代わりに、以下の文字を使用します：<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>コード</th>
+        <th >コマンド</th>
+        <th style="text-align: left;">アクション</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>ステータスLED消灯</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>ステータスLED緑色</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>ステータスLED 緑色点滅</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">エコー ":" &gt; /dev/ttyS1</td>
+        <td>ステータスLEDオレンジ</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">エコー ";" &gt; /dev/ttyS1</td>
+        <td>ステータスLED オレンジ点滅</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>コピーLED点灯</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>コピーLED点滅</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>コピーLED消灯</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

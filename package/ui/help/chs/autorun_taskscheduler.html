@@ -12,14 +12,12 @@
   <body>
     <h1>任务调度器</h1>
     <p>
-    在某些情况下，通过自动运行来启动一个在任务调度器中定义的任务是有意义的。    </p>
+    在某些情况下，通过自动运行来启动一个在任务调度器中定义的任务是很有用的。    </p>
     <p>
-    启动这样一个任务的shell命令是<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0.</span>"任务ID"（在这个例子中是14）可以通过<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>获得。 
-    在某些情况下，直接执行指定为 "Command "的命令并绕过任务调度器也是有意义的。    </p>
+    启动这样一个任务的shell命令是<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">/usr/syno/bin/synoschedtask --run id=14 check_time=0.</span>"任务ID"（在这个例子中是14）可以通过<span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">synoschedtask --get</span>确定。在某些情况下，直接执行指定为 "command "的命令并绕过任务调度器也是很有用的。    </p>
     <p>
-    调度器的启动命令在短时间内完成，任务作为一个独立的进程运行。 
-    如果你想用LED控制显示正在运行的任务或者在任务结束后弹出磁盘，你必须在任务开始后用这样的循环等待该进程的结束：    </p><p>
+    这样，调度器的启动命令就会在短时间内完成，任务作为一个独立的进程运行。如果你想用LED控制来指示正在运行的任务，或者在任务完成后弹出硬盘，你必须在脚本中用这样的循环来等待任务启动后的进程结束：    </p><p>
     
-     <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof<i>&lt;processName&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
+   <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">sleep 60<br>while [ "$(/bin/pidof<i>&lt;process name&gt;)</i>" ]; do<br>sleep 60<br>done </span>   </p>
   </body>
 </html>

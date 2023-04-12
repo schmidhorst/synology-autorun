@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="img-no-display" lang="DE">
+<!DOCTYPE html><html class="img-no-display" lang="pl">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,25 +11,19 @@
   <body>
     <h1>Bezpieczeństwo</h1>
     <h2>Lokalizacja skryptu:</h2>
-    <p>Istnieją dwa zasadniczo różne miejsca, w których może być umieszczony skrypt uruchamiany przez pakiet autorun:</p>
-   <ul>
-     <li>Na zewnętrznych urządzeniach pamięci masowej: 
-       <ul>
-         <li>
-            Tylko urządzenia pamięci masowej przygotowane ze skryptem w ten sposób rozpoczną działanie. </li> </ul> </li> <li> <ul> <li>Wszystkie inne pamięci masowe, które mogą zostać podłączone, zostaną zignorowane. </li> <li>Jeśli dostępna opcja bezpieczeństwa <b>nie</b> zostanie wykorzystana, wówczas każdy, kto ma dostęp do stacji dysków, może zrobić dowolne rzeczy, podłączając przygotowaną pamięć USB. Np. skasować całą stację dysków i mieć swobodny dostęp do całej sieci.</li></ul></li> <li>Wewnętrzne w DSM: <ul> <li>Za każdym razem, gdy podłączone zostanie urządzenie pamięci masowej, uruchamiany jest </li> </ul>skry </ul>pt. <ul> <ul> <li>Sam skrypt może być zmuszony do sprawdzenia, czy powinien wykonać swoje działania na bieżącym urządzeniu pamięci masowej. </li> <li>Dostępna opcja bezpieczeństwa przez większość czasu nie będzie potrzebna </li> <li>. </li> </ul> </ul>     <p>Oprócz wspomnianego wyżej skryptu głównego opcjonalnie możliwy jest również skrypt wtórny, który jest wykonywany po wysunięciu urządzenia pamięci masowej. 
-        Ten drugi skrypt może być oczywiście zlokalizowany tylko wewnętrznie w DSM. Dostęp do wysuniętej pamięci nie jest już możliwy w momencie, gdy ma być ona uruchomiona.</p>
-    <p>Wszystkie skrypty są uruchamiane z uprawnieniami roota. Skrypty umieszczone wewnętrznie mogą więc znajdować się niemal w dowolnym miejscu systemu plików DSM. 
-      Użytkownicy bez praw administratora nie powinni mieć dostępu, a przynajmniej nie dostępu do zapisu!</p>       
+    <p>Istnieją dwie zasadniczo różne lokalizacje, w których może być przechowywany skrypt uruchamiany przez pakiet autorun:</p>
+ <ul>
+   <li>Na zewnętrznych urządzeniach pamięci masowej: <ul> <li>tylko urządzenia pamięci masowej przygotowane ze skryptem w ten sposób uruchomią akcję . </li> </ul> </li>   <li> <ul> <li>Wszystkie inne urządzenia pamięci masowej, które można podłączyć, są ignorowane. </li> <li>Jeśli dostępna opcja bezpieczeństwa <b>nie</b> jest używana, każdy kto ma dostęp do stacji dysków może zrobić dowolne rzeczy wkładając przygotowaną pamięć USB, np. wymazać całą stację dysków i mieć swobodny dostęp do całej sieci.</li></ul></li> <li>Wewnętrznie w DSM: <ul> <li>Przy każdym włożeniu nośnika pamięci uruchamiany jest skrypt . </li> </ul> <ul> <li>Sam skrypt może potrzebować sprawdzić, czy powinien wykonać swoje działania na bieżącym urządzeniu pamięci masowej. </li> <li>Dostępna opcja bezpieczeństwa nie będzie wymagana w większości przypadków. </li> </ul> </ul>        <p>Oprócz wspomnianego wyżej podstawowego skryptu możliwe jest również posiadanie opcjonalnego skryptu wtórnego, który jest wykonywany po wysunięciu urządzenia pamięci masowej. Ten drugi skrypt może oczywiście znajdować się tylko wewnętrznie w DSM. Dostęp do wysuniętej pamięci nie jest już możliwy w momencie, gdy ma być uruchomiony.</p>
+    <p>Wszystkie skrypty są uruchamiane z uprawnieniami roota. Skrypty umieszczone wewnętrznie mogą więc znajdować się niemal w dowolnym miejscu systemu plików DSM. Użytkownicy bez uprawnień administratora nie powinni mieć dostępu, a przynajmniej nie dostępu do zapisu!</p>       
     
     <h2>Opcja bezpieczeństwa:</h2>        
-    <p>Wykonywanie skryptów można ograniczyć do skryptów wcześniej zarejestrowanych za pomocą ich sumy kontrolnej (hash SHA256). Inne skrypty nie będą wykonywane.<br>
+    <p>Wykonywanie skryptów można ograniczyć do wcześniej zarejestrowanych skryptów na podstawie ich sumy kontrolnej (hash SHA256). Inne skrypty nie będą wtedy wykonywane.<br>
       Istnieją dwa różne podejścia:</p>
       <ol type="A">
         <li>
-          W ustawieniach podczas instalacji pakietu autorun wybrane jest ustawienie "1 pierwszy dozwolony skrypt", a suma kontrolna pierwszego skryptu po instalacji jest określana i rejestrowana. Tylko ten skrypt i jego niezmienione kopie są wykonywane. Zabezpieczenie automatycznie uzbraja się w pierwszy skrypt po pierwszej, a w razie potrzeby także po ponownej instalacji. 
-          Jeżeli skrypt będzie wymagał zmiany, to po tym należy ponownie wykonać reinstalację pakietu autorun z ustawieniem "1 first script allowed". Stara rejestracja zostanie usunięta, a nowa suma kontrolna skryptu zostanie zarejestrowana jako jedyna dopuszczalna.        </li>
+          W ustawieniach podczas instalacji pakietu autorun wybrane jest ustawienie "1 pierwszy dozwolony skrypt", a suma kontrolna pierwszego skryptu po instalacji jest określana i rejestrowana. Tylko ten skrypt i jego niezmodyfikowane kopie są wykonywane. Ochrona automatycznie uzbraja się w pierwszy skrypt po pierwszej, a w razie potrzeby ponownej instalacji. Jeśli skrypt kiedykolwiek będzie wymagał modyfikacji, należy wykonać kolejną reinstalację pakietu autorun z ustawieniem "1 pierwszy dozwolony skrypt". Stara rejestracja jest usuwana, a nowa suma kontrolna skryptu jest następnie rejestrowana jako jedyna dozwolona.        </li>
         <li>
-          Podczas instalacji pakietu najpierw wybierana jest opcja "2 Add any hash". Teraz wszystkie zewnętrzne magazyny, które mają różne skrypty, muszą być podłączone jeden po drugim. W ten sposób można zarejestrować i dodać potrzebne sumy kontrolne. Następnie należy <b>ponownie</b> uruchomić instalację i zmienić wartość na "3 Only previously registered". Od tego momentu zabezpieczenie jest uzbrojone.</li>
+          Podczas instalacji pakietu najpierw wybierane jest ustawienie "2 Add any hash". Teraz wszystkie pamięci zewnętrzne, które mają różne skrypty, muszą być podłączone jedna po drugiej. Tak, aby można było zarejestrować i dodać wymagane sumy kontrolne. Następnie należy <b>ponownie</b> wykonać instalację i zmienić wartość na "3 Only previously registered". Od tego momentu bezpieczeństwo jest włączone.</li>
       </ol>
-      Procedura B może być również użyta, jeśli A była wcześniej używana i trzeba dodać dodatkową sumę kontrolną, np. dla nowego wariantu skryptu, równolegle do wcześniej zarejestrowanego wariantu skryptu.  </body>
+      Procedurę B można zastosować również wtedy, gdy wcześniej użyto A i równolegle do już zarejestrowanego wariantu skryptu należy dodać dodatkową sumę kontrolną, np. dla nowego wariantu skryptu.  </body>
 </html>

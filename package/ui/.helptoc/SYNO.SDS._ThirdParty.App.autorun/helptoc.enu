@@ -2,7 +2,8 @@
   "base":"help"
   ,"id":"SYNO.SDS._ThirdParty.App.autorun"
   ,"text":"Autorun"
-  ,"desc":"","topic":"autorun_index.html"
+  ,"desc":""
+  ,"topic":"autorun_index.html"
   ,"children":[
     {
       "id":"SYNO.SDS._ThirdParty.App.autorun:autorun_security.html"
@@ -25,6 +26,14 @@
       ,"base":"help"
       ,"topic":"autorun_taskscheduler.html"
       ,"text":"Task Scheduler"
+      ,"desc":""
+      ,"leaf":true
+      }
+    ,{
+      "id":"SYNO.SDS._ThirdParty.App.autorun:autorun_leds.html"
+      ,"base":"help"
+      ,"topic":"autorun_leds.html"
+      ,"text":"LED Display"
       ,"desc":""
       ,"leaf":true
       }

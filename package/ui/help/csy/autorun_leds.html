@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="cs">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Autorun</title>
+    <style>
+      .t1 { border-collapse: collapse; } .t1, .t1 th, .t1 td { border: solid 1px } .tc td { text-align: center; } </style>
+  </head>
+  <body>
+    <h1>Indikátor LED stavu a kopírování</h1>
+    <p>
+    Autorun může ovládat stavovou nebo kopírovací LED diodu. Tu lze použít k indikaci probíhající činnosti a případně i chyby.    </p>
+    <h2>Poznámky:</h2>
+    <ul>
+    <li>Neexistuje žádný jednoduchý způsob, jak přečíst aktuální stav LED nebo se vrátit do předchozího stavu. Pokud je v nastavení programu Autorun povoleno ovládání LED, pak bude aktuální stav LED (např. stav blikající oranžově kvůli chybě) případně přepsán programem Autorun. A také naopak jiné události mohou přepsat zobrazení nastavené programem Autorun.</li>
+    <li>Existují nastavení konfigurace Autorun, kde je chyba (nebo volitelné návratové kódy spuštěného skriptu) indikována LED diodou po skončení. Vymazání chybového zobrazení je pak možné pouze příkazem skriptu spuštěným jako <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">root</span> (např. prostřednictvím plánování úloh).</li>
+    </ul>
+    <p>
+    Příkaz skriptu pro kontrolu LED je např. <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    Místo 7 v příkladu (pro vypnutí stavové LED) je třeba použít následující znaky:<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>Kód</th>
+        <th >Příkaz</th>
+        <th style="text-align: left;">Akce</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>Vypnutí stavové LED diody</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">echo "8" &gt; /dev/ttyS1</td>
+        <td>Stavová LED zelená</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>Stavová LED zeleně bliká</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo ":" &gt; /dev/ttyS1</td>
+        <td>Stavová LED oranžová</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">echo ";" &gt; /dev/ttyS1</td>
+        <td>Stavová LED oranžově bliká</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>LED dioda kopírování svítí</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>Kopírování LED bliká</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>Zkopírovat LED diodu vypnuto</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

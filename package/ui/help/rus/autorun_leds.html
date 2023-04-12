@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="img-no-display" lang="ru">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+    <link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+    <script src="../../../../help/scrollbar/flexcroll.js"></script>
+    <script src="../../../../help/scrollbar/initFlexcroll.js"></script>
+    <title>Автозапуск</title>
+    <style>
+      .t1 { border-collapse: collapse; } .t1, .t1 th, .t1 td { border: solid 1px } .tc td { text-align: center; } </style>
+  </head>
+  <body>
+    <h1>Светодиодный индикатор состояния и копирования</h1>
+    <p>
+    Автозапуск может управлять светодиодным индикатором состояния или копирования. Он может использоваться для индикации выполняемой работы и, при необходимости, ошибки.    </p>
+    <h2>Примечания:</h2>
+    <ul>
+    <li>Не существует простого способа прочитать текущее состояние светодиода или вернуться к предыдущему состоянию. Если управление светодиодами включено в настройках Autorun, то текущее состояние светодиодов (например, статус мигает оранжевым из-за ошибки) может быть перезаписано Autorun. И наоборот, другие события могут перезаписать индикацию, установленную Autorun.</li>
+    <li>Существуют настройки конфигурации Autorun, в которых ошибка (или выбранные коды возврата запущенного сценария) отображается светодиодом после завершения. Очистить индикацию ошибки можно только с помощью команды сценария, выполняемой от имени <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">root</span> (например, через планирование задач).</li>
+    </ul>
+    <p>
+    Команда сценария для управления светодиодом выглядит, например, так: <span style="font-family: 'Courier New'; font-weight: normal; font-style: normal; text-decoration: none;">echo "7" &gt; /dev/ttyS1 </span>   </p>
+    Вместо 7 в примере (для выключения светодиода состояния) следует использовать следующие символы:<br>
+    
+    <table class="t1">
+      <thead>
+        <tr><th>Код</th>
+        <th >Команда</th>
+        <th style="text-align: left;">Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td style="text-align: center;">7</td>
+        <td style="text-align: center;">echo "7" &gt; /dev/ttyS1</td>
+        <td>Светодиод состояния выключен</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">8</td>
+        <td style="text-align: center;">эхо "8" &gt; /dev/ttyS1</td>
+        <td>Светодиод состояния зеленый</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: center;">echo "9" &gt; /dev/ttyS1</td>
+        <td>Светодиод состояния зеленый мигающий</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">:</td>
+        <td style="text-align: center;">echo ":" &gt; /dev/ttyS1</td>
+        <td>Светодиод состояния оранжевый</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">;</td>
+        <td style="text-align: center;">эхо ";" &gt; /dev/ttyS1</td>
+        <td>Светодиод состояния оранжевый мигающий</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">@</td>
+        <td style="text-align: center;">echo "@" &gt; /dev/ttyS1</td>
+        <td>Светодиод копирования включен</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">A</td>
+        <td style="text-align: center;">echo "A" &gt; /dev/ttyS1</td>
+        <td>Светодиод копирования мигает</td>
+        </tr>
+        <tr>
+        <td style="text-align: center;">B</td>
+        <td style="text-align: center;">echo "B" &gt; /dev/ttyS1</td>
+        <td>Светодиод копирования выключен</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

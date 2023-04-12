@@ -191,7 +191,7 @@
     "type": "combobox",
     "desc": "Use of status LED:<br/>0: Not used at all<br/>1: Green while running, green flashing during eject, OFF (success), orange flashing (failure)<br/>2: Green flashing while script is running or ejecting, green if finished (success) or orange flashing (failure)<br/>3: Green while script is running and during eject, OFF (success), orange flashing (failure)",
     "subitems": [{
-      "key": "config_LED",
+      "key": "config_LED_STATUS",
       "autoSelect": true,
       "editable": false,
       "desc": "Status LED",
@@ -199,7 +199,7 @@
       "mode": "local",
       "valueField": "myId",
       "displayField": "displayText",
-      "defaultValue": "@LED@",
+      "defaultValue": "@LED_STATUS@",
       "store": {
         "xtype": "arraystore",
         "fields": ["myId", "displayText"],

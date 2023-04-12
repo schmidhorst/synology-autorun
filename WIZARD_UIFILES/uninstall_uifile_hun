@@ -6,8 +6,12 @@
 "desc":"<p>A csomag eltávolítása során lehetőség van a beállítások megőrzésére egy későbbi új telepítéshez<br>Vagy törölheti a csomag összes beállítását és naplófájlját</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Távolítsa el a"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Utilização do LED de estado:<br/>0: Não usado de todo<br/>1: Verde enquanto funciona, verde a piscar durante a ejecção, OFF se terminado com 0 ou 100, laranja a piscar para outros resultados ou ejecção falhada<br/>2: Verde a piscar enquanto o guião está a funcionar ou a ejectar, verde se terminado com 0 ou 100, laranja a piscar para outros resultados ou ejecção falhada<br/>3: Verde enquanto o guião está a funcionar e durante a ejecção, OFF quando terminado, laranja a piscar se a ejecção falhou",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"LED de estado",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

@@ -6,8 +6,12 @@
 "desc":"<p>パッケージのアンインストール時に、後の新規インストールのために設定を保存することが可能です。<br>または、パッケージのすべての設定とログファイルを削除することも可能です</p>。",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"削除"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

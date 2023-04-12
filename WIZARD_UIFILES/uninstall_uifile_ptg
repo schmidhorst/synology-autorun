@@ -6,8 +6,12 @@
 "desc":"<p>Durante a desinstalação do pacote é possível preservar as configurações para uma nova instalação posterior<br>ou pode apagar todas as configurações e ficheiros de registo do pacote</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Remover"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

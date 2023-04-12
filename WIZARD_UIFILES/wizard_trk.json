@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Durum LED'inin kullanımı:<br/>0: Hiç kullanılmaz<br/>1: Çalışırken yeşil, çıkarma sırasında yeşil yanıp sönme, 0 veya 100 ile bittiğinde KAPALI, diğer sonuçlar veya başarısız çıkarma için turuncu yanıp sönme<br/>2: Kod çalışırken veya çıkarılırken yeşil yanıp sönme, 0 veya 100 ile bittiğinde yeşil, diğer sonuçlar veya başarısız çıkarma için turuncu yanıp sönme<br/>3: Kod çalışırken ve çıkarma sırasında yeşil, bittiğinde KAPALI, çıkarma başarısız olduğunda turuncu yanıp sönme",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Durum LED'i",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

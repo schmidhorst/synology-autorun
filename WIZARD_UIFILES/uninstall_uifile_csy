@@ -6,8 +6,12 @@
 "desc":"<p>Při odinstalaci balíčku je možné zachovat nastavení pro pozdější novou instalaci<br>Nebo můžete odstranit všechna nastavení a soubory protokolu balíčku</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Odstranění adresy"
+			}
+			,{
+				"key": "config_remove_log",
+				"desc": "Remove Logfiles"
 }]
 }]
 }]

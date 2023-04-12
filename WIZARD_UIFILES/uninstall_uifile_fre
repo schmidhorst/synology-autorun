@@ -6,8 +6,12 @@
 "desc":"<p>Lors de la désinstallation du paquet, il est possible de conserver les paramètres pour une nouvelle installation ultérieure<br>Ou vous pouvez supprimer tous les paramètres et les fichiers journaux du paquet</p>.",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Retirer"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

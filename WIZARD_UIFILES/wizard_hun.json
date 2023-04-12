@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Az állapotjelző LED használata:<br/>0: Egyáltalán nem használatos<br/>1: Zöld futás közben, zöld villogás kilövés közben, OFF, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>2: Zöld villogás a szkript futása vagy kilövése közben, zöld villogás, ha 0 vagy 100-as értékkel fejeződött be, narancssárga villogás egyéb eredmények vagy sikertelen kilövés esetén<br/>3: Zöld villogás a szkript futása közben és kilövés közben, OFF, ha befejeződött, narancssárga villogás sikertelen kilövés esetén.",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Állapot LED",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

@@ -6,8 +6,12 @@
 "desc":"<p>Tijdens het verwijderen van het pakket is het mogelijk om de instellingen te bewaren voor een latere nieuwe installatie<br>Of u kunt alle instellingen en logbestanden van het pakket verwijderen</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Verwijder"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

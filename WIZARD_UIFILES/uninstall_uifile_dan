@@ -6,8 +6,12 @@
 "desc":"<p>Ved afinstallationen af pakken er det muligt at bevare indstillingerne til en senere ny installation<br>Og du kan slette alle indstillinger og logfiler for pakken</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Fjern"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Zastosowanie diody statusu:<br/>0: Nieużywana w ogóle<br/>1: Zielona podczas pracy, zielona migająca podczas wysuwania, WYŁĄCZONA jeśli zakończy się z 0 lub 100, pomarańczowa migająca dla innych wyników lub nieudanego wysuwania<br/>2: Zielona migająca podczas pracy skryptu lub wysuwania, zielona jeśli zakończy się z 0 lub 100, pomarańczowa migająca dla innych wyników lub nieudanego wysuwania<br/>3: Zielona podczas pracy skryptu i podczas wysuwania, WYŁĄCZONA po zakończeniu, pomarańczowa migająca jeśli wysuwanie nie powiodło się",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Dioda LED stanu",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

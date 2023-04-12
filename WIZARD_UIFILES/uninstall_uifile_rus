@@ -6,8 +6,12 @@
 "desc":"<p>Во время деинсталляции пакета можно сохранить настройки для последующей новой установки<br>или удалить все настройки и лог-файлы пакета</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Удалить"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

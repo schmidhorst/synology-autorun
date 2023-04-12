@@ -6,8 +6,12 @@
 "desc":"<p>Durante la disinstallazione del pacchetto è possibile conservare le impostazioni per una successiva nuova installazione<br>Oppure è possibile cancellare tutte le impostazioni e i file di log del pacchetto</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Rimuovere"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

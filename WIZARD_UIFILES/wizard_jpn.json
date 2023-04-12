@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"ステータスLEDの使用：<br/>0：全く使用しない<br/>1：実行中は緑、イジェクト中は緑点滅、0または100で終了した場合はOFF、その他の結果またはイジェクト失敗の場合はオレンジ点滅<br/>2：スクリプト実行中またはイジェクト中は緑点滅、0または100で終了した場合は緑、その他の結果またはイジェクト失敗の場合はオレンジ点滅＜br/>3：実行中およびイジェクト中は緑、終了時はOFF、イジェクト失敗時はオレンジ点滅＜br/＞4：スクリプトは実行中またはイジェクト中のみ使用可能、イジェクトは実行中またはイジェクト中のみ使用可能",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"ステータスLED",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

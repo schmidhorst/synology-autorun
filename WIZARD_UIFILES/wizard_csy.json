@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Použití stavové LED:<br/>0: Nepoužívá se vůbec<br/>1: Zelená za běhu, zelené blikání při vysunutí, vypnuto, pokud skončí s 0 nebo 100, oranžové blikání při jiných výsledcích nebo neúspěšném vysunutí<br/>2: Zelené blikání při běhu skriptu nebo vysunutí, zelené, pokud skončí s 0 nebo 100, oranžové blikání při jiných výsledcích nebo neúspěšném vysunutí<br/>3: Zelené za běhu skriptu a při vysunutí, vypnuto, pokud skončí, oranžové blikání, pokud vysunutí selhalo.",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Stavová LED dioda",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

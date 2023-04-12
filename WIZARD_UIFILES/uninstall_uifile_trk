@@ -6,8 +6,12 @@
 "desc":"<p>Paketin kaldırılması sırasında, daha sonra yeni bir kurulum için ayarları korumak mümkündür<br>Ya da paketin tüm ayarlarını ve günlük dosyalarını silebilirsiniz</p>",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Kaldırmak"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

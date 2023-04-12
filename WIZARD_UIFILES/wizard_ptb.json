@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Uso do LED de status:<br/>0: Não usado em absoluto<br/>1: verde durante a execução, verde piscando durante a ejeção, OFF se terminado com 0 ou 100, laranja piscando para outros resultados ou falha na ejeção<br/>2: verde piscando durante a execução ou ejeção, verde se terminado com 0 ou 100, laranja piscando para outros resultados ou falha na ejeção<br/>3: verde durante a execução e durante a ejeção, OFF quando terminado, laranja piscando se falha na ejeção",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"LED de status",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

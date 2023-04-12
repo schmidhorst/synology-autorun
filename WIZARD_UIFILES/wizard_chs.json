@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"状态LED的使用：<br/>0：完全不使用<br/>1：运行时绿色，弹出时绿色闪烁，如果完成了0或100，则关闭，其他结果或弹出失败则橙色闪烁<br/>2：脚本运行或弹出时绿色闪烁，如果完成了0或100，则绿色闪烁，其他结果或弹出失败则橙色闪烁<br/>3：脚本运行和弹出时绿色，完成后关闭，弹出失败时橙色闪烁",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"状态LED",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

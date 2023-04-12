@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Användning av status-LED:<br/>0: Används inte alls<br/>1: Grön när skriptet körs, grönt blinkande under utmatning, OFF om det är klart med 0 eller 100, orange blinkande för andra resultat eller misslyckad utmatning<br/>2: Grönt blinkande när skriptet körs eller matas ut, grönt om det är klart med 0 eller 100, orange blinkande för andra resultat eller misslyckad utmatning<br/>3: Grönt när skriptet körs och under utmatning, OFF när det är klart, orange blinkande om utmatningen misslyckades.",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Status-LED",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

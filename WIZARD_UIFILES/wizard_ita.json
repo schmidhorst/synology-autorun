@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Uso del LED di stato:<br/>0: Non utilizzato affatto<br/>1: Verde durante l'esecuzione, verde lampeggiante durante l'espulsione, OFF se terminato con 0 o 100, arancione lampeggiante per altri risultati o espulsione fallita<br/>2: Verde lampeggiante durante l'esecuzione dello script o l'espulsione, verde se terminato con 0 o 100, arancione lampeggiante per altri risultati o espulsione fallita<br/>3: Verde durante l'esecuzione dello script e durante l'espulsione, OFF quando terminato, arancione lampeggiante se espulsione fallita",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"LED di stato",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

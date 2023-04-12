@@ -191,7 +191,7 @@
 "type": "combobox",
 "desc":"Verwendung der Status-LED:<br/>0: Gar nicht verwendet<br/>1: Grün während des Skripts, grün blinkend während des Auswerfens, AUS nach erfolgreichem Ende, orange blinkend bei Fehler oder fehlgeschlagenem Auswerfen<br/>2: Grün blinkend während des Skripts oder des Auswerfens, grün bei Erfolg, orange blinkend bei Fehler oder fehlgeschlagenem Auswerfen<br/>3: Grün während des Skripts und während des Auswerfens, AUS wenn erfolgreich beendet, orange blinkend bei Fehler",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Status-LED",
@@ -199,7 +199,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

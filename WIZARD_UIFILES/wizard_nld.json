@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Gebruik van de status-LED:<br/>0: Wordt helemaal niet gebruikt<br/>1: Groen terwijl het script loopt, groen knipperend tijdens het uitwerpen, UIT als het klaar is met 0 of 100, oranje knipperend voor andere resultaten of mislukte uitwerping<br/>2: Groen knipperend terwijl het script loopt of uitgeworpen wordt, groen als het klaar is met 0 of 100, oranje knipperend voor andere resultaten of mislukte uitwerping<br/>3: Groen terwijl het script loopt en tijdens het uitwerpen, UIT als het klaar is, oranje knipperend als de uitwerping mislukt.",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Status-LED",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

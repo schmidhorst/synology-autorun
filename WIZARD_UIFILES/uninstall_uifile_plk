@@ -6,8 +6,12 @@
 "desc":"<p>Podczas deinstalacji pakietu można zachować ustawienia dla późniejszej nowej instalacji<br>Albo można usunąć wszystkie ustawienia i pliki dziennika pakietu</p>.",
 "subitems":
 [{
-"key": "pkgwizard_remove_settings",
+"key": "config_remove_settings",
 "desc":"Usuń"
+			}
+			,{
+				"key": "config_remove_log"
+        ,"desc": "Remove Logfiles"
 }]
 }]
 }]

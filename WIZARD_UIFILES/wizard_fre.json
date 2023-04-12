@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Utilisation de la LED d'état :<br/>0 : Pas utilisé du tout<br/>1 : Vert en cours d'exécution, vert clignotant pendant l'éjection, OFF si terminé avec 0 ou 100, orange clignotant pour d'autres résultats ou échec de l'éjection<br/>2 : Vert clignotant pendant l'exécution du script ou l'éjection, vert si terminé avec 0 ou 100, orange clignotant pour d'autres résultats ou échec de l'éjection<br/>3 : Vert pendant l'exécution du script et pendant l'éjection, OFF si terminé, orange clignotant si échec de l'éjection.",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"LED d'état",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

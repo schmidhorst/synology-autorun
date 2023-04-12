@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Uso del LED de estado:<br/>0: No se utiliza en absoluto<br/>1: Verde mientras se ejecuta, verde intermitente durante la expulsión, apagado si finaliza con 0 ó 100, naranja intermitente para otros resultados o expulsión fallida<br/>2: Verde intermitente mientras el script se ejecuta o expulsa, verde si finaliza con 0 ó 100, naranja intermitente para otros resultados o expulsión fallida<br/>3: Verde mientras el script se ejecuta y durante la expulsión, apagado cuando finaliza, naranja intermitente si la expulsión falló.",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"LED de estado",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

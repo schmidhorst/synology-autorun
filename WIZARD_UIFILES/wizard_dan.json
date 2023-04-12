@@ -151,7 +151,7 @@
 "type": "combobox",
 "desc":"Anvendelse af status-LED:<br/>0: Anvendes slet ikke<br/>1: Grøn under kørsel, grønt blink under udkast, slukket hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>2: Grønt blink under kørsel eller udkast, grønt hvis afsluttet med 0 eller 100, orange blink for andre resultater eller mislykket udkast<br/>3: Grønt under kørsel og under udkast, slukket når scriptet er afsluttet, orange blink hvis udkast mislykkedes",
 "subitems": [{
-"key": "config_LED",
+"key": "config_LED_STATUS",
 "autoSelect": true,
 "editable": false,
 "desc":"Status-LED",
@@ -159,7 +159,7 @@
 "mode": "local",
 "valueField": "myId",
 "displayField": "displayText",
-"defaultValue": "@LED@",
+"defaultValue": "@LED_STATUS@",
 "store": {
 "xtype": "arraystore",
 "fields": ["myId", "displayText"],

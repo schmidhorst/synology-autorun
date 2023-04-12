@@ -169,7 +169,7 @@ while read line; do # read all settings from config file
       settings="${settings}<p style=\"margin-left:30px;\">${settingWait}<br/></p>"
     elif [[ "$itemName" == "BEEP" ]]; then
       settings="${settings}<p style=\"margin-left:30px;\">${settingBeep}<br/></p>"
-    elif [[ "$itemName" == "LED" ]]; then
+    elif [[ "$itemName" == "LED_STATUS" ]]; then
       settings="${settings}<p style=\"margin-left:30px;\">${settingLedStatus}<br/></p>"
       if [[ "${!itemName}" -ne "0" ]]; then
         ledResetPossiblyRequired=1

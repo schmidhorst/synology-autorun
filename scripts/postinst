@@ -23,7 +23,7 @@ else
   mapfile -t itemArray < <(/bin/printf '%s' "$items")
 fi
 logInfo 7 "$(date "$DTFMT"): Config-Items from ENV: '${itemArray[*]}'"
-# config_LED, Status LED usage:
+# config_LED_STATUS, Status LED usage:
  # 0 = not used,
  # 1 = orange while script is running, green when done,
  # 2 = orange flashing if script result indicates an error,

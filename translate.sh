@@ -5,11 +5,12 @@
 bExec=1 # 0: do not translate, only list files, which would be processed, 1: translate
 bUpdateAll=0 # 0: update only outdated files, 1:translate all
 
-previousVersionPath="/volume1/syn/sHorst/Dev_Syno/source/autorun1.10.0_0010" # if set then are the sourceable files not completely, but only changed items are updated
+previousVersionPath="/volume1/syn/sHorst/Dev_Syno/source/autorun1.10.0_0011i" # if set then are the sourceable files not completely, but only changed items are updated
 
 translateSourceable=0
 translateWizzard=0
-translateHtml=0
+translateHtmlLicense=0
+translateHtmlHelp=0
 translateHelpToc=1
 
 SCRIPTPATHtranslate="$( cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 ; /bin/pwd -P )"
@@ -58,27 +59,33 @@ SYNO2ISO=( ["ger"]="de" ["enu"]="en" ["chs"]="zh" ["csy"]="cs" ["jpn"]="ja" ["kr
 
 
 synoLangs="chs csy dan fre ger hun ita jpn nld plk ptb ptg rus spn sve trk"
-# synoLangs="ger" # for debugging translate only these languages
+# synoLangs="chs csy dan fre hun ita jpn nld plk ptb ptg rus spn sve trk"
+# synoLangs="enu" # for debugging translate only these languages
 
 sourceSynoLang="enu"
 # sourceSynoLang="ger"
+
 echo "Translating from $sourceSynoLang to $synoLangs" | tee -a "$LOG"
 errCnt=0
 sourceIsoLang="${SYNO2ISO[$sourceSynoLang]}"
 
-# sourcable files:
+# sourcable files: ###
 filePath="package/ui/texts"
 sourceablefiles=( "$filePath/${sourceSynoLang}/lang.txt" "$filePath/${sourceSynoLang}/strings" )
 
-# json files from Wizzards:
+# json files from Wizzards: ###
 wizzardfiles=( "WIZARD_UIFILES/wizard_$sourceSynoLang.json" "WIZARD_UIFILES/uninstall_uifile_$sourceSynoLang" )
 
-# html files:
+# html files: ###
 declare -a htmlfiles
-htmlfiles=( "package/ui/licence_$sourceSynoLang.html" )
-for file in "package/ui/help/$sourceSynoLang"/*.html; do
-  htmlfiles=("${htmlfiles[@]}" "$file")
-done
+if [[ "$translateHtmlLicense" -gt "0" ]]; then
+  htmlfiles=( "package/ui/licence_$sourceSynoLang.html" )
+fi
+if [[ "$translateHtmlHelp" -gt "0" ]]; then
+  for file in "package/ui/help/$sourceSynoLang"/*.html; do
+    htmlfiles=("${htmlfiles[@]}" "$file")
+  done
+fi
 
 allfiles=( "${sourceablefiles[@]}" "${wizzardfiles[@]}" "${htmlfiles[@]}" ) # all source files
 for sourcefile in "${allfiles[@]}"; do
@@ -92,6 +99,7 @@ if [[ "$errCnt" -gt "0" ]]; then
   exit 2
 fi
 
+###################################
 if [[ "$translateSourceable" -ne "0" ]];then
   # line by line translation of sourcable files with removed item label like "msg1="
   for sourcefile in "${sourceablefiles[@]}"; do  # e.g. package/ui/texts/enu/lang.txt
@@ -144,7 +152,7 @@ if [[ "$translateSourceable" -ne "0" ]];then
         lineCount=0
         while read -r lineSourceNew; do # read all settings from file
           lineCount=$((lineCount+1))
-          if [[ ${lineSourceNew} == "#"* ]] || [[ ${lineSourceNew} == "["* ]]; then
+          if [[ ${lineSourceNew} == "#"* ]] || [[ ${lineSourceNew} == "["* ]]; then # Comment or Section like "[app]"
             if [[ "$bExec" -ne "0" ]]; then
               echo "$lineSourceNew" >> "$targetFile"
               if [[ "$lineCount" -eq "1" ]]; then # add an comment line
@@ -157,7 +165,14 @@ if [[ "$translateSourceable" -ne "0" ]];then
             fi
           else
             itemName="${lineSourceNew%%=*}"
-            itemVal="$(echo "${lineSourceNew#*=}" | sed -e 's/^"//' -e 's/"$//')" # remove quotes
+            quotedItemVal="${lineSourceNew#*=}"
+            if [[ "${quotedItemVal:0:1}" == "'" ]]; then
+              quote="'"
+              itemVal="$(echo "${quotedItemVal}" | sed -e "s/^'//" -e "s/'$//")" # remove quotes
+            else
+              quote="\""
+              itemVal="$(echo "${quotedItemVal}" | sed -e 's/^"//' -e 's/"$//')" # remove quotes
+            fi
             # itemVal="${itemVal@Q}" #  preserve ESC
             uptodateItem=0
             prevVersionFilePathName="${previousVersionPath}/${sourcefile}"
@@ -203,9 +218,11 @@ if [[ "$translateSourceable" -ne "0" ]];then
                     echo "stopped!" | tee -a "$LOG"
                     exit 2
                   fi
-                  tr2="$(echo "$translated" | sed -e 's|\"|\\"|g' -e 's|\$|\\$|g' )"
+                  # tr2="$(echo "$translated" | sed -e 's|\"|\\"|g' -e 's|\$|\\$|g' )" # Führt zu Fehler in lang.txt bei settingNotifyUsers=""!! Daher:
+                  tr2="$(echo "$translated" | sed -e 's|\$|\\$|g' )"
                   echo "$synoLang $targetIsoLang: $tr2" | tee -a "$LOG"
-                  echo "$itemName=\"${tr2}\"" >> "$targetFile"
+                  # echo "$itemName=\"${tr2}\"" >> "$targetFile"
+                  printf "%s=%s%s%s\n" "$itemName" "$quote" "$tr2" "$quote"
                 else
                   echo "The translation request failed: curl code $res, result:'$translatedraw'" | tee -a "$LOG"
                   # https://really-simple-ssl.com/curl-errors/
@@ -240,6 +257,7 @@ if [[ "$translateSourceable" -ne "0" ]];then
   done # for sourcefile in $sourceablefiles; do
 fi # translateSourceable
 
+###################################
 if [[ "$translateWizzard" -ne "0" ]]; then
   # translation of lines with '"desc":', '"errorText":', '"emptyText":' and '"step_title":' in wizzard files:
   for sourcefile in "${wizzardfiles[@]}"; do
@@ -365,9 +383,11 @@ if [[ "$translateWizzard" -ne "0" ]]; then
   done # for sourcefile in ${wizzardfiles[@]}; do
 fi # translateWizzard
 
-if [[ "$translateHtml" -ne "0" ]]; then
+#################################
+if [[ "$translateHtmlHelp" -ne "0" ]] || [[ "$translateHtmlLicense" -ne "0" ]]; then
   # translation of html files
   for sourcefile in "${htmlfiles[@]}"; do
+    echo ""
     if [[ "$bUpdateAll" -ne "0" ]]; then
       timeStampSource=$(date +%s)
     else
@@ -380,6 +400,7 @@ if [[ "$translateHtml" -ne "0" ]]; then
       if [[ "${srcLngPath##*/}" == "$sourceSynoLang" ]]; then # lng in path, seperate folders for each language
         lngPath=${srcLngPath%/*} # parent without e.g. "ger"
         targetFile="$lngPath/${synoLang}/$(basename "$sourcefile")"
+        # echo "Language in Path: $sourcefile ==> $targetFile"
         if [[ "$bExec" -ne "0" ]]; then
           if [[ ! -d "$lngPath/${synoLang}" ]]; then
             mkdir "$lngPath/${synoLang}"
@@ -390,6 +411,7 @@ if [[ "$translateHtml" -ne "0" ]]; then
       else # lng in file name
         #targetFile=$(echo "$sourcefile" | sed "s/_$sourceSynoLang/_$synoLang/")
         targetFile=${sourcefile/_$sourceSynoLang/_$synoLang}
+        # echo "Language in Name: $sourcefile ==> $targetFile"
       fi
       uptodateFile=0
       if [[ -f "$targetFile" ]]; then
@@ -407,7 +429,7 @@ if [[ "$translateHtml" -ne "0" ]]; then
         echo "not yet existing: $targetFile" | tee -a "$LOG"
       fi # target exists else
       if [[ "uptodateFile" -eq "0" ]]; then
-        echo "translating $sourcefile ..." | tee -a "$LOG"
+        echo "translating $sourcefile ==> $targetFile ..." | tee -a "$LOG"
         val=$(<"$sourcefile")
         param="target_lang=$targetIsoLang&source_lang=$sourceIsoLang&tag_handling=html"        
         if [[ "$bExec" -ne "0" ]]; then
@@ -420,7 +442,7 @@ if [[ "$translateHtml" -ne "0" ]]; then
             translated=${translated#\"} # remove quote at string start
             translated=${translated%\"} # remove quote at string end
             #printf %s "$translated" > "${targetFile}_extracted"
-            echo "to $synoLang translated $sourcefile:" | tee -a "$LOG"
+            # echo "to $synoLang translated $sourcefile:" | tee -a "$LOG"
             translated=$(urldecode "$translated") 
             # echo "$translated"
             if [[ ! -v translated ]] || [[ -z "$translated" ]]; then
@@ -450,18 +472,19 @@ if [[ "$translateHtml" -ne "0" ]]; then
             sed -i 's/\\"/"/g' "$targetFile" # quotes are escaped, don't know why. Unescape now all quotes!
 
           else # If the curl above was NOT sucessful
-            echo "The request failed: $res" | tee -a "$LOG"
+            echo "==== The request failed: $res ====" | tee -a "$LOG"
             exit 1
           fi
         else
-          echo "Source: '$sourcefile', Target: '$targetFile'" | tee -a "$LOG"
-        fi        
+          echo "Simulation '$sourcefile' ==> '$targetFile'" | tee -a "$LOG"
+        fi # if [[ "$bExec" -ne "0" ]]       
         echo "... $targetFile done!" | tee -a "$LOG"
       fi # not up to date
     done # for synoLang in $synoLangs; do
   done # for sourcefile in $htmlfiles; do
 fi # translateHtml
 
+######################################
 if [[ "$translateHelpToc" -ne "0" ]]; then
   # translation of lines with '""text":":' in helptoc.xxx files:
   echo -e "\nhelptoc.xxx Translation:" | tee -a "$LOG"
@@ -493,8 +516,12 @@ if [[ "$translateHelpToc" -ne "0" ]]; then
     fi # target exists else
     if [[ "$uptodateFile" -eq "0" ]]; then
       echo -e "\ntranslating lines of $targetFile ..." | tee -a "$LOG"
+	  source="$(cat "$sourcefile" | sed -z -e 's/\",\"/\"\n,\"/g' -e 's/},{/}\n,{/g')" # insert line breaks
+	  mapfile -t lines  < <(printf '%s' "$source")
       lineCount=0
-      while read -r lineSourceNew; do # read all settings from file
+      # while read -r lineSourceNew; do # read all settings from file
+	  for lineSourceNew in "${lines[@]}";do
+        # echo "lineSourceNew='$lineSourceNew'"
         lineCount=$((lineCount+1))
         val=""
         if [[ ${lineSourceNew} == *"\"text\":"* ]] && [[ ${lineSourceNew} != *"\"Autorun\""* ]]; then
@@ -554,7 +581,7 @@ if [[ "$translateHelpToc" -ne "0" ]]; then
             echo "$lineSourceNew" >> "$targetFile"
           fi
         fi
-      done < "$sourcefile" # while read: Works well even if last line has no \n!
+      done # < "$sourcefile" # while read: Works well even if last line has no \n!
       chmod 777 "$targetFile"
       chown :users "$targetFile"
       echo "... $targetFile done!" | tee -a "$LOG"

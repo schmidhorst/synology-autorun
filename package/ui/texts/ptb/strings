@@ -20,4 +20,4 @@ main="Autorun"
 node01="Segurança"
 node02="Roteiro"
 node03="Agendador de tarefas"
-
+node04="Controle de LEDs"

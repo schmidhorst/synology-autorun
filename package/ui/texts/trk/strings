@@ -20,4 +20,4 @@ main="Otomatik Çalıştırma"
 node01="Güvenlik"
 node02="Senaryo"
 node03="Görev Zamanlayıcı"
-
+node04="LED Kontrol"

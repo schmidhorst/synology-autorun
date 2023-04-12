@@ -20,4 +20,4 @@ main="Autorun"
 node01="Sikkerhed"
 node02="Script"
 node03="Opgaveplanlægger"
-
+node04="LED-kontrol"

@@ -3,7 +3,7 @@
  - Eject can be triggered by a list of exit codes, no more only at exit code 100
  - Help added, integrated to the Synology Help
  - Several improvements (Installation Wizzard, Logging, ...)
- - Several Bugs fixed
+ - Several Bugs fixed (LED control, quoting in strings, ...)
 
 1.10.0 Horst Schmid
 

@@ -87,15 +87,15 @@ executeConfiguredScript(){
   else
     /bin/printf "%s\t%s\n" "$(/bin/date "$DTFMT")" "The script '$scriptFullPathName' on '$diskName', mounted as $MOUNTPATH, was started and is running ..." >> "$SCRIPT_EXEC_LOG"
   fi
-  if (((LED & 1)!=0)); then  # 1 or 3
-    beep LED_STATUS_GREEN
-  elif (((LED & 2)!=0)); then # 2
-    beep LED_STATUS_GREEN_FLASH
+  if (((LED_STATUS & 1)!=0)); then  # 1 or 3
+    beep $LED_STATUS_GREEN
+  elif (((LED_STATUS & 2)!=0)); then # 2
+    beep $LED_STATUS_GREEN_FLASH
   fi
   if [[ "$LED_COPY" -eq "1" ]] || [[ "$LED_COPY" -eq "3" ]]; then
-    beep LED_COPY_ON
+    beep $LED_COPY_ON
   elif [[ "$LED_COPY" -ne "0" ]]; then # 2 or 4 or 5
-    beep LED_COPY_FLASH
+    beep $LED_COPY_FLASH
   fi
   # https://serverfault.com/questions/146745/how-can-i-check-in-bash-if-a-shell-is-running-in-interactive-mode
   if [[ $- == *i* ]]; then # interactive shell, [[ -n "$PS1" ]] would also be possible
@@ -124,14 +124,14 @@ executeConfiguredScript(){
   logInfo 6 "Back in $scriptThisFullPhysicalPathName from $scriptFullPathName with ${highlightStart}result=$scriptResultCode${highlightEnd} and last msg line ${highlightStart}'$lastScriptMsg'${highlightEnd}"
   dateFinished_s=$(/bin/date +"%s")
 
-  if [[ "$LED" == "1" ]]; then
-    beep LED_STATUS_GREEN_FLASH
+  if [[ "$LED_STATUS" == "1" ]]; then
+    beep $LED_STATUS_GREEN_FLASH
   fi
   if (((LED_COPY & 7)!=0)); then
-    beep LED_COPY_OFF # Copy LED off
+    beep $LED_COPY_OFF # Copy LED off
     if [[ ";$failureCodes;" == *";$scriptResultCode;"* ]]; then
       if (((LED_COPY & 4)!=0)); then
-        beep LED_COPY_FLASH
+        beep $LED_COPY_FLASH
       fi
     fi
   fi # if LED_COPY
@@ -167,8 +167,8 @@ executeConfiguredScript(){
     # lsof is part of "SynoCli Tools" and of "synogear"
     # fuser is also only part of "SynoCli Tools"
     /bin/echo "Script result code $scriptResultCode detected in $EJECT_RETURN_CODES"
-    if [ "$LED" -eq "1" ];then
-      beep LED_STATUS_GREEN_FLASH
+    if [ "$LED_STATUS" -eq "1" ];then
+      beep $LED_STATUS_GREEN_FLASH
     fi
     # no change of LED_COPY from running script to ejecting!
     logInfo 2 "device '$1' - script '$scriptFullPathName' finished with $scriptResultCode ($FREE left on device), starting unmount"
@@ -314,25 +314,25 @@ executeConfiguredScript(){
 
 # return codes: $scriptResultCode, $ejected (0: no ejection, 2: eject success, 3: eject fail) and
   if [[ "$LED_COPY" -eq "1" ]] || [[ "$LED_COPY" -eq "2" ]]; then
-    beep LED_COPY_OFF # independent from failures
+    beep $LED_COPY_OFF # independent from failures
   fi
   if [[ "$ejected" -eq "3" ]] || [[ ";$failureCodes;" == *";$scriptResultCode;"* ]] || [[ ";$failureCodes;" == *";$resAfter;"* ]];then # failure
     if [[ "$LED_COPY" -eq "3" ]] || [[ "$LED_COPY" -eq "4" ]]; then
-      beep LED_COPY_FLASH # independent from failures
+      beep $LED_COPY_FLASH # independent from failures
     elif [[ "$LED_COPY" -eq "5" ]]; then
-      beep LED_COPY_ON
+      beep $LED_COPY_ON
     fi
-    if [[ "$LED" -ge "1" ]] && [[ "$LED" -le "3" ]]; then
-      beep LED_STATUS_ORANGE_FLASH
+    if [[ "$LED_STATUS" -ge "1" ]] && [[ "$LED_STATUS" -le "3" ]]; then
+      beep "$LED_STATUS_ORANGE_FLASH"
     fi
   else # no failure
     if [[ "$LED_COPY" -ge "1" ]]; then
-      beep LED_COPY_OFF
+      beep $LED_COPY_OFF
     fi
-    if [[ "$LED" -eq "1" ]] || [[ "$LED" -eq "3" ]]; then
-      beep LED_STATUS_OFF
-    elif [[ "$LED" -eq "2" ]]; then
-      beep LED_STATUS_GREEN
+    if [[ "$LED_STATUS" -eq "1" ]] || [[ "$LED_STATUS" -eq "3" ]]; then
+      beep $LED_STATUS_OFF
+    elif [[ "$LED_STATUS" -eq "2" ]]; then
+      beep $LED_STATUS_GREEN
     fi
   fi
 } # executeConfiguredScript()
@@ -461,7 +461,7 @@ if [ -x "$scriptFullPathName" ];then
   if [ "$BEEP" == "true" ]; then
     beep "$BEEP_SHORT"
   fi
-  if [ "$LED" = "1" ]; then
+  if [ "$LED_STATUS" = "1" ]; then
     beep "$LED_STATUS_ORANGE"
   fi
 
@@ -628,14 +628,14 @@ if [ -x "$scriptFullPathName" ];then
     if [ "$bError" == 1 ];then
       beepError
     else
-      beep BEEP_SHORT  # short beep
+      beep $BEEP_SHORT  # short beep
     fi
   fi
-  if [ "$LED" == 1 ];then
+  if [ "$LED_STATUS" == 1 ];then
     if [ "$bError" == 1 ];then
-      beep LED_STATUS_ORANGE_FLASH
+      beep $LED_STATUS_ORANGE_FLASH
     else
-      beep LED_STATUS_GREEN
+      beep $LED_STATUS_GREEN
     fi
   fi
 else # no executable script

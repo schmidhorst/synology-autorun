@@ -22,7 +22,7 @@
 #shellcheck disable=2034
 BEEP_SHORT=2
 BEEP_LONG=3
-# LED_POWER_FLASH=5
+LED_POWER_FLASH=5
 LED_STATUS_OFF=7
 LED_STATUS_GREEN=8 # Default state while DSM is ON
 LED_STATUS_GREEN_FLASH=9
@@ -31,11 +31,15 @@ LED_STATUS_ORANGE_FLASH=;
 LED_COPY_ON=@
 LED_COPY_FLASH=A
 LED_COPY_OFF=B
-NO_DSM_MESSAGE_RETURN_CODES=""
+NO_DSM_MESSAGE_RETURN_CODES="" # no screen message if the script return code is in this list
 
 beep() {  # also used for LED control
   # requires root!
   /bin/echo "$1" > /dev/ttyS1 # on virtual DSM: write error: Input/output error
+  arr=("BEEP_SHORT" "BEEP_LONG" "LED_POWER_ON" "LED_POWER_FLASH" "LED_POWER_OFF" "LED_STATUS_OFF" "LED_STATUS_GREEN" "LED_STATUS_GREEN_FLASH" "LED_STATUS_ORANGE" "LED_STATUS_ORANGE_FLASH" "<" "=" ">" "?" "LED_COPY_ON" "LED_COPY_FLASH" "LED_COPY_OFF")
+  x="$(printf "%d" \'"$1")"
+  y="$((x-50))"
+  logInfo 8 "beep '$1' ${arr[$y]}"
   #synoexternal  -susled disk_green/disk_orange/power none/steady/blink
 }
 

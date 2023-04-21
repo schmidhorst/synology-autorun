@@ -429,12 +429,12 @@ diskName=${diskName%)*}
 if [[ "$SCRIPT" == *"/"* ]]; then
   scriptFullPathName="$SCRIPT"  # script on DSM, not at external storage
   scriptExternal=0
-  txtOnFor="on" # for messages: <script> on <disk>
+  txtOnFor="for" # for messages: <script> for <disk>
   # check for file with other upper/lower case already done in start-stop-status
 else
   scriptFullPathName="$MOUNTPATH/$SCRIPT" # script on external storage
   scriptExternal=1
-  txtOnFor="for" # for messages: <script> for <disk>
+  txtOnFor="on" # for messages: <script> on <disk>
 fi
 if [[ ! -f "$scriptFullPathName" ]]; then
   res="$(/bin/find -L "$(dirname "$scriptFullPathName")" -maxdepth 1 -iname "$(basename "$scriptFullPathName")" -type f)" # -L Follow symbolic links
@@ -633,7 +633,7 @@ if [ -x "$scriptFullPathName" ];then
   fi
   if [ "$LED_STATUS" == 1 ];then
     if [ "$bError" == 1 ];then
-      beep $LED_STATUS_ORANGE_FLASH
+      beep "$LED_STATUS_ORANGE_FLASH"
     else
       beep $LED_STATUS_GREEN
     fi

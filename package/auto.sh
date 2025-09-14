@@ -523,7 +523,7 @@ if [ -x "$scriptFullPathName" ];then
         logError "Failed to register fingerprint of '$scriptFullPathName' in '$KNOWNSCRIPTSFILEPATHNAME'"
       fi
       bExec=1
-    elif [[ "$line" != "" ]]; then # this is the already registered skript
+    elif [[ "$line" != "" ]]; then # this is the already registered script
       bExec=1
       logInfo 6 "Setting ADD_NEW_FINGERPRINTS is 1 and the registered fingerprint '$line' matches the script file: will be executed!"
     fi
@@ -574,7 +574,7 @@ if [ -x "$scriptFullPathName" ];then
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg14" "$scriptFullPathName"
         fi
-        /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong line break CR/LF (Windows). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
+        /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Error: The Script '$scriptFullPathName', which should be executed, uses the wrong line break CR/LF (Windows). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
         bError=1
       elif [[ $res == *"CR line terminators"* ]]; then # MAC format
         bExec=0 # don't try to execute the script
@@ -582,7 +582,7 @@ if [ -x "$scriptFullPathName" ];then
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg16" "$scriptFullPathName"
         fi
-        /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong line break CR (MAC). Please use a siutable Editor to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
+        /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Error: The Script '$scriptFullPathName', which should be executed, uses the wrong line break CR (MAC). Please use a siutable Editor to change it to LF (UNIX)!" >> "$SCRIPT_EXEC_LOG"
         bError=1
       elif [[ "$res" == *"ISO-8859 text"* ]]; then
         bExec=0 # don't try to execute the script
@@ -591,7 +591,7 @@ if [ -x "$scriptFullPathName" ];then
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg15" "$scriptFullPathName"
         fi
-        /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Error: The Skript '$scriptFullPathName', which should be executed, uses the wrong coding (Windows ISO-8859). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to UTF-8!" >> "$SCRIPT_EXEC_LOG"
+        /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "Error: The Script '$scriptFullPathName', which should be executed, uses the wrong coding (Windows ISO-8859). Please use a siutable Editor (Linux oder Windows Notepad++, PSPad, ...) to change it to UTF-8!" >> "$SCRIPT_EXEC_LOG"
         bError=1
       fi
     fi # if [[ -z "$res" ]] else
@@ -603,19 +603,19 @@ if [ -x "$scriptFullPathName" ];then
     if [[ "$bError" == "0" ]]; then # not yet error message done
       if [[ "$scriptExternal" -eq "1" ]]; then
         /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "The script '$SCRIPT' ($scriptDateLastChange) ${txtOnFor} '$diskName' with fingerprint $FINGERPRINT, mounted as $MOUNTPATH does not match registered fingerprints" >> "$SCRIPT_EXEC_LOG"
-        logInfo 2 "This skript '$SCRIPT' ($scriptDateLastChange) ${txtOnFor} '$diskName' with fingerprint $FINGERPRINT with it's fingerprint is not permitted to run. No autorun!"
+        logInfo 2 "This script '$SCRIPT' ($scriptDateLastChange) ${txtOnFor} '$diskName' with fingerprint $FINGERPRINT with it's fingerprint is not permitted to run. No autorun!"
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg4" "$SYNOPKG_PKGNAME" "$SCRIPT" "$scriptDateLastChange"
         fi
       else
         /bin/printf "%s\t%s\n" "$(date "$DTFMT")" "The script '$scriptFullPathName' ($scriptDateLastChange) with fingerprint $FINGERPRINT does not match registered fingerprints" >> "$SCRIPT_EXEC_LOG"
-        logInfo 2 "This skript '$scriptFullPathName' ($scriptDateLastChange) with fingerprint $FINGERPRINT with it's fingerprint is not permitted to run. No autorun!"
+        logInfo 2 "This script '$scriptFullPathName' ($scriptDateLastChange) with fingerprint $FINGERPRINT with it's fingerprint is not permitted to run. No autorun!"
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg4" "$SYNOPKG_PKGNAME" "$scriptFullPathName" "$scriptDateLastChange"
         fi
       fi
       if [[ FINGERPRINTS_INCL_DRIVE -eq 1 ]]; then
-        logInfo 2 "This skript on '$diskName' ($scriptDateLastChange) with fingerprint $FINGERPRINT is not permitted to run from $scriptFullPathName. No autorun!"
+        logInfo 2 "This script on '$diskName' ($scriptDateLastChange) with fingerprint $FINGERPRINT is not permitted to run from $scriptFullPathName. No autorun!"
         if [[ -n "$NOTIFY_USERS" ]]; then
           /usr/syno/bin/synodsmnotify -c "$dsmappname" "$NOTIFY_USERS" "$SYNOPKG_PKGNAME:app1:title01" "$SYNOPKG_PKGNAME:app1:msg5" "$SYNOPKG_PKGNAME" "$scriptFullPathName" "$MOUNTPATH"
         fi

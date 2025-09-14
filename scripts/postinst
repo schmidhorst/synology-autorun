@@ -16,7 +16,7 @@ logInfo 6 "postinst V$SYNOPKG_PKGVER started as user '$user'$msg ..."
 # configFilePathName="$(dirname "${BASH_SOURCE[0]}")/initial_config.txt" is no more available!
 items="$(env | grep "^config_")"
 if [[ -z "$items" ]]; then
-  logError "Somthing went wrong with the Synology Installation Wizzard: The values from the keys from the file wizard_xxx.json have not been stored to the environment!"
+  logError "Something went wrong with the Synology Installation Wizzard: The values from the keys from the file wizard_xxx.json have not been stored to the environment!"
   keys="config_WAIT config_BEEP config_LED_COPY config_EJECT_TIMEOUT config_LOG_MAX_LINES config_NOTIFY_USERS config_LOGLEVEL"
   mapfile -d " " -t itemArray < <(/bin/printf '%s' "$keys")
 else
